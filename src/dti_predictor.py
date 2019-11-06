@@ -72,7 +72,7 @@ def write_paracetamol_prots_to_file():
             aa_seq = protein_aa_seq_dict[organism+'.'+protein]
 
             with open(file="../data/para_targets", mode='a') as para_handler:
-                para_handler.write(organism+'.'+protein + "\t" + aa_seq.seq+"\n")
+                para_handler.write(organism+'.'+protein + "\t" + aa_seq+"\n")
     print("Finished.")
 
     print("Total line count:", counter)
@@ -82,7 +82,7 @@ def write_paracetamol_prots_to_fasta():
     filename = "../data/para_targets"
     with open(file=filename, mode='r') as f:
         for line in f:
-            pass
+
 
 
 
