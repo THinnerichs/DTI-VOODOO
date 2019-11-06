@@ -46,7 +46,7 @@ def write_paracetamol_prots_to_file():
     # process drug-protein-interaction file
     print("Processing drug protein data...")
     protein_chemical_links_filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
-    paracetamol_id = 'CID1983'
+    paracetamol_id = 'CIDs00001983'
     counter = 0
     paracetamol_prots_count = 0
     with open(file=protein_chemical_links_filename, mode='r') as f:
@@ -79,15 +79,38 @@ def write_paracetamol_prots_to_file():
     print("Paracetamol count:", paracetamol_prots_count)
 
 def write_paracetamol_prots_to_fasta():
-    filename = "../data/para_targets"
-    with open(file=filename, mode='r') as f:
-        for line in f:
-            pass
+
+    para_filename = "../data/para_targets"
+    para_fasta_filename = "../data/para_fasta.fasta"
+    print("Processing {} and writing {} ...".format(para_filename, para_fasta_filename))
+    with open(file=para_filename, mode='r') as para_file, open(file=para_fasta_filename, mode='w') as fasta_file:
+        for line in para_file:
+            protein, aa_seq = line.split('\t')
+
+            fasta_file.write(">"+protein+'\n')
+            fasta_file.write(aa_seq+'\n')
+
+    print("Finished.")
+
+def run_stitch_db_query():
+
+    paracetamol_id = "CID1983"
+    url = "http://stitch.embl.de/api/tsv/interactorsList?identifier=" + paracetamol_id + "&required_score=700"
+    url2 = "http://stitch.embl.de/api/tsv/resolve?identifier=" + paracetamol_id
+    print(url2)
+
+
+def run_multi_sequence_alignment():
+    pass
+
+
 
 
 
 
 
 if __name__=='__main__':
-    write_paracetamol_prots_to_file()
+    # write_paracetamol_prots_to_file()
     # write_pruned_SeqIO_fasta_dict()
+
+    run_stitch_db_query()
