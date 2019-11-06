@@ -65,7 +65,9 @@ def main():
                 continue
 
             drug = split_line[0]
-            organism, protein = split_line[1].strip().split('.')
+            split_protein = split_line[1].strip().split('.')
+            organism = split_protein.pop(0)
+            protein = ".".join(split_protein)
 
             seqio_seq = protein_aa_seq_dict[organism+'.'+protein]
 
