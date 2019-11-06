@@ -14,6 +14,7 @@ def write_pruned_SeqIO_fasta_dict():
     print("Pruning dict...")
     pruned_dict = {}
     for key, seqio_seq in protein_aa_seq_dict.items():
+        print(key)
         organism, protein = key.split('.')
         result = pruned_dict.get(organism, None)
 
