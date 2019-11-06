@@ -31,6 +31,8 @@ def write_pruned_SeqIO_fasta_dict():
         pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
 
+    print("TYPE:", type(pruned_dict[list(pruned_dict.keys())[0]]))
+
 
 
 def write_paracetamol_prots_to_file():
@@ -111,7 +113,7 @@ def run_multi_sequence_alignment():
 
 
 if __name__=='__main__':
+    write_pruned_SeqIO_fasta_dict()
     write_paracetamol_prots_to_file()
-    # write_pruned_SeqIO_fasta_dict()
 
     # run_stitch_db_query()
