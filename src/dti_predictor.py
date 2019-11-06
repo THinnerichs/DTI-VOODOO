@@ -6,7 +6,7 @@ def main():
 
     paracetamol_id = "CID1983"
     counter = 0
-    with open(file=protein_chemical_links_filename, read='r') as f:
+    with open(file=protein_chemical_links_filename, mode='r') as f:
         for line in f:
             counter += 1
             if counter%10000==0:
