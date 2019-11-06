@@ -57,9 +57,6 @@ def write_paracetamol_prots_to_file():
             if counter%5000000==0:
                 print("Processed lines: {}\r".format(counter))
 
-            if '1983' in line and 'CID' in line:
-                print(line)
-
             if paracetamol_id not in line:
                 continue
 
