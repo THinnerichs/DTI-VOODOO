@@ -10,7 +10,7 @@ def main():
         for line in f:
             counter += 1
             if counter%100000==0:
-                print("Processed lines:\r", counter)
+                print("Processed lines: {}\r".format(counter))
 
             '''
             if paracetamol_id not in line:
