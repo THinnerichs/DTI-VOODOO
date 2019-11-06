@@ -2,6 +2,24 @@ import numpy as np
 
 from Bio import SeqIO
 
+import pickle
+
+def write_pruned_SeqIO_fasta_dict():
+    # Create protein amino acid sequence from fasta
+    print("Reading fasta file to dict...")
+    fasta_filename = "../data/protein.sequences.v10.fa"
+    protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
+    print("Finished.")
+
+
+    print("Writing pruned dict to disc")
+    filename = "../data/prot_aa_seq_dict"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(protein_aa_seq_dict, f, pickle.HIGHEST_PROTOCOL)
+
+    print("Finished writing ", filename)
+
+
 
 def main():
 
@@ -52,4 +70,5 @@ def main():
 
 
 if __name__=='__main__':
-    main()
+    # main()
+    write_pruned_SeqIO_fasta_dict()
