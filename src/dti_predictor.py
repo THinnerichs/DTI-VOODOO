@@ -9,8 +9,8 @@ def main():
     with open(file=protein_chemical_links_filename, mode='r') as f:
         for line in f:
             counter += 1
-            if counter%10000==0:
-                print("Processed lines:", counter)
+            if counter%100000==0:
+                print("Processed lines:\r", counter)
 
             '''
             if paracetamol_id not in line:
