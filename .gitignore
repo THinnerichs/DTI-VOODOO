@@ -103,6 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# vim stuff
+*.swp
+
 # Actions file
 /data/*transfer.v5.0.tsv
 /data/protein.sequences.v10.fa
