@@ -22,7 +22,7 @@ def write_pruned_SeqIO_fasta_dict():
         if not result:
             pruned_dict[organism] = {}
 
-        pruned_dict[organism][protein] = seqio_seq.seq
+        pruned_dict[organism][protein] = str(seqio_seq.seq)
     print("Finished.")
 
     print("Writing pruned dict to disc")
@@ -30,11 +30,6 @@ def write_pruned_SeqIO_fasta_dict():
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
-
-    a = pruned_dict[list(pruned_dict.keys())[0]]
-    print(type(a[list(a.keys())[0]]))
-
-
 
 def write_paracetamol_prots_to_file():
 
@@ -51,6 +46,7 @@ def write_paracetamol_prots_to_file():
     protein_chemical_links_filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
     paracetamol_id = 'CIDs00001983'
     counter = 0
+    total_lines = 7019540873
     paracetamol_prots_count = 0
     with open(file=protein_chemical_links_filename, mode='r') as f:
         for line in f:
@@ -58,7 +54,7 @@ def write_paracetamol_prots_to_file():
             paracetamol_prots_count += 1
 
             if counter%5000000==0:
-                print("Processed lines: {}\r".format(counter))
+                print("Progress: %.2f"%(counter*100/total_lines))
 
             if paracetamol_id not in line:
                 continue
@@ -115,6 +111,6 @@ def run_multi_sequence_alignment():
 
 if __name__=='__main__':
     write_pruned_SeqIO_fasta_dict()
-    # write_paracetamol_prots_to_file()
+    write_paracetamol_prots_to_file()
 
     # run_stitch_db_query()
