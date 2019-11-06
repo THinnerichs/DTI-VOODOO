@@ -11,11 +11,11 @@ def write_pruned_SeqIO_fasta_dict():
     protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
     print("Finished.")
 
-    print("Pruning dict...")
     pruned_dict = {}
     for key, seqio_seq in protein_aa_seq_dict.items():
         print(key)
-        organism, protein = key.split('.')
+        organism = key.split('.')[0]
+        protein = key.split('.')[1]
         result = pruned_dict.get(organism, None)
 
         if not result:
