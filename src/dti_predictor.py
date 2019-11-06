@@ -33,7 +33,7 @@ def write_pruned_SeqIO_fasta_dict():
 
 
 
-def main():
+def write_paracetamol_prots_to_file():
 
     # Create protein amino acid sequence from fasta
     print("Reading pruned dict...")
@@ -54,8 +54,11 @@ def main():
             counter += 1
             paracetamol_prots_count += 1
 
-            if counter%100000==0:
+            if counter%5000000==0:
                 print("Processed lines: {}\r".format(counter))
+
+            if '1983' in line and 'CID' in line:
+                print(line)
 
             if paracetamol_id not in line:
                 continue
@@ -69,18 +72,23 @@ def main():
             organism = split_protein.pop(0)
             protein = ".".join(split_protein)
 
-            seqio_seq = protein_aa_seq_dict[organism+'.'+protein]
+            aa_seq = protein_aa_seq_dict[organism+'.'+protein]
 
             with open(file="../data/para_targets", mode='a') as para_handler:
-                para_handler.write(organism+'.'+protein + "\t" + seqio_seq.seq+"\n")
+                para_handler.write(organism+'.'+protein + "\t" + aa_seq.seq+"\n")
     print("Finished.")
 
     print("Total line count:", counter)
     print("Paracetamol count:", paracetamol_prots_count)
 
+def write_paracetamol_prots_to_fasta():
+    filename = "../data/para_targets"
+    with open(file=filename, mode='r') as f:
+        for line in f:
+
 
 
 
 if __name__=='__main__':
-    main()
+    write_paracetamol_prots_to_file()
     # write_pruned_SeqIO_fasta_dict()
