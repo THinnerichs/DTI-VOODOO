@@ -85,6 +85,7 @@ def write_paracetamol_prots_to_fasta():
     filename = "../data/para_targets"
     with open(file=filename, mode='r') as f:
         for line in f:
+            pass
 
 
 
