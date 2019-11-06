@@ -61,18 +61,19 @@ def write_paracetamol_prots_to_file():
                 continue
 
             split_line = line.strip().split('\t')
-            if int(split_line[10]) < 700:
+            if int(split_line[10]) < 400:
                 continue
 
             drug = split_line[0]
             split_protein = split_line[1].strip().split('.')
             organism = split_protein.pop(0)
             protein = ".".join(split_protein)
+            score = int(split_line[10])
 
             aa_seq = protein_aa_seq_dict[organism+'.'+protein]
 
             with open(file="../data/para_targets", mode='a') as para_handler:
-                para_handler.write(organism+'.'+protein + "\t" + aa_seq+"\n")
+                para_handler.write(organism+'.'+protein + "\t" + aa_seq+'\t' + str(score) + "\n")
     print("Finished.")
 
     print("Total line count:", counter)
@@ -110,7 +111,7 @@ def run_multi_sequence_alignment():
 
 
 if __name__=='__main__':
-    # write_paracetamol_prots_to_file()
+    write_paracetamol_prots_to_file()
     # write_pruned_SeqIO_fasta_dict()
 
-    run_stitch_db_query()
+    # run_stitch_db_query()
