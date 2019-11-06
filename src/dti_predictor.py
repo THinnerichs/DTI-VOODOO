@@ -36,9 +36,9 @@ def main():
     # Create protein amino acid sequence from fasta
     print("Reading pruned dict...")
     dict_filename = "../data/prot_aa_seq_dict"
-    prot_aa_seq_dict = None
+    protein_aa_seq_dict = None
     with open(dict_filename + '.pkl', 'rb') as f:
-        prot_aa_seq_dict = pickle.load(f)
+        protein_aa_seq_dict = pickle.load(f)
     print("Finished.")
 
     # process drug-protein-interaction file
@@ -71,9 +71,6 @@ def main():
                 para_handler.write(organism+'.'+protein + "\t" + seqio_seq.seq+"\n")
     print("Finished.")
 
-
-
-
     print("Total line count:", counter)
     print("Paracetamol count:", paracetamol_prots_count)
 
@@ -81,5 +78,5 @@ def main():
 
 
 if __name__=='__main__':
-    # main()
-    write_pruned_SeqIO_fasta_dict()
+    main()
+    # write_pruned_SeqIO_fasta_dict()
