@@ -54,7 +54,7 @@ def write_paracetamol_prots_to_file():
             paracetamol_prots_count += 1
 
             if counter%5000000==0:
-                print("Progress: %.2f"%(counter*100/total_lines))
+                print("Progress: %.2f %%\r"%(counter*100/total_lines))
 
             if paracetamol_id not in line:
                 continue
@@ -93,11 +93,23 @@ def write_paracetamol_prots_to_fasta():
     print("Finished.")
 
 def run_stitch_db_query():
+    import requests
+    import sys
 
-    paracetamol_id = "CID1983"
-    url = "http://stitch.embl.de/api/tsv/interactorsList?identifier=" + paracetamol_id + "&required_score=700"
+    paracetamol_id = "CID100001983"
+    paracetamol_id = "CID3676"
+    required_score = 400
+    url = "http://stitch.embl.de/api/tsv/interactors?identifier=" + paracetamol_id + "&required_score=" + str(required_score)
     url2 = "http://stitch.embl.de/api/tsv/resolve?identifier=" + paracetamol_id
     print(url2)
+
+    r = requests.get(url)
+    if not r.ok:
+        r.raise_for_status()
+        sys.exit()
+    seq = r.text
+
+    print(seq)
 
 
 def run_multi_sequence_alignment():
@@ -110,7 +122,7 @@ def run_multi_sequence_alignment():
 
 
 if __name__=='__main__':
-    write_pruned_SeqIO_fasta_dict()
+    # write_pruned_SeqIO_fasta_dict()
     write_paracetamol_prots_to_file()
 
     # run_stitch_db_query()
