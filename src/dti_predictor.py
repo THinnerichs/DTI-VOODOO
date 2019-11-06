@@ -70,7 +70,7 @@ def write_paracetamol_prots_to_file():
             protein = ".".join(split_protein)
             score = int(split_line[10])
 
-            aa_seq = protein_aa_seq_dict[organism+'.'+protein]
+            aa_seq = protein_aa_seq_dict[organism][protein]
 
             with open(file="../data/para_targets", mode='a') as para_handler:
                 para_handler.write(organism+'.'+protein + "\t" + aa_seq+'\t' + str(score) + "\n")
