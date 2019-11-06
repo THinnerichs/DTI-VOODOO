@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Actions file
+/data/*transfer.v5.0.tsv
