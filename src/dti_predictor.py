@@ -13,8 +13,10 @@ def write_pruned_SeqIO_fasta_dict():
 
     pruned_dict = {}
     for key, seqio_seq in protein_aa_seq_dict.items():
-        organism = key.split('.')[0]
-        protein = key.split('.')[1]
+        split_list = key.split('.')
+
+        organism = split_list.pop(0)
+        protein = '.'.join(split_list)
         result = pruned_dict.get(organism, None)
 
         if not result:
@@ -78,5 +80,5 @@ def main():
 
 
 if __name__=='__main__':
-    main()
-    # write_pruned_SeqIO_fasta_dict()
+    # main()
+    write_pruned_SeqIO_fasta_dict()
