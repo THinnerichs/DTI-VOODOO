@@ -15,11 +15,11 @@ def write_pruned_SeqIO_fasta_dict():
     pruned_dict = {}
     for key, seqio_seq in protein_aa_seq_dict.items():
         organism, protein = key.split('.')
-        result = pruned_dict.get(organism, default=None)
+        result = pruned_dict.get(organism, None)
 
         if not result:
             pruned_dict[organism] = {}
-        
+
         pruned_dict[organism][protein] = seqio_seq.seq
     print("Finished.")
 
@@ -33,11 +33,12 @@ def write_pruned_SeqIO_fasta_dict():
 
 def main():
 
-
     # Create protein amino acid sequence from fasta
-    print("Reading fasta file to dict...")
-    fasta_filename = "../data/protein.sequences.v10.fa"
-    protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
+    print("Reading pruned dict...")
+    dict_filename = "../data/prot_aa_seq_dict"
+    prot_aa_seq_dict = None
+    with open(dict_filename + '.pkl', 'rb') as f:
+        prot_aa_seq_dict = pickle.load(f)
     print("Finished.")
 
     # process drug-protein-interaction file
