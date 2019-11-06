@@ -80,5 +80,5 @@ def main():
 
 
 if __name__=='__main__':
-    # main()
-    write_pruned_SeqIO_fasta_dict()
+    main()
+    # write_pruned_SeqIO_fasta_dict()
