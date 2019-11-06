@@ -11,12 +11,16 @@ def write_pruned_SeqIO_fasta_dict():
     protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
     print("Finished.")
 
+    print("Pruning dict...")
+    pruned_dict = {}
+    for key, seqio_seq in protein_aa_seq_dict.items():
+        pruned_dict[key] = seqio_seq.seq
+    print("Finished.")
 
     print("Writing pruned dict to disc")
     filename = "../data/prot_aa_seq_dict"
     with open(filename + '.pkl', 'wb') as f:
-        pickle.dump(protein_aa_seq_dict, f, pickle.HIGHEST_PROTOCOL)
-
+        pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
 
 
