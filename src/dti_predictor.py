@@ -167,7 +167,7 @@ def run_para_multi_sequence_alignment(min_score):
 
     in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
 
-    out_file = "../data/para_aligned.fasta"
+    out_file = "../data/para_aligned" + str(min_score) + "_min_score.fasta"
 
     start_time = time.time()
 
