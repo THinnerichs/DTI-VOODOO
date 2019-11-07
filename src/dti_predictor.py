@@ -1,6 +1,7 @@
 import numpy as np
 
 from Bio import SeqIO
+import subprocess
 
 import pickle
 
@@ -159,7 +160,24 @@ def eliminate_para_target_duplicates():
             f.write(ele+'\n')
 
 def run_para_multi_sequence_alignment():
-    pass
+    from Bio.Align.Applications import ClustalOmegaCommandline
+
+    in_file = "../data/para_fasta.fasta"
+
+    out_file = "../data/para_aligned.fasta"
+
+    clustalomega_cline = ClustalOmegaCommandline(infile=in_file,
+                                                 outfile=out_file,
+                                                 verbose=True,
+                                                 auto=True)
+
+    print(clustalomega_cline)
+
+    print("Starting alignment ...")
+    subprocess.call(str(clustalomega_cline), shell=True)
+    print("Finished.")
+
+
 
 
 
@@ -176,4 +194,6 @@ if __name__=='__main__':
     # run_stitch_db_query()
     # prune_drug_protein_db(min_score=400)
 
-    write_paracetamol_prots_to_fasta()
+    # write_paracetamol_prots_to_fasta()
+
+    run_para_multi_sequence_alignment()
