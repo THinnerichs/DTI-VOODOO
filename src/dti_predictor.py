@@ -2,6 +2,7 @@ import numpy as np
 
 from Bio import SeqIO
 import subprocess
+import time
 
 import pickle
 
@@ -166,6 +167,8 @@ def run_para_multi_sequence_alignment():
 
     out_file = "../data/para_aligned.fasta"
 
+    start_time = time.time()
+
     clustalomega_cline = ClustalOmegaCommandline(infile=in_file,
                                                  outfile=out_file,
                                                  verbose=True,
@@ -173,9 +176,10 @@ def run_para_multi_sequence_alignment():
 
     print(clustalomega_cline)
 
+
     print("Starting alignment ...")
     subprocess.call("./"+str(clustalomega_cline), shell=True)
-    print("Finished.")
+    print("Finished in {} sec.".format(time.time()-start_time))
 
 
 
