@@ -159,6 +159,7 @@ def eliminate_para_target_duplicates():
             f.write(ele+'\n')
 
 def run_para_multi_sequence_alignment():
+    pass
 
 
 
