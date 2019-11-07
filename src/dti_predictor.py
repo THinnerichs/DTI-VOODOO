@@ -32,7 +32,7 @@ def write_pruned_SeqIO_fasta_dict():
     print("Finished writing ", filename)
 
 
-def pruning_drug_protein_db(min_score=700):
+def prune_drug_protein_db(min_score=700):
 
     filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
     target_filename = "../data/protein_chemical.links.min_score_" + str(min_score) + ".tsv"
@@ -158,8 +158,8 @@ def eliminate_para_target_duplicates():
         for ele in protein_set:
             f.write(ele+'\n')
 
-def run_multi_sequence_alignment():
-    pass
+def run_para_multi_sequence_alignment():
+
 
 
 
@@ -173,4 +173,6 @@ if __name__=='__main__':
 
     # eliminate_para_target_duplicates()
     # run_stitch_db_query()
-    pruning_drug_protein_db(min_score=400)
+    # prune_drug_protein_db(min_score=400)
+
+    write_paracetamol_prots_to_fasta()
