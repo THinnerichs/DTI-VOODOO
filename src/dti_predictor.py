@@ -260,6 +260,6 @@ if __name__=='__main__':
     '''
 
     run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='mafft')
+                                      alignment_method='muscle')
 
     # para_PWM_from_alignment()
