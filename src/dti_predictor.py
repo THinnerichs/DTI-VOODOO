@@ -103,14 +103,16 @@ def write_paracetamol_prots_to_file():
     print("Total line count:", counter)
     print("Paracetamol count:", paracetamol_prots_count)
 
-def write_paracetamol_prots_to_fasta():
+def write_paracetamol_prots_to_fasta(min_score=400):
 
     para_filename = "../data/para_targets"
-    para_fasta_filename = "../data/para_fasta.fasta"
+    para_fasta_filename = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
     print("Processing {} and writing {} ...".format(para_filename, para_fasta_filename))
     with open(file=para_filename, mode='r') as para_file, open(file=para_fasta_filename, mode='w') as fasta_file:
         for line in para_file:
-            protein, aa_seq, _ = line.split('\t')
+            protein, aa_seq, score = line.split('\t')
+            if int(score) < min_score:
+                continue
 
             fasta_file.write(">"+protein+'\n')
             fasta_file.write(aa_seq+'\n')
@@ -160,10 +162,10 @@ def eliminate_para_target_duplicates():
         for ele in protein_set:
             f.write(ele+'\n')
 
-def run_para_multi_sequence_alignment():
+def run_para_multi_sequence_alignment(min_score):
     from Bio.Align.Applications import ClustalOmegaCommandline
 
-    in_file = "../data/para_fasta.fasta"
+    in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
 
     out_file = "../data/para_aligned.fasta"
 
@@ -198,6 +200,8 @@ if __name__=='__main__':
     # run_stitch_db_query()
     # prune_drug_protein_db(min_score=400)
 
-    # write_paracetamol_prots_to_fasta()
+    min_score = 700
 
-    run_para_multi_sequence_alignment()
+    write_paracetamol_prots_to_fasta(min_score=min_score)
+
+    run_para_multi_sequence_alignment(min_score=min_score)
