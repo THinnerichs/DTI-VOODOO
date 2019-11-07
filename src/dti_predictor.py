@@ -184,10 +184,19 @@ def run_para_multi_sequence_alignment(min_score=700,
                                     auto=True)
         command = "./" + str(command)
     elif alignment_method == 'mafft':
-        command = MafftCommandline(in_file,
-                                   outfile=out_file,
-                                   auto=True)
+        command = MafftCommandline(in_file)
         command = "./mafft-linux64/mafft.bat " + ' '.join(str(command).split(' ')[1:])
+
+        print(command)
+
+        print("Starting {} alignment ...".format(alignment_method))
+        stdout= subprocess.check_output(str(command), shell=True)
+
+        print("Finished in {} sec.".format(time.time()-start_time))
+
+        with open(file=out_file, mode='w') as f:
+            f.write(stdout)
+
     elif alignment_method == 'msaprobs':
         command = MSAProbsCommandline(infile=in_file,
                                       outfile=out_file,
@@ -205,7 +214,7 @@ def run_para_multi_sequence_alignment(min_score=700,
     print(command)
 
 
-    print("Starting alignment ...")
+    print("Starting {} alignment ...".format(alignment_method))
     subprocess.call(str(command), shell=True)
     print("Finished in {} sec.".format(time.time()-start_time))
 
