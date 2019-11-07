@@ -108,7 +108,7 @@ def write_paracetamol_prots_to_fasta():
     print("Processing {} and writing {} ...".format(para_filename, para_fasta_filename))
     with open(file=para_filename, mode='r') as para_file, open(file=para_fasta_filename, mode='w') as fasta_file:
         for line in para_file:
-            protein, aa_seq = line.split('\t')
+            protein, aa_seq, _ = line.split('\t')
 
             fasta_file.write(">"+protein+'\n')
             fasta_file.write(aa_seq+'\n')
