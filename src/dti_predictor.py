@@ -162,25 +162,52 @@ def eliminate_para_target_duplicates():
         for ele in protein_set:
             f.write(ele+'\n')
 
-def run_para_multi_sequence_alignment(min_score):
-    from Bio.Align.Applications import ClustalOmegaCommandline
+def run_para_multi_sequence_alignment(min_score=700,
+                                      alignment_method='clustalo'):
+    from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
     in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
-
-    out_file = "../data/para_aligned" + str(min_score) + "_min_score.fasta"
-
+    out_file = "../data/para_" + alignment_method + "aligned" + str(min_score) + "_min_score.fasta"
     start_time = time.time()
 
-    clustalomega_cline = ClustalOmegaCommandline(infile=in_file,
-                                                 outfile=out_file,
-                                                 verbose=True,
-                                                 auto=True)
+    command = None
+    if alignment_method == 'clustalo':
+        command = ClustalOmegaCommandline(infile=in_file,
+                                          outfile=out_file,
+                                          verbose=True,
+                                          auto=True)
+        command = "./" + str(command)
+    elif alignment_method == 'muscle':
+        command = MuscleCommandline(infile=in_file,
+                                    outfile=out_file,
+                                    verbose=True,
+                                    auto=True)
+        command = "./" + str(command)
+    elif alignment_method == 'mafft':
+        command = MafftCommandline(infile=in_file,
+                                   outfile=out_file,
+                                   verbose=True,
+                                   auto=True)
+        command = "./mafft-linux64/mafft.bat " + ' '.join(str(command).split(' ')[1:])
+    elif alignment_method == 'msaprobs':
+        command = MSAProbsCommandline(infile=in_file,
+                                      outfile=out_file,
+                                      verbose=True,
+                                      auto=True)
+        command = "./MSAProbs-0.9.7/MSAProbs/msaprobs " + ' '.join(str(command).split(' ')[1:])
+    '''
+    elif alignment_method == 'tcoffee':
+        command = TCoffeeCommandline(infile=in_file,
+                                     outfile=out_file,
+                                     verbose=True,
+                                     auto=True)
+    '''
 
-    print(clustalomega_cline)
+    print(command)
 
 
     print("Starting alignment ...")
-    subprocess.call("./"+str(clustalomega_cline), shell=True)
+    subprocess.call(str(command), shell=True)
     print("Finished in {} sec.".format(time.time()-start_time))
 
 
