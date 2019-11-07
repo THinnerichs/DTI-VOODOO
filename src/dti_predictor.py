@@ -146,4 +146,5 @@ if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
     # write_paracetamol_prots_to_file()
 
-    run_stitch_db_query()
+    eliminate_para_target_duplicates()
+    # run_stitch_db_query()
