@@ -178,9 +178,8 @@ def run_para_multi_sequence_alignment(min_score=700,
                                           auto=True)
         command = "./" + str(command)
     elif alignment_method == 'muscle':
-        command = MuscleCommandline(infile=in_file,
-                                    outfile=out_file,
-                                    verbose=True)
+        command = MuscleCommandline(input=in_file,
+                                    out=out_file)
         command = "./" + str(command)
     elif alignment_method == 'mafft':
         command = MafftCommandline(input=in_file)
