@@ -14,3 +14,7 @@
 - Calculate similarity between drugs and metabolites...
 	... over structural similarity
 	... over alignment of e.g. SMILES
+
+## On performance of alignments
+
+This [link](https://www.ebi.ac.uk/Tools/msa/)
