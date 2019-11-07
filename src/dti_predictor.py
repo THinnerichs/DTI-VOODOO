@@ -96,13 +96,17 @@ def run_stitch_db_query():
     import requests
     import sys
 
-    paracetamol_id = "CID100001983"
-    paracetamol_id = "CID3676"
+    # build url
+    paracetamol_id = "CID000001983"
+    # paracetamol_id = "CID3676"
     required_score = 400
-    url = "http://stitch.embl.de/api/tsv/interactors?identifier=" + paracetamol_id + "&required_score=" + str(required_score)
+    url = "http://stitch.embl.de/api/tsv/interactors?identifier=" + paracetamol_id + \
+          "&required_score=" + str(required_score) + "%0A"\
+          "species=9606"
     url2 = "http://stitch.embl.de/api/tsv/resolve?identifier=" + paracetamol_id
     print(url2)
 
+    # Run query with exception handling
     r = requests.get(url)
     if not r.ok:
         r.raise_for_status()
@@ -111,6 +115,23 @@ def run_stitch_db_query():
 
     print(seq)
 
+def eliminate_para_target_duplicates():
+    filename="../data/para_targets"
+    protein_set = set()
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            org_prot, _, _ = line.split('\t')
+            split_prot = org_prot.split('.')
+            organism = split_prot.pop(0)
+            protein = ".".join(split_prot)
+
+            protein_set.add(protein)
+
+    print("set size:", len(protein_set))
+
+    with open(file="../data/setified_para_proteins", mode="w") as f:
+        for ele in protein_set:
+            f.write(ele+'\n')
 
 def run_multi_sequence_alignment():
     pass
@@ -123,6 +144,6 @@ def run_multi_sequence_alignment():
 
 if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
-    write_paracetamol_prots_to_file()
+    # write_paracetamol_prots_to_file()
 
-    # run_stitch_db_query()
+    run_stitch_db_query()
