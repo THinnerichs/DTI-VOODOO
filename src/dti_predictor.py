@@ -174,7 +174,7 @@ def run_para_multi_sequence_alignment():
     print(clustalomega_cline)
 
     print("Starting alignment ...")
-    subprocess.call(str(clustalomega_cline), shell=True)
+    subprocess.call("./"+str(clustalomega_cline), shell=True)
     print("Finished.")
 
 
