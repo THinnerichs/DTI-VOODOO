@@ -184,9 +184,8 @@ def run_para_multi_sequence_alignment(min_score=700,
                                     auto=True)
         command = "./" + str(command)
     elif alignment_method == 'mafft':
-        command = MafftCommandline(infile=in_file,
+        command = MafftCommandline(in_file,
                                    outfile=out_file,
-                                   verbose=True,
                                    auto=True)
         command = "./mafft-linux64/mafft.bat " + ' '.join(str(command).split(' ')[1:])
     elif alignment_method == 'msaprobs':
