@@ -31,6 +31,7 @@ def write_pruned_SeqIO_fasta_dict():
         pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
 
+
 def pruning_drug_protein_db(min_score=700):
 
     filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
@@ -38,7 +39,7 @@ def pruning_drug_protein_db(min_score=700):
 
     print("Processing huge file ...")
     with open(file=filename, mode='r') as f, open(file=target_filename, mode='w') as targetfile:
-        targetfile.write(f.readline()+'\n')
+        targetfile.write(f.readline())
 
         counter = 0
 
@@ -49,10 +50,8 @@ def pruning_drug_protein_db(min_score=700):
 
             if int(line.strip().split('\t')[10]) < min_score:
                 continue
-            targetfile.write(line+'\n')
+            targetfile.write(line)
     print("Finished.")
-
-
 
 
 def write_paracetamol_prots_to_file():
