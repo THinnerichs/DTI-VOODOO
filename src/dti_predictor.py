@@ -31,6 +31,30 @@ def write_pruned_SeqIO_fasta_dict():
         pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
 
+def pruning_drug_protein_db(min_score=700):
+
+    filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
+    target_filename = "../data/protein_chemical.links.min_score_" + str(min_score) + ".tsv"
+
+    print("Processing huge file ...")
+    with open(file=filename, mode='r') as f, open(file=target_filename, mode='w') as targetfile:
+        targetfile.write(f.readline()+'\n')
+
+        counter = 0
+
+        for line in f:
+            counter += 1
+            if counter % 10000000 == 0:
+                print("Processed lines:", counter)
+
+            if int(line.strip().split('\t')[10]) < min_score:
+                continue
+            targetfile.write(line+'\n')
+    print("Finished.")
+
+
+
+
 def write_paracetamol_prots_to_file():
 
     # Create protein amino acid sequence from fasta
@@ -120,7 +144,9 @@ def eliminate_para_target_duplicates():
     protein_set = set()
     with open(file=filename, mode='r') as f:
         for line in f:
-            org_prot, _, _ = line.split('\t')
+            org_prot, _, score = line.split('\t')
+            if int(score) < 700:
+                continue
             split_prot = org_prot.split('.')
             organism = split_prot.pop(0)
             protein = ".".join(split_prot)
@@ -129,7 +155,7 @@ def eliminate_para_target_duplicates():
 
     print("set size:", len(protein_set))
 
-    with open(file="../data/setified_para_proteins", mode="w") as f:
+    with open(file="../data/setified_para_proteins_700", mode="w") as f:
         for ele in protein_set:
             f.write(ele+'\n')
 
@@ -146,5 +172,6 @@ if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
     # write_paracetamol_prots_to_file()
 
-    eliminate_para_target_duplicates()
+    # eliminate_para_target_duplicates()
     # run_stitch_db_query()
+    pruning_drug_protein_db(min_score=400)
