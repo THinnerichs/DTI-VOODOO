@@ -110,3 +110,4 @@ venv.bak/
 /data/*transfer.v5.0.tsv
 /data/protein.sequences.v10.fa
 /data/chemicals.v5.0.tsv
+/data/prot_aa_seq_dict.pkl
