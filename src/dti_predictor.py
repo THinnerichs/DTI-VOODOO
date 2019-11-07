@@ -210,6 +210,24 @@ def run_para_multi_sequence_alignment(min_score=700,
     subprocess.call(str(command), shell=True)
     print("Finished in {} sec.".format(time.time()-start_time))
 
+def para_PWM_from_alignment(min_score=700,
+                            alignment_method='clustalo'):
+    from Bio.Alphabet import IUPAC, Gapped
+    from Bio import AlignIO, Alphabet, motifs
+
+    alphabet = Gapped(IUPAC.protein)
+
+    filename = "../data/para_" + alignment_method + "aligned" + str(min_score) + "_min_score.fasta"
+
+    alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
+    m = motifs.create([x.seq for x in alignment])
+
+    print(m.consensus)
+    print(m.counts)
+
+
+
+
 
 
 
@@ -227,8 +245,13 @@ if __name__=='__main__':
     # run_stitch_db_query()
     # prune_drug_protein_db(min_score=400)
 
+    '''
     min_score = 700
 
     write_paracetamol_prots_to_fasta(min_score=min_score)
+    '''
 
-    run_para_multi_sequence_alignment(min_score=min_score)
+    run_para_multi_sequence_alignment(min_score=700,
+                                      alignment_method='mafft')
+
+    # para_PWM_from_alignment()
