@@ -200,8 +200,7 @@ def run_para_multi_sequence_alignment(min_score=700,
                                       outfile=out_file)
         command = "./MSAProbs-0.9.7/MSAProbs/msaprobs " + ' '.join(str(command).split(' ')[1:])
     elif alignment_method == 'kalign':
-        # command =
-        pass
+        command = "./kalign2/kalign -i " + in_file + " -o " + out_file
     else:
         print("No valid alignment method selected.")
         raise Exception
@@ -283,7 +282,7 @@ if __name__=='__main__':
     '''
 
     run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='msaprobs')
+                                      alignment_method='kalign')
 
 
     # para_PWM_from_alignment()
