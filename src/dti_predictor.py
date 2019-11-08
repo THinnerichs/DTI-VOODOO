@@ -167,7 +167,7 @@ def run_para_multi_sequence_alignment(min_score=700,
     from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
     in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
-    out_file = "../data/para_" + alignment_method + "_aligned" + str(min_score) + "_min_score.fasta"
+    out_file = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
     start_time = time.time()
 
     command = None
@@ -223,7 +223,7 @@ def para_PWM_from_alignment(min_score=700,
 
     alphabet = Gapped(IUPAC.protein)
 
-    filename = "../data/para_" + alignment_method + "_aligned" + str(min_score) + "_min_score.fasta"
+    filename = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
 
     alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
     m = motifs.create([x.seq for x in alignment])
@@ -278,6 +278,7 @@ if __name__=='__main__':
     '''
 
     run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='muscle')
+                                      alignment_method='mafft')
+
 
     # para_PWM_from_alignment()
