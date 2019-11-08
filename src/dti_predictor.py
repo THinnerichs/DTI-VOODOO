@@ -197,9 +197,7 @@ def run_para_multi_sequence_alignment(min_score=700,
 
     elif alignment_method == 'msaprobs':
         command = MSAProbsCommandline(infile=in_file,
-                                      outfile=out_file,
-                                      verbose=True,
-                                      auto=True)
+                                      outfile=out_file)
         command = "./MSAProbs-0.9.7/MSAProbs/msaprobs " + ' '.join(str(command).split(' ')[1:])
     elif alignment_method == 'kalign':
         # command =
