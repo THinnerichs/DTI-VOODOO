@@ -167,7 +167,7 @@ def run_para_multi_sequence_alignment(min_score=700,
     from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
     in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
-    out_file = "../data/para_" + alignment_method + "aligned" + str(min_score) + "_min_score.fasta"
+    out_file = "../data/para_" + alignment_method + "_aligned" + str(min_score) + "_min_score.fasta"
     start_time = time.time()
 
     command = None
@@ -219,25 +219,45 @@ def run_para_multi_sequence_alignment(min_score=700,
 def para_PWM_from_alignment(min_score=700,
                             alignment_method='clustalo'):
     from Bio.Alphabet import IUPAC, Gapped
-    from Bio import AlignIO, Alphabet, motifs
+    from Bio import AlignIO, Alphabet, motifs, SeqIO
 
     alphabet = Gapped(IUPAC.protein)
 
-    filename = "../data/para_" + alignment_method + "aligned" + str(min_score) + "_min_score.fasta"
+    filename = "../data/para_" + alignment_method + "_aligned" + str(min_score) + "_min_score.fasta"
 
     alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
     m = motifs.create([x.seq for x in alignment])
 
     print(m.consensus)
     print(m.counts)
+    
+    # See http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc213
 
+    # Usually, pseudocounts are added to each position before normalizing. This avoids overfitting of the position-weight
+    # matrix to the limited number of motif instances in the alignment, and can also prevent probabilities from becoming zero.
+    pwm = m.counts.normalize(pseudecounts=0.5)
+    print(pwm)
 
+    pssm = pwm.log_odds()
+    print(pssm)
 
+    all_fastas_filename = "../data/protein.sequences.v10.fa"
+    distribution = pssm.distribution(precision=10 ** 4)
 
+    # Obtain threshold from distribution
+    # We can specify the requested false-positive rate (probability of “finding” a motif instance in background generated sequence)
+    # threshold = distribution.threshold_fpr(0.01)
+    # or the false-negative rate (probability of “not finding” an instance generated from the motif)
+    # threshold = distribution.threshold_fnr(0.1)
+    # or a threshold (approximately) satisfying some relation between the false-positive rate and the false-negative rate (fnr/fpr = t)
+    threshold = distribution.threshold_balanced(1000)
+    # or a threshold satisfying (roughly) the equality between the −log of the false-positive rate and the information content (as used in patser software by Hertz and Stormo)
+    # threshold = distribution.threshold_patser()
 
-
-
-
+    for record in SeqIO.parse(all_fastas_filename, 'fasta'):
+        # Set threshold constant to 3.0, or according to distribution
+        for position, score in pssm.search(record.seq, threshold=threshold):
+            print("position: {},\tscore: {}".format(position, score))
 
 
 
