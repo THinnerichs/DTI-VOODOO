@@ -201,6 +201,13 @@ def run_para_multi_sequence_alignment(min_score=700,
                                       verbose=True,
                                       auto=True)
         command = "./MSAProbs-0.9.7/MSAProbs/msaprobs " + ' '.join(str(command).split(' ')[1:])
+    elif alignment_method == 'kalign':
+        # command =
+        pass
+    else:
+        print("No valid alignment method selected.")
+        raise Exception
+
     '''
     elif alignment_method == 'tcoffee':
         command = TCoffeeCommandline(infile=in_file,
@@ -278,7 +285,7 @@ if __name__=='__main__':
     '''
 
     run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='mafft')
+                                      alignment_method='msaprobs')
 
 
     # para_PWM_from_alignment()
