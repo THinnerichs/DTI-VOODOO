@@ -183,17 +183,14 @@ def run_para_multi_sequence_alignment(min_score=700,
         command = "./" + str(command)
     elif alignment_method == 'mafft':
         command = MafftCommandline(input=in_file)
-        command = "./mafft-linux64/mafft.bat --anysymbol " + ' '.join(str(command).split(' ')[1:])
+        command = "./mafft-linux64/mafft.bat --anysymbol --auto" + ' '.join(str(command).split(' ')[1:]) + " > " + out_file
 
         print(command)
 
         print("Starting {} alignment ...".format(alignment_method))
-        stdout= subprocess.check_output(str(command), shell=True)
+        subprocess.call(str(command), shell=True)
 
         print("Finished in {} sec.".format(time.time()-start_time))
-
-        with open(file=out_file, mode='w') as f:
-            f.write(stdout)
 
     elif alignment_method == 'msaprobs':
         command = MSAProbsCommandline(infile=in_file,
@@ -282,7 +279,7 @@ if __name__=='__main__':
     '''
 
     run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='kalign')
+                                      alignment_method='mafft')
 
 
     # para_PWM_from_alignment()
