@@ -295,7 +295,9 @@ if __name__=='__main__':
     # prune_drug_protein_db(min_score=400)
 
 
-    write_paracetamol_prots_to_file(file_min_score=400, min_score=700)
+    # write_paracetamol_prots_to_file(file_min_score=400, min_score=700)
+
+    write_paracetamol_prots_to_fasta(min_score=800)
 
     '''
     run_para_multi_sequence_alignment(min_score=700,
