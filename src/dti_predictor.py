@@ -226,6 +226,7 @@ def run_para_multi_sequence_alignment(min_score=700,
 def para_PWM_from_alignment(min_score=700,
                             alignment_method='mafft',
                             mol_name='para'):
+
     from Bio.Alphabet import IUPAC, Gapped
     from Bio import AlignIO, Alphabet, motifs, SeqIO
 
@@ -303,17 +304,17 @@ if __name__=='__main__':
 
     # write_paracetamol_prots_to_fasta(min_score=700)
 
-    '''
     run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='mafft')
-'                                     mol_name='rofec')
+                                      alignment_method='kalign',
+                                      mol_name='para')
+
+
+
     '''
-
-
-
     para_PWM_from_alignment(min_score=800,
                             alignment_method='mafft',
                             mol_name='para')
+    '''
 
 
 
