@@ -224,13 +224,14 @@ def run_para_multi_sequence_alignment(min_score=700,
     print("Finished in {} sec.".format(time.time()-start_time))
 
 def para_PWM_from_alignment(min_score=700,
-                            alignment_method='mafft'):
+                            alignment_method='mafft',
+                            mol_name='para'):
     from Bio.Alphabet import IUPAC, Gapped
     from Bio import AlignIO, Alphabet, motifs, SeqIO
 
     alphabet = Gapped(IUPAC.extended_protein)
 
-    filename = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
+    filename = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
 
     print("Reading alignment file ...")
     alignment = AlignIO.read(filename,
@@ -305,25 +306,14 @@ if __name__=='__main__':
     '''
     run_para_multi_sequence_alignment(min_score=800,
                                       alignment_method='mafft')
+'                                     mol_name='rofec')
     '''
 
 
-    run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='mafft',
-                                      mol_name='rofec')
 
-    run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='kalign',
-                                      mol_name='rofec')
-
-    run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='kalign',
-                                      mol_name='rofec')
-
-    '''
-    para_PWM_from_alignment(min_score=700,
-                            alignment_method='mafft')
-    '''
+    para_PWM_from_alignment(min_score=800,
+                            alignment_method='mafft',
+                            mol_name='para')
 
 
 
