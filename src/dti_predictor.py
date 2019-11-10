@@ -226,8 +226,10 @@ def para_PWM_from_alignment(min_score=700,
 
     filename = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
 
+    print("Reading alignment file ...")
     alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
     m = motifs.create([x.seq for x in alignment])
+    print("Finished.")
 
     print(m.consensus)
     print(m.counts)
@@ -242,8 +244,10 @@ def para_PWM_from_alignment(min_score=700,
     pssm = pwm.log_odds()
     print(pssm)
 
+    print("Calculating distribution ...")
     all_fastas_filename = "../data/protein.sequences.v10.fa"
     distribution = pssm.distribution(precision=10 ** 4)
+    print("Finished.")
 
     # Obtain threshold from distribution
     # We can specify the requested false-positive rate (probability of “finding” a motif instance in background generated sequence)
@@ -255,6 +259,7 @@ def para_PWM_from_alignment(min_score=700,
     # or a threshold satisfying (roughly) the equality between the −log of the false-positive rate and the information content (as used in patser software by Hertz and Stormo)
     # threshold = distribution.threshold_patser()
 
+    print("Analyzing fasta all sequences with distribution ...")
     counter = 0
     hit_counter = 0
     for record in SeqIO.parse(all_fastas_filename, 'fasta'):
@@ -267,6 +272,7 @@ def para_PWM_from_alignment(min_score=700,
         counter += 1
         if hit_counter == 100:
             break
+    print("Finished.")
 
 
 
