@@ -108,8 +108,8 @@ def write_paracetamol_prots_to_file(file_min_score=400,
 
 def write_paracetamol_prots_to_fasta(min_score=400):
 
-    para_filename = "../data/para_targets"
-    para_fasta_filename = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
+    para_filename = "../data/rofec_targets"
+    para_fasta_filename = "../data/rofec_fasta_" + str(min_score) + "_min_score.fasta"
     print("Processing {} and writing {} ...".format(para_filename, para_fasta_filename))
     with open(file=para_filename, mode='r') as para_file, open(file=para_fasta_filename, mode='w') as fasta_file:
         for line in para_file:
@@ -297,11 +297,14 @@ if __name__=='__main__':
 
     # write_paracetamol_prots_to_file(file_min_score=400, min_score=700)
 
-    # write_paracetamol_prots_to_fasta(min_score=800)
+    write_paracetamol_prots_to_fasta(min_score=700)
+    write_paracetamol_prots_to_fasta(min_score=800)
 
+    '''
     run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='mafft')
-    
+                                      alignment_method='afft')
+    '''
+
 
     '''
     run_para_multi_sequence_alignment(min_score=700,
