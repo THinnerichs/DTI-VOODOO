@@ -1,0 +1,6 @@
+mod	motif	regexp	fg_matches
+C160	xxx_C160_xxx	[ACDEGHIKLNPRSTV][ACDEFGIKLNPQRSTVY][ACDEFIKLMNRSTVWY]C[ACDEGHLPQRSTVW][CDEFGHIKLNRSTVY][ACDEFHIKLNQRSTV]	43
+
+# MoMo (Modification Motifs): Version 5.0.5 compiled on Jul  2 2019 at 18:43:29
+# The format of this file is described at http://meme-suite.org/doc/momo-output-format.html.
+# momo simple --oc results/momo16 --psm-type comet --sequence-column 'modified sequence' momo/small-comet-mod.txt

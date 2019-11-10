@@ -1,0 +1,9 @@
+mod	motif	regexp	score	fg_match	fg_size	bg_match	bg_size	fg/bg	unadjusted_p-value
+S79.9	xxx_S79.9_[CIR]xx	...S[CIR]..	12.60	16	114	4	114	4.0	4.3e-003
+S79.9	xxx_S79.9_xx[GN]	...S..[GN]	8.99	15	114	5	114	3.0	1.6e-002
+T79.9	[FLV]xx_T79.9_xxx	[FLV]..T...	43.93	26	90	7	90	3.7	2.0e-004
+Y79.9	xx[EK]_Y79.9_xxx	..[EK]Y...	13.64	15	48	5	48	3.0	1.1e-002
+
+# MoMo (Modification Motifs): Version 5.0.5 compiled on Jul  2 2019 at 18:43:29
+# The format of this file is described at http://meme-suite.org/doc/momo-output-format.html.
+# momo modl --oc results/momo17 --psm-type tide --protein-database momo/small-yeast.fasta momo/small-tide-mod.txt

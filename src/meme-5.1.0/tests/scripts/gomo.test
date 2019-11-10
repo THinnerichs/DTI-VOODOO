@@ -1,0 +1,21 @@
+# Test gomo on single species
+&test('gomo1', '',
+  'gomo', '',
+  ['--seed', 1, '--nostatus', '--verbosity', 1, '--oc', 'results/gomo1', 
+    '--motifs', 'gomo/motif.meme.txt', 'gomo/GO2Gene.map.csv', 'gomo/ama.nozscoring.xml'],
+  [ {output => 'results/gomo1/gomo.tsv', reference => 'gomo/gomo.smallthreshold.tsv', 
+      type => 'text', ignore => ['^#'] } ],
+  'results/gomo1'
+);
+
+# Test gomo on multiple species
+&test('gomo2', '',
+  'gomo', '',
+  ['--gs', '--seed', 1, '--nostatus', '--verbosity', 1, '--oc', 'results/gomo2', 
+    '--motifs', 'gomo/motif.meme.txt', 'gomo/GO2Gene.map.csv', 
+    'gomo/ama.zscoring.xml', 'gomo/ama.nozscoring.xml'],
+  [{output => 'results/gomo2/gomo.tsv', reference => 'gomo/gomo.multipleSpecies.tsv', 
+    type => 'text', ignore => ['^#'] } ],
+  'results/gomo2'
+);
+

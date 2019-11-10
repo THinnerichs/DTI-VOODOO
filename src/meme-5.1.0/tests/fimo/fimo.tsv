@@ -1,0 +1,11 @@
+motif_id	motif_alt_id	sequence_name	start	stop	strand	score	p-value	q-value	matched_sequence
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	119	136	-	23.6714	3.85e-09	1.63e-05	TTTCCCATTTAGGAAATA
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	1975	1992	-	16.2857	1.5e-06	0.00318	TTTCCTGATTCGGTCGCT
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	2124	2141	+	12.8571	7.11e-06	0.01	TAACCTCTTTGGGGAAAA
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	120	137	-	10.3571	1.71e-05	0.0158	TTTTCCCATTTAGGAAAT
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	121	138	+	10.0857	1.86e-05	0.0158	TTTCCTAAATGGGAAAAA
+TTTCCYDWTTBGGAAATW	MEME-1	Scer	2331	2348	-	3.94286	9.3e-05	0.0657	TTTCGCTTTTCAGAAGTA
+
+# FIMO (Find Individual Motif Occurrences): Version 5.0.1 compiled on Jul  5 2018 at 13:29:07
+# The format of this file is described at http://meme-suite.org/doc/fimo-output-format.html.
+# fimo --oc results/fimo1 --motif-pseudo 0.01 fimo/MCM1.meme.html fimo/spiked.fasta

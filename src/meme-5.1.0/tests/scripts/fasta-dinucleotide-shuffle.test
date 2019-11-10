@@ -1,0 +1,5 @@
+  &test('fasta-dinucleotide-shuffle1', '',
+    'fasta-dinucleotide-shuffle', '',
+    ['-f', 'common/Klf1-200-100.fa', '-t', '-dinuc'],
+    [{output => '-', reference => 'common/Klf1-200-100-shuffled.fa', type => 'text'}],
+    'results/fasta-dinucleotide-shuffle1', 'scripts');

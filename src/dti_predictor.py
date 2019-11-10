@@ -236,18 +236,18 @@ def para_PWM_from_alignment(min_score=700,
     m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
 
-    print(m.consensus)
-    print(m.counts)
+    # print(m.consensus)
+    # print(m.counts)
     
     # See http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc213
 
     # Usually, pseudocounts are added to each position before normalizing. This avoids overfitting of the position-weight
     # matrix to the limited number of motif instances in the alignment, and can also prevent probabilities from becoming zero.
     pwm = m.counts.normalize(pseudocounts=0.5)
-    print(pwm)
+    # print(pwm)
 
     pssm = pwm.log_odds()
-    print(pssm)
+    # print(pssm)
 
     print("Calculating distribution ...")
     all_fastas_filename = "../data/protein.sequences.v10.fa"

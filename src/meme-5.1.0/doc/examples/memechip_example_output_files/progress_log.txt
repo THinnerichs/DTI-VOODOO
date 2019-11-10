@@ -1,0 +1,98 @@
+Invoking:
+  getsize memechip_example_output_files/Klf1.fna 1> $metrics
+Finished invoke:
+  name: count_seqs  status: 0  time: 0.035646
+Invoking:
+  fasta-most -min 50 < memechip_example_output_files/Klf1.fna 1> $metrics
+Finished invoke:
+  name: most_seqs  status: 0  time: 0.078392
+Invoking:
+  fasta-center -dna -len 100 < memechip_example_output_files/Klf1.fna 1> memechip_example_output_files/seqs-centered
+Finished invoke:
+  name: center_seqs  status: 0  time: 0.097361
+Invoking:
+  fasta-shuffle-letters memechip_example_output_files/seqs-centered memechip_example_output_files/seqs-shuffled -kmer 2 -tag -dinuc -dna -seed 1
+Finished invoke:
+  name: shuffle_seqs  status: 0  time: 0.015264
+Invoking:
+  fasta-get-markov -nostatus -nosummary -dna -m 1 memechip_example_output_files/Klf1.fna memechip_example_output_files/background
+Finished invoke:
+  name: bg  status: 0  time: 0.01352
+Invoking:
+  meme memechip_example_output_files/seqs-centered -oc memechip_example_output_files/meme_out -mod zoops -nmotifs 3 -minw 6 -maxw 30 -bfile memechip_example_output_files/background -dna -p 6 -revcomp -nostatus
+Finished invoke:
+  name: meme  status: 0  time: 341.259733
+Invoking:
+  dreme -verbosity 1 -oc memechip_example_output_files/dreme_out -png -dna -p memechip_example_output_files/seqs-centered -n memechip_example_output_files/seqs-shuffled
+Finished invoke:
+  name: dreme  status: 0  time: 21.960664
+Invoking:
+  centrimo -seqlen 500 -verbosity 1 -oc memechip_example_output_files/centrimo_out -bfile memechip_example_output_files/background memechip_example_output_files/Klf1.fna memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: centrimo  status: 0  time: 16.891751
+Invoking:
+  tomtom -verbosity 1 -oc memechip_example_output_files/meme_tomtom_out -min-overlap 5 -dist pearson -evalue -thresh 1 -no-ssc memechip_example_output_files/meme_out/meme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: meme_tomtom  status: 0  time: 7.196198
+Invoking:
+  tomtom -verbosity 1 -oc memechip_example_output_files/dreme_tomtom_out -min-overlap 5 -dist pearson -evalue -thresh 1 -no-ssc memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: dreme_tomtom  status: 0  time: 0.984684
+Invoking:
+  tomtom -verbosity 1 -text -thresh 0.1 memechip_example_output_files/combined.meme memechip_example_output_files/combined.meme 1> memechip_example_output_files/motif_alignment.txt
+Finished invoke:
+  name: align  status: 0  time: 3.162313
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_1 -bgfile memechip_example_output_files/background -keepprimary -primary WGGGTGTGGYY memechip_example_output_files/Klf1.fna memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo1  status: 0  time: 28.119551
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_2 -bgfile memechip_example_output_files/background -keepprimary -primary TTATCW memechip_example_output_files/Klf1.fna memechip_example_output_files/dreme_out/dreme.xml memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo2  status: 0  time: 22.036843
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_3 -bgfile memechip_example_output_files/background -keepprimary -primary MA0014.3 memechip_example_output_files/Klf1.fna JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo3  status: 0  time: 10.25278
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_4 -bgfile memechip_example_output_files/background -keepprimary -primary MA1099.1 memechip_example_output_files/Klf1.fna JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo4  status: 0  time: 6.126577
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_5 -bgfile memechip_example_output_files/background -keepprimary -primary MA1063.1 memechip_example_output_files/Klf1.fna JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo5  status: 0  time: 20.730206
+Invoking:
+  spamo -verbosity 1 -oc memechip_example_output_files/spamo_out_6 -bgfile memechip_example_output_files/background -keepprimary -primary MA0607.1 memechip_example_output_files/Klf1.fna JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/dreme_out/dreme.xml JASPAR2018_CORE_non-redundant.meme
+Finished invoke:
+  name: spamo6  status: 0  time: 11.500047
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_1 --bgfile memechip_example_output_files/background --motif WGGGTGTGGYY memechip_example_output_files/meme_out/meme.xml memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo1  status: 0  time: 0.582778
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_2 --bgfile memechip_example_output_files/background --motif TTATCW memechip_example_output_files/dreme_out/dreme.xml memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo2  status: 0  time: 0.388245
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_3 --bgfile memechip_example_output_files/background --motif MA0014.3 JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo3  status: 0  time: 0.803997
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_4 --bgfile memechip_example_output_files/background --motif MA1099.1 JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo4  status: 0  time: 0.927358
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_5 --bgfile memechip_example_output_files/background --motif MA1063.1 JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo5  status: 0  time: 0.835807
+Invoking:
+  fimo --parse-genomic-coord --verbosity 1 --oc memechip_example_output_files/fimo_out_6 --bgfile memechip_example_output_files/background --motif MA0607.1 JASPAR2018_CORE_non-redundant.meme memechip_example_output_files/Klf1.fna
+Finished invoke:
+  name: fimo6  status: 0  time: 0.804253
+Writing output
+Invoking:
+  meme-chip_html_to_tsv memechip_example_output_files/meme-chip.html memechip_example_output_files/summary.tsv "meme-chip -meme-p 6 -oc memechip_example_output_files -db JASPAR2018_CORE_non-redundant.meme Klf1.fna" 5.1.0 "Wed Oct 09 15\:58\:02 2019 -0700"
+Finished invoke:
+  name: summary  status: 0  time: 0.607986
+Done

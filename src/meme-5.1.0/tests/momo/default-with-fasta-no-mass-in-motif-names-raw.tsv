@@ -1,0 +1,8 @@
+mod	motif	regexp	fg_matches
+S	xxx_S_xxx	[ACDEFGHIKLMNPRSTVWY].[ADEFGHIKLMNPQRSTVWY]S[ACDEFGHIKLMNPQRSTVY][ADEFGHIKLMNPQRSTVWY].	114
+T	xxx_T_xxx	[ADEFGIKLMNPQRSTVWY][ADEFGIKLMNPQRSTVW][ACDEFGIKLMNPQRSTVWY]T[ACDEFGHIKLNPQRSTVY][ADEFGHIKLNPQRSTVWY][ADEFGHIKLMPQRSTVY]	90
+Y	xxx_Y_xxx	[ADEFGHIKLMNPQSTVY][ADEFGIKLMNQRSTVW][ACDEFGIKLNPQRSTVW]Y[AEFGHIKLNPRSTVWY][ADEFGHIKLNPQRSVWY][ADEFGIKLNPRSTVW]	48
+
+# MoMo (Modification Motifs): Version 5.0.5 compiled on Jul  2 2019 at 18:43:29
+# The format of this file is described at http://meme-suite.org/doc/momo-output-format.html.
+# momo simple --oc results/momo8 --protein-database momo/small-yeast.fasta momo/small-tide-mod-phospho.txt

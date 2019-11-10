@@ -1,0 +1,50 @@
+# Test fimo
+$out_dir = 'results/fimo1';
+$out_file = catfile($out_dir, 'fimo.tsv');
+&test('fimo1', '',
+  'fimo', '',
+  ['--oc', $out_dir, '--motif-pseudo', 0.01, 
+    'fimo/MCM1.meme.html', 'fimo/spiked.fasta'],
+  [{output => $out_file, reference => 'fimo/fimo.tsv', 
+    type => 'text', ignore => ['^#']}],
+  $out_dir
+);
+
+# Test fimo with --motif option and --no-qvalue
+$out_dir = 'results/fimo2';
+$out_file = catfile($out_dir, 'fimo.tsv');
+&test('fimo2', '',
+  'fimo', '',
+  ['--oc', $out_dir, '--motif', 'CGGYGGGG', '--motif', 'GCATCRGRBSAGA', 
+    '--no-qvalue',
+    '--thresh', 0.01, 'common/crp0.meme.xml', 'motiph/spiked.fasta'],
+  [{output => $out_file, reference => 'fimo/fimo-motif23.tsv', 
+  type => 'text', ignore => ['^#']}],
+  $out_dir
+);
+
+# Test fimo with --psp and --prior-dist options
+$out_dir = 'results/fimo3';
+$out_file = catfile($out_dir, 'fimo.tsv');
+&test('fimo3', '',
+  'fimo', '',
+  ['--oc', $out_dir, '--psp', 'fimo/GCN4_YPD.psp', '--prior-dist', 
+    'fimo/prior.dist.txt', 'fimo/GCN4.meme.txt', 'fimo/GCN4_YPD.fasta'],
+  [{output => $out_file, reference => 'fimo/fimo-priors.tsv', 
+    type => 'text', ignore => ['^#']}],
+  $out_dir
+);
+
+# Test fimo with --psp and --prior-dist options
+# with genomic coordinates provied in PSP and fasta files.
+$out_dir = 'results/fimo4';
+$out_file = catfile($out_dir, 'fimo.tsv');
+&test('fimo4', '',
+  'fimo', '',
+  ['--oc', $out_dir, '--parse-genomic-coord', '--psp', 'fimo/GCN4_YPD-genomic.psp', '--prior-dist', 
+    'fimo/prior.dist.txt', 'fimo/GCN4.meme.txt', 'fimo/GCN4_YPD-genomic.fasta'],
+  [{output => $out_file, reference => 'fimo/fimo-priors-genomic.tsv', 
+    type => 'text', ignore => ['^#']}],
+  $out_dir
+);
+
