@@ -227,9 +227,11 @@ def para_PWM_from_alignment(min_score=700,
     filename = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
 
     print("Reading alignment file ...")
-    alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
+    alignment = AlignIO.read(filename,
+                             'fasta',
+                             alphabet=alphabet)
     # print("Seqs", [x.seq for x in alignment][1])
-    m = motifs.create([str(x.seq) for x in alignment], alphabet=Alphabet.IUPAC.extended_protein)
+    m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
 
     print(m.consensus)
