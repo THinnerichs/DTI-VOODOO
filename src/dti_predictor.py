@@ -57,7 +57,8 @@ def prune_drug_protein_db(min_score=700):
 
 
 def write_paracetamol_prots_to_file(file_min_score=400,
-                                    min_score=700):
+                                    min_score=700,
+                                    mol_name='para'):
 
     # Create protein amino acid sequence from fasta
     print("Reading pruned dict...")
@@ -99,17 +100,18 @@ def write_paracetamol_prots_to_file(file_min_score=400,
 
             aa_seq = protein_aa_seq_dict[organism][protein]
 
-            with open(file="../data/rofec_targets", mode='a') as para_handler:
+            with open(file="../data/"+mol_name+"_targets", mode='a') as para_handler:
                 para_handler.write(organism+'.'+protein + "\t" + aa_seq+'\t' + str(score) + "\n")
     print("Finished.")
 
     print("Total line count:", counter)
     print("Paracetamol count:", paracetamol_prots_count)
 
-def write_paracetamol_prots_to_fasta(min_score=400):
+def write_paracetamol_prots_to_fasta(min_score=400,
+                                     mol_name='para'):
 
-    para_filename = "../data/rofec_targets"
-    para_fasta_filename = "../data/rofec_fasta_" + str(min_score) + "_min_score.fasta"
+    para_filename = "../data/"+mol_name+"_targets"
+    para_fasta_filename = "../data/"+mol_name+"_fasta_" + str(min_score) + "_min_score.fasta"
     print("Processing {} and writing {} ...".format(para_filename, para_fasta_filename))
     with open(file=para_filename, mode='r') as para_file, open(file=para_fasta_filename, mode='w') as fasta_file:
         for line in para_file:
@@ -166,11 +168,12 @@ def eliminate_para_target_duplicates():
             f.write(ele+'\n')
 
 def run_para_multi_sequence_alignment(min_score=700,
-                                      alignment_method='clustalo'):
+                                      alignment_method='clustalo',
+                                      mol_name='para'):
     from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
-    in_file = "../data/para_fasta_" + str(min_score) + "_min_score.fasta"
-    out_file = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
+    in_file = "../data/"+mol_name+"_fasta_" + str(min_score) + "_min_score.fasta"
+    out_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
     start_time = time.time()
 
     command = None
@@ -297,19 +300,17 @@ if __name__=='__main__':
 
     # write_paracetamol_prots_to_file(file_min_score=400, min_score=700)
 
-    write_paracetamol_prots_to_fasta(min_score=700)
-    write_paracetamol_prots_to_fasta(min_score=800)
+    # write_paracetamol_prots_to_fasta(min_score=700)
 
     '''
     run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='afft')
-    '''
-
-
-    '''
-    run_para_multi_sequence_alignment(min_score=700,
                                       alignment_method='mafft')
     '''
+
+
+    run_para_multi_sequence_alignment(min_score=700,
+                                      alignment_method='mafft',
+                                      mol_name='rofec')
 
     '''
     para_PWM_from_alignment(min_score=700,
