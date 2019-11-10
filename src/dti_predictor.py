@@ -222,7 +222,7 @@ def para_PWM_from_alignment(min_score=700,
     from Bio.Alphabet import IUPAC, Gapped
     from Bio import AlignIO, Alphabet, motifs, SeqIO
 
-    alphabet = Gapped(IUPAC.protein)
+    alphabet = Gapped(IUPAC.extended_protein)
 
     filename = "../data/para_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
 
