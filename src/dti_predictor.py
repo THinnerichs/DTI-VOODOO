@@ -308,8 +308,16 @@ if __name__=='__main__':
     '''
 
 
-    run_para_multi_sequence_alignment(min_score=700,
+    run_para_multi_sequence_alignment(min_score=800,
                                       alignment_method='mafft',
+                                      mol_name='rofec')
+
+    run_para_multi_sequence_alignment(min_score=700,
+                                      alignment_method='kalign',
+                                      mol_name='rofec')
+
+    run_para_multi_sequence_alignment(min_score=800,
+                                      alignment_method='kalign',
                                       mol_name='rofec')
 
     '''
