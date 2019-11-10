@@ -228,6 +228,7 @@ def para_PWM_from_alignment(min_score=700,
 
     print("Reading alignment file ...")
     alignment = AlignIO.read(filename, 'fasta', alphabet=alphabet)
+    print("Seqs", [x.seq for x in alignment][:100])
     m = motifs.create([x.seq for x in alignment])
     print("Finished.")
 
