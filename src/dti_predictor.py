@@ -231,8 +231,8 @@ def para_PWM_from_alignment(min_score=700,
                              'fasta',
                              alphabet=alphabet)
     print("Finished.")
-    
-    print("Creating motifs...")
+
+    print("Creating motifs ...")
     m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
 
@@ -243,7 +243,7 @@ def para_PWM_from_alignment(min_score=700,
 
     # Usually, pseudocounts are added to each position before normalizing. This avoids overfitting of the position-weight
     # matrix to the limited number of motif instances in the alignment, and can also prevent probabilities from becoming zero.
-    pwm = m.counts.normalize(pseudecounts=0.5)
+    pwm = m.counts.normalize(pseudocounts=0.5)
     print(pwm)
 
     pssm = pwm.log_odds()
