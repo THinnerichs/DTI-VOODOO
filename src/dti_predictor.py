@@ -56,7 +56,8 @@ def prune_drug_protein_db(min_score=700):
     print("Finished.")
 
 
-def write_paracetamol_prots_to_file():
+def write_paracetamol_prots_to_file(file_min_score=400,
+                                    min_score=700):
 
     # Create protein amino acid sequence from fasta
     print("Reading pruned dict...")
@@ -68,10 +69,11 @@ def write_paracetamol_prots_to_file():
 
     # process drug-protein-interaction file
     print("Processing drug protein data...")
-    protein_chemical_links_filename = "../data/protein_chemical.links.transfer.v5.0.tsv"
-    paracetamol_id = 'CIDs00001983'
+    protein_chemical_links_filename = "../data/protein_chemical.links.min_score_"+str(file_min_score)+".tsv"
+    # paracetamol_id = 'CIDs00001983'
+    rofecoxib_id = 'CIDs00005090'
     counter = 0
-    total_lines = 7019540873
+    # total_lines = 7019540873
     paracetamol_prots_count = 0
     with open(file=protein_chemical_links_filename, mode='r') as f:
         for line in f:
@@ -79,13 +81,14 @@ def write_paracetamol_prots_to_file():
             paracetamol_prots_count += 1
 
             if counter%5000000==0:
-                print("Progress: %.2f %%\r"%(counter*100/total_lines))
+                # print("Progress: %.2f %%\r"%(counter*100/total_lines))
+                print("Processed lines:", counter)
 
-            if paracetamol_id not in line:
+            if rofecoxib_id not in line:
                 continue
 
             split_line = line.strip().split('\t')
-            if int(split_line[10]) < 400:
+            if int(split_line[10]) < min_score:
                 continue
 
             drug = split_line[0]
@@ -96,7 +99,7 @@ def write_paracetamol_prots_to_file():
 
             aa_seq = protein_aa_seq_dict[organism][protein]
 
-            with open(file="../data/para_targets", mode='a') as para_handler:
+            with open(file="../data/rofec_targets", mode='a') as para_handler:
                 para_handler.write(organism+'.'+protein + "\t" + aa_seq+'\t' + str(score) + "\n")
     print("Finished.")
 
@@ -291,19 +294,18 @@ if __name__=='__main__':
     # run_stitch_db_query()
     # prune_drug_protein_db(min_score=400)
 
-    '''
-    min_score = 700
 
-    write_paracetamol_prots_to_fasta(min_score=min_score)
-    '''
+    write_paracetamol_prots_to_fasta(file_min_score=400, min_score=700)
 
     '''
     run_para_multi_sequence_alignment(min_score=700,
                                       alignment_method='mafft')
     '''
 
+    '''
     para_PWM_from_alignment(min_score=700,
                             alignment_method='mafft')
+    '''
 
 
-    # para_PWM_from_alignment()
+
