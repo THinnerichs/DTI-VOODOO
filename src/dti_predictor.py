@@ -218,7 +218,7 @@ def run_para_multi_sequence_alignment(min_score=700,
     print("Finished in {} sec.".format(time.time()-start_time))
 
 def para_PWM_from_alignment(min_score=700,
-                            alignment_method='clustalo'):
+                            alignment_method='mafft'):
     from Bio.Alphabet import IUPAC, Gapped
     from Bio import AlignIO, Alphabet, motifs, SeqIO
 
@@ -255,10 +255,18 @@ def para_PWM_from_alignment(min_score=700,
     # or a threshold satisfying (roughly) the equality between the −log of the false-positive rate and the information content (as used in patser software by Hertz and Stormo)
     # threshold = distribution.threshold_patser()
 
+    counter = 0
+    hit_counter = 0
     for record in SeqIO.parse(all_fastas_filename, 'fasta'):
         # Set threshold constant to 3.0, or according to distribution
+        print("COUNTER:", counter)
         for position, score in pssm.search(record.seq, threshold=threshold):
-            print("position: {},\tscore: {}".format(position, score))
+            print("hit_counter: {},\tposition: {},\tscore: {}".format(hit_counter, position, score))
+            hit_counter += 1
+
+        counter += 1
+        if hit_counter == 100:
+            break
 
 
 
@@ -278,8 +286,13 @@ if __name__=='__main__':
     write_paracetamol_prots_to_fasta(min_score=min_score)
     '''
 
+    '''
     run_para_multi_sequence_alignment(min_score=700,
                                       alignment_method='mafft')
+    '''
+
+    para_PWM_from_alignment(min_score=700,
+                            alignment_method='mafft')
 
 
     # para_PWM_from_alignment()
