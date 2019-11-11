@@ -327,15 +327,27 @@ def run_HMMER_build(min_score=700,
     alignment_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.afa"
     out_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
 
-    print("Reading alignment file ...")
-
+    print("Building Hidden Markov Model ...")
     command = "hmmbuild "+out_file+" "+alignment_file
+    print(command)
     subprocess.call(command, shell=True)
+    print("Finished.\n")
 
 def run_HMMER_search(min_score=700,
                      alignment_method='mafft',
                      mol_name='para'):
-    pass
+
+    hmm_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
+    all_prots_fasta_filename = "../data/protein.sequences.v10.fa"
+    out_file ="../data/hmm_search_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
+
+
+    command = "hmmsearch "+hmm_file+" "+all_prots_fasta_filename+" > "+out_file
+    start_time = time.time()
+    print("Querying all protein sequences ...")
+    print(command)
+    subprocess.call(command, shell=True)
+    print("Finished in {} seconds.\n".format(time.time()-start_time))
 
 
 if __name__=='__main__':
@@ -357,8 +369,9 @@ if __name__=='__main__':
                             mol_name='para')
     '''
 
-    run_HMMER_build(min_score=800, alignment_method='mafft', mol_name='para')
-    
+    # run_HMMER_build(min_score=800, alignment_method='mafft', mol_name='para')
+    run_HMMER_search(min_score=800, alignment_method='mafft', mol_name='para')
+
 
 
 
