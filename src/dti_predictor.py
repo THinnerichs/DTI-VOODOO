@@ -258,14 +258,16 @@ def para_PWM_from_alignment(min_score=700,
 
     pssm = pwm.log_odds()
 
-    pssm_string = pssm.__str__
+    pssm_string = pssm.__str__()
     pssm_lines = pssm_string.split('\n')
 
     print(pssm_lines[0])
 
+    pssm_
+
     raise Exception
 
-    pssm = np.array(pssm.__str__)
+    pssm = np.array(pssm.__str__())
 
     # print(pssm)
     print(pssm.shape)
