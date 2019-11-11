@@ -244,6 +244,9 @@ def para_PWM_from_alignment(min_score=700,
     m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
 
+    print("Create weblogo image ...")
+    m.weblogo(fname="../results/weblogo_"+mol_name+"_"+alignment_method+"_"+str(min_score)+"min_score.png")
+
     # print(m.consensus)
     # print(m.counts)
     
@@ -280,7 +283,7 @@ def para_PWM_from_alignment(min_score=700,
     for record in SeqIO.parse(all_fastas_filename, 'fasta'):
         # Set threshold constant to 3.0, or according to distribution
         print("COUNTER:", counter)
-        for position, score in pssm.search(record.seq, threshold=threshold):
+        for position, score in pssm.search(record.seq):
             print("hit_counter: {},\tposition: {},\tscore: {}".format(hit_counter, position, score))
             hit_counter += 1
 
