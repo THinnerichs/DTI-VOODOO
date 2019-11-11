@@ -257,7 +257,7 @@ def para_PWM_from_alignment(min_score=700,
     # print(pwm)
 
     pssm = pwm.log_odds()
-    print(pssm)
+    print(type(pssm))
 
     raise Exception
 
