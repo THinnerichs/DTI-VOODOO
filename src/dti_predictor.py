@@ -349,6 +349,11 @@ def run_HMMER_search(min_score=700,
     subprocess.call(command, shell=True)
     print("Finished in {} seconds.\n".format(time.time()-start_time))
 
+def evaluate_HMMER_search(min_score=700,
+                          alignment_method='mafft',
+                          mol_name='para'):
+
+
 
 if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
@@ -374,9 +379,9 @@ if __name__=='__main__':
             for mol in ['para', 'rofec']:
                 if m_s == 800 and mol =='rofec' and a_m == 'mafft':
                     continue
-                    
+
                 run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
-                run_HMMER_search(min_score=a_m, alignment_method=a_m, mol_name=mol)
+                run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
 
 
 
