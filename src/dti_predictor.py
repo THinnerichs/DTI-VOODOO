@@ -353,7 +353,7 @@ def evaluate_HMMER_search(min_score=700,
                           alignment_method='mafft',
                           mol_name='para'):
 
-
+    pass
 
 if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
