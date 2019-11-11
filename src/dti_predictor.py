@@ -260,7 +260,8 @@ def para_PWM_from_alignment(min_score=700,
 
     pssm = np.array(pssm)
 
-    print(pssm)
+    # print(pssm)
+    print(pssm.shape)
 
     raise Exception
 
