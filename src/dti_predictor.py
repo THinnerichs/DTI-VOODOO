@@ -241,8 +241,9 @@ def para_PWM_from_alignment(min_score=700,
     print("Finished.")
 
     import math
+    in_file = "../data/"+mol_name+"_fasta_" + str(min_score) + "_min_score.fasta"
     min_seq_length = math.inf
-    for record in SeqIO.parse(filename, 'fasta'):
+    for record in SeqIO.parse(in_file, 'fasta'):
         if min_seq_length > len(str(record.seq)):
             min_seq_length = len(str(record.seq))
 
