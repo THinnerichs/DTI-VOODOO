@@ -173,7 +173,7 @@ def run_para_multi_sequence_alignment(min_score=700,
     from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
     in_file = "../data/"+mol_name+"_fasta_" + str(min_score) + "_min_score.fasta"
-    out_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
+    out_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.afa"
     start_time = time.time()
 
     command = None
@@ -232,7 +232,7 @@ def para_PWM_from_alignment(min_score=700,
 
     alphabet = Gapped(IUPAC.extended_protein)
 
-    filename = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.fasta"
+    filename = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.afa"
 
     print("Reading alignment file ...")
     alignment = AlignIO.read(filename,
@@ -320,8 +320,22 @@ def para_PWM_from_alignment(min_score=700,
             break
     print("Finished.")
 
+def run_HMMER_build(min_score=700,
+                    alignment_method='mafft',
+                    mol_name='para'):
 
+    alignment_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.afa"
+    out_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
 
+    print("Reading alignment file ...")
+
+    command = "hmmbuild "+out_file+" "+alignment_file
+    subprocess.call(command, shell=True)
+
+def run_HMMER_search(min_score=700,
+                     alignment_method='mafft',
+                     mol_name='para'):
+    pass
 
 
 if __name__=='__main__':
@@ -338,16 +352,13 @@ if __name__=='__main__':
     # write_paracetamol_prots_to_fasta(min_score=700)
 
     '''
-    run_para_multi_sequence_alignment(min_score=800,
-                                      alignment_method='kalign',
-                                      mol_name='para')
-    '''
-
-
-
     para_PWM_from_alignment(min_score=800,
                             alignment_method='mafft',
                             mol_name='para')
+    '''
+
+    run_HMMER_build(min_score=800, alignment_method='mafft', mol_name='para')
+    
 
 
 
