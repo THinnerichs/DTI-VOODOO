@@ -258,7 +258,7 @@ def para_PWM_from_alignment(min_score=700,
 
     pssm = pwm.log_odds()
 
-    pssm = np.array(pssm)
+    pssm = np.array(pssm.__str__)
 
     # print(pssm)
     print(pssm.shape)
