@@ -362,7 +362,9 @@ def evaluate_HMMER_search(min_score=700,
         for i in range(14):
             f.readline()
         for line in f:
-            print(line)
+            if line.strip() == "":
+                print("NO MATCHES FOUND!")
+                break
             protein_id = line.split('\t')[8].strip()
             protein_id_list.append(protein_id)
             if "inclusion threshold" in line:
