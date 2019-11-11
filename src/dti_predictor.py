@@ -240,6 +240,18 @@ def para_PWM_from_alignment(min_score=700,
                              alphabet=alphabet)
     print("Finished.")
 
+    import math
+    min_seq_length = math.inf
+    for record in SeqIO.parse(filename, 'fasta'):
+        if min_seq_length > len(str(record.seq)):
+            min_seq_length = len(str(record.seq))
+
+
+    print(min_seq_length)
+
+    raise Exception
+
+
     print("Creating motifs ...")
     m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
