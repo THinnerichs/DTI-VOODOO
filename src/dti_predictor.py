@@ -353,7 +353,23 @@ def evaluate_HMMER_search(min_score=700,
                           alignment_method='mafft',
                           mol_name='para'):
 
-    pass
+    out_file ="../data/hmm_search_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
+
+    protein_id_list = []
+    with open(file=out_file, mode='r') as f:
+        # Skip first 14 lines
+        for i in range(14):
+            f.readline()
+        for line in f:
+            protein_id = line.split('\t')[8].strip()
+            protein_id_list.append(protein_id)
+            if "inclusion threshold" in line:
+                break
+
+    print("Evaluating {}".format(out_file))
+    print("Contains {} proteins below threshold.".format(len(protein_id_list)))
+
+
 
 if __name__=='__main__':
     # write_pruned_SeqIO_fasta_dict()
@@ -378,8 +394,9 @@ if __name__=='__main__':
         for a_m in ['mafft', 'kalign']:
             for mol in ['para', 'rofec']:
 
-                run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
-                run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
+                # run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
+                # run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
+                evaluate_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
 
     # run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
 
