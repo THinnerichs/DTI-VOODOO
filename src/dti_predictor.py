@@ -377,8 +377,6 @@ if __name__=='__main__':
     for m_s in [700, 800]:
         for a_m in ['mafft', 'kalign']:
             for mol in ['para', 'rofec']:
-                if m_s == 800 and mol =='rofec' and a_m == 'mafft':
-                    continue
 
                 run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
                 run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
