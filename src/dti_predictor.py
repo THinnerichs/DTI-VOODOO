@@ -259,7 +259,7 @@ def para_PWM_from_alignment(min_score=700,
 
     print("Calculating distribution ...")
     all_fastas_filename = "../data/protein.sequences.v10.fa"
-    distribution = pssm.distribution(precision=10 ** 4)
+    # distribution = pssm.distribution(precision=10 ** 4)
     print("Finished.")
 
     # Obtain threshold from distribution
@@ -268,9 +268,11 @@ def para_PWM_from_alignment(min_score=700,
     # or the false-negative rate (probability of “not finding” an instance generated from the motif)
     # threshold = distribution.threshold_fnr(0.1)
     # or a threshold (approximately) satisfying some relation between the false-positive rate and the false-negative rate (fnr/fpr = t)
-    threshold = distribution.threshold_balanced(1000)
+    # threshold = distribution.threshold_balanced(1000)
     # or a threshold satisfying (roughly) the equality between the −log of the false-positive rate and the information content (as used in patser software by Hertz and Stormo)
     # threshold = distribution.threshold_patser()
+
+    threshold = 5
 
     print("Analyzing fasta all sequences with distribution ...")
     counter = 0
@@ -314,7 +316,7 @@ if __name__=='__main__':
 
     para_PWM_from_alignment(min_score=800,
                             alignment_method='mafft',
-                            mol_name='rofec')
+                            mol_name='para')
 
 
 
