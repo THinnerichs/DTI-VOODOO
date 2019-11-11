@@ -283,7 +283,7 @@ def para_PWM_from_alignment(min_score=700,
     for record in SeqIO.parse(all_fastas_filename, 'fasta'):
         # Set threshold constant to 3.0, or according to distribution
         print("COUNTER:", counter)
-        for position, score in pssm.search(record.seq):
+        for position, score in pssm.search(record.seq, threshold=threshold, both=False):
             print("hit_counter: {},\tposition: {},\tscore: {}".format(hit_counter, position, score))
             hit_counter += 1
 
