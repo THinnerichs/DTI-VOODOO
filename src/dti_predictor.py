@@ -261,9 +261,9 @@ def para_PWM_from_alignment(min_score=700,
     pssm_string = pssm.__str__()
     pssm_lines = pssm_string.split('\n')
 
-    print(pssm_lines[0])
+    print(pssm_lines[1])
 
-    pssm_
+    # pssm_mat = [[word.strip() for word in line.split('\t')] for line in pssm_string.split('\n')]
 
     raise Exception
 
