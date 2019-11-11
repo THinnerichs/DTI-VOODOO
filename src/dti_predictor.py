@@ -244,8 +244,7 @@ def para_PWM_from_alignment(min_score=700,
     m = motifs.create([x.seq for x in alignment], alphabet=alphabet)
     print("Finished.")
 
-    print("Create weblogo image ...")
-    m.weblogo(fname="../results/weblogo_"+mol_name+"_"+alignment_method+"_"+str(min_score)+"min_score.png")
+    # m.weblogo(fname="../results/weblogo_"+mol_name+"_"+alignment_method+"_"+str(min_score)+"min_score.png")
 
     # print(m.consensus)
     # print(m.counts)
@@ -258,7 +257,9 @@ def para_PWM_from_alignment(min_score=700,
     # print(pwm)
 
     pssm = pwm.log_odds()
-    # print(pssm)
+    print(pssm)
+
+    raise Exception
 
     print("Calculating distribution ...")
     all_fastas_filename = "../data/protein.sequences.v10.fa"
