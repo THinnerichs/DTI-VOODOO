@@ -354,6 +354,7 @@ def evaluate_HMMER_search(min_score=700,
                           mol_name='para'):
 
     out_file ="../data/hmm_search_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
+    print("Evaluating {}".format(out_file))
 
     protein_id_list = []
     with open(file=out_file, mode='r') as f:
@@ -367,7 +368,6 @@ def evaluate_HMMER_search(min_score=700,
             if "inclusion threshold" in line:
                 break
 
-    print("Evaluating {}".format(out_file))
     print("Contains {} proteins below threshold.".format(len(protein_id_list)))
 
 
