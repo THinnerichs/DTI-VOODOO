@@ -257,9 +257,13 @@ def para_PWM_from_alignment(min_score=700,
     # print(pwm)
 
     pssm = pwm.log_odds()
-    print(type(pssm))
+
+    pssm = np.array(pssm)
+
+    print(pssm)
 
     raise Exception
+
 
     print("Calculating distribution ...")
     all_fastas_filename = "../data/protein.sequences.v10.fa"
