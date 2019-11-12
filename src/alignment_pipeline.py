@@ -16,6 +16,7 @@ def separate_prots_to_files(file_min_score=400,
 
     counter = 0
     with open(file=protein_chemical_links_filename, mode='r') as f:
+        f.readline()
         for line in f:
             counter += 1
 
