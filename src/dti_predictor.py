@@ -322,32 +322,66 @@ def para_PWM_from_alignment(min_score=700,
 
 def run_HMMER_build(min_score=700,
                     alignment_method='mafft',
-                    mol_name='para'):
+                    mol_name='para',
+                    sym_frac=0.5,
+                    frag_thresh=0.5,
+                    rel_weight_method='wpb'):
+    """
 
+    :param min_score:
+    :param alignment_method:
+    :param mol_name:
+    :param sym_frac:
+    :param frag_thresh:
+    :param rel_weight_method:           options: wpb, wgsc, wblosum
+    :return:
+    """
     alignment_file = "../data/"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.afa"
     out_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
 
     print("Building Hidden Markov Model ...")
-    command = "hmmbuild "+out_file+" "+alignment_file
+    command = "hmmbuild --amino "\
+              "--symfrac "+str(sym_frac)+" "+\
+              "--fragthresh " + str(frag_thresh) +" "+\
+              "--"+rel_weight_method+" "+\
+              out_file+" "+\
+              alignment_file
     print(command)
     subprocess.call(command, shell=True)
     print("Finished.\n")
 
 def run_HMMER_search(min_score=700,
                      alignment_method='mafft',
-                     mol_name='para'):
+                     mol_name='para',
+                     max_flag=False,
+                     cores=2):
 
     hmm_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
     all_prots_fasta_filename = "../data/protein.sequences.v10.fa"
     out_file ="../data/hmm_search_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
 
 
-    command = "hmmsearch "+hmm_file+" "+all_prots_fasta_filename+" > "+out_file
+    command = "hmmsearch "+\
+              ("--max " if max_flag else "")+\
+              "--cpu "+str(cores)+ " "+\
+              hmm_file+" "+all_prots_fasta_filename+" > "+out_file
+
     start_time = time.time()
     print("Querying all protein sequences ...")
     print(command)
     subprocess.call(command, shell=True)
     print("Finished in {} seconds.\n".format(time.time()-start_time))
+
+def create_HMMER_logo(min_score=700,
+                      alignment_method='mafft',
+                      mol_name='para'):
+
+    hmm_file = "../data/hmm_build_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.hmm"
+    logo_file = "../results/hmm_logo_"+mol_name+"_" + alignment_method + "_aligned_" + str(min_score) + "_min_score"
+
+    print("Building HMM Logo ...")
+    command = "hmmlogo "+hmm_file+" > "+ logo_file
+    print("Finished.")
 
 def evaluate_HMMER_search(min_score=700,
                           alignment_method='mafft',
@@ -372,6 +406,18 @@ def evaluate_HMMER_search(min_score=700,
 
     print("Contains {} proteins below threshold.".format(len(protein_id_list)))
 
+    # Get all proteins from mol_name targets
+    targets = []
+    with open(file="../data/"+mol_name+"_targets") as f:
+        for line in f:
+            protein = line.split('\t')[0].strip()
+            targets.append(protein)
+
+    intersection = set(protein_id_list) & set(targets)
+
+    print("Detected {} of {}".format(len(intersection), len(targets)))
+
+
 
 
 if __name__=='__main__':
@@ -395,10 +441,13 @@ if __name__=='__main__':
                                                   mol_name='para',
                                                   alignment_method='mafft')
     '''
+
+    '''
     for mn in ['para', 'rofec']:
         run_para_multi_sequence_alignment(min_score=800,
                                           mol_name=mn,
                                           alignment_method='clustalo')
+    '''
 
     '''
     para_PWM_from_alignment(min_score=800,
@@ -416,10 +465,12 @@ if __name__=='__main__':
                 evaluate_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
     '''
 
-
-
-    # run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
-    # run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
+    for sym_frac in [i/10.0 for i in range(6)]:
+        for frag_thresh in [i/10.0 for i in range(6)]:
+            print("SYM_FRAC", sym_frac, "FRAG_THRESH", frag_thresh)
+            run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para', sym_frac=sym_frac, frag_thresh=frag_thresh)
+            run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
+            evaluate_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
 
 
 
