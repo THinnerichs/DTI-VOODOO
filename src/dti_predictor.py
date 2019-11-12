@@ -403,10 +403,11 @@ def evaluate_HMMER_search(min_score=700,
                 break
             if "inclusion threshold" in line:
                 break
-            split_list = line.split(' ')
-            split_list.remove('')
+            split_list = []
+            for ele in line.split(' '):
+                if not ele == '':
+                    split_list.append(ele)
             print(split_list)
-
             raise Exception
             protein_id = split_list[8].strip()
             protein_id_list.append(protein_id)
