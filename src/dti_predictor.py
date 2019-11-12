@@ -393,6 +393,7 @@ if __name__=='__main__':
                             mol_name='para')
     '''
 
+    '''
     for m_s in [700, 800]:
         for a_m in ['mafft', 'kalign']:
             for mol in ['para', 'rofec']:
@@ -400,8 +401,12 @@ if __name__=='__main__':
                 # run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
                 # run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
                 evaluate_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
+    '''
 
-    # run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
+
+
+    run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
+    run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
 
     '''
     run_para_multi_sequence_alignment(min_score=700,
