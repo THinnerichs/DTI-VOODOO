@@ -407,8 +407,6 @@ def evaluate_HMMER_search(min_score=700,
             for ele in line.split(' '):
                 if not ele == '':
                     split_list.append(ele)
-            print(split_list)
-            raise Exception
             protein_id = split_list[8].strip()
             protein_id_list.append(protein_id)
 
