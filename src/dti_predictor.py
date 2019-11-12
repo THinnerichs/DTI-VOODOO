@@ -387,11 +387,18 @@ if __name__=='__main__':
 
     # write_paracetamol_prots_to_fasta(min_score=700)
 
-    for ms in [700, 800]:
-        for mn in ['para', 'rofec']:
-            run_para_multi_sequence_alignment(min_score=700,
-                                              mol_name='para',
-                                              alignment_method='msaprobs')
+    '''
+    for mn in ['para', 'rofec']:
+        for ms in [700, 800]:
+            for am in ['mafft', 'kalign']:
+                run_para_multi_sequence_alignment(min_score=700,
+                                                  mol_name='para',
+                                                  alignment_method='mafft')
+    '''
+    for mn in ['para', 'rofec']:
+        run_para_multi_sequence_alignment(min_score=800,
+                                          mol_name=mn,
+                                          alignment_method='clustalo')
 
     '''
     para_PWM_from_alignment(min_score=800,
@@ -411,8 +418,8 @@ if __name__=='__main__':
 
 
 
-    run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
-    run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
+    # run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para')
+    # run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
 
 
 
