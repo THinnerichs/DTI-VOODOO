@@ -420,8 +420,10 @@ def evaluate_HMMER_search(min_score=700,
             targets.append(protein)
 
     intersection = set(protein_id_list) & set(targets)
+    others = set(protein_id_list) - intersection
 
     print("Detected {} of {}".format(len(intersection), len(targets)))
+    print("And {} others\n".format(len(others)))
 
 
 
@@ -475,7 +477,7 @@ if __name__=='__main__':
         for frag_thresh in [i/10.0 for i in range(3, 6)]:
             print("SYM_FRAC", sym_frac, "FRAG_THRESH", frag_thresh)
             run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para', sym_frac=sym_frac, frag_thresh=frag_thresh, cores=16)
-            run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para', max_flag=True, cores=16)
+            run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para', cores=16)
             evaluate_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
 
 
