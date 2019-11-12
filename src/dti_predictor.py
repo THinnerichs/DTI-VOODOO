@@ -461,6 +461,7 @@ if __name__=='__main__':
                             mol_name='para')
     '''
 
+    '''
     for m_s in [700, 800]:
         for a_m in ['mafft', 'kalign']:
             for mol in ['para', 'rofec']:
@@ -468,15 +469,14 @@ if __name__=='__main__':
                 # run_HMMER_build(min_score=m_s, alignment_method=a_m, mol_name=mol)
                 # run_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
                 evaluate_HMMER_search(min_score=m_s, alignment_method=a_m, mol_name=mol)
-
     '''
+
     for sym_frac in [i/10.0 for i in range(6)]:
         for frag_thresh in [i/10.0 for i in range(6)]:
             print("SYM_FRAC", sym_frac, "FRAG_THRESH", frag_thresh)
             run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para', sym_frac=sym_frac, frag_thresh=frag_thresh, cores=16)
-            run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para', max_flag=True, cores=16)
+            run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para', cores=16)
             evaluate_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
-    '''
 
 
 
