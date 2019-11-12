@@ -325,7 +325,8 @@ def run_HMMER_build(min_score=700,
                     mol_name='para',
                     sym_frac=0.5,
                     frag_thresh=0.5,
-                    rel_weight_method='wpb'):
+                    rel_weight_method='wpb',
+                    cores=2):
     """
 
     :param min_score:
@@ -341,6 +342,7 @@ def run_HMMER_build(min_score=700,
 
     print("Building Hidden Markov Model ...")
     command = "hmmbuild --amino "\
+              "--cpu "+str(cores)+" "+\
               "--symfrac "+str(sym_frac)+" "+\
               "--fragthresh " + str(frag_thresh) +" "+\
               "--"+rel_weight_method+" "+\
@@ -468,7 +470,7 @@ if __name__=='__main__':
     for sym_frac in [i/10.0 for i in range(6)]:
         for frag_thresh in [i/10.0 for i in range(6)]:
             print("SYM_FRAC", sym_frac, "FRAG_THRESH", frag_thresh)
-            run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para', sym_frac=sym_frac, frag_thresh=frag_thresh)
+            run_HMMER_build(min_score=700, alignment_method='mafft', mol_name='para', sym_frac=sym_frac, frag_thresh=frag_thresh, cores=16)
             run_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para', max_flag=True, cores=16)
             evaluate_HMMER_search(min_score=700, alignment_method='mafft', mol_name='para')
 
