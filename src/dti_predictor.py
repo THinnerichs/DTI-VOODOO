@@ -417,6 +417,8 @@ def evaluate_HMMER_search(min_score=700,
             protein = line.split('\t')[0].strip()
             targets.append(protein)
 
+    print(targets[:20])
+    print(protein_id_list[:20])
     intersection = set(protein_id_list) & set(targets)
 
     print("Detected {} of {}".format(len(intersection), len(targets)))
