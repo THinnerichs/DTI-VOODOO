@@ -18,3 +18,7 @@
 ## On performance of alignments
 
 This [link](https://www.ebi.ac.uk/Tools/msa/)
+
+## Other sources for MSAs
+
+- [wiki article on MSAs](https://en.wikipedia.org/wiki/List_of_sequence_alignment_software#Multiple_sequence_alignment)

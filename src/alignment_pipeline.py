@@ -175,20 +175,25 @@ def run_MSA(min_score=800,
     Parallel(n_jobs=32)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
 
 def write_predicted_targets(min_score=800,
-                            alignment_method='mafft',
-                            sym_frac=0.5,
-                            frag_thresh=0.5,
-                            rel_weight_method='wpb',
-                            cores=2):
+                            alignment_method='kalign'):
 
     alignment_path = '../data/alignment_targets/'
-    hmmbuild_target_path = '../data/alignment_targets/'
 
-    def hmm_build(file):
-        drug_name = file
+    def hmm_pipeline(file):
+
+        # hmm build to perform on precomputed fasta files
+        hmmbuild_target_path = '../data/hmm_builds/'
+
+        # hmmbuild params
+        sym_frac = 0.5
+        frag_thresh = 0.5
+        rel_weight_method = 'wpb'
+        cores = 2
+
+        drug_name = file.split("_")[0]
 
         alignment_file = alignment_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
-        target_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
+        hmmbuild_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
 
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
@@ -196,11 +201,60 @@ def write_predicted_targets(min_score=800,
                   "--symfrac "+str(sym_frac)+" "+\
                   "--fragthresh " + str(frag_thresh) +" "+\
                   "--"+rel_weight_method+" "+\
-                  target_file+" "+\
+                  hmmbuild_file+" "+\
                   alignment_file
         print(command)
         subprocess.call(command, shell=True)
         print("Finished.\n")
+
+        # Parallel(n_jobs=10)(delayed(hmm_build)(filename) for filename in [file for file in os.listdir(alignment_path) if file.startswith("CID")])
+
+        # run hmm search on previously computed hidden markov model over all sequences
+        # hmmsearch params
+        max_flag = False
+        cores = 1
+
+        all_prots_fasta_filename = "../data/protein.sequences.v10.fa"
+
+        hmm_search_results_path = '../data/hmm_search_results/'
+        hmmsearch_file = hmm_search_results_path + drug_name + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
+
+        command = "hmmsearch " + \
+                  ("--max " if max_flag else "") + \
+                  "--nonli " + \
+                  "--nontextw "+\
+                  "--cpu " + str(cores) + " " + \
+                  hmmbuild_file + " " + all_prots_fasta_filename + " > " + hmmsearch_file
+
+        start_time = time.time()
+        print("Querying all protein sequences ...")
+        print(command)
+        subprocess.call(command, shell=True)
+        print("Finished in {} seconds.\n".format(time.time() - start_time))
+
+        # Evaluate the results of the search
+        predicted_targets_path = "../data/predicted_targets/"
+        predicted_targets_file = predicted_targets_path + drug_name + "_predicted_targets"
+
+        # extract actual predicted targets from hmmsearch output file and write them to a new file
+        with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, open(file=predicted_targets_file, mode='w') as predicted_targets_filehandler:
+            # Skip first 14 lines
+            for i in range(14):
+                hmmsearch_filehandler.readline()
+            for line in hmmsearch_filehandler:
+                if line.strip() == "":
+                    print("NO MATCHES FOUND!")
+                    break
+                if "inclusion threshold" in line:
+                    break
+                split_list = []
+                for ele in line.split(' '):
+                    if not ele == '':
+                        split_list.append(ele)
+                protein_id = split_list[8].strip()
+                predicted_targets_filehandler.write(protein_id+'\n')
+
+    Parallel(n_jobs=8)(delayed(hmm_pipeline)(filename) for filename in os.listdir(alignment_path))
 
 
 
