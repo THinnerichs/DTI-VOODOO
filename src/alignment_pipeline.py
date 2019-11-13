@@ -101,7 +101,7 @@ def create_fasta_files(min_score=800):
 
                 aa_seq = protein_aa_seq_dict[organism][protein]
 
-                fasta_filehandler.write(">"+protein+'\n')
+                fasta_filehandler.write(">"+organism+'.'+protein+'\n')
                 fasta_filehandler.write(aa_seq +'\n')
 
 def run_MSA(min_score=800,
