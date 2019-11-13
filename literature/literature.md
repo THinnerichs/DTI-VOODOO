@@ -7,4 +7,5 @@
 - Models using more similarities tend to perform better
 - Models using ensemble techniques need more time in exchange for better performance
 - Models using only Protein similarities perform really bad (See figure 4)
-- 
+
+
