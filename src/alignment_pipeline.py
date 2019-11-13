@@ -70,6 +70,15 @@ def merge_drug_files():
         print("intersection:", len(set(m_targets) & set(s_targets)), '\n')
 
 def create_fasta_files(min_score=800):
+
+    # Create protein amino acid sequence from fasta
+    print("Reading pruned dict...")
+    dict_filename = "../data/prot_aa_seq_dict"
+    protein_aa_seq_dict = None
+    with open(dict_filename + '.pkl', 'rb') as f:
+        protein_aa_seq_dict = pickle.load(f)
+    print("Finished.")
+
     path = "../data/drug_target_relations/"
     files = os.listdir(path)
 
@@ -79,12 +88,18 @@ def create_fasta_files(min_score=800):
 
         with open(file=path+file, mode='r') as filehandler, open(file=fasta_filename, mode='w') as fasta_filehandler:
             for line in filehandler:
-                protein, aa_seq, score = line.split('\t')
+                protein, score = line.split('\t')
                 if int(score) < min_score:
                     continue
 
+                split_protein = protein.strip().split('.')
+                organism = split_protein.pop(0)
+                protein = ".".join(split_protein)
+
+                aa_seq = protein_aa_seq_dict[organism][protein]
+
                 fasta_filehandler.write(">"+protein+'\n')
-                fasta_filehandler.write(aa_seq+'\n')
+                fasta_filehandler.write(aa_seq +'\n')
 
 def run_MSA(min_score=800,
             alignment_method='mafft'):
