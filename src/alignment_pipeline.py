@@ -193,7 +193,7 @@ if __name__ == '__main__':
                             min_score=400)
     '''
 
-    merge_drug_files()
+    # merge_drug_files()
 
-    # create_fasta_files()
+    create_fasta_files()
 
