@@ -48,26 +48,26 @@ def merge_drug_files():
 
     m_file = None
     for i in range(100000000):
-        if 'm' in files[i] and os.path.exists(path+'/'+files[i].replace('m','s')):
-            m_file = files[i]
-            break
+        if not('m' in files[i] and os.path.exists(path+'/'+files[i].replace('m','s'))):
+            continue
 
-    print("m_file:", m_file)
+        m_file = files[i]
+        print("m_file:", m_file)
 
-    m_targets = []
-    with open(path+m_file, mode='r') as f:
-        for line in f:
-            m_targets.append(line.split('\t')[0])
+        m_targets = []
+        with open(path+m_file, mode='r') as f:
+            for line in f:
+                m_targets.append(line.split('\t')[0])
 
-    s_targets = []
-    with open(path+'/'+m_file.replace('m','s'), mode='r') as f:
-        for line in f:
-            s_targets.append(line.split('\t')[0])
+        s_targets = []
+        with open(path+'/'+m_file.replace('m','s'), mode='r') as f:
+            for line in f:
+                s_targets.append(line.split('\t')[0])
 
-    print("length m_targets:", len(m_targets))
-    print("length s_targets:", len(s_targets))
+        print("length m_targets:", len(m_targets))
+        print("length s_targets:", len(s_targets))
 
-    print("intersection:", len(set(m_targets) & set(s_targets)))
+        print("intersection:", len(set(m_targets) & set(s_targets)), '\n')
 
 def create_fasta_files(min_score=800):
     path = "../data/drug_target_relations/"
