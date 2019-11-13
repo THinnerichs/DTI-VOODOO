@@ -213,5 +213,8 @@ if __name__ == '__main__':
 
     # merge_drug_files()
 
-    create_fasta_files()
+    # create_fasta_files()
+
+    run_MSA(min_score=800,
+            alignment_method='kalign')
 
