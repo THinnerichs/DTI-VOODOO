@@ -48,7 +48,7 @@ def merge_drug_files():
 
     m_file = None
     for i in range(100000000):
-        if 'm' in files[i] and os.path.exists(path+'/'+m_file.replace('m','s')):
+        if 'm' in files[i] and os.path.exists(path+'/'+files[i].replace('m','s')):
             m_file = files[i]
             break
 
