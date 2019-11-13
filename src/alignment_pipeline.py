@@ -84,7 +84,7 @@ def create_fasta_files(min_score=800):
 
     for i in range(len(files)):
         if i % 20000 == 0:
-            print("Processed %.2f %% of files"%(i/len(files)))
+            print("Processed %.2f %% of files"%(i*100/len(files)))
         file = files[i]
         drug_name = file.strip()[:-8]
         fasta_filename = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
