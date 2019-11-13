@@ -172,7 +172,7 @@ def run_MSA(min_score=800,
             return drug_name
 
 
-    Parallel(n_jobs=16)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
+    Parallel(n_jobs=32)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
 
 def write_predicted_targets(min_score=800,
                             alignment_method='mafft',
@@ -181,14 +181,14 @@ def write_predicted_targets(min_score=800,
                             rel_weight_method='wpb',
                             cores=2):
 
-    fasta_path = '../data/fasta_files/'
-    target_path = '../data/alignment_targets/'
+    alignment_path = '../data/alignment_targets/'
+    hmmbuild_target_path = '../data/alignment_targets/'
 
     def hmm_build(file):
         drug_name = file
 
-        fasta_file = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
-        target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
+        alignment_file = alignment_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
+        target_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
 
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
@@ -196,7 +196,7 @@ def write_predicted_targets(min_score=800,
                   "--symfrac "+str(sym_frac)+" "+\
                   "--fragthresh " + str(frag_thresh) +" "+\
                   "--"+rel_weight_method+" "+\
-                  out_file+" "+\
+                  target_file+" "+\
                   alignment_file
         print(command)
         subprocess.call(command, shell=True)
