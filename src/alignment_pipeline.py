@@ -48,7 +48,7 @@ def merge_drug_files():
 
     m_file = None
     for i in range(100000000):
-        if 'm' in files[i]:
+        if 'm' in files[i] and os.path.exists(path+'/'+m_file.replace('m','s')):
             m_file = files[i]
             break
 
@@ -188,5 +188,12 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
+    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
+    '''
+
+    merge_drug_files()
+
+    # create_fasta_files()
+
