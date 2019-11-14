@@ -113,5 +113,13 @@ venv.bak/
 /data/prot_aa_seq_dict.pkl
 /data/para_kalign_aligned_700_min_score.fasta
 /data/protein_chemical.links.min_score_400.tsv
+
+/data/drug_target_relations/
+/data/alignment_targets/
+/data/fasta_files/
+/data/hmm_builds/
+/data/hmm_search_results/
+/data/predicted_targets/
+
 *aligned*
 *msa_output
