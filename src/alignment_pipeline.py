@@ -107,7 +107,16 @@ def create_fasta_files(min_score=800):
                 fasta_filehandler.write(aa_seq +'\n')
 
 def run_MSA(min_score=800,
-            alignment_method='mafft'):
+            alignment_method='mafft',
+            workers=50):
+    """
+    A wrapper for the different MSA techniques that are eventually executed in parallel.
+
+    :param min_score:
+    :param alignment_method:
+    :param workers:
+    :return:
+    """
 
 
     fasta_path = '../data/fasta_files/'
@@ -205,18 +214,26 @@ def run_MSA(min_score=800,
                 return
             msa(fileName)
 
-    threads = [threading.Thread(target=worker) for _i in range(50)]
+    threads = [threading.Thread(target=worker) for _i in range(workers)]
     for thread in threads:
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
 
 def write_predicted_targets(min_score=800,
-                            alignment_method='kalign'):
+                            alignment_method='kalign',
+                            workers=20):
 
     alignment_path = '../data/alignment_targets/'
 
     def hmm_pipeline(file):
+        # Check whether right min_score is present
+        if str(min_score) not in file:
+            return
+        # Check whether file is empty for speedup
+        if os.stat(alignment_path+file).st_size == 0:
+            return
+
 
         # hmm build to perform on precomputed fasta files
         hmmbuild_target_path = '../data/hmm_builds/'
@@ -249,7 +266,7 @@ def write_predicted_targets(min_score=800,
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
         max_flag = False
-        cores = 1
+        cores = 2
 
         all_prots_fasta_filename = "../data/protein.sequences.v10.fa"
 
@@ -291,9 +308,24 @@ def write_predicted_targets(min_score=800,
                 protein_id = split_list[8].strip()
                 predicted_targets_filehandler.write(protein_id+'\n')
 
-    Parallel(n_jobs=8)(delayed(hmm_pipeline)(filename) for filename in os.listdir(alignment_path))
+    # Parallel(n_jobs=8)(delayed(hmm_pipeline)(filename) for filename in os.listdir(alignment_path))
 
+    q = queue.Queue()
 
+    for fileName in os.listdir(alignment_path):
+        q.put(fileName)
+
+    def worker():
+        while True:
+            fileName = q.get()
+            if fileName is None:  # EOF?
+                return
+            hmm_pipeline(fileName)
+
+    threads = [threading.Thread(target=worker) for _i in range(workers)]
+    for thread in threads:
+        thread.start()
+        q.put(None)  # one EOF marker for each threa
 
 
 if __name__ == '__main__':
