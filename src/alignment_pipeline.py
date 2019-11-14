@@ -83,7 +83,7 @@ def create_fasta_files(min_score=800):
     files = os.listdir(path)
 
     for i in range(len(files)):
-        if i % 20000 == 0:
+        if i % 2000 == 0:
             print("Processed %.2f %% of files"%(i*100/len(files)))
         file = files[i]
         drug_name = file.strip()[:-8]
