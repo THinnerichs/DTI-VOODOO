@@ -112,6 +112,13 @@ def run_MSA(min_score=800,
     target_path = '../data/alignment_targets/'
 
     def msa(file):
+        # Check whether right min_score is present
+        if str(min_score) not in file:
+            return
+        # Check whether file is empty for speedup
+        if os.stat(fasta_path+file).st_size == 0:
+            return
+
         drug_name = file.split("_")[0].strip()
 
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
@@ -270,10 +277,8 @@ if __name__ == '__main__':
 
     create_fasta_files(min_score=700)
 
-    '''
     run_MSA(min_score=800,
             alignment_method='kalign')
-    '''
 
 
 
