@@ -112,7 +112,11 @@ def run_MSA(min_score=800,
     target_path = '../data/alignment_targets/'
 
     def msa(file):
-        drug_name = file.strip()[:-8]
+        drug_name = file.split("_")[1].strip()[:-8]
+
+        print("DRUGNAME", drug_name)
+        raise Exception
+
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
         if not os.path.exists(target_file):
             fasta_file = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
