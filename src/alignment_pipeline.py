@@ -112,10 +112,7 @@ def run_MSA(min_score=800,
     target_path = '../data/alignment_targets/'
 
     def msa(file):
-        drug_name = file.split("_")[1].strip()[:-8]
-
-        print("DRUGNAME", drug_name)
-        raise Exception
+        drug_name = file.split("_")[0].strip()
 
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
         if not os.path.exists(target_file):
