@@ -121,7 +121,7 @@ def run_MSA(min_score=800,
 
         drug_name = file.split("_")[0].strip()
 
-        target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
+        target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.fasta"
         if not os.path.exists(target_file):
             fasta_file = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
 
@@ -159,6 +159,8 @@ def run_MSA(min_score=800,
                 command = "./MSAProbs-0.9.7/MSAProbs/msaprobs " + ' '.join(str(command).split(' ')[1:])
             elif alignment_method == 'kalign':
                 command = "./kalign2/kalign -i " + fasta_file + " -o " + target_file
+            elif alignment_method == 'famsa':
+                "./famsa-1.2.5-linux " + fasta_file + " " + target_file
             else:
                 print("No valid alignment method selected.")
                 raise Exception
@@ -176,6 +178,10 @@ def run_MSA(min_score=800,
             print("Starting {} alignment ...".format(alignment_method))
             subprocess.call(str(command), shell=True)
             print("Finished in {} sec.\n".format(time.time()-start_time))
+
+            # Eventually rename file for hmm
+            rename_command = "mv " + target_file + " " + target_file[:-6] + ".afa"
+            subprocess.call(str(rename_command), shell=True)
 
             return drug_name
 
