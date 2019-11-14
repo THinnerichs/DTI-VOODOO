@@ -1,13 +1,15 @@
 import numpy as np
 
-from Bio import SeqIO
 import subprocess
+import queue
+import threading
 import time
 import os
 from joblib import Parallel, delayed
 
 import pickle
 
+from Bio import SeqIO
 from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
 def separate_prots_to_files(file_min_score=400,
@@ -188,8 +190,25 @@ def run_MSA(min_score=800,
 
     # Parallel(n_jobs=50)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
 
-    for filename in os.listdir(fasta_path):
-        msa(filename)
+    # for filename in os.listdir(fasta_path):
+        # msa(filename)
+
+    q = queue.Queue()
+
+    for fileName in os.listdir(fasta_path):
+        q.put(fileName)
+
+    def worker():
+        while True:
+            fileName = q.get()
+            if fileName is None:  # EOF?
+                return
+            msa(fileName)
+
+    threads = [threading.Thread(target=worker) for _i in range(50)]
+    for thread in threads:
+        thread.start()
+        q.put(None)  # one EOF marker for each thread
 
 
 def write_predicted_targets(min_score=800,
