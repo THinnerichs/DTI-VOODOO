@@ -186,7 +186,11 @@ def run_MSA(min_score=800,
             return drug_name
 
 
-    Parallel(n_jobs=50)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
+    # Parallel(n_jobs=50)(delayed(msa)(filename) for filename in os.listdir(fasta_path))
+
+    for filename in os.listdir(fasta_path):
+        msa(filename)
+
 
 def write_predicted_targets(min_score=800,
                             alignment_method='kalign'):
