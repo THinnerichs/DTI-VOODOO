@@ -2,6 +2,7 @@ import numpy as np
 
 import subprocess
 from joblib import Parallel, delayed
+import time
 
 
 
@@ -52,6 +53,18 @@ def evaluate_Blast_XML():
     from Bio.Blast import NCBIXML
     E_VALUE_THRESH = 0.05
 
+    num_lines = None
+    fasta_path = "../data/fasta_files/"
+    filename = "CIDm00000043_fasta_800_min_score.fasta"
+    with open(file=fasta_path+filename, mode='r') as f:
+        num_lines = sum(1 for line in f)
+
+    print("Lines:", num_lines)
+
+    raise Exception
+
+
+    start_time = time.time()
     print("Parsing similarity scores ...")
     prot_prot_sim_dict = {}
     for record in NCBIXML.parse(open(results_filename)):
@@ -60,9 +73,9 @@ def evaluate_Blast_XML():
             for alignment in record.alignments:
                 for hsp in alignment.hsps:
                     if hsp.expect < E_VALUE_THRESH:
-                        prot_prot_sim_dict[record.query][alignment.title] = hsp.score
+                        prot_prot_sim_dict[record.query][alignment.title] = int(hsp.score)
 
-    print("Finished.")
+    print("Finished in {} seconds.".format(time.time() - start_time))
 
 
 
