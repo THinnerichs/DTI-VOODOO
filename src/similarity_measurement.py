@@ -31,6 +31,7 @@ def test_blast():
     results_filename = ""+drug_name+"_blast_result"
 
     blast_command = "./blastp "+\
+                    "-task blastp-fast "+\
                     "-query "+query_fasta_file+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
