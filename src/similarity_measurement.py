@@ -52,27 +52,17 @@ def evaluate_Blast_XML():
     from Bio.Blast import NCBIXML
     E_VALUE_THRESH = 0.05
 
-    first = True
+    print("Parsing similarity scores ...")
+    prot_prot_sim_dict = {}
     for record in NCBIXML.parse(open(results_filename)):
         if record.alignments: # skip queries with no   matches
-            print("QUERY: %s" % record.query[:60])
+            prot_prot_sim_dict[record.query] = {}
             for alignment in record.alignments:
-                counter = 1
                 for hsp in alignment.hsps:
                     if hsp.expect < E_VALUE_THRESH:
-                        print(alignment.title)
-                        print()
-                        print(hsp.score)
-                        print("\n")
+                        prot_prot_sim_dict[record.query][alignment.title] = hsp.score
 
-                        counter += 1
-                print("COUNTER:", counter)
-
-                if first:
-                    first = False
-                    continue
-                raise Exception
-
+    print("Finished.")
 
 
 
