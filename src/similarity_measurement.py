@@ -50,7 +50,7 @@ def evaluate_Blast_XML():
     results_filename = ""+drug_name+"_blast_result.xml"
 
     from Bio.Blast import NCBIXML
-    E_VALUE_THRESH = 1e-20
+    E_VALUE_THRESH = 0.05
 
     first = True
     for record in NCBIXML.parse(open(results_filename)):
