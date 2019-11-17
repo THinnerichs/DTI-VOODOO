@@ -3,6 +3,12 @@ import numpy as np
 import subprocess
 from joblib import Parallel, delayed
 import time
+import queue
+import threading
+import os
+from random import shuffle
+
+import itertools
 
 
 
@@ -77,8 +83,104 @@ def evaluate_Blast_XML():
 
     print("Finished in {} seconds.".format(time.time() - start_time))
 
+def run_similarity_pipeline(threads=8,
+                            e_value_threshold=0.05,
+                            min_score=800):
+
+    alignment_path = "../data/alignment_targets/"
+
+    def similarity_score(file1, file2):
+        # build filenames
+        database_alignment_file = alignment_path + file1
+        query_alignment_file = alignment_path + file2
+
+        database_drug_name = file1.split("_")[0]
+        query_drug_name = file2.split("_")[0]
+        database_name = alignment_path + database_drug_name + "_blast_db"
+
+        # Build blast db
+        print("Building database ...")
+        command = "./makeblastdb -dbtype 'prot' " + \
+                  "-in " + database_alignment_file + " " + \
+                  "-out " + database_name
+        print(command)
+        subprocess.call(command, shell=True)
+        print("Finished.\n")
+
+        # run blast query
+        print("Running query ...")
+        results_filename = "" + database_drug_name + "_" + query_drug_name + "_blast_result.xml"
+
+        blast_command = "./blastp " + \
+                        "-task blastp-fast " + \
+                        "-num_threads 32 " + \
+                        "-query " + query_alignment_file + " " + \
+                        "-db " + database_name + " " + \
+                        "-out " + results_filename + " " + \
+                        "-evalue " + str(e_value_threshold)+" "\
+                        "-outfmt 5"
+        print(blast_command)
+
+        subprocess.call(blast_command, shell=True)
+        print("Finished.\n")
+
+        # Evaluate query
+        from Bio.Blast import NCBIXML
+
+        # Count lines in both files for normalization of results
+        file1_num_lines = None
+        database_fasta_file = "../data/fasta_files/" + database_drug_name + "_fasta_" + str(min_score) + "_min_score.afa"
+        with open(file=database_fasta_file, mode='r') as f:
+            file1_num_lines = sum(1 for line in f)
+
+        file2_num_lines = None
+        query_fasta_file = "../data/fasta_files/" + query_drug_name + "_fasta_" + str(min_score) + "_min_score.afa"
+        with open(file=query_fasta_file, mode='r') as f:
+            file2_num_lines = sum(1 for line in f)
+
+        # Parse xml file
+        start_time = time.time()
+        print("Parsing similarity scores ...")
+        score_sum = 0
+        for record in NCBIXML.parse(open(results_filename)):
+            if record.alignments:  # skip queries with no   matches
+                for alignment in record.alignments:
+                    for hsp in alignment.hsps:
+                        if hsp.expect < e_value_threshold:
+                            score_sum += int(hsp.score)
+
+        print("Finished in {} seconds.".format(time.time() - start_time))
+        final_score = score_sum / (file1_num_lines/2 + file2_num_lines/2)
+
+        evaluation_results_filename = "../data/similarity_results"
+        with open(file=evaluation_results_filename, mode='a') as f:
+            f.write(query_drug_name+"\t"+database_drug_name+"\t"+str(final_score))
+
+    q = queue.Queue()
+
+    file_doublets = itertools.product(os.listdir(alignment_path), os.listdir(alignment_path))
+    for doublet in file_doublets:
+        q.put(doublet)
+
+    def worker():
+        while True:
+            doublet = q.get()
+            if doublet is None:  # EOF?
+                return
+            file1, file2 = doublet
+            if file1 == file2:
+                continue
+            similarity_score(file1, file2)
+
+    max_overall_threads = 50
+    threads = [threading.Thread(target=worker) for _i in range(int(max_overall_threads/threads))]
+    for thread in threads:
+        thread.start()
+        q.put(None)  # one EOF marker for each thread
+
 
 
 if __name__ == '__main__':
     # test_blast()
-    evaluate_Blast_XML()
+    # evaluate_Blast_XML()
+    run_similarity_pipeline()
