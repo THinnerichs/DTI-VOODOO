@@ -55,11 +55,19 @@ def evaluate_Blast_XML():
     for record in NCBIXML.parse(open(results_filename)):
         if record.alignments: # skip queries with no   matches
             print("QUERY: %s" % record.query[:60])
-            for align in record.alignments:
-                for hsp in align.hsps:
+            for alignment in record.alignments:
+                counter = 1
+                for hsp in alignment.hsps:
                     if hsp.expect < E_VALUE_THRESH:
-                        print("MATCH: %s " % align.title[:60])
-                        print(hsp.expect)
+                        print(alignment.title)
+                        print()
+                        print(hsp.score+"\n")
+
+                        counter += 1
+                print("COUNTER:", counter)
+                raise Exception
+
+
 
 
 if __name__ == '__main__':
