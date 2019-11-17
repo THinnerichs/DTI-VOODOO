@@ -45,6 +45,23 @@ def test_blast():
     subprocess.call(blast_command, shell=True)
     print("Finished.\n")
 
+def evaluate_Blast_XML():
+    drug_name = "CIDm00000043"
+    results_filename = ""+drug_name+"_blast_result.xml"
+
+    from Bio.Blast import NCBIXML
+    E_VALUE_THRESH = 1e-20
+
+    for record in NCBIXML.parse(open(results_filename)):
+        if record.alignments: # skip queries with no   matches
+            print("QUERY: %s" % record.query[:60])
+            for align in record.alignments:
+                for hsp in align.hsps:
+                    if hsp.expect < E_VALUE_THRESH:
+                        print("MATCH: %s " % align.title[:60])
+                        print(hsp.expect)
+
 
 if __name__ == '__main__':
-    test_blast()
+    # test_blast()
+    evaluate_Blast_XML()
