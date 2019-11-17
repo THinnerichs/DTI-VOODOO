@@ -120,6 +120,9 @@ venv.bak/
 /data/hmm_builds/
 /data/hmm_search_results/
 /data/predicted_targets/
+/data/mdrfre.umls
+/data/meddra_all_label_se.tsv
+
 
 *aligned*
 *msa_output

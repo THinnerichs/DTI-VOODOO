@@ -108,7 +108,8 @@ def create_fasta_files(min_score=800):
 
 def run_MSA(min_score=800,
             alignment_method='mafft',
-            workers=50):
+            workers=50,
+            overwrite=False):
     """
     A wrapper for the different MSA techniques that are eventually executed in parallel.
 
@@ -133,7 +134,7 @@ def run_MSA(min_score=800,
         drug_name = file.split("_")[0].strip()
 
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.fasta"
-        if not os.path.exists(target_file):
+        if overwrite or not os.path.exists(target_file):
             fasta_file = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
 
             start_time = time.time()

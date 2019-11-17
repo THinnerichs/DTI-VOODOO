@@ -18,17 +18,27 @@ def test_blast():
     database_name = fasta_path + drug_name + "_blast_db"
 
     # Build blast db
+    print("Building database ...")
     command = "./makeblastdb -dbtype 'prot' "+\
               "-in " + database_fasta_file + " "+\
               "-out " + database_name
-    subprocess.call(command, shell=True)
     print(command)
-
-    
-
-    # cline = NcbiblastpCommandline(query=)
+    subprocess.call(command, shell=True)
+    print("Finished.\n")
 
 
+    print("Running query ...")
+    results_filename = ""+drug_name+"_blast_result"
+
+    blast_command = "blastp "+\
+                    "-query "+query_fasta_file+" "+\
+                    "-db "+database_name+" "+\
+                    "-out "+results_filename+" "+\
+                    "-outfmt 0"
+    print(blast_command)
+
+    subprocess.call(blast_command, shell=True)
+    print("Finished.\n")
 
 
 if __name__ == '__main__':
