@@ -52,6 +52,7 @@ def evaluate_Blast_XML():
     from Bio.Blast import NCBIXML
     E_VALUE_THRESH = 1e-20
 
+    first = True
     for record in NCBIXML.parse(open(results_filename)):
         if record.alignments: # skip queries with no   matches
             print("QUERY: %s" % record.query[:60])
@@ -66,6 +67,10 @@ def evaluate_Blast_XML():
 
                         counter += 1
                 print("COUNTER:", counter)
+
+                if first:
+                    first = False
+                    continue
                 raise Exception
 
 
