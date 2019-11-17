@@ -61,7 +61,8 @@ def evaluate_Blast_XML():
                     if hsp.expect < E_VALUE_THRESH:
                         print(alignment.title)
                         print()
-                        print(hsp.score+"\n")
+                        print(hsp.score)
+                        print("\n")
 
                         counter += 1
                 print("COUNTER:", counter)
