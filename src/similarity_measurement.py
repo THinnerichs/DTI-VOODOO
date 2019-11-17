@@ -34,7 +34,7 @@ def test_blast():
 
     blast_command = "./blastp "+\
                     "-task blastp-fast "+\
-                    "-num_threads 16 "+\
+                    "-num_threads 32 "+\
                     "-query "+query_fasta_file+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
