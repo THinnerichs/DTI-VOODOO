@@ -30,15 +30,16 @@ def test_blast():
 
 
     print("Running query ...")
-    results_filename = ""+drug_name+"_blast_result"
+    results_filename = ""+drug_name+"_blast_result.xml"
 
     blast_command = "./blastp "+\
                     "-task blastp-fast "+\
-                    "-num_threads 8 "+\
+                    "-num_threads 16 "+\
                     "-query "+query_fasta_file+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-outfmt 0"
+                    "-evalue 1e-20 "
+                    "-outfmt 5"
     print(blast_command)
 
     subprocess.call(blast_command, shell=True)
