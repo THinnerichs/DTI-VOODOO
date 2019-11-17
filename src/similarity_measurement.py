@@ -38,7 +38,7 @@ def test_blast():
                     "-query "+query_fasta_file+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-evalue 1e-20 "
+                    "-evalue 1e-20 "+\
                     "-outfmt 5"
     print(blast_command)
 
