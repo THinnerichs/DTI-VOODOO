@@ -30,7 +30,7 @@ def test_blast():
     print("Running query ...")
     results_filename = ""+drug_name+"_blast_result"
 
-    blast_command = "blastp "+\
+    blast_command = "./blastp "+\
                     "-query "+query_fasta_file+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
