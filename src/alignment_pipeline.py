@@ -1,4 +1,5 @@
 import numpy as np
+from random import shuffle
 
 import subprocess
 import queue
@@ -132,6 +133,8 @@ def run_MSA(min_score=800,
             return
 
         drug_name = file.split("_")[0].strip()
+        if int(drug_name[4:]) > 1200:
+            return
 
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.fasta"
         if overwrite or not os.path.exists(target_file):
@@ -205,7 +208,9 @@ def run_MSA(min_score=800,
 
     q = queue.Queue()
 
-    for fileName in os.listdir(fasta_path):
+    files = os.listdir(fasta_path)
+    shuffle(files)
+    for fileName in files:
         q.put(fileName)
 
     def worker():
@@ -313,7 +318,10 @@ def write_predicted_targets(min_score=800,
 
     q = queue.Queue()
 
-    for fileName in os.listdir(alignment_path):
+    files = os.listdir(alignment_path)
+    shuffle(files)
+
+    for fileName in files:
         q.put(fileName)
 
     def worker():
@@ -341,7 +349,7 @@ if __name__ == '__main__':
 
     run_MSA(min_score=800,
             alignment_method='kalign',
-            workers=32)
+            workers=16)
 
 
 
