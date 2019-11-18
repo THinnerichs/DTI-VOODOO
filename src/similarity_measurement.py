@@ -138,7 +138,7 @@ def evaluate_Blast_XML():
     results_filename = "../data/"+drug_name+"_blast_result.xml"
 
     from Bio.Blast import NCBIXML
-    E_VALUE_THRESH = 0.05
+    E_VALUE_THRESH = 100
 
     '''
     num_lines = None
@@ -206,8 +206,8 @@ def run_similarity_pipeline(threads=8,
                         "-query " + query_alignment_file + " " + \
                         "-db " + database_name + " " + \
                         "-out " + results_filename + " " + \
-                        "-evalue " + str(e_value_threshold)+" "\
                         "-outfmt 5"
+                        # "-evalue " + str(e_value_threshold)+" "\
         print(blast_command)
 
         subprocess.call(blast_command, shell=True)
@@ -280,7 +280,7 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    replace_gap_symbols_in_alignment()
+    # replace_gap_symbols_in_alignment()
     test_blast()
     evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
