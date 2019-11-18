@@ -77,9 +77,13 @@ def test_blast():
     # fasta_path = "../data/fasta_files/"
     # filename = "CIDm00000043_fasta_800_min_score.fasta"
 
+
     alignment_path = "../data/alignment_targets/"
     database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
     query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
+
+    subprocess.call("mv "+alignment_path+database_filename+" "+ alignment_path+database_filename[:-3]+"fasta")
+    subprocess.call("mv "+alignment_path+query_filename+" "+ alignment_path+query_filename[:-3]+"fasta")
 
     drug_name = database_filename.split("_")[0]
     database_name = "../data/" + drug_name + "_blast_db"
