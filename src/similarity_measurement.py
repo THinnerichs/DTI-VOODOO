@@ -77,12 +77,12 @@ def replace_gap_symbols_in_alignment():
 
     with open(file=alignment_path+database_filename[:-3]+"fasta", mode='w') as f:
         for record in SeqIO.parse(alignment_path+database_filename, 'fasta'):
-            f.write(str(record.id)+"\n")
+            f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+"\n")
 
     with open(file=alignment_path + query_filename[:-3] + "fasta", mode='w') as f:
         for record in SeqIO.parse(alignment_path + query_filename, 'fasta'):
-            f.write(str(record.id)+"\n")
+            f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+'\n')
 
 
