@@ -15,7 +15,7 @@ def test_biopython_PairwiseAligner():
     from Bio import Align, SeqIO
     aligner = Align.PairwiseAligner()
 
-    alignment_path = "../data/alignement_targets/"
+    alignment_path = "../data/alignment_targets/"
     database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
     query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
 
