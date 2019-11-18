@@ -87,6 +87,7 @@ def test_blast():
     # Build blast db
     print("Building database ...")
     command = "./makeblastdb -dbtype 'prot' "+\
+              "-input_type 'fasta' "+\
               "-in " + alignment_path+database_filename + " "+\
               "-out " + database_name
     print(command)
