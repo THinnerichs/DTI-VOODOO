@@ -98,7 +98,7 @@ def test_blast():
 
     alignment_path = "../data/alignment_targets/"
     database_filename = "CIDm00000003_kalign_aligned_800_min_score.fasta"
-    query_filename = "CIDm00000006_kalign_aligned_800_min_score.fasta"
+    query_filename = "CIDm00000003_kalign_aligned_800_min_score.fasta"
 
     # subprocess.call("cp "+alignment_path+database_filename+" "+ alignment_path+database_filename[:-3]+"fasta")
     # subprocess.call("cp "+alignment_path+query_filename+" "+ alignment_path+query_filename[:-3]+"fasta")
@@ -282,7 +282,7 @@ def run_similarity_pipeline(threads=8,
 if __name__ == '__main__':
     # replace_gap_symbols_in_alignment()
     test_blast()
-    # evaluate_Blast_XML()
+    evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
     # test_biopython_PairwiseAligner()
