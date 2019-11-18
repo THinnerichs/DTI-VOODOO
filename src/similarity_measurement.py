@@ -126,7 +126,7 @@ def test_blast():
                     "-query "+alignment_path+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-outfmt 5"
+                    "-outfmt 0"
                     # "-evalue 0.05 "+\
     print(blast_command)
 
@@ -282,7 +282,7 @@ def run_similarity_pipeline(threads=8,
 if __name__ == '__main__':
     # replace_gap_symbols_in_alignment()
     test_blast()
-    evaluate_Blast_XML()
+    # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
     # test_biopython_PairwiseAligner()
