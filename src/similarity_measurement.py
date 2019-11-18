@@ -68,6 +68,24 @@ def test_biopython_PairwiseAligner():
 
     print("This took {} seconds.".format(time.time()-start_time))
 
+def replace_gap_symbols_in_alignment():
+    from Bio import SeqIO
+
+    alignment_path = "../data/alignment_targets/"
+    database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
+    query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
+
+    with open(file=alignment_path+database_filename[:-3]+"fasta", mode='w') as f:
+        for record in SeqIO.parse(alignment_path+database_filename, 'fasta'):
+            f.write(str(record.id)+"\n")
+            f.write(str(record.seq).replace('-', 'X')+"\n")
+
+    with open(file=alignment_path + query_filename[:-3] + "fasta", mode='w') as f:
+        for record in SeqIO.parse(alignment_path + query_filename, 'fasta'):
+            f.write(str(record.id)+"\n")
+            f.write(str(record.seq).replace('-', 'X')+'\n')
+
+
 def test_blast():
 
     # parameters
@@ -106,7 +124,7 @@ def test_blast():
                     "-task blastp-fast "+\
                     "-num_threads 32 "+\
                     "-query "+alignment_path+query_filename+" "+\
-                    "-db "+alignment_path+database_name+" "+\
+                    "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
                     "-evalue 1e-20 "+\
                     "-outfmt 5"
@@ -254,7 +272,8 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    test_blast()
+    replace_gap_symbols_in_alignment()
+    # test_blast()
     # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
