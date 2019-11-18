@@ -281,8 +281,8 @@ def run_similarity_pipeline(threads=8,
 
 if __name__ == '__main__':
     # replace_gap_symbols_in_alignment()
-    test_blast()
-    # evaluate_Blast_XML()
+    # test_blast()
+    evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
     # test_biopython_PairwiseAligner()
