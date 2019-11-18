@@ -24,6 +24,8 @@ def test_biopython_PairwiseAligner():
     # STR, RISLER, RAO, PAM70, PAM30, PAM250, MDM78, MCLACHLAN, LEVIN, JONES, JOHNSON, GONNET1992, GENETIC,
     # FENG, DAYHOFF, BLOSUM,
 
+    start_time = time.time()
+
     for matrix in ['STR', 'RISLER', 'RAO', 'PAM70', 'PAM30', 'PAM250', 'MDM78', 'MCLACHLAN', 'LEVIN', 'JONES', 'JOHNSON', 'GONNET1992', 'GENETIC',
                    'FENG', 'DAYHOFF', 'BLOSUM90', 'BENNER22', 'BENNER6', 'BENNER74', 'BLOSUM45', 'BLOSUM50', 'BLOSUM62', 'BLOSUM80']:
 
@@ -49,12 +51,11 @@ def test_biopython_PairwiseAligner():
         print(len(database_records))
         print(len(query_records))
 
-        start_time = time.time()
 
         def help_func(doublet):
             with open(file="../data/score_list", mode='a') as f:
-                seq1 = str(doublet[0].seq).replace('-', 'X')
-                seq2 = str(doublet[1].seq).replace('-', 'X')
+                seq1 = str(doublet[0].seq).replace('-', '-')
+                seq2 = str(doublet[1].seq).replace('-', '-')
                 f.write(str(aligner.score(seq1, seq2))+"\n")
         # help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
 
