@@ -27,6 +27,7 @@ def test_biopython_PairwiseAligner():
     for matrix in ['STR', 'RISLER', 'RAO', 'PAM70', 'PAM30', 'PAM250', 'MDM78', 'MCLACHLAN', 'LEVIN', 'JONES', 'JOHNSON', 'GONNET1992', 'GENETIC',
                    'FENG', 'DAYHOFF', 'BLOSUM90', 'BENNER22', 'BENNER6', 'BENNER74', 'BLOSUM45', 'BLOSUM50', 'BLOSUM62', 'BLOSUM80']:
 
+        print("\n" + matrix)
         aligner.substitution_matrix = substitution_matrices.load(matrix)
 
         with open(file="../data/score_list", mode='a') as f:
