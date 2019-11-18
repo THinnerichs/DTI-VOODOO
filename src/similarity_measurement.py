@@ -36,7 +36,7 @@ def test_biopython_PairwiseAligner():
 
     help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
 
-    score_list = Parallel(n_jobs=16)(delayed(help_func)(doublet) for doublet in itertools.product(database_records, query_records))
+    score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in itertools.product(database_records, query_records))
 
     score_list = np.array(score_list)
 
