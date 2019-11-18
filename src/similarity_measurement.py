@@ -34,7 +34,10 @@ def test_biopython_PairwiseAligner():
 
     start_time = time.time()
 
-    help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
+    def help_func(doublet):
+        with open(file="../data/score_list", mode='a') as f:
+            f.write(str(aligner.score(doublet[0].seq, doublet[1].seq))+"\n")
+    # help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
 
     score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in tqdm(itertools.product(database_records, query_records)))
 
