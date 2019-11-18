@@ -11,6 +11,21 @@ from random import shuffle
 import itertools
 
 
+def test_biopython_PairwiseAligner():
+    from Bio import Align, SeqIO
+    aligner = Align.PairwiseAligner()
+
+    # make_blast_db
+    fasta_path = "../data/fasta_files/"
+    filename = "CIDm00000043_fasta_800_min_score.fasta"
+    database_fasta_file = fasta_path + filename
+    query_fasta_file = fasta_path + filename
+
+    records = list(SeqIO.parse(database_fasta_file, 'fasta'))
+    start_time = time.time()
+    print(aligner.score(records[0].seq,records[1].seq))
+
+    print("This took {} seconds.".format(time.time()-start_time))
 
 def test_blast():
 
@@ -158,23 +173,33 @@ def run_similarity_pipeline(threads=8,
 
     q = queue.Queue()
 
-    file_doublets = itertools.product(os.listdir(alignment_path), os.listdir(alignment_path))
+    help_file_doublets = itertools.product(os.listdir(alignment_path), os.listdir(alignment_path))
+
+    # omit symmetric doublets
+    file_doublets=[]
+    for doublet in help_file_doublets:
+        file1, file2 = doublet
+        if (file2, file2) not in file_doublets and not file1 == file2:
+            file_doublets.append(doublet)
+
+    # initialize queue
     for doublet in file_doublets:
         q.put(doublet)
 
+    # define worker
     def worker():
         while True:
             doublet = q.get()
             if doublet is None:  # EOF?
                 return
             file1, file2 = doublet
-            if file1 == file2:
-                continue
+
             similarity_score(file1, file2)
 
+    # Start the workers
     max_overall_threads = 50
-    threads = [threading.Thread(target=worker) for _i in range(int(max_overall_threads/threads))]
-    for thread in threads:
+    num_threads = [threading.Thread(target=worker) for _i in range(int(max_overall_threads/threads))]
+    for thread in num_threads:
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
@@ -183,4 +208,4 @@ def run_similarity_pipeline(threads=8,
 if __name__ == '__main__':
     # test_blast()
     # evaluate_Blast_XML()
-    run_similarity_pipeline()
+    run_similarity_pipeline(threads=8)
