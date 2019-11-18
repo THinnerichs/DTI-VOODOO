@@ -134,33 +134,41 @@ def test_blast():
     print("Finished.\n")
 
 def evaluate_Blast_XML():
-    drug_name = "CIDm00000043"
+    drug_name = "CIDm00000003"
     results_filename = ""+drug_name+"_blast_result.xml"
 
     from Bio.Blast import NCBIXML
     E_VALUE_THRESH = 0.05
 
+    '''
     num_lines = None
     fasta_path = "../data/fasta_files/"
-    filename = "CIDm00000043_fasta_800_min_score.fasta"
+    filename = "CIDm00000003_fasta_800_min_score.fasta"
     with open(file=fasta_path+filename, mode='r') as f:
         num_lines = sum(1 for line in f)
 
     print("Lines:", num_lines)
+    '''
 
-    raise Exception
 
 
     start_time = time.time()
     print("Parsing similarity scores ...")
-    prot_prot_sim_dict = {}
+    # prot_prot_sim_dict = {}
+    score_list = []
     for record in NCBIXML.parse(open(results_filename)):
         if record.alignments: # skip queries with no   matches
-            prot_prot_sim_dict[record.query] = {}
+            # prot_prot_sim_dict[record.query] = {}
             for alignment in record.alignments:
                 for hsp in alignment.hsps:
                     if hsp.expect < E_VALUE_THRESH:
-                        prot_prot_sim_dict[record.query][alignment.title] = int(hsp.score)
+                        # prot_prot_sim_dict[record.query][alignment.title] = int(hsp.score)
+                        score_list.append(int(hsp.score))
+
+    print(score_list)
+    score_list = np.array(score_list)
+
+    print(score_list.mean(), score_list.std())
 
     print("Finished in {} seconds.".format(time.time() - start_time))
 
@@ -272,7 +280,7 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    replace_gap_symbols_in_alignment()
+    # replace_gap_symbols_in_alignment()
     test_blast()
     # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
