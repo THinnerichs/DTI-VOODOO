@@ -332,8 +332,6 @@ def write_predicted_targets(min_score=800,
                 protein_id = split_list[8].strip()
                 predicted_targets_filehandler.write(protein_id+'\n')
 
-    # Parallel(n_jobs=8)(delayed(hmm_pipeline)(filename) for filename in os.listdir(alignment_path))
-
     q = queue.Queue()
 
     files = os.listdir(alignment_path)

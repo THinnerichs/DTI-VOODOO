@@ -7,6 +7,7 @@ import queue
 import threading
 import os
 from random import shuffle
+from tqdm import tqdm
 
 import itertools
 
@@ -32,11 +33,10 @@ def test_biopython_PairwiseAligner():
     print(len(query_records))
 
     start_time = time.time()
-    counter = 0
 
     help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
 
-    score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in itertools.product(database_records, query_records))
+    score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in tqdm(itertools.product(database_records, query_records)))
 
     score_list = np.array(score_list)
 
