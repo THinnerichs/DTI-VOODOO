@@ -126,8 +126,8 @@ def test_blast():
                     "-query "+alignment_path+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-evalue 0.05 "+\
                     "-outfmt 5"
+                    # "-evalue 0.05 "+\
     print(blast_command)
 
     subprocess.call(blast_command, shell=True)
@@ -206,8 +206,8 @@ def run_similarity_pipeline(threads=8,
                         "-query " + query_alignment_file + " " + \
                         "-db " + database_name + " " + \
                         "-out " + results_filename + " " + \
+                        "-evalue " + str(e_value_threshold)+" "\
                         "-outfmt 5"
-                        # "-evalue " + str(e_value_threshold)+" "\
         print(blast_command)
 
         subprocess.call(blast_command, shell=True)
