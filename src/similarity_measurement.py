@@ -208,4 +208,6 @@ def run_similarity_pipeline(threads=8,
 if __name__ == '__main__':
     # test_blast()
     # evaluate_Blast_XML()
-    run_similarity_pipeline(threads=8)
+    # run_similarity_pipeline(threads=8)
+
+    test_biopython_PairwiseAligner()
