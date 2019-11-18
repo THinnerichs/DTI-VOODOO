@@ -13,8 +13,11 @@ import itertools
 
 
 def test_biopython_PairwiseAligner():
+    # initialize and tune aligner
     from Bio import Align, SeqIO
     aligner = Align.PairwiseAligner()
+    aligner.open_gap_score = -10
+    aligner.extend_gap_score = -0.5
 
     alignment_path = "../data/alignment_targets/"
     database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
