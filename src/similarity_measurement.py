@@ -68,7 +68,7 @@ def test_biopython_PairwiseAligner():
 
     print("This took {} seconds.".format(time.time()-start_time))
 
-def replace_gap_symbols_in_alignment():
+def replace_gap_symbols_in_alignment(samples=500):
     from Bio import SeqIO
 
     alignment_path = "../data/alignment_targets/"
@@ -76,12 +76,12 @@ def replace_gap_symbols_in_alignment():
     query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
 
     with open(file=alignment_path+database_filename[:-3]+"fasta", mode='w') as f:
-        for record in list(SeqIO.parse(alignment_path+database_filename, 'fasta'))[:200]:
+        for record in list(SeqIO.parse(alignment_path+database_filename, 'fasta'))[:samples]:
             f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+"\n")
 
     with open(file=alignment_path + query_filename[:-3] + "fasta", mode='w') as f:
-        for record in list(SeqIO.parse(alignment_path + query_filename, 'fasta'))[:200]:
+        for record in list(SeqIO.parse(alignment_path + query_filename, 'fasta'))[:samples]:
             f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+'\n')
 
@@ -126,7 +126,7 @@ def test_blast():
                     "-query "+alignment_path+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-evalue 1e-20 "+\
+                    "-evalue 0.05 "+\
                     "-outfmt 5"
     print(blast_command)
 
@@ -166,9 +166,9 @@ def evaluate_Blast_XML():
                         score_list.append(int(hsp.score))
 
     print(score_list)
-    score_list = np.array(score_list)
+    # score_list = np.array(score_list)
 
-    print(score_list.mean(), score_list.std())
+    # print(score_list.mean(), score_list.std())
 
     print("Finished in {} seconds.".format(time.time() - start_time))
 
@@ -280,8 +280,8 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    # replace_gap_symbols_in_alignment()
-    # test_blast()
+    replace_gap_symbols_in_alignment()
+    test_blast()
     evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
