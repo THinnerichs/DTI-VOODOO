@@ -76,12 +76,12 @@ def replace_gap_symbols_in_alignment():
     query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
 
     with open(file=alignment_path+database_filename[:-3]+"fasta", mode='w') as f:
-        for record in SeqIO.parse(alignment_path+database_filename, 'fasta'):
+        for record in list(SeqIO.parse(alignment_path+database_filename, 'fasta'))[:200]:
             f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+"\n")
 
     with open(file=alignment_path + query_filename[:-3] + "fasta", mode='w') as f:
-        for record in SeqIO.parse(alignment_path + query_filename, 'fasta'):
+        for record in list(SeqIO.parse(alignment_path + query_filename, 'fasta'))[:200]:
             f.write(">"+str(record.id)+"\n")
             f.write(str(record.seq).replace('-', 'X')+'\n')
 
@@ -272,7 +272,7 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    # replace_gap_symbols_in_alignment()
+    replace_gap_symbols_in_alignment()
     test_blast()
     # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
