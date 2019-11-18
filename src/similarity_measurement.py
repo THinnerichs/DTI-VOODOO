@@ -126,7 +126,7 @@ def test_blast():
                     "-query "+alignment_path+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
-                    "-outfmt 0"
+                    "-outfmt 5"
                     # "-evalue 0.05 "+\
     print(blast_command)
 
@@ -276,6 +276,10 @@ def run_similarity_pipeline(threads=8,
     for thread in num_threads:
         thread.start()
         q.put(None)  # one EOF marker for each thread
+
+def get_kovacs_similarity():
+    # Extract graph from raw SIDER2 data
+    import networkx as nx
 
 
 
