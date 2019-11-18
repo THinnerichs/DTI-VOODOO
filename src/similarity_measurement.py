@@ -122,7 +122,7 @@ def test_blast():
 
     blast_command = "./blastp "+\
                     "-task blastp-fast "+\
-                    "-num_threads 32 "+\
+                    "-num_threads "+str(threads)+" "+\
                     "-query "+alignment_path+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
