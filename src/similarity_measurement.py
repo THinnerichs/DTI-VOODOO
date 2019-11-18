@@ -71,21 +71,23 @@ def test_biopython_PairwiseAligner():
 def test_blast():
 
     # parameters
-    threads = 8
+    threads = 40
 
     # make_blast_db
-    fasta_path = "../data/fasta_files/"
-    filename = "CIDm00000043_fasta_800_min_score.fasta"
-    database_fasta_file = fasta_path + filename
-    query_fasta_file = fasta_path + filename
+    # fasta_path = "../data/fasta_files/"
+    # filename = "CIDm00000043_fasta_800_min_score.fasta"
 
-    drug_name = filename.split("_")[0]
-    database_name = fasta_path + drug_name + "_blast_db"
+    alignment_path = "../data/alignment_targets/"
+    database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
+    query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
+
+    drug_name = database_filename.split("_")[0]
+    database_name = "../data/" + drug_name + "_blast_db"
 
     # Build blast db
     print("Building database ...")
     command = "./makeblastdb -dbtype 'prot' "+\
-              "-in " + database_fasta_file + " "+\
+              "-in " + database_filename + " "+\
               "-out " + database_name
     print(command)
     subprocess.call(command, shell=True)
@@ -93,12 +95,12 @@ def test_blast():
 
 
     print("Running query ...")
-    results_filename = ""+drug_name+"_blast_result.xml"
+    results_filename = "../data/"+drug_name+"_blast_result.xml"
 
     blast_command = "./blastp "+\
                     "-task blastp-fast "+\
                     "-num_threads 32 "+\
-                    "-query "+query_fasta_file+" "+\
+                    "-query "+query_filename+" "+\
                     "-db "+database_name+" "+\
                     "-out "+results_filename+" "+\
                     "-evalue 1e-20 "+\
@@ -247,8 +249,8 @@ def run_similarity_pipeline(threads=8,
 
 
 if __name__ == '__main__':
-    # test_blast()
+    test_blast()
     # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
-    test_biopython_PairwiseAligner()
+    # test_biopython_PairwiseAligner()
