@@ -87,7 +87,7 @@ def test_blast():
     # Build blast db
     print("Building database ...")
     command = "./makeblastdb -dbtype 'prot' "+\
-              "-in " + database_filename + " "+\
+              "-in " + alignment_path+database_filename + " "+\
               "-out " + database_name
     print(command)
     subprocess.call(command, shell=True)
@@ -100,8 +100,8 @@ def test_blast():
     blast_command = "./blastp "+\
                     "-task blastp-fast "+\
                     "-num_threads 32 "+\
-                    "-query "+query_filename+" "+\
-                    "-db "+database_name+" "+\
+                    "-query "+alignment_path+query_filename+" "+\
+                    "-db "+alignment_path+database_name+" "+\
                     "-out "+results_filename+" "+\
                     "-evalue 1e-20 "+\
                     "-outfmt 5"
