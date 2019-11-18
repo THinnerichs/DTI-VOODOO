@@ -18,6 +18,8 @@ def test_biopython_PairwiseAligner():
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -10
     aligner.extend_gap_score = -0.5
+    aligner.substitution_matrix = Align.substitution_matrices.load("STR")
+
 
     alignment_path = "../data/alignment_targets/"
     database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
