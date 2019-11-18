@@ -15,10 +15,12 @@ import itertools
 def test_biopython_PairwiseAligner():
     # initialize and tune aligner
     from Bio import Align, SeqIO
+    from Bio.Align import substitution_matrices
+
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -10
     aligner.extend_gap_score = -0.5
-    aligner.substitution_matrix = Align.substitution_matrices.load("STR")
+    aligner.substitution_matrix = substitution_matrices.load("STR")
 
 
     alignment_path = "../data/alignment_targets/"
