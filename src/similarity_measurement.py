@@ -19,7 +19,7 @@ def test_biopython_PairwiseAligner():
 
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -10
-    aligner.extend_gap_score = -0.01
+    aligner.extend_gap_score = -0.5
     aligner.substitution_matrix = substitution_matrices.load("STR")
 
 
