@@ -15,22 +15,38 @@ def test_biopython_PairwiseAligner():
     from Bio import Align, SeqIO
     aligner = Align.PairwiseAligner()
 
-    # make_blast_db
-    fasta_path = "../data/fasta_files/"
-    filename = "CIDm00000043_fasta_800_min_score.fasta"
-    database_fasta_file = fasta_path + filename
-    query_fasta_file = fasta_path + filename
+    alignment_path = "../data/alignement_targets/"
+    database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
+    query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
 
-    print(len(list(SeqIO.parse(database_fasta_file, 'fasta'))))
+    # make_blast_db
+    # fasta_path = "../data/fasta_files/"
+    # filename = "CIDm00000043_fasta_800_min_score.fasta"
+    database_fasta_file = alignment_path + database_filename
+    query_fasta_file = alignment_path + query_filename
+
+    database_records = list(SeqIO.parse(database_fasta_file, 'fasta'))
+    query_records = list(SeqIO.parse(query_fasta_file, 'fasta'))
+
+    print(len(database_records))
+    print(len(query_records))
 
     start_time = time.time()
     counter = 0
-    for record1 in SeqIO.parse(database_fasta_file, 'fasta'):
-        counter += 1
-        for record2 in SeqIO.parse(query_fasta_file, 'fasta'):
-            aligner.score(record1.seq, record2.seq)
-        print(counter)
+
+    help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
+
+    score_list = Parallel(n_jobs=16)(delayed(help_func)(doublet) for doublet in itertools.product(database_records, query_records))
+
+    score_list = np.array(score_list)
+
+    np.save("../data/score_list_nparray.npy", score_list)
+
+
+
     print("This took {} seconds.".format(time.time()-start_time))
+
+
 
 def test_blast():
 
