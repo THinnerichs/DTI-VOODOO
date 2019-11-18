@@ -135,7 +135,7 @@ def test_blast():
 
 def evaluate_Blast_XML():
     drug_name = "CIDm00000003"
-    results_filename = ""+drug_name+"_blast_result.xml"
+    results_filename = "../data/"+drug_name+"_blast_result.xml"
 
     from Bio.Blast import NCBIXML
     E_VALUE_THRESH = 0.05
