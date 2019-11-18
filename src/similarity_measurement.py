@@ -21,10 +21,12 @@ def test_biopython_PairwiseAligner():
     database_fasta_file = fasta_path + filename
     query_fasta_file = fasta_path + filename
 
-    records = list(SeqIO.parse(database_fasta_file, 'fasta'))
-    start_time = time.time()
-    print(aligner.score(records[0].seq,records[1].seq))
+    print(len(list(SeqIO.parse(database_fasta_file, 'fasta'))))
 
+    start_time = time.time()
+    for record1 in SeqIO.parse(database_fasta_file, 'fasta'):
+        for record2 in SeqIO.parse(query_fasta_file, 'fasta'):
+            aligner.score(record1.seq, record2.seq)
     print("This took {} seconds.".format(time.time()-start_time))
 
 def test_blast():
