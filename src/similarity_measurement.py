@@ -20,37 +20,49 @@ def test_biopython_PairwiseAligner():
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -10
     aligner.extend_gap_score = -0.5
-    aligner.substitution_matrix = substitution_matrices.load("STR")
+    # options:
+    # STR, RISLER, RAO, PAM70, PAM30, PAM250, MDM78, MCLACHLAN, LEVIN, JONES, JOHNSON, GONNET1992, GENETIC,
+    # FENG, DAYHOFF, BLOSUM,
 
+    for matrix in ['STR', 'RISLER', 'RAO', 'PAM70', 'PAM30', 'PAM250', 'MDM78', 'MCLACHLAN', 'LEVIN', 'JONES', 'JOHNSON', 'GONNET1992', 'GENETIC',
+                   'FENG', 'DAYHOFF', 'BLOSUM90', 'BENNER22', 'BENNER6', 'BENNER74', 'BLOSUM45', 'BLOSUM50', 'BLOSUM62', 'BLOSUM80']:
 
-    alignment_path = "../data/alignment_targets/"
-    database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
-    query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
+        aligner.substitution_matrix = substitution_matrices.load(matrix)
 
-    # make_blast_db
-    # fasta_path = "../data/fasta_files/"
-    # filename = "CIDm00000043_fasta_800_min_score.fasta"
-    database_fasta_file = alignment_path + database_filename
-    query_fasta_file = alignment_path + query_filename
-
-    database_records = list(SeqIO.parse(database_fasta_file, 'fasta'))
-    query_records = list(SeqIO.parse(query_fasta_file, 'fasta'))
-
-    print(len(database_records))
-    print(len(query_records))
-
-    start_time = time.time()
-
-    def help_func(doublet):
         with open(file="../data/score_list", mode='a') as f:
-            f.write(str(aligner.score(doublet[0].seq, doublet[1].seq))+"\n")
-    # help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
+            f.write("\nMATRIX: "+matrix+"\n")
 
-    score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in tqdm(itertools.product(database_records, query_records)))
+        alignment_path = "../data/alignment_targets/"
+        database_filename = "CIDm00000003_kalign_aligned_800_min_score.afa"
+        query_filename = "CIDm00000006_kalign_aligned_800_min_score.afa"
 
-    score_list = np.array(score_list)
+        # make_blast_db
+        # fasta_path = "../data/fasta_files/"
+        # filename = "CIDm00000043_fasta_800_min_score.fasta"
+        database_fasta_file = alignment_path + database_filename
+        query_fasta_file = alignment_path + query_filename
 
-    np.save("../data/score_list_nparray.npy", score_list)
+        database_records = list(SeqIO.parse(database_fasta_file, 'fasta'))
+        query_records = list(SeqIO.parse(query_fasta_file, 'fasta'))
+
+        print(len(database_records))
+        print(len(query_records))
+
+        start_time = time.time()
+
+        def help_func(doublet):
+            with open(file="../data/score_list", mode='a') as f:
+                seq1 = str(doublet[0].seq).replace('-', 'X')
+                seq2 = str(doublet[1].seq).replace('-', 'X')
+                f.write(str(aligner.score(seq1, seq2))+"\n")
+        # help_func = lambda doublet: aligner.score(doublet[0].seq, doublet[1].seq)
+
+        score_list = Parallel(n_jobs=40)(delayed(help_func)(doublet) for doublet in tqdm(itertools.product(database_records, query_records)[:200]))
+
+
+        # score_list = np.array(score_list)
+
+        # np.save("../data/score_list_nparray.npy", score_list)
 
     print("This took {} seconds.".format(time.time()-start_time))
 
