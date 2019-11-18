@@ -42,11 +42,7 @@ def test_biopython_PairwiseAligner():
 
     np.save("../data/score_list_nparray.npy", score_list)
 
-
-
     print("This took {} seconds.".format(time.time()-start_time))
-
-
 
 def test_blast():
 

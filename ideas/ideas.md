@@ -4,10 +4,9 @@
 - for each drug get targets across all organisms
 - perform multi sequence alignment (Biopython?)
 - use result for query against same database
-	- if many results:
-		- use position weight matrix for encoding of targets
-	- few results:
-		- good precision
+	- good precision
+
+- get similarity score between alignments -> is a single score sufficient? (Bit score)
 
 ## Other ideas
 

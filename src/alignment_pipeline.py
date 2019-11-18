@@ -15,7 +15,12 @@ from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, M
 
 def separate_prots_to_files(file_min_score=400,
                             min_score=400):
-
+    """
+    Iterate over large drug-target-interaction file and filter drugs and their targets to separate files.
+    :param file_min_score:              min_score given in filename
+    :param min_score:                   min_score that is really applied,
+    :return:
+    """
     # process drug-protein-interaction file
     print("Processing drug protein data...")
     protein_chemical_links_filename = "../data/protein_chemical.links.min_score_"+str(file_min_score)+".tsv"
@@ -73,7 +78,12 @@ def merge_drug_files():
         print("intersection:", len(set(m_targets) & set(s_targets)), '\n')
 
 def create_fasta_files(min_score=800):
-
+    """
+    Create fasta files for all filtered files from separate_prots_to_file() using a previously created dict, mapping
+    targets to their amino acid sequence.
+    :param min_score:                   min_score both applied and in filename
+    :return:
+    """
     # Create protein amino acid sequence from fasta
     print("Reading pruned dict...")
     dict_filename = "../data/prot_aa_seq_dict"
@@ -114,9 +124,9 @@ def run_MSA(min_score=800,
     """
     A wrapper for the different MSA techniques that are eventually executed in parallel.
 
-    :param min_score:
-    :param alignment_method:
-    :param workers:
+    :param min_score:                       min_score on which pipeline shall be executed
+    :param alignment_method:                alignment method which shall be used for the msa, see elif cascade below for options
+    :param workers:                         number of workers that each will execute the pipeline, watch memory limitations
     :return:
     """
 
@@ -229,6 +239,14 @@ def run_MSA(min_score=800,
 def write_predicted_targets(min_score=800,
                             alignment_method='kalign',
                             workers=20):
+    """
+    A wrapper for the hmm pipeline that builds the Hidden Markov Model for each multi sequence alignment and also searches
+    for it against the whole amount of amino acid sequences.
+    :param min_score:                       min_score for both filename
+    :param alignment_method:                alignment method that was used in the previous msa step
+    :param workers:                         number of workers that will each execute the pipeline for a single alignment
+    :return:
+    """
 
     alignment_path = '../data/alignment_targets/'
 
