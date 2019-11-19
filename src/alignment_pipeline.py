@@ -186,9 +186,9 @@ def run_MSA(min_score=800,
                 command = "./kalign2/kalign -i " + fasta_file + " -o " + target_file
             elif alignment_method == 'famsa':
                 threads_per_process = 3
-                "./famsa-1.2.5-linux " +\
-                "-t "+str(threads_per_process)+" "+\
-                fasta_file + " " + target_file
+                command = "./famsa-1.2.5-linux " +\
+                          "-t "+str(threads_per_process)+" "+\
+                          fasta_file + " " + target_file
             else:
                 print("No valid alignment method selected.")
                 raise Exception
