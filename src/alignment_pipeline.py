@@ -119,7 +119,8 @@ def create_fasta_files(min_score=800):
 
 def run_MSA(min_score=800,
             alignment_method='mafft',
-            workers=50,
+            workers=16,
+            threads_per_process=2,
             overwrite=False):
     """
     A wrapper for the different MSA techniques that are eventually executed in parallel.
@@ -166,7 +167,6 @@ def run_MSA(min_score=800,
                                             out=target_file)
                 command = "./" + str(command)
             elif alignment_method == 'mafft':
-                threads_per_process = 3
                 command = "./mafft-linux64/mafft.bat " \
                           "--anysymbol " \
                           "--auto " + \
@@ -184,7 +184,6 @@ def run_MSA(min_score=800,
             elif alignment_method == 'kalign':
                 command = "./kalign2/kalign -i " + fasta_file + " -o " + target_file
             elif alignment_method == 'famsa':
-                threads_per_process = 3
                 command = "./famsa-1.2.5-linux " +\
                           "-t "+str(threads_per_process)+" "+\
                           fasta_file + " " + target_file
@@ -367,7 +366,8 @@ if __name__ == '__main__':
 
     run_MSA(min_score=800,
             alignment_method='mafft',
-            workers=16)
+            workers=8,
+            threads_per_process=6)
 
 
 
