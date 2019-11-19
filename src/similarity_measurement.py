@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.metrics import jaccard_similarity_score
 import networkx as nx
+import math
 
 
 import subprocess
@@ -281,10 +282,11 @@ def run_similarity_pipeline(threads=8,
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
-def write_SIDER_graph():
+def write_SIDER_only_graph():
     # Extract graph from raw SIDER2 data
     filename = "../data/meddra_all_label_se.tsv"
 
+    print("Extracting graph from raw data ...")
     G = nx.Graph()
     with open(file=filename, mode='r') as f:
         for line in f:
@@ -302,27 +304,81 @@ def write_SIDER_graph():
 
             G.add_edge(flat_drug, side_effect_id)
             G.add_edge(stereo_drug, side_effect_id)
+    print("Finished.\n")
 
-
-    print("Writing pruned dict to disc")
+    print("Writing SIDER only graph to disc ...")
     filename = "../data/bipartite_SIDER_only_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(G, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished writing ", filename)
+    print("Finished writing ", filename, '\n')
 
+def get_SIDER_only_graph():
+    print("Reading SIDER only graph ...")
+    graph_filename = "../data/bipartite_SIDER_only_graph"
+    with open(graph_filename + '.pkl', 'rb') as f:
+        return pickle.load(f)
 
-def get_jaccard_se_similarity_dict():
-    # get jacca
+def get_SIDER_drug_list():
+    filename = "../data/meddra_all_label_se.tsv"
+
+    drug_list = set()
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+
+            flat_drug = flat_drug[:3] + "m" + flat_drug[4:]
+            stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
+
+            drug_list.add(flat_drug)
+            drug_list.add(stereo_drug)
+
+    return list(drug_list)
+
+def get_SIDER_side_effect_list():
+    filename = "../data/meddra_all_label_se.tsv"
+
+    side_effect_id_list = set()
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+
+            side_effect_id_list.add(side_effect_id)
+
+    return list(side_effect_id_list)
+
+def write_jaccard_se_similarity_graph():
+    # SIDER only graph
+    SIDER_graph = get_SIDER_only_graph()
+    drug_SIDER_list = get_SIDER_drug_list()
+
+    similarity_graph = nx.Graph()
+    similarity_graph.add_nodes_from(drug_SIDER_list)
+    for drug1, drug2 in itertools.product(drug_SIDER_list, drug_SIDER_list):
+        adj_set1 = set(SIDER_graph.neighbors(drug1))
+        adj_set2 = set(SIDER_graph.neighbors(drug2))
+
+        intersec_size = len(adj_set1 & adj_set2)
+        union_size = len(adj_set1 | adj_set2)
+        if union_size != 0:
+            jaccard_similarity = intersec_size / union_size
+            similarity_graph.add_edge(drug1, drug2, weight=jaccard_similarity)
+        else:
+            similarity_graph.add_edge(drug1, drug2, weight=0)
 
     print("Writing pruned dict to disc")
-    filename = "../data/jaccard_similarity_dict"
+    filename = "../data/jaccard_similarity_graph"
     with open(filename + '.pkl', 'wb') as f:
-        pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(similarity_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
 
+def get_jaccard_se_similarity_graph():
+    print("Reading jaccard side effect graph graph ...")
+    graph_filename = "../data/jaccard_similarity_graph"
+    with open(graph_filename + '.pkl', 'rb') as f:
+        return pickle.load(f)
 
-
-    
+def write_semantic_similarity_graph():
+    pass
 
 
 if __name__ == '__main__':
@@ -333,6 +389,6 @@ if __name__ == '__main__':
 
     # test_biopython_PairwiseAligner()
 
-    write_SIDER_graph()
-    # get_jaccard_se_similarity_dict()
+    # write_SIDER_only_graph()
+    get_jaccard_se_similarity_graph()
 
