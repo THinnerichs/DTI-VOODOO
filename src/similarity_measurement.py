@@ -351,6 +351,7 @@ def write_jaccard_se_similarity_graph():
     SIDER_graph = get_SIDER_only_graph()
     drug_SIDER_list = get_SIDER_drug_list()
 
+    print("Building jaccard similarity graph ...")
     similarity_graph = nx.Graph()
     similarity_graph.add_nodes_from(drug_SIDER_list)
     for drug1, drug2 in itertools.product(drug_SIDER_list, drug_SIDER_list):
@@ -364,15 +365,16 @@ def write_jaccard_se_similarity_graph():
             similarity_graph.add_edge(drug1, drug2, weight=jaccard_similarity)
         else:
             similarity_graph.add_edge(drug1, drug2, weight=0)
+    print("Finished.\n")
 
-    print("Writing pruned dict to disc")
+    print("Writing jaccard side effect similarity graph to disc ...")
     filename = "../data/jaccard_similarity_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(similarity_graph, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished writing ", filename)
+    print("Finished writing ", filename, '\n')
 
 def get_jaccard_se_similarity_graph():
-    print("Reading jaccard side effect graph graph ...")
+    print("Reading jaccard side effect graph ...\n")
     graph_filename = "../data/jaccard_similarity_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
@@ -390,5 +392,6 @@ if __name__ == '__main__':
     # test_biopython_PairwiseAligner()
 
     # write_SIDER_only_graph()
+    write_jaccard_se_similarity_graph()
     get_jaccard_se_similarity_graph()
 
