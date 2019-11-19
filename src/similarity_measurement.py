@@ -1,4 +1,7 @@
 import numpy as np
+from sklearn.metrics import jaccard_similarity_score
+import networkx as nx
+
 
 import subprocess
 from joblib import Parallel, delayed
@@ -8,6 +11,7 @@ import threading
 import os
 from random import shuffle
 from tqdm import tqdm
+import pickle
 
 import itertools
 
@@ -277,16 +281,46 @@ def run_similarity_pipeline(threads=8,
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
-def get_kovacs_similarity():
-
+def write_SIDER_graph():
     # Extract graph from raw SIDER2 data
     filename = "../data/meddra_all_label_se.tsv"
+
+    G = nx.Graph()
     with open(file=filename, mode='r') as f:
         for line in f:
             _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
 
             flat_drug = flat_drug[:3] + "m" + flat_drug[4:]
             stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
+
+            if flat_drug not in G.nodes():
+                G.add_node(flat_drug)
+                G.add_node(stereo_drug)
+
+            if side_effect_id not in G.nodes():
+                G.add_node(side_effect_id)
+
+            G.add_edge(flat_drug, side_effect_id)
+            G.add_edge(stereo_drug, side_effect_id)
+
+
+    print("Writing pruned dict to disc")
+    filename = "../data/bipartite_SIDER_only_graph"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(G, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename)
+
+
+def get_jaccard_se_similarity_dict():
+    # get jacca
+
+    print("Writing pruned dict to disc")
+    filename = "../data/jaccard_similarity_dict"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename)
+
+
 
     
 
@@ -299,4 +333,6 @@ if __name__ == '__main__':
 
     # test_biopython_PairwiseAligner()
 
-    get_kovacs_similarity()
+    write_SIDER_graph()
+    # get_jaccard_se_similarity_dict()
+

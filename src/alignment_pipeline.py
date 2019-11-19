@@ -7,6 +7,7 @@ import threading
 import time
 import os
 from joblib import Parallel, delayed
+import tqdm
 
 import pickle
 
