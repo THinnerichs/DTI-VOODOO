@@ -143,8 +143,9 @@ def run_MSA(min_score=800,
             return
 
         drug_name = file.split("_")[0].strip()
-        if int(drug_name[4:]) > 1200:
-            return
+
+        # if int(drug_name[4:]) > 1200:
+            # return
 
         target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.fasta"
         if overwrite or not os.path.exists(target_file):
@@ -165,7 +166,12 @@ def run_MSA(min_score=800,
                                             out=target_file)
                 command = "./" + str(command)
             elif alignment_method == 'mafft':
-                command = "./mafft-linux64/mafft.bat --anysymbol --auto " + fasta_file + " > " + target_file
+                threads_per_process = 3
+                command = "./mafft-linux64/mafft.bat " \
+                          "--anysymbol " \
+                          "--auto " + \
+                          "--thread " + str(threads_per_process)+" "+\
+                          fasta_file + " > " + target_file
                 print(command)
 
             elif alignment_method == 'msaprobs':
