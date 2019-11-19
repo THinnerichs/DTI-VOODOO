@@ -165,15 +165,8 @@ def run_MSA(min_score=800,
                                             out=target_file)
                 command = "./" + str(command)
             elif alignment_method == 'mafft':
-                command = MafftCommandline(input=fasta_file)
-                command = "./mafft-linux64/mafft.bat --anysymbol --auto " + ' '.join(str(command).split(' ')[1:]) + " > " + target_file
-
+                command = "./mafft-linux64/mafft.bat --anysymbol --auto " + fasta_file + " > " + target_file
                 print(command)
-
-                print("Starting {} alignment ...".format(alignment_method))
-                subprocess.call(str(command), shell=True)
-
-                print("Finished in {} sec.".format(time.time()-start_time))
 
             elif alignment_method == 'msaprobs':
                 print("MSAProbs not supported yet.")
@@ -367,7 +360,7 @@ if __name__ == '__main__':
     # create_fasta_files(min_score=700)
 
     run_MSA(min_score=800,
-            alignment_method='famsa',
+            alignment_method='mafft',
             workers=16)
 
 
