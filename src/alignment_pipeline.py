@@ -185,7 +185,10 @@ def run_MSA(min_score=800,
             elif alignment_method == 'kalign':
                 command = "./kalign2/kalign -i " + fasta_file + " -o " + target_file
             elif alignment_method == 'famsa':
-                "./famsa-1.2.5-linux " + fasta_file + " " + target_file
+                threads_per_process = 3
+                "./famsa-1.2.5-linux " +\
+                "-t "+str(threads_per_process)+" "+\
+                fasta_file + " " + target_file
             else:
                 print("No valid alignment method selected.")
                 raise Exception
@@ -364,7 +367,7 @@ if __name__ == '__main__':
     # create_fasta_files(min_score=700)
 
     run_MSA(min_score=800,
-            alignment_method='kalign',
+            alignment_method='famsa',
             workers=16)
 
 

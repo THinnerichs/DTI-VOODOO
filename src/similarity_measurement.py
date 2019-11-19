@@ -278,15 +278,25 @@ def run_similarity_pipeline(threads=8,
         q.put(None)  # one EOF marker for each thread
 
 def get_kovacs_similarity():
-    # Extract graph from raw SIDER2 data
-    import networkx as nx
 
+    # Extract graph from raw SIDER2 data
+    filename = "../data/meddra_all_label_se.tsv"
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+
+            flat_drug = flat_drug[:3] + "m" + flat_drug[4:]
+            stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
+
+    
 
 
 if __name__ == '__main__':
     # replace_gap_symbols_in_alignment()
-    test_blast()
-    evaluate_Blast_XML()
+    # test_blast()
+    # evaluate_Blast_XML()
     # run_similarity_pipeline(threads=8)
 
     # test_biopython_PairwiseAligner()
+
+    get_kovacs_similarity()
