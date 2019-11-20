@@ -394,6 +394,25 @@ def write_meddra_graph_to_disc():
     print("Finished writing ", filename, '\n')
 
 def write_semantic_similarity_graph():
+
+    # read meddra RDF graph from disc
+    print("Reading meddra RDF graph graph ...\n")
+    graph_filename = "../data/meddra_RDF_graph"
+
+    meddra_RDF_graph = None
+    with open(graph_filename + '.pkl', 'rb') as f:
+         meddra_RDF_graph = pickle.load(f)
+    print("Finished.\n")
+
+    # fetch mapping of MedDRA URIs to UMLS ids
+    qres = meddra_RDF_graph.query(
+        """SELECT DISTINCT ?UMLSid ?MedDRAid
+           WHERE {
+              ?MedDRAid umls:cui ?UMLSid .
+           }""")
+
+    for row in qres:
+        print(row)
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
 
 
