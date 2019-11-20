@@ -385,6 +385,7 @@ def write_meddra_graph_to_disc():
     meddra_rdf_graph_filename = "../data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
+    print(result)
 
     print("Writing meddra RDF graph to disc ...")
     filename = "../data/meddra_RDF_graph"
@@ -410,5 +411,5 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    write_semantic_similarity_graph()
+    write_meddra_graph_to_disc()
 
