@@ -379,8 +379,23 @@ def get_jaccard_se_similarity_graph():
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
+def write_meddra_graph_to_disc():
+    import rdflib
+
+    meddra_rdf_graph_filename = "../data/MEDDRA.ttl"
+    meddra_graph = rdflib.Graph()
+    result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
+
+    print("Writing meddra RDF graph to disc ...")
+    filename = "../data/meddra_RDF_graph"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(meddra_graph, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename, '\n')
+
 def write_semantic_similarity_graph():
-    pass
+    target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
+
+
 
 
 if __name__ == '__main__':
@@ -392,6 +407,8 @@ if __name__ == '__main__':
     # test_biopython_PairwiseAligner()
 
     # write_SIDER_only_graph()
-    write_jaccard_se_similarity_graph()
-    get_jaccard_se_similarity_graph()
+    # write_jaccard_se_similarity_graph()
+    # get_jaccard_se_similarity_graph()
+
+    write_semantic_similarity_graph()
 
