@@ -430,5 +430,5 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    write_meddra_graph_to_disc()
+    write_semantic_similarity_graph()
 
