@@ -382,7 +382,7 @@ def get_jaccard_se_similarity_graph():
 def write_meddra_graph_to_disc():
     import rdflib
 
-    meddra_rdf_graph_filename = "../data/MEDDRA.ttl"
+    meddra_rdf_graph_filename = "../data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
 
