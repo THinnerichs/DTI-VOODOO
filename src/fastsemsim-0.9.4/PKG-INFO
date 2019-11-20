@@ -1,0 +1,28 @@
+Metadata-Version: 1.1
+Name: fastsemsim
+Version: 0.9.4
+Summary: FastSemSim is a Python package to evaluate semantic similarity measures on Gene Ontology.
+See the documentation at https://sites.google.com/site/fastsemsim/. Source repository is available at https://sourceforge.net/p/fastsemsim/.
+
+
+Home-page: https://sites.google.com/site/fastsemsim/
+Author: Marco Mina
+Author-email: marco.mina.85@gmail.com
+License: GNU GPL version 3
+Download-URL: https://sourceforge.net/projects/fastsemsim/files/
+Description: FastSemSim is a Python package to evaluate semantic similarity measures on Gene Ontology.
+        See the documentation at https://sites.google.com/site/fastsemsim/. Source repository is available at https://sourceforge.net/p/fastsemsim/.
+        
+        Copyright 2011 Marco Mina. All rights reserved.
+        
+Keywords: semantic similarity,Ontology,Gene Ontology
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Natural Language :: English
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Requires: pandas

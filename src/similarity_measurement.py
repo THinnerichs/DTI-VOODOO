@@ -313,7 +313,7 @@ def write_SIDER_only_graph():
     print("Finished writing ", filename, '\n')
 
 def get_SIDER_only_graph():
-    print("Reading SIDER only graph ...")
+    print("Reading SIDER only graph ...\n")
     graph_filename = "../data/bipartite_SIDER_only_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)

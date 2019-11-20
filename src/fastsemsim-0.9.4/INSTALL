@@ -1,0 +1,18 @@
+Thanks for downloading FastSemSim.
+
+fatSemSim has been tested on Python >= 2.5
+Staring from version 0.9, fastsemsim requires the numpy and pandas packages.
+
+To install, simply run from the command prompt:
+
+    python setup.py install
+
+You might need to run the command in privileged mode (e.g. using sudo):
+
+	sudo python setup.py install
+
+
+Note for Linux and OS X users: in some systems the Python interpreter has to be invoked using the command 'python2' instead of 'python'. You might need to modify the fastsemsim.sh script accordingly.
+
+For more detailed instructions, see the documentation available online.
+

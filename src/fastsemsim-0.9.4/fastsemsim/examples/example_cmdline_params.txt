@@ -1,0 +1,34 @@
+'core'	'task'	'SS'
+'core'	'verbose'	3
+'core'	'load_params'	None
+'core'	'save_params'	None
+'core'	'program_dir'	None
+'core'	'inject_IC'	None
+'ac'	'ac_type'	None
+'ac'	'ac_species'	None
+'ac'	'ac'	'fly'
+'ac'	'EC_ignore'	['TAS']
+'ac'	'ac_file'	None
+'ac'	'ac_separator'	None
+'ac'	'tax_ignore'	[]
+'ac'	'ac_term_first'	True
+'ac'	'ac_multiple'	True
+'ac'	'tax_include'	[]
+'ac'	'EC_include'	[]
+'stats'	'IC'	True
+'ss'	'ss_root'	'biological_process'
+'ss'	'tss_measure'	'Resnik'
+'ss'	'tss_mix'	'BMA'
+'ss'	'use_enhanced'	True
+'output'	'cut_nan'	True
+'output'	'out_file'	None
+'output'	'cut_thres'	0.9
+'query'	'query_mode'	'pairs'
+'query'	'query_file_sep'	'	'
+'query'	'query_ss_type'	'obj'
+'query'	'query_input'	'file'
+'query'	'query_file'	'data/GO_fly_pairs_query.txt'
+'ontology'	'ignore'	['regulates', 'negatively_regulates', 'positively_regulates']
+'ontology'	'ontology_file'	None
+'ontology'	'ontology_type'	'GeneOntology'
+'ontology'	'ontology_file_format'	None

@@ -1,0 +1,16 @@
+# This file describes the ontologies and the annotation corpora included in fastSemSim.
+name	type	file	ontology	filetype	date	species	description
+AC_DO_peng	AC	ACs/DO_human_Peng_NAR_2014.10.12.txt	DiseaseOntology	plain	2014.10.12	human	Annotation of human genes with Disease Ontology terms. Retrieved from Peng, NAR, 2013
+AC_DO_osborne	AC	ACs/DO_human_Osborne_BMC_2010.08.24.txt	DiseaseOntology	plain	2010.08.24	human	Annotation of human genes with Disease Ontology terms. Retrieved from Osborne, BMC, 2009
+AC_GO_uniprot_arabidopsis	AC	ACs/GO_gene_association.goa_arabidopsis_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	arabidopsis	Annotation of arabidopsis genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_fly	AC	ACs/GO_gene_association.goa_fly_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	fly	Annotation of arabidopsis genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_human	AC	ACs/GO_gene_association.goa_human_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	human	Annotation of human genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_mouse	AC	ACs/GO_gene_association.goa_mouse_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	mouse	Annotation of mouse genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_rat	AC	ACs/GO_gene_association.goa_rat_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	rat	Annotation of rat genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_worm	AC	ACs/GO_gene_association.goa_worm_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	worm	Annotation of worm genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+AC_GO_uniprot_zebrafish	AC	ACs/GO_gene_association.goa_zebrafish_2014.10.12.gz	GeneOntology	gaf-2.0	2014.10.12	zebrafish	Annotation of zebrafish genes with the Gene Ontology terms. Retrieved from Uniprot http://www.ebi.ac.uk/GOA/downloads
+CO	O	Os/CellOntology_2014.10.13.obo	CellOntology	obo	2014.10.13		Retrieved from http://www.obofoundry.org/cgi-bin/detail.cgi?id=cell, or https://cell-ontology.googlecode.com/svn/trunk/src/ontology/cl-basic.obo. This is the filtered version.
+DO	O	Os/DiseaseOntology_2014.10.13.obo	DiseaseOntology	obo	2014.10.13		Retrieved from http://www.obofoundry.org/cgi-bin/detail.cgi?id=disease_ontology
+GO	O	Os/GeneOntology_2014.10.27.obo	GeneOntology	obo	2014.10.13		Retrieved from http://purl.obolibrary.org/obo/go.obo
+GO_oboxml	O	Os/GeneOntology_2014.10.13.obo-xml.gz	GeneOntology	obo-xml	2014.10.13		Retrieved from http://archive.geneontology.org/latest-termdb/go_daily-termdb.obo-xml.gz
+#pato	O	Os/pato_2014.09.09.obo	Ontology	obo	2014.09.09		Retrieved from 
