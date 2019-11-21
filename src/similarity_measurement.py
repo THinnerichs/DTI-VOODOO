@@ -418,7 +418,7 @@ def write_enriched_SIDER_graph():
     for node in SIDER_only_graph.nodes():
         if node == '':
             print("ALERT")
-        print(SIDER_only_graph[''])
+            print(SIDER_only_graph[''])
 
     raise Exception
 
