@@ -416,6 +416,9 @@ def write_enriched_SIDER_graph():
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
+    for node in ['C0026986']:
+        SIDER_only_graph.remove_node(node)
+
 
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
@@ -452,6 +455,6 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    write_SIDER_only_graph()
+    # write_SIDER_only_graph()
     write_enriched_SIDER_graph()
 
