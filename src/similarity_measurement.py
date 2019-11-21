@@ -412,14 +412,16 @@ def write_enriched_SIDER_graph():
     for UMLSid, MedDRAid in qres:
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
-    for node in list(UMLS_to_MedDRA_id_dict.keys()):
-        print(node)
-
-    raise Exception
-
     SIDER_only_graph = get_SIDER_only_graph()
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
+
+    
+    print("drug list", len(drug_list))
+    print("side effects", len(side_effect_list))
+
+    raise Exception
+
 
     for node in ['C0026986']:
         SIDER_only_graph.remove_node(node)
