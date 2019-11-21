@@ -415,6 +415,11 @@ def write_enriched_SIDER_graph():
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
+    for node in SIDER_only_graph.nodes():
+        print(node)
+
+    raise Exception
+
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
     for start_node, end_node in SIDER_only_graph.edges():
