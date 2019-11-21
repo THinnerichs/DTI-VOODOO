@@ -394,7 +394,7 @@ def write_meddra_graph_to_disc():
 def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
-    print("Reading meddra RDF graph graph ...")
+    print("Reading meddra RDF graph ...")
     graph_filename = "../data/meddra_RDF_graph"
     meddra_RDF_graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
@@ -430,7 +430,7 @@ def write_enriched_SIDER_graph():
         subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
         predicate = rdflib.term.URIRef(kaust_url+'causes')
 
-        object = UMLS_to_MedDRA_id_dict.get(end_node, default=None)
+        object = UMLS_to_MedDRA_id_dict.get(end_node, None)
         if object == None:
             with open(file='missing_nodes', mode='a') as f:
                 f.write(end_node+'\n')
@@ -438,7 +438,7 @@ def write_enriched_SIDER_graph():
         meddra_RDF_graph.add((subject, predicate, object))
 
     raise Exception
-    
+
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
