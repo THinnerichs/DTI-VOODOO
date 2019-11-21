@@ -352,11 +352,17 @@ def write_updated_MedDRA_label_SIDER_graph():
     # Intersection between all of the below is empty
     MedDRA_delete_list, MedDRA_merge_mapping_dict, MedDRA_simple_mapping_dict = get_MedDRA_mapping()
 
+    print("Nodes to delete:", len(MedDRA_delete_list))
+    print("Nodes to merge:", len(MedDRA_merge_mapping_dict))
+    print("Nodes to relabel:", len(MedDRA_simple_mapping_dict.keys()))
+
     # Remove deleted
-    for cui in MedDRA_delete_list:
+    print("Removing deprecated nodes ...")
+    for cui in tqdm(MedDRA_delete_list):
         if cui in SIDER_only_graph.nodes():
             SIDER_only_graph.remove_node(cui)
 
+    print("Relabeling nodes ...")
     SIDER_only_graph = nx.relabel_nodes(SIDER_only_graph, MedDRA_simple_mapping_dict)
 
 
@@ -380,8 +386,10 @@ def write_updated_MedDRA_label_SIDER_graph():
         for n in nodes:  # remove the merged nodes
             G.remove_node(n)
 
-    for new_cui, old_cui_list in MedDRA_merge_mapping_dict.items():
+    print("Merging nodes ...")
+    for new_cui, old_cui_list in tqdm(MedDRA_merge_mapping_dict.items()):
         merge_nodes(SIDER_only_graph, old_cui_list, new_cui)
+    print("Finished.\n")
 
     print("Writing updated MedDRA label SIDER graph to disc ...")
     filename = "../data/updated_MedDRA_label_SIDER_graph"
