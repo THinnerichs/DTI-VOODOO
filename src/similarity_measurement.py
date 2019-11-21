@@ -393,9 +393,8 @@ def write_meddra_graph_to_disc():
 def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
-    print("Reading meddra RDF graph graph ...\n")
+    print("Reading meddra RDF graph graph ...")
     graph_filename = "../data/meddra_RDF_graph"
-
     meddra_RDF_graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
          meddra_RDF_graph = pickle.load(f)
@@ -410,7 +409,6 @@ def write_enriched_SIDER_graph():
 
     UMLS_to_MedDRA_id_dict = {}
     for UMLSid, MedDRAid in qres:
-        print(UMLSid.value)
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
     SIDER_only_graph = get_SIDER_only_graph()
