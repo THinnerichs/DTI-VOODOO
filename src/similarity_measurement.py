@@ -418,6 +418,10 @@ def write_enriched_SIDER_graph():
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
     for start_node, end_node in SIDER_only_graph.edges():
+        # Switch if end_node is drug
+        if 'CID' in end_node:
+            start_node, end_node = end_node, start_node
+
         subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
         predicate = rdflib.term.URIRef(kaust_url+'causes')
         object = UMLS_to_MedDRA_id_dict[end_node]
