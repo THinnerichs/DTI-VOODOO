@@ -416,7 +416,7 @@ def write_enriched_SIDER_graph():
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
-    
+
     print("drug list", len(drug_list))
     print("side effects", len(side_effect_list))
 
@@ -453,6 +453,34 @@ def write_enriched_SIDER_graph():
         pickle.dump(meddra_RDF_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", target_filename, '\n')
 
+def read_MedDRA_mapping():
+
+    # Read MRCUI mapping file
+    MRCUI_filename = "../data/MRCUI.RRF"
+    simple_mapping_dict = {}
+    merge_mapping_dict = {}
+    delete_list = []
+    with open(file=MRCUI_filename, mode='r') as f:
+        for line in f:
+            old_cui, database, mode, _, _, new_cui, _, _ = line.split('|')
+
+            database_year = int(database[:4])
+            database_version = database[4:]
+
+            if database_version < 2016:
+                continue
+
+            if mode in ['RB', 'RO', 'RN']:
+                simple_mapping_dict[old_cui] = new_cui
+            elif mode == 'SY':
+                merge_mapping_dict[old_cui] = new_cui
+            elif mode == 'DEL':
+                delete_list.append(old_cui)
+
+    return delete_list, merge_mapping_dict, delete_list
+
+
+
 
 
 
@@ -469,5 +497,6 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    write_enriched_SIDER_graph()
+    print(read_MedDRA_mapping())
+    # write_enriched_SIDER_graph()
 
