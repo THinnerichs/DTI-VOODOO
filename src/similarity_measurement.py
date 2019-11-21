@@ -318,6 +318,23 @@ def get_SIDER_only_graph():
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
+def write_updated_MedDRA_label_SIDER_graph():
+    SIDER_only_graph = get_SIDER_only_graph()
+
+    MedDRA_delete_list, MedDRA_merge_mapping_dict, MedDRA_simple_mapping_dict = get_MedDRA_mapping()
+
+    delete_set = set(MedDRA_delete_list)
+    merge_keys_set = set(MedDRA_merge_mapping_dict.keys())
+    merge_value_set = set(MedDRA_merge_mapping_dict.values())
+    simple_keys_set = set(MedDRA_simple_mapping_dict.keys())
+    simple_value_set = set(MedDRA_simple_mapping_dict.values())
+
+    for setty in [merge_keys_set, merge_value_set, simple_keys_set, simple_value_set]:
+        print(len(delete_set & setty))
+
+    print(len(merge_value_set & simple_keys_set))
+    print(len(simple_value_set & merge_keys_set))
+
 def get_SIDER_drug_list():
     filename = "../data/meddra_all_label_se.tsv"
 
@@ -416,17 +433,6 @@ def write_enriched_SIDER_graph():
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
-
-    print("drug list", len(drug_list))
-    print("side effects", len(side_effect_list))
-
-    raise Exception
-
-
-    for node in ['C0026986']:
-        SIDER_only_graph.remove_node(node)
-
-
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
     for start_node, end_node in SIDER_only_graph.edges():
@@ -453,24 +459,21 @@ def write_enriched_SIDER_graph():
         pickle.dump(meddra_RDF_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", target_filename, '\n')
 
-def read_MedDRA_mapping():
-
+def get_MedDRA_mapping():
     # Read MRCUI mapping file
     MRCUI_filename = "../data/MRCUI.RRF"
     simple_mapping_dict = {}
     merge_mapping_dict = {}
     delete_list = []
     with open(file=MRCUI_filename, mode='r') as f:
-        counter = 0
         for line in f:
-            counter += 1
-            if counter%10000 == 0:
-                print("Processed lines:", counter)
             old_cui, database, mode, _, _, new_cui, _, _ = line.split('|')
 
+            # database example: '2015AB' -> 2015, 'AB'
             database_year = int(database[:4])
             database_version = database[4:]
 
+            # only interested in changes after
             if database_year < 2016:
                 continue
 
@@ -481,7 +484,7 @@ def read_MedDRA_mapping():
             elif mode == 'DEL':
                 delete_list.append(old_cui)
 
-    return delete_list, merge_mapping_dict, delete_list
+    return delete_list, merge_mapping_dict, simple_mapping_dict
 
 
 
@@ -501,6 +504,7 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    print(read_MedDRA_mapping())
     # write_enriched_SIDER_graph()
+
+    write_updated_MedDRA_label_SIDER_graph()
 
