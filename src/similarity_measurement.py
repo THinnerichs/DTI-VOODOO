@@ -524,7 +524,13 @@ def get_MedDRA_mapping():
     # Intersection between all of the below is empty
     return delete_list, merge_mapping_dict, simple_mapping_dict
 
+def evaluate_missing_ids():
+    cui_list = {}
+    with open(file='missing_nodes', mode='r') as f:
+        for line in f:
+            cui_list.add(line.strip())
 
+    print(len(cui_list))
 
 
 
@@ -545,5 +551,6 @@ if __name__ == '__main__':
     # write_updated_MedDRA_label_SIDER_graph()
     # get_updated_MedDRA_label_SIDER_graph()
 
-    write_enriched_SIDER_graph()
+    # write_enriched_SIDER_graph()
+    evaluate_missing_ids()
 
