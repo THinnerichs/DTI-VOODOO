@@ -354,7 +354,7 @@ def write_updated_MedDRA_label_SIDER_graph():
 
     print("Nodes to delete:", len(MedDRA_delete_list))
     print("Nodes to merge:", len(MedDRA_merge_mapping_dict))
-    print("Nodes to relabel:", len(MedDRA_simple_mapping_dict.keys()))
+    print("Nodes to relabel:", len(MedDRA_simple_mapping_dict.keys()), '\n')
 
     # Remove deleted
     print("Removing deprecated nodes ...")
@@ -375,13 +375,9 @@ def write_updated_MedDRA_label_SIDER_graph():
 
         G.add_node(new_node)  # Add the 'merged' node
 
-        for n1, n2 in G.edges():
-            # For all edges related to one of the nodes to merge,
-            # make an edge going to or coming from the `new gene`.
-            if n1 in nodes:
-                G.add_edge(new_node, n2)
-            elif n2 in nodes:
-                G.add_edge(n1, new_node)
+        for n in nodes:
+            for neighbor in G.neighbors(n):
+                G.add_edge(neighbor, new_node)
 
         for n in nodes:  # remove the merged nodes
             G.remove_node(n)
@@ -469,13 +465,13 @@ def write_enriched_SIDER_graph():
     for UMLSid, MedDRAid in qres:
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
-    SIDER_only_graph = get_SIDER_only_graph()
+    updated_SIDER_graph = get_updated_MedDRA_label_SIDER_graph()
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
-    for start_node, end_node in SIDER_only_graph.edges():
+    for start_node, end_node in updated_SIDER_graph.edges():
         # Switch if end_node is drug
         if 'CID' in end_node:
             start_node, end_node = end_node, start_node
