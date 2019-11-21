@@ -508,7 +508,7 @@ def get_MedDRA_mapping():
             database_version = database[4:]
 
             # only interested in changes after
-            if database_year < 2016:
+            if database_year < 2015:
                 continue
 
             if mode in ['RB', 'RO', 'RN']:
@@ -551,6 +551,6 @@ if __name__ == '__main__':
     # write_updated_MedDRA_label_SIDER_graph()
     # get_updated_MedDRA_label_SIDER_graph()
 
-    # write_enriched_SIDER_graph()
+    write_enriched_SIDER_graph()
     evaluate_missing_ids()
 
