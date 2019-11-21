@@ -303,6 +303,7 @@ def write_SIDER_only_graph():
 
             G.add_edge(flat_drug, side_effect_id)
             G.add_edge(stereo_drug, side_effect_id)
+    G.remove_node('')
     print("Finished.\n")
 
     print("Writing SIDER only graph to disc ...")
@@ -415,12 +416,6 @@ def write_enriched_SIDER_graph():
     drug_list = get_SIDER_drug_list()
     side_effect_list = get_SIDER_side_effect_list()
 
-    for node in SIDER_only_graph.nodes():
-        if node == '':
-            print("ALERT")
-            print(SIDER_only_graph[''])
-
-    raise Exception
 
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
@@ -457,5 +452,6 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
+    write_SIDER_only_graph()
     write_enriched_SIDER_graph()
 
