@@ -486,8 +486,6 @@ def write_enriched_SIDER_graph():
             continue
         meddra_RDF_graph.add((subject, predicate, object))
 
-    raise Exception
-
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
@@ -544,8 +542,8 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    # write_enriched_SIDER_graph()
+    # write_updated_MedDRA_label_SIDER_graph()
+    # get_updated_MedDRA_label_SIDER_graph()
 
-    write_updated_MedDRA_label_SIDER_graph()
-    get_updated_MedDRA_label_SIDER_graph()
+    write_enriched_SIDER_graph()
 
