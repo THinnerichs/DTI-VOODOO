@@ -410,7 +410,8 @@ def write_enriched_SIDER_graph():
 
     UMLS_to_MedDRA_id_dict = {}
     for UMLSid, MedDRAid in qres:
-        UMLS_to_MedDRA_id_dict[UMLSid.value()] = MedDRAid
+        print(UMLSid.value)
+        UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
     SIDER_only_graph = get_SIDER_only_graph()
     drug_list = get_SIDER_drug_list()
