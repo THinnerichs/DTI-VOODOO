@@ -461,7 +461,11 @@ def read_MedDRA_mapping():
     merge_mapping_dict = {}
     delete_list = []
     with open(file=MRCUI_filename, mode='r') as f:
+        counter = 0
         for line in f:
+            counter += 1
+            if counter%10000 == 0:
+                print("Processed lines:", counter)
             old_cui, database, mode, _, _, new_cui, _, _ = line.split('|')
 
             database_year = int(database[:4])
