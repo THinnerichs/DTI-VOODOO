@@ -416,7 +416,8 @@ def write_enriched_SIDER_graph():
     side_effect_list = get_SIDER_side_effect_list()
 
     for node in SIDER_only_graph.nodes():
-        print(node)
+        if node == '':
+            print("ALERT")
 
     raise Exception
 
