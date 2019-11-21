@@ -354,7 +354,8 @@ def write_updated_MedDRA_label_SIDER_graph():
 
     # Remove deleted
     for cui in MedDRA_delete_list:
-        SIDER_only_graph.remove_node(cui)
+        if cui in SIDER_only_graph.nodes():
+            SIDER_only_graph.remove_node(cui)
 
     SIDER_only_graph = nx.relabel_nodes(SIDER_only_graph, MedDRA_simple_mapping_dict)
 
