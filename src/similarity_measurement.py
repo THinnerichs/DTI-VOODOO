@@ -429,9 +429,16 @@ def write_enriched_SIDER_graph():
 
         subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
         predicate = rdflib.term.URIRef(kaust_url+'causes')
-        object = UMLS_to_MedDRA_id_dict[end_node]
+
+        object = UMLS_to_MedDRA_id_dict.get(end_node, default=None)
+        if object == None:
+            with open(file='missing_nodes', mode='a') as f:
+                f.write(end_node+'\n')
+            continue
         meddra_RDF_graph.add((subject, predicate, object))
 
+    raise Exception
+    
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
@@ -455,6 +462,5 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    # write_SIDER_only_graph()
     write_enriched_SIDER_graph()
 
