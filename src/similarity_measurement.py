@@ -481,8 +481,6 @@ def write_enriched_SIDER_graph():
 
         object = UMLS_to_MedDRA_id_dict.get(end_node, None)
         if object == None:
-            with open(file='missing_nodes', mode='a') as f:
-                f.write(end_node+'\n')
             continue
         meddra_RDF_graph.add((subject, predicate, object))
 
@@ -524,17 +522,6 @@ def get_MedDRA_mapping():
     # Intersection between all of the below is empty
     return delete_list, merge_mapping_dict, simple_mapping_dict
 
-def evaluate_missing_ids():
-    cui_list = set()
-    with open(file='missing_nodes', mode='r') as f:
-        for line in f:
-            cui_list.add(line.strip())
-
-    print(len(cui_list))
-
-
-
-
 
 if __name__ == '__main__':
     # replace_gap_symbols_in_alignment()
@@ -552,5 +539,4 @@ if __name__ == '__main__':
     # get_updated_MedDRA_label_SIDER_graph()
 
     write_enriched_SIDER_graph()
-    evaluate_missing_ids()
 
