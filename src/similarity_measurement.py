@@ -281,6 +281,34 @@ def run_similarity_pipeline(threads=8,
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
+def get_SIDER_drug_list():
+    filename = "../data/meddra_all_label_se.tsv"
+
+    drug_list = set()
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+
+            flat_drug = flat_drug[:3] + "m" + flat_drug[4:]
+            stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
+
+            drug_list.add(flat_drug)
+            drug_list.add(stereo_drug)
+
+    return list(drug_list)
+
+def get_SIDER_side_effect_list():
+    filename = "../data/meddra_all_label_se.tsv"
+
+    side_effect_id_list = set()
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+
+            side_effect_id_list.add(side_effect_id)
+
+    return list(side_effect_id_list)
+
 def write_SIDER_only_graph():
     # Extract graph from raw SIDER2 data
     filename = "../data/meddra_all_label_se.tsv"
@@ -321,47 +349,51 @@ def get_SIDER_only_graph():
 def write_updated_MedDRA_label_SIDER_graph():
     SIDER_only_graph = get_SIDER_only_graph()
 
+    # Intersection between all of the below is empty
     MedDRA_delete_list, MedDRA_merge_mapping_dict, MedDRA_simple_mapping_dict = get_MedDRA_mapping()
 
-    delete_set = set(MedDRA_delete_list)
-    merge_keys_set = set(MedDRA_merge_mapping_dict.keys())
-    merge_value_set = set(MedDRA_merge_mapping_dict.values())
-    simple_keys_set = set(MedDRA_simple_mapping_dict.keys())
-    simple_value_set = set(MedDRA_simple_mapping_dict.values())
+    # Remove deleted
+    for cui in MedDRA_delete_list:
+        SIDER_only_graph.remove_node(cui)
 
-    for setty in [merge_keys_set, merge_value_set, simple_keys_set, simple_value_set]:
-        print(len(delete_set & setty))
+    SIDER_only_graph = nx.relabel_nodes(SIDER_only_graph, MedDRA_simple_mapping_dict)
 
-    print(len(merge_value_set & simple_keys_set))
-    print(len(simple_value_set & merge_keys_set))
 
-def get_SIDER_drug_list():
-    filename = "../data/meddra_all_label_se.tsv"
+    def merge_nodes(G, nodes, new_node, attr_dict=None, **attr):
+        """
+        Merges the selected `nodes` of the graph G into one `new_node`,
+        meaning that all the edges that pointed to or from one of these
+        `nodes` will point to or from the `new_node`.
+        attr_dict and **attr are defined as in `G.add_node`.
+        """
 
-    drug_list = set()
-    with open(file=filename, mode='r') as f:
-        for line in f:
-            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
+        G.add_node(new_node, attr_dict, **attr)  # Add the 'merged' node
 
-            flat_drug = flat_drug[:3] + "m" + flat_drug[4:]
-            stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
+        for n1, n2 in G.edges():
+            # For all edges related to one of the nodes to merge,
+            # make an edge going to or coming from the `new gene`.
+            if n1 in nodes:
+                G.add_edge(new_node, n2)
+            elif n2 in nodes:
+                G.add_edge(n1, new_node)
 
-            drug_list.add(flat_drug)
-            drug_list.add(stereo_drug)
+        for n in nodes:  # remove the merged nodes
+            G.remove_node(n)
 
-    return list(drug_list)
+    for new_cui, old_cui_list in MedDRA_merge_mapping_dict.items():
+        merge_nodes(SIDER_only_graph, old_cui_list, new_cui)
 
-def get_SIDER_side_effect_list():
-    filename = "../data/meddra_all_label_se.tsv"
+    print("Writing updated MedDRA label SIDER graph to disc ...")
+    filename = "../data/updated_MedDRA_label_SIDER_graph"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(SIDER_only_graph, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename, '\n')
 
-    side_effect_id_list = set()
-    with open(file=filename, mode='r') as f:
-        for line in f:
-            _, flat_drug, stereo_drug, _, _, side_effect_id, side_effect_name = line.split('\t')
-
-            side_effect_id_list.add(side_effect_id)
-
-    return list(side_effect_id_list)
+def get_updated_MedDRA_label_SIDER_graph():
+    print("Reading updated MedDRA label SIDER only graph ...\n")
+    graph_filename = "../data/updated_MedDRA_label_SIDER_graph"
+    with open(graph_filename + '.pkl', 'rb') as f:
+        return pickle.load(f)
 
 def write_jaccard_se_similarity_graph():
     # SIDER only graph
@@ -480,10 +512,14 @@ def get_MedDRA_mapping():
             if mode in ['RB', 'RO', 'RN']:
                 simple_mapping_dict[old_cui] = new_cui
             elif mode == 'SY':
-                merge_mapping_dict[old_cui] = new_cui
+                if merge_mapping_dict.get(new_cui, None):
+                    merge_mapping_dict[new_cui].append(old_cui)
+                else:
+                    merge_mapping_dict[new_cui] = []
             elif mode == 'DEL':
                 delete_list.append(old_cui)
 
+    # Intersection between all of the below is empty
     return delete_list, merge_mapping_dict, simple_mapping_dict
 
 
@@ -507,4 +543,5 @@ if __name__ == '__main__':
     # write_enriched_SIDER_graph()
 
     write_updated_MedDRA_label_SIDER_graph()
+    get_updated_MedDRA_label_SIDER_graph()
 
