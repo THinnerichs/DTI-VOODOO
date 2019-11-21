@@ -471,7 +471,7 @@ def read_MedDRA_mapping():
             database_year = int(database[:4])
             database_version = database[4:]
 
-            if database_version < 2016:
+            if database_year < 2016:
                 continue
 
             if mode in ['RB', 'RO', 'RN']:
