@@ -525,7 +525,7 @@ def get_MedDRA_mapping():
     return delete_list, merge_mapping_dict, simple_mapping_dict
 
 def evaluate_missing_ids():
-    cui_list = {}
+    cui_list = set()
     with open(file='missing_nodes', mode='r') as f:
         for line in f:
             cui_list.add(line.strip())
