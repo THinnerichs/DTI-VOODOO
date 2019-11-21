@@ -412,7 +412,8 @@ def write_enriched_SIDER_graph():
     for UMLSid, MedDRAid in qres:
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
-    print(list(UMLS_to_MedDRA_id_dict.keys()))
+    for node in list(UMLS_to_MedDRA_id_dict.keys()):
+        print(node)
 
     raise Exception
 
