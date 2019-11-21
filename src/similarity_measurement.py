@@ -360,15 +360,14 @@ def write_updated_MedDRA_label_SIDER_graph():
     SIDER_only_graph = nx.relabel_nodes(SIDER_only_graph, MedDRA_simple_mapping_dict)
 
 
-    def merge_nodes(G, nodes, new_node, attr_dict=None, **attr):
+    def merge_nodes(G, nodes, new_node):
         """
         Merges the selected `nodes` of the graph G into one `new_node`,
         meaning that all the edges that pointed to or from one of these
         `nodes` will point to or from the `new_node`.
-        attr_dict and **attr are defined as in `G.add_node`.
         """
 
-        G.add_node(new_node, attr_dict, **attr)  # Add the 'merged' node
+        G.add_node(new_node)  # Add the 'merged' node
 
         for n1, n2 in G.edges():
             # For all edges related to one of the nodes to merge,
