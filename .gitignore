@@ -121,7 +121,7 @@ venv.bak/
 /data/hmm_search_results/
 /data/predicted_targets/
 /data/meddra_all_label_se.tsv
-/data/MEDDRA.ttl
+/data/MEDDRA_RDF_original.ttl
 
 
 

@@ -1,8 +1,7 @@
 import numpy as np
 from sklearn.metrics import jaccard_similarity_score
 import networkx as nx
-import math
-
+import rdflib
 
 import subprocess
 from joblib import Parallel, delayed
@@ -380,8 +379,6 @@ def get_jaccard_se_similarity_graph():
         return pickle.load(f)
 
 def write_meddra_graph_to_disc():
-    import rdflib
-
     meddra_rdf_graph_filename = "../data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
@@ -393,7 +390,7 @@ def write_meddra_graph_to_disc():
         pickle.dump(meddra_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
-def write_semantic_similarity_graph():
+def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
     print("Reading meddra RDF graph graph ...\n")
@@ -411,9 +408,29 @@ def write_semantic_similarity_graph():
               ?MedDRAid umls:cui ?UMLSid .
            }""")
 
-    for row in qres:
-        print(row)
+    UMLS_to_MedDRA_id_dict = {}
+    for UMLSid, MedDRAid in qres:
+        UMLS_to_MedDRA_id_dict[UMLSid.value()] = MedDRAid
+
+    SIDER_only_graph = get_SIDER_only_graph()
+    drug_list = get_SIDER_drug_list()
+    side_effect_list = get_SIDER_side_effect_list()
+
+    # Add SIDER nodes to MedDRA RDF graph
+    kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
+    for start_node, end_node in SIDER_only_graph.edges_iter():
+        subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
+        predicate = rdflib.term.URIRef(kaust_url+'causes')
+        object = UMLS_to_MedDRA_id_dict[end_node]
+        meddra_RDF_graph.add((subject, predicate, object))
+
+    # Write result to disc
+    print("Writing meddra RDF graph to disc ...")
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
+    with open(target_filename + '.pkl', 'wb') as f:
+        pickle.dump(meddra_RDF_graph, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", target_filename, '\n')
+
 
 
 
@@ -430,5 +447,5 @@ if __name__ == '__main__':
     # write_jaccard_se_similarity_graph()
     # get_jaccard_se_similarity_graph()
 
-    write_semantic_similarity_graph()
+    write_enriched_SIDER_graph()
 
