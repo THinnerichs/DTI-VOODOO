@@ -478,7 +478,7 @@ def write_enriched_SIDER_graph():
             start_node, end_node = end_node, start_node
 
         subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
-        predicate = rdflib.term.URIRef(kaust_url+'causes')
+        predicate = rdflib.namespace.RDF.type
 
         object = UMLS_to_MedDRA_id_dict.get(end_node, None)
         if object == None:
@@ -486,8 +486,8 @@ def write_enriched_SIDER_graph():
         counter += 1
 
         meddra_RDF_graph.add((subject, predicate, object))
-        if counter % 100 == 0:
-            print("Added nodes:", counter)
+        if counter % 10000 == 0:
+            print("Added edges:", counter)
 
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
