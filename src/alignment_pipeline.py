@@ -356,19 +356,15 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
-    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
-    '''
 
-    # merge_drug_files()
+    create_fasta_files(min_score=700)
 
-    # create_fasta_files(min_score=700)
-
-    run_MSA(min_score=800,
+    run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=8,
-            threads_per_process=6)
+            workers=70,
+            threads_per_process=2)
 
 
 
