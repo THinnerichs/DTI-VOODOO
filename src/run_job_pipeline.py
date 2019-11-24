@@ -37,8 +37,10 @@ def cancel_jobs():
     filename = "cancellist"
     with open(file=filename, mode='r') as f:
         for line in f:
-            split_line = line.split('\t')
-            print(split_line)
+            split_line = line.split(' ')
+            for ele in split_line:
+                if ele!='':
+                    print(ele)
             # subprocess.call("scancel "+split_line[0])
 if __name__ == '__main__':
     # run_jobs()
