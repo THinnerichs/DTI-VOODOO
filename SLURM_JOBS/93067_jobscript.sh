@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
@@ -13,5 +14,5 @@
 module load anaconda3/4.4.0
 source /home/${USER}/.bashrc
 conda activate ~/.conda/envs/dti/
-
-python3 alignment_pipeline.py
+        
+python3 alignment_pipeline.py 93067 94928
