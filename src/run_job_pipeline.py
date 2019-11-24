@@ -41,7 +41,8 @@ def cancel_jobs():
             for ele in split_line:
                 if ele!='':
                     print(ele)
-                    continue
+                    break
+
             # subprocess.call("scancel "+split_line[0])
 if __name__ == '__main__':
     # run_jobs()
