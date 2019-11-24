@@ -123,6 +123,7 @@ venv.bak/
 /data/meddra_all_label_se.tsv
 /data/MEDDRA_RDF_original.ttl
 
+/SLURM_JOBS/
 
 
 *aligned*
