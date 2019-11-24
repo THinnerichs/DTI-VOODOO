@@ -361,10 +361,12 @@ if __name__ == '__main__':
 
     create_fasta_files(min_score=700)
 
+    '''
     run_MSA(min_score=700,
             alignment_method='mafft',
             workers=70,
             threads_per_process=2)
+    '''
 
 
 
