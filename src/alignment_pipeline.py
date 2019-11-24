@@ -6,6 +6,7 @@ import queue
 import threading
 import time
 import os
+import sys
 from joblib import Parallel, delayed
 import tqdm
 
@@ -122,7 +123,9 @@ def run_MSA(min_score=800,
             alignment_method='mafft',
             workers=16,
             threads_per_process=2,
-            overwrite=False):
+            overwrite=False,
+            start='',
+            end=''):
     """
     A wrapper for the different MSA techniques that are eventually executed in parallel.
 
@@ -221,7 +224,13 @@ def run_MSA(min_score=800,
     q = queue.Queue()
 
     files = os.listdir(fasta_path)
-    shuffle(files)
+    # shuffle(files)
+
+    if start:
+        files = files[int(start):]
+    if end:
+        files = files[:int(end)-int(start)]
+
     for fileName in files:
         q.put(fileName)
 
@@ -356,17 +365,21 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
+    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
-
-    create_fasta_files(min_score=700)
-
     '''
+
+    # create_fasta_files(min_score=700)
+
+    _, start, end = sys.argv
+
     run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=70,
-            threads_per_process=2)
-    '''
+            workers=16,
+            threads_per_process=2,
+            start=start,
+            end=end)
 
 
 

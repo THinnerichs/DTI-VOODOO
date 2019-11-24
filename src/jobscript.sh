@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -N 1
+#SBATCH -N 100
 #SBATCH --partition=batch
 #SBATCH -J MultiSequenceAlignment
 #SBATCH -o MultiSequenceAlignment.%J.out
@@ -14,7 +14,4 @@ module load anaconda3/4.4.0
 source /home/${USER}/.bashrc
 conda activate ~/.conda/envs/dti/
 
-python3 ./alignment_pipeline.py
-
-
-
+python3 alignment_pipeline.py

@@ -471,6 +471,7 @@ def write_enriched_SIDER_graph():
 
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
+    counter = 0
     for start_node, end_node in updated_SIDER_graph.edges():
         # Switch if end_node is drug
         if 'CID' in end_node:
@@ -482,13 +483,16 @@ def write_enriched_SIDER_graph():
         object = UMLS_to_MedDRA_id_dict.get(end_node, None)
         if object == None:
             continue
+        counter += 1
+
         meddra_RDF_graph.add((subject, predicate, object))
+        if counter % 100 == 0:
+            print("Added nodes:", counter)
 
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
     target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
-    with open(target_filename + '.pkl', 'wb') as f:
-        pickle.dump(meddra_RDF_graph, f, pickle.HIGHEST_PROTOCOL)
+    meddra_RDF_graph.serialize(destination=target_filename, format='turtle')
     print("Finished writing ", target_filename, '\n')
 
 def get_MedDRA_mapping():
