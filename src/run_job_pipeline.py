@@ -30,7 +30,7 @@ conda activate ~/.conda/envs/dti/
             f.write(preface_script)
             f.write("python3 alignment_pipeline.py " + str(start) + " " + str(end))
 
-        # subprocess.call("sbatch "+filename, shell=True)
+        subprocess.call("sbatch "+filename, shell=True)
 
 if __name__ == '__main__':
     run_jobs()
