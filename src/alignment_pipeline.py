@@ -369,6 +369,7 @@ if __name__ == '__main__':
                             min_score=400)
 
     create_fasta_files(min_score=700)
+    create_fasta_files(min_score=800)
 
     '''
     _, start, end = sys.argv
