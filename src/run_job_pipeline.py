@@ -8,8 +8,7 @@ def run_jobs(parts=100,
     sep_intervals = [(int(amount / parts * i), int(amount / parts * (i + 1))) for i in range(parts)]
 
     for start, end in sep_intervals:
-        preface_script = '''
-#!/bin/bash
+        preface_script = '''#!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
 #SBATCH -J MultiSequenceAlignment
@@ -31,7 +30,7 @@ conda activate ~/.conda/envs/dti/
             f.write(preface_script)
             f.write("python3 alignment_pipeline.py " + str(start) + " " + str(end))
 
-        subprocess.call("sbatch "+filename, shell=True)
+        # subprocess.call("sbatch "+filename, shell=True)
 
 if __name__ == '__main__':
     run_jobs()
