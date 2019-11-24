@@ -365,13 +365,12 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
-    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
+
+    create_fasta_files(min_score=700)
+
     '''
-
-    # create_fasta_files(min_score=700)
-
     _, start, end = sys.argv
 
     run_MSA(min_score=700,
@@ -380,6 +379,7 @@ if __name__ == '__main__':
             threads_per_process=2,
             start=start,
             end=end)
+    '''
 
 
 
