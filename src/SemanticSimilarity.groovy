@@ -51,40 +51,23 @@ class Gene {
 }
 
 
-def getPhenomenet = {
+def getMedDRAgraph = {
 
   URI graph_uri = factory.getURI("http://purl.obolibrary.org/obo/")
   G graph = new GraphMemory(graph_uri)
 
   // Load OBO file to graph "go.obo"
-  GDataConf goConf = new GDataConf(GFormat.RDF_XML, "data/hp.owl")
+  GDataConf goConf = new GDataConf(GFormat.TURTLE, "../data/MedDRA_enriched_SIDER_RDF_graph.ttl")
   GraphLoaderGeneric.populate(goConf, graph)
 
   // Add virtual root for 3 subontologies__________________________________
   URI virtualRoot = factory.getURI("http://purl.obolibrary.org/obo/virtualRoot")
   graph.addV(virtualRoot)
 
-  new File(omimPath).splitEachLine('\t') { items ->
-    String disId = items[0].replaceAll(":", "_");
-    for (int i = 1; i < items.size(); i++) {
-      URI idURI = factory.getURI("http://purl.obolibrary.org/obo/" + disId);
-      String pheno = items[i];
-      URI phenoURI = factory.getURI("http://purl.obolibrary.org/obo/" + pheno);
-      Edge e = new Edge(idURI, RDF.TYPE, phenoURI);
-      graph.addE(e);
-    }
-  }
-
   GAction rooting = new GAction(GActionType.REROOTING)
   rooting.addParameter("root_uri", virtualRoot.stringValue())
   GraphActionExecutor.applyAction(factory, rooting, graph)
   return graph
-}
-
-def getURIfromName = { name ->
-    def id = name.split('\\:')
-    name = id[0] + "_" + id[1]
-    return factory.getURI("http://purl.obolibrary.org/obo/$name")
 }
 
 def getGenes = {
@@ -115,7 +98,7 @@ def getDiseases = {
   return dis
 }
 
-graph = getPhenomenet()
+graph = getMedDRAgraph()
 genes = getGenes()
 diseases = getDiseases()
 
