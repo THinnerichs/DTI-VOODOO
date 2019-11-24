@@ -32,5 +32,14 @@ conda activate ~/.conda/envs/dti/
 
         subprocess.call("sbatch "+filename, shell=True)
 
+
+def cancel_jobs():
+    filename = "cancellist"
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            split_line = line.split('\t')
+            print(split_line)
+            # subprocess.call("scancel "+split_line[0])
 if __name__ == '__main__':
-    run_jobs()
+    # run_jobs()
+    cancel_jobs()
