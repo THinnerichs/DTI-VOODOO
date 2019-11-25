@@ -554,8 +554,6 @@ def write_annotation_file():
          annotation_graph = pickle.load(f)
     print("Finished.\n")
 
-    print(list(annotation_graph.nodes())[:100])
-
     drug_list = get_SIDER_drug_list()
 
     print("Writing annotation file ...")
