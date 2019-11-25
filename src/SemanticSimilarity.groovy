@@ -52,7 +52,7 @@ class Drug {
 
 def getMedDRAgraph = {
 
-  URI graph_uri = factory.getURI("http://purl.obolibrary.org/obo/")
+  URI graph_uri = factory.getURI("http://purl.bioontology.org/ontology/")
   G graph = new GraphMemory(graph_uri)
 
   // Load OBO file to graph "go.obo"
@@ -60,7 +60,7 @@ def getMedDRAgraph = {
   GraphLoaderGeneric.populate(goConf, graph)
 
   // Add virtual root for 3 subontologies__________________________________
-  URI virtualRoot = factory.getURI("http://purl.obolibrary.org/obo/virtualRoot")
+  URI virtualRoot = factory.getURI("http://purl.bioontology.org/ontology/virtualRoot")
   graph.addV(virtualRoot)
 
   GAction rooting = new GAction(GActionType.REROOTING)
