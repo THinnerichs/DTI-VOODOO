@@ -11,10 +11,10 @@ def run_jobs(parts=100,
         preface_script = '''#!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J MultiSequenceAlignment
+#SBATCH -J MSA
 #SBATCH -o MultiSequenceAlignment.%J.out
 #SBATCH -e MultiSequenceAlignment.%J.err
-#SBATCH --time=72:00:00
+#SBATCH --time=5-00:00:00
 #SBATCH --mem=240G
 #SBATCH --constraint=[intel]
 #SBATCH --cpus-per-task=40
@@ -45,5 +45,5 @@ def cancel_jobs():
                     break
 
 if __name__ == '__main__':
-    # run_jobs()
-    cancel_jobs()
+    run_jobs()
+    # cancel_jobs()

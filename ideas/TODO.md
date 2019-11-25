@@ -10,6 +10,7 @@
 
 
 - calculate side effect similarity matrix (See jupyter notebook)
+- Bring Maxats groovy stuff to life
 
 
 - how to compare alignments (use blastp for e values)
@@ -17,4 +18,3 @@
 - how to compare both similarity measures? (-> Maxat)
 
 - get distibution over similarities and then take lowest, median and highest and fit above mapping to it
-

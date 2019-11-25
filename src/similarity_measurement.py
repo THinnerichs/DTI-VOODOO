@@ -472,12 +472,14 @@ def write_enriched_SIDER_graph():
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
     counter = 0
+    # build annotation graph with rdf labels
+    annotation_graph = nx.Graph()
     for start_node, end_node in updated_SIDER_graph.edges():
         # Switch if end_node is drug
         if 'CID' in end_node:
             start_node, end_node = end_node, start_node
 
-        subject = rdflib.term.URIRef(kaust_url+'SIDER_drug')
+        subject = rdflib.term.URIRef(kaust_url+start_node)
         predicate = rdflib.namespace.RDF.type
 
         object = UMLS_to_MedDRA_id_dict.get(end_node, None)
@@ -486,6 +488,11 @@ def write_enriched_SIDER_graph():
         counter += 1
 
         meddra_RDF_graph.add((subject, predicate, object))
+
+        annotation_graph.add_node(start_node)
+        annotation_graph.add_node(end_node)
+        annotation_graph.add_edge(start_node, end_node)
+
         if counter % 10000 == 0:
             print("Added edges:", counter)
 
@@ -525,6 +532,7 @@ def get_MedDRA_mapping():
 
     # Intersection between all of the below is empty
     return delete_list, merge_mapping_dict, simple_mapping_dict
+
 
 
 if __name__ == '__main__':

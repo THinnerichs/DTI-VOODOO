@@ -223,7 +223,7 @@ def run_MSA(min_score=800,
 
     q = queue.Queue()
 
-    files = os.listdir(fasta_path)
+    files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(file).st_size!=0)]
     # shuffle(files)
 
     if start:
@@ -344,7 +344,6 @@ def write_predicted_targets(min_score=800,
                 predicted_targets_filehandler.write(protein_id+'\n')
 
     q = queue.Queue()
-
     files = os.listdir(alignment_path)
     shuffle(files)
 
@@ -361,26 +360,25 @@ def write_predicted_targets(min_score=800,
     threads = [threading.Thread(target=worker) for _i in range(workers)]
     for thread in threads:
         thread.start()
-        q.put(None)  # one EOF marker for each threa
+        q.put(None)  # one EOF marker for each thread
 
 
 if __name__ == '__main__':
+    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
-
-    create_fasta_files(min_score=700)
-    create_fasta_files(min_score=800)
-
     '''
+
+    # create_fasta_files(min_score=700)
+
     _, start, end = sys.argv
 
     run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=16,
-            threads_per_process=2,
+            workers=12,
+            threads_per_process=3,
             start=start,
             end=end)
-    '''
 
 
 

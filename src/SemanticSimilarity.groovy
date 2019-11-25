@@ -30,12 +30,12 @@ def omimPath = "data/dis_annotations.tab";
 def resSimPath = "data/sim_gene_disease.txt";
 
 
-class Gene {
+class Drug {
 
   int id
   Set annotations
 
-  public Gene(id, annotations) {
+  public Drug(id, annotations) {
     setId(id)
     setAnnotations(annotations)
   }
@@ -70,37 +70,22 @@ def getMedDRAgraph = {
   return graph
 }
 
-def getGenes = {
-  def genes = []
+def getDrugs = {
+  def drugs = []
   def i = 0
   new File(annotationsPath).splitEachLine('\t') { items ->
     def s = 0
-    genes.push(new Gene(i, new LinkedHashSet()))
+    drugs.push(new Drug(i, new LinkedHashSet()))
     for (int j = 1; j < items.size(); j++) {
-      genes[i].addAnnotation(getURIfromName(items[j]))
+      drugs[i].addAnnotation(items[j])
     }
     i++
   }
-  return genes
-}
-
-def getDiseases = {
-  def dis = []
-  def i = 0
-  new File(omimPath).splitEachLine('\t') { items ->
-    def s = 0
-    dis.push(new Gene(i, new LinkedHashSet()))
-    for (int j = 1; j < items.size(); j++) {
-      dis[i].addAnnotation(getURIfromName(items[j]))
-    }
-    i++
-  }
-  return dis
+  return drugs
 }
 
 graph = getMedDRAgraph()
-genes = getGenes()
-diseases = getDiseases()
+drugs = getDrugs()
 
 def sim_id = 0 //this.args[0].toInteger()
 
@@ -138,7 +123,7 @@ smConfPairwise.setICconf(icConf);
 // ICconf prob = new IC_Conf_Topo(SMConstants.FLAG_ICI_PROB_OCCURENCE_PROPAGATED);
 // smConfPairwise.addParam("ic_prob", prob);
 
-def result = new Double[genes.size() * diseases.size()]
+def result = new Double[drugs.size() * drugs.size()]
 for (i = 0; i < result.size(); i++) {
   result[i] = i
 }
@@ -153,8 +138,8 @@ GParsPool.withPool {
     result[i] = engine.compare(
             smConfGroupwise,
             smConfPairwise,
-            genes[x].getAnnotations(),
-            diseases[y].getAnnotations())
+            drugs[x].getAnnotations(),
+            drugs[y].getAnnotations())
     if (c % 100000 == 0)
       println c
     c++
@@ -164,8 +149,8 @@ GParsPool.withPool {
 def out = new PrintWriter(new BufferedWriter(
   new FileWriter(resSimPath)))
 for (i = 0; i < result.size(); i++) {
-  def x = i.intdiv(diseases.size())
-  def y = i % diseases.size()
+  def x = i.intdiv(drugs.size())
+  def y = i % drugs.size()
   out.println(result[i])
 }
 out.flush()
