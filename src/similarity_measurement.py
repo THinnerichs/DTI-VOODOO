@@ -554,7 +554,7 @@ def write_annotation_file():
          annotation_graph = pickle.load(f)
     print("Finished.\n")
 
-    print(annotation_graph.nodes()[:100])
+    print(list(annotation_graph.nodes())[:100])
 
     raise Exception
 
