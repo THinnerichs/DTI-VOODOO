@@ -556,15 +556,18 @@ def write_annotation_file():
 
     print(list(annotation_graph.nodes())[:100])
 
-    raise Exception
-
     drug_list = get_SIDER_drug_list()
 
     print("Writing annotation file ...")
     annotation_file = "../data/annotation_file_for_groovy.tsv"
     with open(file=annotation_file, mode='w') as f:
         for drug in drug_list:
-            if drug not in annotation_graph.nodes():
+            present = False
+            for rdf_id in annotation_graph.nodes():
+                if drug in rdf_id:
+                    present = True
+                    break
+            if not present:
                 continue
             neighbor_list = annotation_graph.neighbors(drug)
             f.write(drug+'\t'+'\t'.join(neighbor_list)+'\n')
