@@ -133,8 +133,8 @@ def c = 0
 GParsPool.withPool {
   result.eachParallel { val ->
     def i = val.toInteger()
-    def x = i.intdiv(diseases.size())
-    def y = i % diseases.size()
+    def x = i.intdiv(drugs.size())
+    def y = i % drugs.size()
     result[i] = engine.compare(
             smConfGroupwise,
             smConfPairwise,
