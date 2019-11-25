@@ -502,6 +502,13 @@ def write_enriched_SIDER_graph():
     meddra_RDF_graph.serialize(destination=target_filename, format='turtle')
     print("Finished writing ", target_filename, '\n')
 
+    # Write annotation graph to disc
+    print("Writing meddra annotation graph to disc ...")
+    filename = "../data/SIDER_annotation_graph"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(annotation_graph, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename, '\n')
+
 def get_MedDRA_mapping():
     # Read MRCUI mapping file
     MRCUI_filename = "../data/MRCUI.RRF"
