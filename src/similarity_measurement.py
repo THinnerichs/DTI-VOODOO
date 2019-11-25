@@ -585,5 +585,6 @@ if __name__ == '__main__':
     # write_updated_MedDRA_label_SIDER_graph()
     # get_updated_MedDRA_label_SIDER_graph()
 
-    write_enriched_SIDER_graph()
+    # write_enriched_SIDER_graph()
+    write_annotation_file()
 
