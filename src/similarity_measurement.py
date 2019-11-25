@@ -561,13 +561,15 @@ def write_annotation_file():
     with open(file=annotation_file, mode='w') as f:
         for drug in drug_list:
             present = False
+            drug_rdf_term = None
             for rdf_id in annotation_graph.nodes():
                 if drug in rdf_id:
                     present = True
+                    drug_rdf_term = rdf_id
                     break
             if not present:
                 continue
-            neighbor_list = annotation_graph.neighbors(drug)
+            neighbor_list = annotation_graph.neighbors(rdf_id)
             f.write(drug+'\t'+'\t'.join(neighbor_list)+'\n')
     print("Finished.")
 
