@@ -489,9 +489,9 @@ def write_enriched_SIDER_graph():
 
         meddra_RDF_graph.add((subject, predicate, object))
 
-        annotation_graph.add_node(start_node)
-        annotation_graph.add_node(end_node)
-        annotation_graph.add_edge(start_node, end_node)
+        annotation_graph.add_node(subject)
+        annotation_graph.add_node(object)
+        annotation_graph.add_edge(subject, object)
 
         if counter % 10000 == 0:
             print("Added edges:", counter)
