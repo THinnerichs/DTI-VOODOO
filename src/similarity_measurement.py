@@ -569,7 +569,7 @@ def write_annotation_file():
                     break
             if not present:
                 continue
-            neighbor_list = annotation_graph.neighbors(rdf_id)
+            neighbor_list = annotation_graph.neighbors(drug_rdf_term)
             f.write(drug+'\t'+'\t'.join(neighbor_list)+'\n')
     print("Finished.")
 

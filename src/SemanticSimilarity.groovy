@@ -77,7 +77,7 @@ def getDrugs = {
     drugs.push(new Drug(i, new LinkedHashSet()))
     for (int j = 1; j < items.size(); j++) {
       println(items[j])
-      drugs[i].addAnnotation(items[j])
+      drugs[i].addAnnotation(factory.createURI(items[j]))
     }
     i++
   }
