@@ -25,9 +25,8 @@ System.setProperty("jdk.xml.entityExpansionLimit", "0");
 System.setProperty("jdk.xml.totalEntitySizeLimit", "0");
 
 def factory = URIFactoryMemory.getSingleton()
-def annotationsPath = "data/gene_annotations.tab";
-def omimPath = "data/dis_annotations.tab";
-def resSimPath = "data/sim_gene_disease.txt";
+def annotationsPath = "../data/annotation_file_for_groovy.tsv";
+def resSimPath = "../results/semsim_drugs.txt";
 
 
 class Drug {
@@ -77,6 +76,7 @@ def getDrugs = {
     def s = 0
     drugs.push(new Drug(i, new LinkedHashSet()))
     for (int j = 1; j < items.size(); j++) {
+      println(items[j])
       drugs[i].addAnnotation(items[j])
     }
     i++
