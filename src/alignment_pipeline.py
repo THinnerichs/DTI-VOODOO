@@ -223,7 +223,7 @@ def run_MSA(min_score=800,
 
     q = queue.Queue()
 
-    files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(target_path+file).st_size!=0)]
+    files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
     # shuffle(files)
 
     if start:
