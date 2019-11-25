@@ -21,11 +21,12 @@ import slib.graph.io.util.*
 import slib.graph.io.loader.*
 import groovyx.gpars.GParsPool
 
+import org.openrdf.model.impl.ValueFactoryImpl
+
 System.setProperty("jdk.xml.entityExpansionLimit", "0");
 System.setProperty("jdk.xml.totalEntitySizeLimit", "0");
 
 def factory = URIFactoryMemory.getSingleton()
-def valueFactory = ValueFactoryImpl.getInstance();
 def annotationsPath = "../data/annotation_file_for_groovy.tsv";
 def resSimPath = "../results/semsim_drugs.txt";
 
@@ -71,6 +72,7 @@ def getMedDRAgraph = {
 }
 
 def getDrugs = {
+  def valueFactory = ValueFactoryImpl.getInstance();
   def drugs = []
   def i = 0
   new File(annotationsPath).splitEachLine('\t') { items ->
