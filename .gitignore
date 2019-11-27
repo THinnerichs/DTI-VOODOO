@@ -127,6 +127,7 @@ venv.bak/
 /data/STITCH_data/
 /data/SIDER_data/
 /data/MedDRA_data/
+/data/similarity_results/
 
 
 /SLURM_JOBS/
