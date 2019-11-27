@@ -62,23 +62,6 @@ def get_db_PubChem_id_mapping_dict_mahmud():
 
     return db_PubChem_id_mapping_dict
 
-def evaluate_dicts_and_graph():
-
-
-    map_1 = get_db_PubChem_id_mapping_dict()
-    map_2 = get_db_PubChem_id_mapping_dict_mahmud()
-
-    key_set1 = set(map_1.keys())
-    key_set2 = set(map_2.values())
-
-    print(len(key_set1))
-    print(len(key_set2))
-
-
-    SIDER_only_graph = get_SIDER_only_graph()
-    drug_set = set(get_SIDER_drug_list())
-
-    print(len(drug_set & key_set1))
 
 def read_pddi_Boyce_data():
     # db := drugbank
@@ -170,6 +153,28 @@ def test_pubchempy_search():
 
     print(type(CID_list))
 
+def evaluate_dicts_and_graph():
+
+
+    map_1 = get_db_PubChem_id_mapping_dict()
+    map_2 = get_db_PubChem_id_mapping_dict_mahmud()
+    map_3 = get_pddi_db_pubchem_mapping()
+
+    key_set1 = set(map_1.keys())
+    key_set2 = set(map_2.keys())
+    key_set3 = set(map_3.keys())
+
+    print(len(key_set1))
+    print(len(key_set2))
+    print(len(key_set3))
+
+    print(len(key_set2 & key_set3))
+
+
+    # SIDER_only_graph = get_SIDER_only_graph()
+    # drug_set = set(get_SIDER_drug_list())
+
+    # print(len(drug_set & key_set1))
 
 
 
@@ -179,12 +184,12 @@ if __name__ == '__main__':
 
     # get_db_PubChem_id_mapping_dict_mahmud()
 
-    # evaluate_dicts_and_graph()
 
     # test_pubchempy_search()
 
     # read_pddi_Boyce_data()
 
-    get_pddi_db_pubchem_mapping()
+    # get_pddi_db_pubchem_mapping()
     # get_pddi_db_pubchem_list()
 
+    evaluate_dicts_and_graph()
