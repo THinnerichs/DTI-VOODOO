@@ -109,7 +109,7 @@ def write_DDI_drugbank_graph():
 
     print("Writing DDI graph extracted from Drugbank ...")
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
-    with open(file=graph_filename+'pkl', mode='wb') as f:
+    with open(file=graph_filename+'.pkl', mode='wb') as f:
         pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.\n".format(graph_filename))
 
@@ -146,7 +146,7 @@ def evaluate_dicts_and_graph():
     drugbank_graph = get_DDI_drugbank_graph()
     boyce_graph = get_DDI_Boyce_graph()
 
-    print(len(set(drugbank_graph.nodes()) & set(boyce_graph)))
+    print(len(set(drugbank_graph.nodes()) & set(boyce_graph.nodes())))
 
 
     # SIDER_only_graph = get_SIDER_only_graph()
@@ -160,7 +160,8 @@ def evaluate_dicts_and_graph():
 if __name__ == '__main__':
     # get_DDI_Boyce_graph()
 
+    write_DDI_drugbank_graph()
+    
     evaluate_dicts_and_graph()
 
-    # write_DDI_drugbank_graph()
     # get_DDI_drugbank_graph()
