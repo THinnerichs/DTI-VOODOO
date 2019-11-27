@@ -106,10 +106,13 @@ def read_pddi_Boyce_data():
             db_id_name_dict[db_id_2] = db_name_2
     print(len(list(db_id_name_dict.keys())))
 
-
+    counter = 0
     CID_list = []
     for id, name in db_id_name_dict.items():
         CID_list.append(pcp.get_cids(name, namespace='name', domain='compound'))
+        if counter % 100 == 0:
+            print(counter)
+        counter += 1
 
     # get_cids_wrapper = lambda name: pcp.get_cids(name, namespace='name', domain='compound')
     # CID_list = Parallel(n_jobs=16)(delayed(get_cids_wrapper)(drug_name) for id, drug_name in db_id_name_dict.items())
@@ -134,7 +137,7 @@ def test_pubchempy_search():
 
     CID_list = pcp.get_cids('alprazolam', 'name', 'substance', list_return='flat')
 
-    print(CID_list)
+    print(type(CID_list))
 
 
 
