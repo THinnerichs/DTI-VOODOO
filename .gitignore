@@ -126,6 +126,8 @@ venv.bak/
 /data/pddi_data/
 /data/STITCH_data/
 /data/SIDER_data/
+/data/MedDRA_data/
+
 
 /SLURM_JOBS/
 
