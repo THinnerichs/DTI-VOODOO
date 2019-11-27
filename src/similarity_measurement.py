@@ -319,7 +319,8 @@ def execute_DD_semantic_similarity_matrix():
     print("Finished.")
 
 def get_semantic_similarity_matrix():
-    pass
+    score_list_filename = "../data/"
+    # with open
 
 
 

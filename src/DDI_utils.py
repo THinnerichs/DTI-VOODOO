@@ -102,16 +102,16 @@ def write_DDI_drugbank_graph():
             DDI_graph.add_node(pubchem_id_2)
             DDI_graph.add_edge(pubchem_id_1, pubchem_id_2)
             counter += 1
-            if counter % 1000 == 0:
+            if counter % 100000 == 0:
                 print("Added edges:", counter)
-    print("Finished.\n")
-    print("Skipped edges:", drugs_missing_in_dict_counter)
+    print("Finished.")
+    print("Skipped edges:", drugs_missing_in_dict_counter, '\n')
 
     print("Writing DDI graph extracted from Drugbank ...")
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
     with open(file=graph_filename+'pkl', mode='wb') as f:
         pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished writing {}\n.".format(graph_filename))
+    print("Finished writing {}.\n".format(graph_filename))
 
 def get_DDI_drugbank_graph():
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
@@ -123,7 +123,7 @@ def get_DDI_drugbank_graph():
 
 def evaluate_dicts_and_graph():
 
-
+    '''
     map_1 = get_db_PubChem_id_mapping_dict()
     map_2 = get_db_PubChem_id_mapping_dict_mahmud()
     map_3 = get_pddi_db_pubchem_mapping()
@@ -141,6 +141,12 @@ def evaluate_dicts_and_graph():
     super_dict = dict(key_set2 | key_set2)
 
     print(len(list(super_dict.keys())))
+    '''
+
+    drugbank_graph = get_DDI_drugbank_graph()
+    boyce_graph = get_DDI_Boyce_graph()
+
+    print(len(set(drugbank_graph.nodes()) & set(boyce_graph)))
 
 
     # SIDER_only_graph = get_SIDER_only_graph()
@@ -154,7 +160,7 @@ def evaluate_dicts_and_graph():
 if __name__ == '__main__':
     # get_DDI_Boyce_graph()
 
-    # evaluate_dicts_and_graph()
+    evaluate_dicts_and_graph()
 
-    write_DDI_drugbank_graph()
+    # write_DDI_drugbank_graph()
     # get_DDI_drugbank_graph()
