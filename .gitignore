@@ -121,13 +121,26 @@ venv.bak/
 /data/predicted_targets/
 /data/meddra_all_label_se.tsv
 /data/MEDDRA_RDF_original.ttl
-/data/example_data/
-/data/DDI_data/
-/data/pddi_data/
+
+/data/example_data/para_mafft_aligned_700_min_score.afa
+/data/example_data/para_kalign_aligned_700_min_score.afa
+/data/example_data/para_mafft_aligned_800_min_score.afa
+/data/example_data/para_kalign_aligned_800_min_score.afa
+
+/data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl
+/data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl.pkl
+/data/meddra_RDF_graph.pkl
+/data/MEDDRA_RDF_original.ttl
+
+/data/DDI_data/DDI_data_full.json
+/data/pddi_data/CombinedDatasetNotConservative.csv
+
 /data/STITCH_data/
-/data/SIDER_data/
-/data/MedDRA_data/
-/data/similarity_results/
+
+/data/SIDER_data/meddra_all_label_se.tsv
+
+/data/similarity_results/jaccard_similarity_graph.pkl
+/data/similarity_results/semsim_drugs.txt
 
 
 /SLURM_JOBS/
