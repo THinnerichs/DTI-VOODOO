@@ -9,17 +9,17 @@
 - execute hmm_pipeline on MSA results
 
 
-- calculate side effect similarity matrix (See jupyter notebook)
-- Bring Maxats groovy stuff to life
+- parse similarity scores from Maxat script
 
-
-- how to compare alignments (use blastp for e values)
 - how to map e values from [0,inf) with 0 as hit and inf as no hit to [0,1] where 0 no hit and 1 is hit
 - how to compare both similarity measures? (-> Maxat)
 
+- calculate DDI of Boyce
+
+- get STRING data
+
 - get distibution over similarities and then take lowest, median and highest and fit above mapping to it
 
-- Talk to LINDA or WADHA ASAP about prolonging of credentials and VPN!
 - iSCB conference deadline is 30. January
 
 ## Other ideas

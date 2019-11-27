@@ -123,11 +123,24 @@ def read_pddi_Boyce_data():
             for CID in CID_list[i]:
                 f.write(db_id+'\t'+db_name+'\t'+str(CID)+'\n')
 
-    print("Writing  to disk ...")
+    print("Writing to disk ...")
     filename = "../data/DDI_data/db_pubchem_mapping_dict_old"
     with open(file="../data/pddi_data/CID_list"+'.pkl', mode='wb') as f:
         pickle.dump(CID_list, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
+
+def get_pddi_db_pubchem_list():
+    # filename = "../data/DDI_data/db_pubchem_mapping_dict_old"
+    cid_list = None
+    with open(file="../data/pddi_data/CID_list" + '.pkl', mode='rb') as f:
+        cid_list = pickle.load(f)
+    # print("Finished writing ", filename, '\n')
+
+    print(len(cid_list))
+
+    for entry in cid_list:
+        if len(entry)>1:
+            print(entry)
 
 
 
@@ -152,5 +165,7 @@ if __name__ == '__main__':
 
     # test_pubchempy_search()
 
-    read_pddi_Boyce_data()
+    # read_pddi_Boyce_data()
+
+    get_pddi_db_pubchem_list()
 
