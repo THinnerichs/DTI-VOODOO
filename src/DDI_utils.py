@@ -130,8 +130,8 @@ def get_merged_DDI_graph():
     merged_graph = get_DDI_drugbank_graph()
     boyce_graph = get_DDI_Boyce_graph()
 
-    merged_graph.add_nodes_from(boyce_graph)
-    merged_graph.add_edges_from(boyce_graph)
+    merged_graph.add_nodes_from(boyce_graph.nodes())
+    merged_graph.add_edges_from(boyce_graph.edges())
 
     return merged_graph
 
