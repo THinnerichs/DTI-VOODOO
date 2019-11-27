@@ -75,12 +75,14 @@ def write_DDI_drugbank_graph():
 
     hit_list = raw_json['hits']['hits']
 
+    print("Parsing drugbank data ...")
+    counter = 0
     for hit in hit_list:
         print(hit)
 
         db_id_1 = hit['_id']
 
-        if not hit.get('_score', None) or not hit['_score'].get('drug-interactions', None):
+        if not hit.get('_source', None) or not hit['_source'].get('drug-interactions', None):
             continue
 
         for interaction in hit['_score']['drug-interactions']:
@@ -93,6 +95,10 @@ def write_DDI_drugbank_graph():
             DDI_graph.add_node(pubchem_id_1)
             DDI_graph.add_node(pubchem_id_2)
             DDI_graph.add_edge(pubchem_id_1, pubchem_id_2)
+            counter += 1
+            if counter % 1000 == 0:
+                print("Added edges:", counter)
+    print("Finished.")
 
     print("Writing DDI graph extracted from Drugbank ...")
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"

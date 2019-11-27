@@ -308,6 +308,20 @@ def write_annotation_file():
             f.write(drug+'\t'+'\t'.join(neighbor_list)+'\n')
     print("Finished.")
 
+def execute_DD_semantic_similarity_matrix():
+    """
+    Wrapper for executing of external groovy script
+    :return:
+    """
+    command = "groovy -cp './lib/*' SemanticSimilarity.groovy"
+    print("Running {} ...".format(command))
+    subprocess.call(command, shell=True)
+    print("Finished.")
+
+def get_semantic_similarity_matrix():
+    pass
+
+
 
 
 
