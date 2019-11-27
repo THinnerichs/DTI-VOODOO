@@ -161,14 +161,18 @@ def evaluate_dicts_and_graph():
     map_3 = get_pddi_db_pubchem_mapping()
 
     key_set1 = set(map_1.keys())
-    key_set2 = set(map_2.keys())
-    key_set3 = set(map_3.keys())
+    key_set2 = set(map_2.items())
+    key_set3 = set(map_3.items())
 
     print(len(key_set1))
     print(len(key_set2))
     print(len(key_set3))
 
     print(len(key_set2 & key_set3))
+
+    super_dict = dict(key_set2 | key_set2)
+
+    print(len(list(super_dict.keys())))
 
 
     # SIDER_only_graph = get_SIDER_only_graph()
