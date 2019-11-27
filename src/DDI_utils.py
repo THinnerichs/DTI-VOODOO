@@ -185,6 +185,6 @@ if __name__ == '__main__':
 
     # read_pddi_Boyce_data()
 
-    parse_db_pubchem_mapping()
+    get_pddi_db_pubchem_mapping()
     # get_pddi_db_pubchem_list()
 
