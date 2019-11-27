@@ -145,6 +145,10 @@ def evaluate_dicts_and_graph():
     drugbank_graph = get_DDI_drugbank_graph()
     boyce_graph = get_DDI_Boyce_graph()
 
+    print(drugbank_graph.nodes())
+    print(boyce_graph.nodes())
+
+
     print(len(set(drugbank_graph.nodes()) & set(boyce_graph.nodes())))
 
 
