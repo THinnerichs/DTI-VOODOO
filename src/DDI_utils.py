@@ -107,11 +107,12 @@ def read_pddi_Boyce_data():
     print(len(list(db_id_name_dict.keys())))
 
 
-    # for id, name in db_id_name_dict.items():
-        # CID_list = pcp.get_cids(name, namespace='name', domain='compound')
+    CID_list = []
+    for id, name in db_id_name_dict.items():
+        CID_list.append(pcp.get_cids(name, namespace='name', domain='compound'))
 
-    get_cids_wrapper = lambda name: pcp.get_cids(name, namespace='name', domain='compound')
-    CID_list = Parallel(n_jobs=16)(delayed(get_cids_wrapper)(drug_name) for id, drug_name in db_id_name_dict.items())
+    # get_cids_wrapper = lambda name: pcp.get_cids(name, namespace='name', domain='compound')
+    # CID_list = Parallel(n_jobs=16)(delayed(get_cids_wrapper)(drug_name) for id, drug_name in db_id_name_dict.items())
 
     with open(file="../data/pddi_data/db_id_CID_mapping", mode='w') as f:
         for i in range(len(list(db_id_name_dict.keys()))):
