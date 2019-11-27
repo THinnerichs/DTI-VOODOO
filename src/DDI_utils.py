@@ -81,6 +81,7 @@ def evaluate_dicts_and_graph():
     print(len(drug_set & key_set1))
 
 def read_pddi_Boyce_data():
+    # db := drugbank
 
     filename = "../data/pddi_data/CombinedDatasetNotConservative.csv"
     db_id_name_dict = {}
@@ -129,6 +130,21 @@ def read_pddi_Boyce_data():
         pickle.dump(CID_list, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
+def get_pddi_db_pubchem_mapping():
+    mapping = {}
+    with open(file="../data/pddi_data/db_id_CID_mapping", mode='w') as f:
+        for line in f:
+            db_id, db_name, CID = line.split('\t')
+            db_id = db_id[db_id.find('DB'):]
+
+            if len(CID)>8 or mapping.get(db_id, None):
+                continue
+
+            CID = 'CIDm' + (8-len(CID))*'0' + CID
+            mapping[db_id] = CID
+
+    return mapping
+
 def get_pddi_db_pubchem_list():
     # filename = "../data/DDI_data/db_pubchem_mapping_dict_old"
     cid_list = None
@@ -145,17 +161,6 @@ def get_pddi_db_pubchem_list():
             counter += 1
 
     print(counter)
-
-def get_extra_long_drugs():
-    counter = 0
-    for file in os.listdir("../data/drug_target_relations"):
-        if len(file[4:-8]) != 8:
-            print(file)
-        counter += 1
-        if counter%10000 == 0:
-            print(counter)
-
-
 
 
 def test_pubchempy_search():
@@ -180,6 +185,6 @@ if __name__ == '__main__':
 
     # read_pddi_Boyce_data()
 
+    parse_db_pubchem_mapping()
     # get_pddi_db_pubchem_list()
-    get_extra_long_drugs()
 
