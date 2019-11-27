@@ -121,6 +121,11 @@ venv.bak/
 /data/predicted_targets/
 /data/meddra_all_label_se.tsv
 /data/MEDDRA_RDF_original.ttl
+/data/example_data/
+/data/DDI_data/
+/data/pddi_data/
+/data/STITCH_data/
+/data/SIDER_data/
 
 /SLURM_JOBS/
 
