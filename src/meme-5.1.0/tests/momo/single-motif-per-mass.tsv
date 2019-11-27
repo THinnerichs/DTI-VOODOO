@@ -1,6 +1,0 @@
-mod	motif	regexp	fg_matches
-79.9	xxx_X79.9_xxx	[ACDEFGHILMNPQRSTVWY].[ACDEFGHILMNPQSTVWY][STY].[ADEFGHIKLMNPQRSTVWY].	252
-
-# MoMo (Modification Motifs): Version 5.0.5 compiled on Jul  2 2019 at 18:43:29
-# The format of this file is described at http://meme-suite.org/doc/momo-output-format.html.
-# momo simple --oc results/momo3 --psm-type tide --single-motif-per-mass momo/small-tide-mod.txt

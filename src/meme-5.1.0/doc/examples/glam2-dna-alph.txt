@@ -1,7 +1,0 @@
-#This is the standard nucleotide alphabet.
-
-aA
-cC
-gG
-tTuU
-N

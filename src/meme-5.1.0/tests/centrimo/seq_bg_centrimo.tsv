@@ -1,7 +1,0 @@
-db_index	motif_id	motif_alt_id	consensus	E-value	adj_p-value	log_adj_p-value	bin_location	bin_width	total_width	sites_in_bin	total_sites	p_success	p-value	mult_tests
-   1	ACRCCC	DREME-1	ACRCCC	4.4e-53	   2.2e-53	        -121.25	         0.0	    129.0	        495	         290	        483	  0.26061	8.9e-56	       247
-   1	TTATCW	DREME-2	TTATCW	2.4e-42	   1.2e-42	         -96.51	         0.0	    175.0	        495	         330	        496	  0.35354	4.9e-45	       247
-
-# CentriMo (Local Motif Enrichment Analysis): Version 5.0.5 compiled on Jul  2 2019 at 19:39:16
-# The format of this file is described at http://meme-suite.org/doc/centrimo-output-format.html.
-# centrimo --verbosity 1 --oc results/centrimo1 --flip --motif-pseudo 1 common/Klf1.fa centrimo/dreme-Klf1.xml
