@@ -125,7 +125,15 @@ def get_DDI_drugbank_graph():
     with open(file=graph_filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def get_merged_DDI_graph():
 
+    merged_graph = get_DDI_drugbank_graph()
+    boyce_graph = get_DDI_Boyce_graph()
+
+    merged_graph.add_nodes_from(boyce_graph)
+    merged_graph.add_edges_from(boyce_graph)
+
+    return merged_graph
 
 def evaluate_dicts_and_graph():
 
@@ -172,6 +180,8 @@ if __name__ == '__main__':
 
     # write_DDI_drugbank_graph()
 
-    evaluate_dicts_and_graph()
+    # evaluate_dicts_and_graph()
 
     # get_DDI_drugbank_graph()
+
+    print(len(get_merged_DDI_graph().nodes()))
