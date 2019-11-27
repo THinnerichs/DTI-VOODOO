@@ -129,8 +129,8 @@ venv.bak/
 
 /data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl
 /data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl.pkl
-/data/meddra_RDF_graph.pkl
-/data/MEDDRA_RDF_original.ttl
+/data/MedDRA_data/meddra_RDF_graph.pkl
+/data/MedDRA_data/MEDDRA_RDF_original.ttl
 
 /data/DDI_data/DDI_data_full.json
 /data/pddi_data/CombinedDatasetNotConservative.csv
