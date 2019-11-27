@@ -146,6 +146,15 @@ def get_pddi_db_pubchem_list():
 
     print(counter)
 
+def get_extra_long_drugs():
+    counter = 0
+    for file in os.listdir("../data/drug_target_relations"):
+        if len(file[4:-8]) != 8:
+            print(file)
+        counter += 1
+        if counter%10000 == 0:
+            print(counter)
+
 
 
 
@@ -171,5 +180,6 @@ if __name__ == '__main__':
 
     # read_pddi_Boyce_data()
 
-    get_pddi_db_pubchem_list()
+    # get_pddi_db_pubchem_list()
+    get_extra_long_drugs()
 
