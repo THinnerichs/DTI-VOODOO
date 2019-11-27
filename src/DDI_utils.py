@@ -81,8 +81,6 @@ def write_DDI_drugbank_graph():
     counter = 0
     drugs_missing_in_dict_counter = 0
     for hit in hit_list:
-        print(hit)
-
         db_id_1 = hit['_id']
 
         if not hit.get('_source', None) or not hit['_source'].get('drug-interactions', None):
