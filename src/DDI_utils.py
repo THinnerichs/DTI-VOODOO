@@ -29,6 +29,7 @@ def get_DDI_Boyce_graph():
     # db := drugbank
     DDI_graph = nx.Graph()
 
+    mapping_dict = get_db_PubChem_id_mapping_dict()
 
     filename = "../data/pddi_data/CombinedDatasetNotConservative.csv"
     with open(file=filename, mode='r', encoding='utf-8-sig') as f:
@@ -49,10 +50,16 @@ def get_DDI_Boyce_graph():
             db_id_1 = db_id_1[db_id_1.find('DB'):]
             db_id_2 = db_id_2[db_id_2.find('DB'):]
 
-            DDI_graph.add_node(db_id_1)
-            DDI_graph.add_node(db_id_2)
+            pubchem_id_1 = mapping_dict.get(db_id_1, None)
+            pubchem_id_2 = mapping_dict.get(db_id_2, None)
 
-            DDI_graph.add_edge(db_id_1, db_id_2)
+            if not pubchem_id_1 or not pubchem_id_2:
+                continue
+
+            DDI_graph.add_node(pubchem_id_1)
+            DDI_graph.add_node(pubchem_id_2)
+
+            DDI_graph.add_edge(pubchem_id_1, pubchem_id_2)
 
     return DDI_graph
 
