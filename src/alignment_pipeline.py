@@ -15,6 +15,56 @@ import pickle
 from Bio import SeqIO
 from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
+
+def write_pruned_SeqIO_fasta_dict():
+    # Create protein amino acid sequence from fasta
+    print("Reading fasta file to dict...")
+    fasta_filename = "../data/STITCH_data/protein.sequences.v10.fa"
+    protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
+    print("Finished.")
+
+    pruned_dict = {}
+    for key, seqio_seq in protein_aa_seq_dict.items():
+        split_list = key.split('.')
+
+        organism = split_list.pop(0)
+        protein = '.'.join(split_list)
+        result = pruned_dict.get(organism, None)
+
+        if not result:
+            pruned_dict[organism] = {}
+
+        pruned_dict[organism][protein] = str(seqio_seq.seq)
+    print("Finished.")
+
+    print("Writing pruned dict to disc")
+    filename = "../data/prot_aa_seq_dict"
+    with open(filename + '.pkl', 'wb') as f:
+        pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename)
+
+
+def prune_drug_protein_db(min_score=700):
+
+    filename = "../data/STITCH_data/protein_chemical.links.transfer.v5.0.tsv"
+    target_filename = "../data/STITCH_data/protein_chemical.links.min_score_" + str(min_score) + ".tsv"
+
+    print("Processing huge file ...")
+    with open(file=filename, mode='r') as f, open(file=target_filename, mode='w') as targetfile:
+        targetfile.write(f.readline())
+
+        counter = 0
+
+        for line in f:
+            counter += 1
+            if counter % 10000000 == 0:
+                print("Processed lines:", counter)
+
+            if int(line.strip().split('\t')[10]) < min_score:
+                continue
+            targetfile.write(line)
+    print("Finished.")
+
 def separate_prots_to_files(file_min_score=400,
                             min_score=400):
     """
@@ -25,7 +75,7 @@ def separate_prots_to_files(file_min_score=400,
     """
     # process drug-protein-interaction file
     print("Processing drug protein data...")
-    protein_chemical_links_filename = "../data/protein_chemical.links.min_score_"+str(file_min_score)+".tsv"
+    protein_chemical_links_filename = "../data/STITCH_data/protein_chemical.links.min_score_"+str(file_min_score)+".tsv"
 
 
     counter = 0
@@ -303,7 +353,7 @@ def write_predicted_targets(min_score=800,
         max_flag = False
         cores = 2
 
-        all_prots_fasta_filename = "../data/protein.sequences.v10.fa"
+        all_prots_fasta_filename = "../data/STITCH_data/protein.sequences.v10.fa"
 
         hmm_search_results_path = '../data/hmm_search_results/'
         hmmsearch_file = hmm_search_results_path + drug_name + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
