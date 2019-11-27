@@ -1,8 +1,12 @@
 import json
 import pickle
 import os
+from joblib import Parallel, delayed
 
 from similarity_measurement import *
+
+import pubchempy as pcp
+
 
 
 def write_db_PubChem_id_mapping_dict():
@@ -81,7 +85,7 @@ def read_pddi_Boyce_data():
     filename = "../data/pddi_data/CombinedDatasetNotConservative.csv"
     db_id_name_dict = {}
     with open(file=filename, mode='r', encoding='utf-8-sig') as f:
-        print(f.readline())
+        f.readline()
         for line in f:
             split_line = line.split('\t')
 
@@ -102,8 +106,24 @@ def read_pddi_Boyce_data():
             db_id_name_dict[db_id_2] = db_name_2
     print(len(list(db_id_name_dict.keys())))
 
-    for 
 
+    # for id, name in db_id_name_dict.items():
+        # CID_list = pcp.get_cids(name, namespace='name', domain='compound')
+
+    get_cids_wrapper = lambda name: pcp.get_cids(name, namespace='name', domain='compound')
+    CID_list = Parallel(n_jobs=16)(delayed(get_cids_wrapper)(drug_name) for id, drug_name in db_id_name_dict.items())
+
+    with open(file="../data/pddi_data/db_id_CID_mapping", mode='w') as f:
+        for i in range(len(list(db_id_name_dict.keys()))):
+            db_id, db_name = list(db_id_name_dict.items())[i]
+            for CID in CID_list[i]:
+                f.write(db_id+'\t'+db_name+'\t'+CID+'\n')
+
+    print("Writing  to disk ...")
+    filename = "../data/DDI_data/db_pubchem_mapping_dict_old"
+    with open(file="../data/pddi_data/CID_list"+'.pkl', mode='wb') as f:
+        pickle.dump(CID_list, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished writing ", filename, '\n')
 
 
 
