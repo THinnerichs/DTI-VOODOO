@@ -85,7 +85,7 @@ def write_DDI_drugbank_graph():
         if not hit.get('_source', None) or not hit['_source'].get('drug-interactions', None):
             continue
 
-        for interaction in hit['_score']['drug-interactions']:
+        for interaction in hit['_source']['drug-interactions']:
             if not interaction.get('drugbank-id', None):
                 continue
             db_id_2 = interaction['drugbank-id']
