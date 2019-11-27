@@ -159,7 +159,7 @@ def evaluate_dicts_and_graph():
 if __name__ == '__main__':
     # get_DDI_Boyce_graph()
 
-    write_DDI_drugbank_graph()
+    # write_DDI_drugbank_graph()
 
     evaluate_dicts_and_graph()
 
