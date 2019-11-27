@@ -138,9 +138,13 @@ def get_pddi_db_pubchem_list():
 
     print(len(cid_list))
 
+    counter = 0
     for entry in cid_list:
         if len(entry)>1:
             print(entry)
+            counter += 1
+
+    print(counter)
 
 
 
