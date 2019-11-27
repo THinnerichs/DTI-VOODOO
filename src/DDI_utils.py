@@ -115,9 +115,8 @@ def write_DDI_drugbank_graph():
 
 def get_DDI_drugbank_graph():
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
-    DDI_drugbank_graph = None
     with open(file=graph_filename+'.pkl', mode='rb') as f:
-        DDI_drugbank_graph = pickle.load(f)
+        return pickle.load(f)
 
 
 
@@ -161,7 +160,7 @@ if __name__ == '__main__':
     # get_DDI_Boyce_graph()
 
     write_DDI_drugbank_graph()
-    
+
     evaluate_dicts_and_graph()
 
     # get_DDI_drugbank_graph()
