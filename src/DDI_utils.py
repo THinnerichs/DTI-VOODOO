@@ -121,7 +121,7 @@ def read_pddi_Boyce_data():
         for i in range(len(list(db_id_name_dict.keys()))):
             db_id, db_name = list(db_id_name_dict.items())[i]
             for CID in CID_list[i]:
-                f.write(db_id+'\t'+db_name+'\t'+CID+'\n')
+                f.write(db_id+'\t'+db_name+'\t'+str(CID)+'\n')
 
     print("Writing  to disk ...")
     filename = "../data/DDI_data/db_pubchem_mapping_dict_old"
