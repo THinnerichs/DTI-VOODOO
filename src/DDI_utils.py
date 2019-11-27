@@ -62,7 +62,7 @@ def get_DDI_Boyce_graph():
         pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
     '''
 
-def get_DDI_drugbank_graph():
+def write_DDI_drugbank_graph():
 
     DDI_graph = nx.Graph()
 
@@ -100,7 +100,12 @@ def get_DDI_drugbank_graph():
         pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.".format(graph_filename))
 
-    return DDI_graph
+def get_DDI_drugbank_graph():
+    graph_filename = "../data/DDI_data/DDI_drugbank_graph"
+    DDI_drugbank_graph = None
+    with open(file=graph_filename+'.pkl', mode='rb') as f:
+        DDI_drugbank_graph = pickle.load(f)
+
 
 
 def evaluate_dicts_and_graph():
@@ -138,4 +143,5 @@ if __name__ == '__main__':
 
     # evaluate_dicts_and_graph()
 
-    get_DDI_drugbank_graph()
+    write_DDI_drugbank_graph()
+    # get_DDI_drugbank_graph()
