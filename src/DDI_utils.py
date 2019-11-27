@@ -132,7 +132,7 @@ def read_pddi_Boyce_data():
 
 def get_pddi_db_pubchem_mapping():
     mapping = {}
-    with open(file="../data/pddi_data/db_id_CID_mapping", mode='w') as f:
+    with open(file="../data/pddi_data/db_id_CID_mapping", mode='r') as f:
         for line in f:
             db_id, db_name, CID = line.split('\t')
             db_id = db_id[db_id.find('DB'):]
