@@ -110,7 +110,7 @@ def read_pddi_Boyce_data():
     CID_list = []
     for id, name in db_id_name_dict.items():
         CID_list.append(pcp.get_cids(name, namespace='name', domain='compound'))
-        if counter % 100 == 0:
+        if counter % 5 == 0:
             print(counter)
         counter += 1
 
