@@ -17,7 +17,7 @@ import itertools
 
 
 def get_SIDER_drug_list():
-    filename = "../data/meddra_all_label_se.tsv"
+    filename = "../data/SIDER_data/meddra_all_label_se.tsv"
 
     drug_list = set()
     with open(file=filename, mode='r') as f:
@@ -33,7 +33,7 @@ def get_SIDER_drug_list():
     return list(drug_list)
 
 def get_SIDER_side_effect_list():
-    filename = "../data/meddra_all_label_se.tsv"
+    filename = "../data/SIDER_data/meddra_all_label_se.tsv"
 
     side_effect_id_list = set()
     with open(file=filename, mode='r') as f:
@@ -46,7 +46,7 @@ def get_SIDER_side_effect_list():
 
 def write_SIDER_only_graph():
     # Extract graph from raw SIDER2 data
-    filename = "../data/meddra_all_label_se.tsv"
+    filename = "../data/SIDER_data/meddra_all_label_se.tsv"
 
     print("Extracting graph from raw data ...")
     G = nx.Graph()
@@ -70,14 +70,14 @@ def write_SIDER_only_graph():
     print("Finished.\n")
 
     print("Writing SIDER only graph to disc ...")
-    filename = "../data/bipartite_SIDER_only_graph"
+    filename = "../data/SIDER_data/bipartite_SIDER_only_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(G, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 def get_SIDER_only_graph():
     print("Reading SIDER only graph ...\n")
-    graph_filename = "../data/bipartite_SIDER_only_graph"
+    graph_filename = "../data/SIDER_data/bipartite_SIDER_only_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
@@ -123,14 +123,14 @@ def write_updated_MedDRA_label_SIDER_graph():
     print("Finished.\n")
 
     print("Writing updated MedDRA label SIDER graph to disc ...")
-    filename = "../data/updated_MedDRA_label_SIDER_graph"
+    filename = "../data/MedDRA_data/updated_MedDRA_label_SIDER_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(SIDER_only_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 def get_updated_MedDRA_label_SIDER_graph():
     print("Reading updated MedDRA label SIDER only graph ...\n")
-    graph_filename = "../data/updated_MedDRA_label_SIDER_graph"
+    graph_filename = "../data/MedDRA_data/updated_MedDRA_label_SIDER_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
@@ -156,25 +156,25 @@ def write_jaccard_se_similarity_graph():
     print("Finished.\n")
 
     print("Writing jaccard side effect similarity graph to disc ...")
-    filename = "../data/jaccard_similarity_graph"
+    filename = "../data/similarity_results/jaccard_similarity_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(similarity_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 def get_jaccard_se_similarity_graph():
     print("Reading jaccard side effect graph ...\n")
-    graph_filename = "../data/jaccard_similarity_graph"
+    graph_filename = "../data/similarity_results/jaccard_similarity_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 def write_meddra_graph_to_disc():
-    meddra_rdf_graph_filename = "../data/MEDDRA_RDF_original.ttl"
+    meddra_rdf_graph_filename = "../data/MedDRA_data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
     print(result)
 
     print("Writing meddra RDF graph to disc ...")
-    filename = "../data/meddra_RDF_graph"
+    filename = "../data/MedDRA_data/meddra_RDF_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(meddra_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
@@ -183,7 +183,7 @@ def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
     print("Reading meddra RDF graph ...")
-    graph_filename = "../data/meddra_RDF_graph"
+    graph_filename = "../data/MedDRA_data/meddra_RDF_graph"
     meddra_RDF_graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
          meddra_RDF_graph = pickle.load(f)
@@ -233,20 +233,20 @@ def write_enriched_SIDER_graph():
 
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
-    target_filename = "../data/MedDRA_enriched_SIDER_RDF_graph.ttl"
+    target_filename = "../data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl"
     meddra_RDF_graph.serialize(destination=target_filename, format='turtle')
     print("Finished writing ", target_filename, '\n')
 
     # Write annotation graph to disc
     print("Writing meddra annotation graph to disc ...")
-    filename = "../data/SIDER_annotation_graph"
+    filename = "../data/SIDER_data/SIDER_annotation_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(annotation_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 def get_MedDRA_mapping():
     # Read MRCUI mapping file
-    MRCUI_filename = "../data/MRCUI.RRF"
+    MRCUI_filename = "../data/MedDRA_data/MRCUI.RRF"
     simple_mapping_dict = {}
     merge_mapping_dict = {}
     delete_list = []
@@ -283,7 +283,7 @@ def write_annotation_file():
 
     # read meddra RDF graph from disc
     print("Reading annotation graph ...")
-    filename = "../data/SIDER_annotation_graph"
+    filename = "../data/SIDER_data/SIDER_annotation_graph"
     annotation_graph = None
     with open(filename + '.pkl', 'rb') as f:
          annotation_graph = pickle.load(f)
