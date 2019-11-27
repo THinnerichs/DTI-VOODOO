@@ -70,13 +70,16 @@ def write_DDI_drugbank_graph():
 
     filename = "../data/DDI_data/DDI_data_full.json"
     raw_json = None
+    print("Loading JSON ...")
     with open(file=filename, mode='r') as f:
         raw_json = json.load(f)
+    print("Finished.\n")
 
     hit_list = raw_json['hits']['hits']
 
     print("Parsing drugbank data ...")
     counter = 0
+    drugs_missing_in_dict_counter = 0
     for hit in hit_list:
         print(hit)
 
@@ -90,21 +93,27 @@ def write_DDI_drugbank_graph():
                 continue
             db_id_2 = interaction['drugbank-id']
 
-            pubchem_id_1 = mapping_dict[db_id_1]
-            pubchem_id_2 = mapping_dict[db_id_2]
+            pubchem_id_1 = mapping_dict.get(db_id_1, None)
+            pubchem_id_2 = mapping_dict.get(db_id_2, None)
+
+            if not pubchem_id_1 or not pubchem_id_2:
+                drugs_missing_in_dict_counter += 1
+                continue
+
             DDI_graph.add_node(pubchem_id_1)
             DDI_graph.add_node(pubchem_id_2)
             DDI_graph.add_edge(pubchem_id_1, pubchem_id_2)
             counter += 1
             if counter % 1000 == 0:
                 print("Added edges:", counter)
-    print("Finished.")
+    print("Finished.\n")
+    print("Skipped edges:", drugs_missing_in_dict_counter)
 
     print("Writing DDI graph extracted from Drugbank ...")
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
     with open(file=graph_filename+'pkl', mode='wb') as f:
         pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished writing {}.".format(graph_filename))
+    print("Finished writing {}\n.".format(graph_filename))
 
 def get_DDI_drugbank_graph():
     graph_filename = "../data/DDI_data/DDI_drugbank_graph"
