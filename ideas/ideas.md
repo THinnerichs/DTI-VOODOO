@@ -1,4 +1,5 @@
 ## TODO
+
 - actually do some literature search!!!
 
 - Put more comments to code
@@ -8,19 +9,25 @@
 - Run Alignment on min_score 700 to avoid that many 0 target drugs
 - execute hmm_pipeline on MSA results
 
-
-- parse similarity scores from Maxat script
-
 - how to map e values from [0,inf) with 0 as hit and inf as no hit to [0,1] where 0 no hit and 1 is hit
 - how to compare both similarity measures? (-> Maxat)
 
-- calculate DDI of Boyce
 
-- get STRING data
+- Handle CIDm and CIDs as different entities?
 
 - get distibution over similarities and then take lowest, median and highest and fit above mapping to it
 
 - iSCB conference deadline is 30. January
+
+
+
+
+
+- parse similarity matrix from Maxat script
+- parse STRING data
+
+
+
 
 ## Other ideas
 
