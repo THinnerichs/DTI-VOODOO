@@ -29,7 +29,7 @@ System.setProperty("jdk.xml.totalEntitySizeLimit", "0");
 def factory = URIFactoryMemory.getSingleton()
 def valueFactory = ValueFactoryImpl.getInstance();
 def annotationsPath = "../data/annotation_file_for_groovy.tsv";
-def resSimPath = "../results/semsim_drugs.txt";
+def resSimPath = "../data/semsim_drugs.txt";
 
 
 class Drug {

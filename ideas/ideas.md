@@ -28,7 +28,7 @@
 	... over structural similarity
 	... over alignment of e.g. SMILES
 
-- clinical trials on humans take a long time usually -> Targets in species other species are available way earlier
+- get DD similarity trough ATC code/hierarchy?
 
 ## On performance of alignments
 
