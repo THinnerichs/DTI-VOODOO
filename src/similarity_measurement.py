@@ -292,7 +292,7 @@ def write_annotation_file():
     drug_list = get_SIDER_drug_list()
 
     print("Writing annotation file ...")
-    annotation_file = "../data/annotation_file_for_groovy.tsv"
+    annotation_file = "../data/MedDRA_data/annotation_file_for_groovy.tsv"
     with open(file=annotation_file, mode='w') as f:
         for drug in drug_list:
             present = False
