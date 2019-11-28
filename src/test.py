@@ -7,6 +7,7 @@ def test_target_subset():
     path = "../data/drug_target_relations/"
 
     counter = 0
+    counter1 = 0
 
     for filename in os.listdir(path):
         if 'm' not in filename:
@@ -25,6 +26,9 @@ def test_target_subset():
             if not s_file_targets.issubset(m_file_targets):
                 counter += 1
                 print(counter, filename)
+        counter1 += 1
+        if counter1 % 1000 == 0:
+            print(counter1)
 
 
 
