@@ -342,9 +342,15 @@ def get_semantic_similarity_matrix():
     return semsim_matrix
 
 def get_SIDER_Boyce_Drubank_drug_intersection():
+    print("Reading SIDER graph ...")
     SIDER_drug_list = get_SIDER_drug_list()
+    print("Finished.\n")
+    print("Reading merged DDI graph ...")
     merged_DDI_graph = get_merged_DDI_graph()
+    print("Finished.\n")
 
+    print(len(SIDER_drug_list))
+    print(len(merged_DDI_graph.nodes()))
     intersection = set(SIDER_drug_list) & set(merged_DDI_graph.nodes())
 
     print(len(intersection))
