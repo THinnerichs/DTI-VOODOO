@@ -413,6 +413,9 @@ def write_predicted_targets(min_score=800,
         q.put(None)  # one EOF marker for each thread
 
 
+
+
+
 if __name__ == '__main__':
     '''
     separate_prots_to_files(file_min_score=400,
