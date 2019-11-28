@@ -13,6 +13,7 @@ def test_target_subset():
             continue
         s_file = filename.replace('m','s')
         if os.path.exists(s_file):
+            print(s_file)
             m_file_targets = set()
             with open(file=path+filename, mode='r') as m:
                 for line in m:
