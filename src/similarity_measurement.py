@@ -319,8 +319,25 @@ def execute_DD_semantic_similarity_matrix():
     print("Finished.")
 
 def get_semantic_similarity_matrix():
-    score_list_filename = "../data/"
-    # with open
+
+    drug_list = get_SIDER_drug_list()
+    num_drugs = len(drug_list)
+    semsim_matrix = np.zeros((len(drug_list), len(drug_list)))
+
+    print("Parsing semantic similarity matrix ...")
+    score_list_filename = "../data/similarity_results/semsim_drugs.txt"
+    with open(file=score_list_filename, mode='r') as f:
+        counter = 0
+        for line in f:
+            i = int(counter/num_drugs)
+            j = counter%num_drugs
+            semsim_matrix[i,j] = int(line.strip())
+
+            counter += 1
+    print("Finished.")
+
+    return semsim_matrix
+
 
 
 
@@ -342,5 +359,7 @@ if __name__ == '__main__':
     # get_updated_MedDRA_label_SIDER_graph()
 
     # write_enriched_SIDER_graph()
-    write_annotation_file()
+    # write_annotation_file()
+
+    get_semantic_similarity_matrix()
 

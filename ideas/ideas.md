@@ -22,11 +22,20 @@
 
 
 
-
+- Build alignment over all targets
+  - Query against only human data
+  - Build STRING graph only on human data
+  - Use human interactions data to build training/testing data
+    - Utilize non-binary score? Sigmoid over score?
 - parse similarity matrix from Maxat script
 - parse STRING data
+  - STRING graph directed?
 
 
+## Ideas for presentation
+- histogram over scores of STRING and STITCH
+- Meaning of score 
+- Functions to slides B)
 
 
 ## Other ideas

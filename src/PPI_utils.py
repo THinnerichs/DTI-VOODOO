@@ -32,9 +32,10 @@ def write_PPI_graph(min_score=700):
 
     print("Building PPI graph ...")
     PPI_graph = nx.Graph()
+    num_lines = sum(1 for line in open('myfile.txt', 'r'))
     with open(file=pruned_PPI_file, mode='r') as f:
         f.readline() # skip header
-        for i, line in enumerate(tqdm(f)):
+        for i, line in enumerate(tqdm(f, total=num_lines)):
             split_line = line.split(' ')
 
             node_1 = split_line[0]
@@ -46,15 +47,19 @@ def write_PPI_graph(min_score=700):
     print("Finished.")
 
     print("Writing PPI graph to disk ...")
-    graph_filename = "../data/STRING_data/PPI_graph"
+    graph_filename = "../data/STRING_data/PPI_graph_"+str(min_score)+"_min_score"
     with open(file=graph_filename+'.pkl', mode='wb') as f:
         pickle.dump(PPI_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.\n".format(graph_filename))
 
+def get_PPI_graph(min_score=700):
+    filename = "../data/STRING_data/PPI_graph_" + str(min_score) + "_min_score.pkl"
+    with open(file= filename, mode='rb') as f:
+        return pickle.load(f)
 
 
 
 if __name__ == '__main__':
-    # prune_protein_protein_db()
+    # prune_protein_protein_db(min_score=700)
 
-    write_PPI_graph()
+    write_PPI_graph(min_score=700)
