@@ -21,15 +21,22 @@
 
 
 
+--------------------------------------------------------------------
+- move repo to project folder (reach out to Ramy)
 
 - Build alignment over all targets
   - Query against only human data
-  - Build STRING graph only on human data
+  - Build STRING graph only on human data (Y)
   - Use human interactions data to build training/testing data
     - Utilize non-binary score? Sigmoid over score?
-- parse similarity matrix from Maxat script
-- parse STRING data
-  - STRING graph directed?
+
+- build human dti data for train/test
+- extract intersection between SIDER data and DDI data
+  - build proper DDI graph
+
+- extract subgraphs for each target for specific radius
+- get node2vec embedding with node features
+(- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
 
 ## Ideas for presentation
