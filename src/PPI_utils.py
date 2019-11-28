@@ -32,10 +32,10 @@ def write_PPI_graph(min_score=700):
 
     print("Building PPI graph ...")
     PPI_graph = nx.Graph()
-    num_lines = sum(1 for line in open('myfile.txt', 'r'))
+    num_lines = sum(1 for line in open(pruned_PPI_file, 'r'))
     with open(file=pruned_PPI_file, mode='r') as f:
         f.readline() # skip header
-        for i, line in enumerate(tqdm(f, total=num_lines)):
+        for line in tqdm(f, total=num_lines):
             split_line = line.split(' ')
 
             node_1 = split_line[0]

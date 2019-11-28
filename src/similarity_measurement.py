@@ -326,15 +326,16 @@ def get_semantic_similarity_matrix():
 
     print("Parsing semantic similarity matrix ...")
     score_list_filename = "../data/similarity_results/semsim_drugs.txt"
+    num_lines = sum(1 for line in open(score_list_filename, 'r'))
     with open(file=score_list_filename, mode='r') as f:
         counter = 0
-        for line in f:
+        for line in tqdm(f, num_lines):
             i = int(counter/num_drugs)
             j = counter%num_drugs
             semsim_matrix[i,j] = float(line.strip())
 
             counter += 1
-    print("Finished.")
+    print("Finished.\n")
 
     return semsim_matrix
 
