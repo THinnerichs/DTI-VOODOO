@@ -29,3 +29,6 @@ def prune_protein_protein_db(min_score=700):
             targetfile.write(line)
     print("Finished.")
 
+
+if __name__ == '__main__':
+    prune_protein_protein_db()
