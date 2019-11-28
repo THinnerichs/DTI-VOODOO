@@ -28,8 +28,8 @@ System.setProperty("jdk.xml.totalEntitySizeLimit", "0");
 
 def factory = URIFactoryMemory.getSingleton()
 def valueFactory = ValueFactoryImpl.getInstance();
-def annotationsPath = "../data/annotation_file_for_groovy.tsv";
-def resSimPath = "../data/semsim_drugs.txt";
+def annotationsPath = "../data/MedDRA_data/annotation_file_for_groovy.tsv";
+def resSimPath = "../data/similarity_results/semsim_drugs.txt";
 
 
 class Drug {
@@ -59,7 +59,7 @@ def getMedDRAgraph = {
   G graph = new GraphMemory(graph_uri)
 
   // Load OBO file to graph "go.obo"
-  GDataConf goConf = new GDataConf(GFormat.TURTLE, "../data/MedDRA_enriched_SIDER_RDF_graph.ttl")
+  GDataConf goConf = new GDataConf(GFormat.TURTLE, "../data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl")
   GraphLoaderGeneric.populate(goConf, graph)
 
   // Add virtual root for 3 subontologies__________________________________

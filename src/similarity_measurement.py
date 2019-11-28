@@ -341,15 +341,15 @@ def get_semantic_similarity_matrix():
 
 
 if __name__ == '__main__':
-    write_SIDER_only_graph()
-    write_jaccard_se_similarity_graph()
-    get_jaccard_se_similarity_graph()
+    # write_SIDER_only_graph()
+    # write_jaccard_se_similarity_graph()
+    # get_jaccard_se_similarity_graph()
 
-    write_updated_MedDRA_label_SIDER_graph()
+    # write_updated_MedDRA_label_SIDER_graph()
     # get_updated_MedDRA_label_SIDER_graph()
 
-    write_enriched_SIDER_graph()
-    write_annotation_file()
+    # write_enriched_SIDER_graph()
+    # write_annotation_file()
 
     execute_DD_semantic_similarity_matrix()
 
