@@ -349,7 +349,7 @@ if __name__ == '__main__':
     # get_updated_MedDRA_label_SIDER_graph()
 
     # write_enriched_SIDER_graph()
-    # write_annotation_file()
+    write_annotation_file()
 
     execute_DD_semantic_similarity_matrix()
 
