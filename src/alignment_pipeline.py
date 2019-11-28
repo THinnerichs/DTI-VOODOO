@@ -92,7 +92,7 @@ def separate_prots_to_files(file_min_score=400,
             if int(split_line[10]) < min_score:
                 continue
 
-            drug = split_line[0]
+            drug = split_line[0].replace('s', 'm')
             split_protein = split_line[1].strip().split('.')
             organism = split_protein.pop(0)
             protein = ".".join(split_protein)
@@ -417,21 +417,21 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
-    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
+
+    create_fasta_files(min_score=700)
+
+    # _, start, end = sys.argv
+
     '''
-
-    # create_fasta_files(min_score=700)
-
-    _, start, end = sys.argv
-
     run_MSA(min_score=700,
             alignment_method='mafft',
             workers=12,
             threads_per_process=3,
             start=start,
             end=end)
+    '''
 
 
 

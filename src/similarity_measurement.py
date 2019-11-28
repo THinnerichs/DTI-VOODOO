@@ -28,7 +28,7 @@ def get_SIDER_drug_list():
             stereo_drug = stereo_drug[:3] + "s" + stereo_drug[4:]
 
             drug_list.add(flat_drug)
-            drug_list.add(stereo_drug)
+            # drug_list.add(stereo_drug)
 
     return list(drug_list)
 
@@ -59,13 +59,13 @@ def write_SIDER_only_graph():
 
             if flat_drug not in G.nodes():
                 G.add_node(flat_drug)
-                G.add_node(stereo_drug)
+                # G.add_node(stereo_drug)
 
             if side_effect_id not in G.nodes():
                 G.add_node(side_effect_id)
 
             G.add_edge(flat_drug, side_effect_id)
-            G.add_edge(stereo_drug, side_effect_id)
+            # G.add_edge(stereo_drug, side_effect_id)
     G.remove_node('')
     print("Finished.\n")
 
@@ -341,22 +341,17 @@ def get_semantic_similarity_matrix():
 
 
 if __name__ == '__main__':
-    # replace_gap_symbols_in_alignment()
-    # test_blast()
-    # evaluate_Blast_XML()
-    # run_similarity_pipeline(threads=8)
+    write_SIDER_only_graph()
+    write_jaccard_se_similarity_graph()
+    get_jaccard_se_similarity_graph()
 
-    # test_biopython_PairwiseAligner()
-
-    # write_SIDER_only_graph()
-    # write_jaccard_se_similarity_graph()
-    # get_jaccard_se_similarity_graph()
-
-    # write_updated_MedDRA_label_SIDER_graph()
+    write_updated_MedDRA_label_SIDER_graph()
     # get_updated_MedDRA_label_SIDER_graph()
 
-    # write_enriched_SIDER_graph()
-    # write_annotation_file()
+    write_enriched_SIDER_graph()
+    write_annotation_file()
 
-    get_semantic_similarity_matrix()
+    execute_DD_semantic_similarity_matrix()
+
+    # get_semantic_similarity_matrix()
 

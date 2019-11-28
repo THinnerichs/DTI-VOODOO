@@ -38,8 +38,18 @@
 - get node2vec embedding with node features
 (- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
-- Test whether CIDs\* targets are subsets of CIDm\* targets
+- Test whether CIDs\* targets are subsets of CIDm\* targets (NOT TRUE!)
 
+- if merge targets necessary:
+  - remove all old relation files
+  - remove all fasta files
+  - recalculate both
+  
+  - recalculate SIDER graph
+  - recalculate MedDRA Enriched sider graph
+  - recalculate semantic similarities
+  - recalculate similarity matrix according to drug list
+  
 
 ## Ideas for presentation
 - histogram over scores of STRING and STITCH
