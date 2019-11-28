@@ -10,9 +10,7 @@ def test_target_subset():
     counter1 = 0
 
     for filename in os.listdir(path):
-        counter1 += 1
-        if counter1 % 10 == 0:
-            print(counter1)
+
 
         if 'm' not in filename:
             continue
@@ -30,7 +28,11 @@ def test_target_subset():
             if not s_file_targets.issubset(m_file_targets):
                 counter += 1
                 print(counter, filename)
+                continue
 
+            counter1 += 1
+            if counter1 % 100 == 0:
+                print("counter1", counter1)
 
 
 
