@@ -329,7 +329,7 @@ def get_semantic_similarity_matrix():
     num_lines = sum(1 for line in open(score_list_filename, 'r'))
     with open(file=score_list_filename, mode='r') as f:
         counter = 0
-        for line in tqdm(f, num_lines):
+        for line in tqdm(f, total=num_lines):
             i = int(counter/num_drugs)
             j = counter%num_drugs
             semsim_matrix[i,j] = float(line.strip())
