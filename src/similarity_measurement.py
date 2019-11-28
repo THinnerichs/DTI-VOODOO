@@ -322,7 +322,7 @@ def get_semantic_similarity_matrix():
 
     drug_list = get_SIDER_drug_list()
     num_drugs = len(drug_list)
-    semsim_matrix = np.zeros((len(drug_list), len(drug_list)))
+    semsim_matrix = np.zeros((len(drug_list), len(drug_list)), dtype=np.float)
 
     print("Parsing semantic similarity matrix ...")
     score_list_filename = "../data/similarity_results/semsim_drugs.txt"
@@ -331,16 +331,12 @@ def get_semantic_similarity_matrix():
         for line in f:
             i = int(counter/num_drugs)
             j = counter%num_drugs
-            semsim_matrix[i,j] = int(line.strip())
+            semsim_matrix[i,j] = float(line.strip())
 
             counter += 1
     print("Finished.")
 
     return semsim_matrix
-
-
-
-
 
 
 if __name__ == '__main__':
