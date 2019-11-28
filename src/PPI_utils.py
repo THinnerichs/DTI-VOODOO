@@ -19,7 +19,7 @@ def prune_protein_protein_db(min_score=700):
             if counter % 1000000 == 0:
                 print("Processed lines:", counter)
 
-            if int(line.strip().split(' ')[16]) < min_score:
+            if int(line.strip().split(' ')[15]) < min_score:
                 continue
             targetfile.write(line)
     print("Finished.")
