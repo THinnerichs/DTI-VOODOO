@@ -137,6 +137,8 @@ venv.bak/
 
 /data/STITCH_data/
 
+/data/STRING_data/protein.links.v11.0.txt
+
 /data/SIDER_data/meddra_all_label_se.tsv
 
 /data/similarity_results/jaccard_similarity_graph.pkl
