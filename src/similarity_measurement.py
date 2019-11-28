@@ -15,6 +15,8 @@ import pickle
 
 import itertools
 
+from DDI_utils import *
+
 
 def get_SIDER_drug_list():
     filename = "../data/SIDER_data/meddra_all_label_se.tsv"
@@ -339,6 +341,16 @@ def get_semantic_similarity_matrix():
 
     return semsim_matrix
 
+def get_SIDER_Boyce_Drubank_drug_intersection():
+    SIDER_drug_list = get_SIDER_drug_list()
+    merged_DDI_graph = get_merged_DDI_graph()
+
+    intersection = set(SIDER_drug_list) & set(merged_DDI_graph.nodes())
+
+    print(len(intersection))
+
+
+
 
 if __name__ == '__main__':
     # write_SIDER_only_graph()
@@ -349,9 +361,11 @@ if __name__ == '__main__':
     # get_updated_MedDRA_label_SIDER_graph()
 
     # write_enriched_SIDER_graph()
-    write_annotation_file()
+    # write_annotation_file()
 
-    execute_DD_semantic_similarity_matrix()
+    # execute_DD_semantic_similarity_matrix()
 
     # get_semantic_similarity_matrix()
+
+    get_SIDER_Boyce_Drubank_drug_intersection()
 

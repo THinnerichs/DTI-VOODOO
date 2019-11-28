@@ -92,6 +92,7 @@ def separate_prots_to_files(file_min_score=400,
             if int(split_line[10]) < min_score:
                 continue
 
+            # merge CIDm and s
             drug = split_line[0].replace('s', 'm')
             split_protein = split_line[1].strip().split('.')
             organism = split_protein.pop(0)
