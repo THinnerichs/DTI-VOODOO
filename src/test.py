@@ -11,7 +11,7 @@ def test_target_subset():
 
     for filename in os.listdir(path):
         counter1 += 1
-        if counter1 % 10000 == 0:
+        if counter1 % 10 == 0:
             print(counter1)
 
         if 'm' not in filename:
