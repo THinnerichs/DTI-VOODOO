@@ -184,4 +184,4 @@ if __name__ == '__main__':
 
     # get_DDI_drugbank_graph()
 
-    print(len(get_merged_DDI_graph().nodes()))
+    print(get_merged_DDI_graph().nodes())
