@@ -349,11 +349,19 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     merged_DDI_graph = get_merged_DDI_graph()
     print("Finished.\n")
 
-    print(len(SIDER_drug_list))
-    print(len(merged_DDI_graph.nodes()))
     intersection = set(SIDER_drug_list) & set(merged_DDI_graph.nodes())
 
-    print(len(intersection))
+    fasta_path = "../data/fasta_files/"
+    files = os.listdir(fasta_path)
+    intersection_files = [drug_name + "_fasta_" + str(700) + "_min_score.fasta" for drug_name in intersection]
+    print()
+    # fasta_filename = "../data/fasta_files/" + drug_name + "_fasta_" + str(min_score) + "_min_score.fasta"
+
+    return intersection
+
+
+
+
 
 
 

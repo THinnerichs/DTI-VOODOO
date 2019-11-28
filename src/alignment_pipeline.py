@@ -15,6 +15,8 @@ import pickle
 from Bio import SeqIO
 from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
+from similarity_measurement import *
+
 
 def write_pruned_SeqIO_fasta_dict():
     # Create protein amino acid sequence from fasta
@@ -74,9 +76,8 @@ def separate_prots_to_files(file_min_score=400,
     :return:
     """
     # process drug-protein-interaction file
-    print("Processing drug protein data...")
+    print("Processing drug-protein-links data...")
     protein_chemical_links_filename = "../data/STITCH_data/protein_chemical.links.min_score_"+str(file_min_score)+".tsv"
-
 
     counter = 0
     with open(file=protein_chemical_links_filename, mode='r') as f:
@@ -176,7 +177,8 @@ def run_MSA(min_score=800,
             threads_per_process=2,
             overwrite=False,
             start='',
-            end=''):
+            end='',
+            human_only=False):
     """
     A wrapper for the different MSA techniques that are eventually executed in parallel.
 
@@ -274,7 +276,13 @@ def run_MSA(min_score=800,
 
     q = queue.Queue()
 
-    files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
+    files = None
+    if human_only:
+        intersect = get_SIDER_Boyce_Drubank_drug_intersection()
+        files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in intersect]
+    else:
+        files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
+
     # shuffle(files)
 
     if start:
@@ -418,21 +426,21 @@ def write_predicted_targets(min_score=800,
 
 
 if __name__ == '__main__':
+    '''
     separate_prots_to_files(file_min_score=400,
                             min_score=400)
-
-    create_fasta_files(min_score=700)
-
-    # _, start, end = sys.argv
-
     '''
+
+    # create_fasta_files(min_score=700)
+
+    _, start, end = sys.argv
+
     run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=12,
-            threads_per_process=3,
+            workers=8,
+            threads_per_process=5,
             start=start,
             end=end)
-    '''
 
 
 
