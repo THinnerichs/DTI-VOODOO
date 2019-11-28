@@ -28,12 +28,13 @@ def test_target_subset():
             if not s_file_targets.issubset(m_file_targets):
                 counter += 1
                 print(counter, filename)
-                print('length', len(s_file_targets - m_file_targets))
+                print('length', len(s_file_targets - m_file_targets), 'of', m_file_targets)
                 continue
 
             counter1 += 1
             if counter1 % 100 == 0:
-                print("counter1", counter1)
+                # print("counter1", counter1)
+                pass
 
 
 
