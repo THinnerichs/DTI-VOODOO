@@ -10,9 +10,9 @@ def test_target_subset():
 
     for filename in os.listdir(path):
         if 'm' not in filename:
+            print(filename)
             continue
         s_file = filename.replace('m','s')
-        print(filename, s_file)
         if os.path.exists(s_file):
             print(s_file)
             m_file_targets = set()
