@@ -205,7 +205,7 @@ def run_MSA(min_score=800,
         # if int(drug_name[4:]) > 1200:
             # return
 
-        target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.fasta"
+        target_file = target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
         if overwrite or not os.path.exists(target_file):
             fasta_file = "../data/fasta_files/"+drug_name+"_fasta_" + str(min_score) + "_min_score.fasta"
 
@@ -262,10 +262,6 @@ def run_MSA(min_score=800,
             subprocess.call(str(command), shell=True)
             print("Finished in {} sec.\n".format(time.time()-start_time))
 
-            # Eventually rename file for hmm
-            rename_command = "mv " + target_file + " " + target_file[:-6] + ".afa"
-            subprocess.call(str(rename_command), shell=True)
-
             return drug_name
 
 
@@ -278,8 +274,9 @@ def run_MSA(min_score=800,
 
     files = None
     if human_only:
-        intersect = get_SIDER_Boyce_Drubank_drug_intersection()
-        files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in intersect]
+        # intersect = get_SIDER_Boyce_Drubank_drug_intersection()
+        drug_list = get_SIDER_drug_list()
+        files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in drug_list]
     else:
         files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
 
@@ -440,7 +437,8 @@ if __name__ == '__main__':
             workers=8,
             threads_per_process=5,
             start=start,
-            end=end)
+            end=end,
+            human_only=True)
 
 
 

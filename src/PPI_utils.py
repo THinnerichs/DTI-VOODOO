@@ -47,16 +47,32 @@ def write_PPI_graph(min_score=700):
     print("Finished.")
 
     print("Writing PPI graph to disk ...")
-    graph_filename = "../data/STRING_data/PPI_graph_"+str(min_score)+"_min_score"
+    graph_filename = "../data/PPI_data/PPI_graph_"+str(min_score)+"_min_score"
     with open(file=graph_filename+'.pkl', mode='wb') as f:
         pickle.dump(PPI_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.\n".format(graph_filename))
 
 def get_PPI_graph(min_score=700):
-    filename = "../data/STRING_data/PPI_graph_" + str(min_score) + "_min_score.pkl"
+    filename = "../data/PPI_data/PPI_graph_" + str(min_score) + "_min_score.pkl"
     with open(file= filename, mode='rb') as f:
         return pickle.load(f)
 
+def write_protein_to_subgraph_dict(radius=5):
+    PPI_graph = get_PPI_graph()
+
+    print("Build protein subgraph mapping ...")
+    protein_subgraph_dict = {}
+    for protein in tqdm(PPI_graph.nodes()):
+        subgraph = nx.ego_graph(PPI_graph, protein, radius=radius, center=True, undirected=True)
+
+        protein_subgraph_dict[protein] = subgraph
+    print("Finished.\n")
+
+    print("Writing dict ...")
+    filename = "../data/PPI_data/protein_to_subgraph_dict"
+    with open(file=filename, mode='wb') as f:
+        pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
 
 
 if __name__ == '__main__':

@@ -2,7 +2,8 @@ import subprocess
 
 
 def run_jobs(parts=100,
-             amount=186135):
+             amount=637):
+    # amount 186135
     slurm_path = "../SLURM_JOBS/"
 
     sep_intervals = [(int(amount / parts * i), int(amount / parts * (i + 1))) for i in range(parts)]
@@ -45,5 +46,5 @@ def cancel_jobs():
                     break
 
 if __name__ == '__main__':
-    run_jobs()
+    run_jobs(parts=50, amount=1430)
     # cancel_jobs()
