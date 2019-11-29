@@ -13,8 +13,6 @@
 - how to compare both similarity measures? (-> Maxat)
 
 
-- Handle CIDm and CIDs as different entities?
-
 - get distibution over similarities and then take lowest, median and highest and fit above mapping to it
 
 - iSCB conference deadline is 30. January
@@ -38,18 +36,15 @@
 - get node2vec embedding with node features
 (- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
-- Test whether CIDs\* targets are subsets of CIDm\* targets (NOT TRUE!)
+- check if intersection targets are empty or not
 
-- if merge targets necessary:
-  - remove all old relation files
-  - remove all fasta files
-  - recalculate both
-  
-  - recalculate SIDER graph
-  - recalculate MedDRA Enriched sider graph
-  - recalculate semantic similarities
-  - recalculate similarity matrix according to drug list
-  
+- wait for data preprocessing to finish
+- zip fasta files and scp them over
+- execute run\_pipeline after checking both run\_pipeline and alignment\_pipeline to
+be properly configured
+  - Run it for both Mafft and FAMSA
+  - Finally execute hmm\_pipeline !!! 
+
 
 ## Ideas for presentation
 - histogram over scores of STRING and STITCH
