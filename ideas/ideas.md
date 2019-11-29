@@ -45,8 +45,24 @@ be properly configured
   - Run it for both Mafft and FAMSA
   - Finally execute hmm\_pipeline !!! 
 
+- check if VPN is working
+---------------------------------------------------
+- read Rpberts Hypothesis testing paper for title and outline
+
+- What do links in PPI graph mean? (-> STRING data/documentation)
+  - what does closeness in enriched PPI graph means?
+- Why do i need the DDIs and the Side effect similarity
+
+- Read PREDICT paper again
+
+- are there papers on DTI using PPIs?
+
+
 
 ## Ideas for presentation
+
+- Other approaches lack ability to generalize -> guilt by association
+
 - histogram over scores of STRING and STITCH
 - Meaning of score 
 - Functions to slides B)
@@ -70,16 +86,10 @@ This [link](https://www.ebi.ac.uk/Tools/msa/)
 
 ## Questions
 
-- What is the actual hypothesis? (Can drug-target interaction in other organisms can be used to determine DTIs in humans?) -> What is difference to GO, where all species are available as well
-- My Fahrplan:
-  - Proof similarity between semsim/jaccard similarity and found targets (most likely jaccard)
-    - How to get correlation between two simlarities?
-    - I only need alignments for drugs present in SIDER?
-  - Remove orthologs -> query for humans (Orthologs are only the ones with same name?)
-- Actually do some statistics on the removed orthologs
-- What could be some meat to add here?
-- What could be some backup plan here?
 
+
+- What is the actual hypothesis? 
+- What could be some meat to add here?
 ## Databases
 
 - CTD
