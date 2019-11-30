@@ -1,3 +1,8 @@
+## Important
+
+- Extend VPN access (only valid until 30.12.19)
+- Visit ithelpdesk on Sunday for VPN credentials
+
 ## TODO
 
 - actually do some literature search!!!

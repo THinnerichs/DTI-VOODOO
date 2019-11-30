@@ -354,10 +354,17 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     fasta_path = "../data/fasta_files/"
     files = os.listdir(fasta_path)
     intersection_files = [drug_name + "_fasta_" + str(700) + "_min_score.fasta" for drug_name in intersection]
-    print()
     # fasta_filename = "../data/fasta_files/" + drug_name + "_fasta_" + str(min_score) + "_min_score.fasta"
 
     return intersection
+
+def test():
+    inter = get_SIDER_Boyce_Drubank_drug_intersection()
+
+    fasta_path = "../data/fasta_files/"
+    filtered_inter = [drug for drug in inter if os.stat(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta").st_size != 0]
+    print(len(filtered_inter))
+
 
 
 
@@ -381,5 +388,7 @@ if __name__ == '__main__':
 
     # get_semantic_similarity_matrix()
 
-    get_SIDER_Boyce_Drubank_drug_intersection()
+    # get_SIDER_Boyce_Drubank_drug_intersection()
+
+    test()
 
