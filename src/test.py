@@ -10,8 +10,13 @@ def test_target_subset():
     counter1 = 0
 
     for filename in os.listdir(path):
+        if 's' not in filename[:5]:
+            continue
+        m_file = filename[:5].replace('s','m') + filename[5:]
+        if not os.path.exists(path+m_file):
 
 
+        '''
         if 'm' not in filename:
             continue
         s_file = filename.replace('m','s')
@@ -36,6 +41,7 @@ def test_target_subset():
             if counter1 % 100 == 0:
                 # print("counter1", counter1)
                 pass
+        '''
 
 
 
