@@ -363,8 +363,8 @@ def test():
 
     fasta_path = "../data/fasta_files/"
     filtered_inter = [drug for drug in inter
-                      if os.stat(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta").st_size != 0 and
-                      os.path.exists(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta")]
+                      if not os.path.exists(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta") and
+                      os.stat(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta").st_size != 0]
     print(len(filtered_inter))
 
 
