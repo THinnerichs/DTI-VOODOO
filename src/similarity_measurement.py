@@ -359,7 +359,8 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     return intersection
 
 def test():
-    inter = get_SIDER_Boyce_Drubank_drug_intersection()
+    # inter = get_SIDER_Boyce_Drubank_drug_intersection()
+    inter = get_SIDER_drug_list()
 
     fasta_path = "../data/fasta_files/"
     filtered_inter = [drug for drug in inter
