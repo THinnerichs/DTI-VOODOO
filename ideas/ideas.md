@@ -23,36 +23,29 @@
 - iSCB conference deadline is 30. January
 
 
-
 --------------------------------------------------------------------
 - move repo to project folder (reach out to Ramy)
 
 - Build alignment over all targets
+  - build hmms over alignments
   - Query against only human target data
   - Build STRING graph only on human data (Y)
   - Use human interactions data to build training/testing data
     - Utilize non-binary score? Sigmoid over score?
 
-- build human dti data for train/test
-- extract intersection between SIDER data and DDI data
-  - build proper DDI graph
-
 - extract subgraphs for each target for specific radius
 - get node2vec embedding with node features
 (- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
-- check if intersection targets are empty or not
+- get phenotypes for drugs
 
-- wait for data preprocessing to finish
-- zip fasta files and scp them over
-- execute run\_pipeline after checking both run\_pipeline and alignment\_pipeline to
-be properly configured
-  - Run it for both Mafft and FAMSA
-  - Finally execute hmm\_pipeline !!! 
+- Finally execute hmm\_pipeline !!! 
 
 - check if VPN is working
 ---------------------------------------------------
-- read Rpberts Hypothesis testing paper for title and outline
+- read Roberts Hypothesis testing paper for title and outline
+
+- What are GCNs exactly doing?
 
 - What do links in PPI graph mean? (-> STRING data/documentation)
   - what does closeness in enriched PPI graph means?
@@ -62,6 +55,8 @@ be properly configured
 
 - are there papers on DTI using PPIs?
 
+- PPI radius based on confidence? -> Ego Graph
+
 
 
 ## Ideas for presentation
@@ -69,6 +64,7 @@ be properly configured
 - Other approaches lack ability to generalize -> guilt by association
 
 - histogram over scores of STRING and STITCH
+- show image of network for STRING and STITCH
 - Meaning of score 
 - Functions to slides B)
 

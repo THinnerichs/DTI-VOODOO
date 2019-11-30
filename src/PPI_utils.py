@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import networkx as nx
 
 from tqdm import tqdm
@@ -40,10 +41,11 @@ def write_PPI_graph(min_score=700):
 
             node_1 = split_line[0]
             node_2 = split_line[1]
+            score = int(split_line[-1])
 
             PPI_graph.add_node(node_1)
             PPI_graph.add_node(node_2)
-            PPI_graph.add_edge(node_1, node_2)
+            PPI_graph.add_edge(node_1, node_2, score=score)
     print("Finished.")
 
     print("Writing PPI graph to disk ...")
@@ -57,13 +59,15 @@ def get_PPI_graph(min_score=700):
     with open(file= filename, mode='rb') as f:
         return pickle.load(f)
 
-def write_protein_to_subgraph_dict(radius=5):
+def write_protein_to_subgraph_dict(cutoff=0.7):
     PPI_graph = get_PPI_graph()
+    for node1, node2 in PPI_graph.edges():
+        PPI_graph[node1][node2] = math.log(PPI_graph[node1][node2]['score'], cutoff)
 
     print("Build protein subgraph mapping ...")
     protein_subgraph_dict = {}
     for protein in tqdm(PPI_graph.nodes()):
-        subgraph = nx.ego_graph(PPI_graph, protein, radius=radius, center=True, undirected=True)
+        subgraph = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
 
         protein_subgraph_dict[protein] = subgraph
     print("Finished.\n")
@@ -73,6 +77,42 @@ def write_protein_to_subgraph_dict(radius=5):
     with open(file=filename, mode='wb') as f:
         pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
+
+def get_protein_to_subgraph_dict():
+    filename = "../data/PPI_data/protein_to_subgraph_dict"
+    with open(file=filename, mode='rb') as f:
+        return pickle.load(f)
+
+def write_protein_to_adj_mat_dict():
+    protein_to_subgraph_dict = get_protein_to_subgraph_dict()
+
+    max_nodes = -1
+    for protein, subgraph in protein_to_subgraph_dict.items():
+        if len(subgraph.nodes()) > max_nodes:
+            max_nodes = len(subgraph.nodes())
+    print("Maximum nodes:", max_nodes)
+
+    print("Calculating adjacency matrices ...")
+    protein_to_adj_mat_dict = {}
+    for protein, subgraph in protein_to_subgraph_dict.items():
+        adj_mat = np.zeros((max_nodes, max_nodes))
+        help_mat = nx.adjacency_matrix(subgraph, weight=None)
+
+        adj_mat[:help_mat[0], :help_mat[1]] = help_mat
+
+        protein_to_adj_mat_dict[protein] = adj_mat
+    print("Finished.\n")
+
+    print("Writing dict ...")
+    filename = "../data/PPI_data/protein_to_adj_mat_dict"
+    with open(file=filename, mode='wb') as f:
+        pickle.dump(protein_to_adj_mat_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
+
+def get_protein_to_adj_mat_dict():
+    filename = "../data/PPI_data/protein_to_adj_mat_dict"
+    with open(file=filename, mode='rb') as f:
+        return pickle.load(f)
 
 
 if __name__ == '__main__':
