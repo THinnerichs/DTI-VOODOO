@@ -362,7 +362,9 @@ def test():
     inter = get_SIDER_Boyce_Drubank_drug_intersection()
 
     fasta_path = "../data/fasta_files/"
-    filtered_inter = [drug for drug in inter if os.stat(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta").st_size != 0]
+    filtered_inter = [drug for drug in inter
+                      if os.stat(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta").st_size != 0 and
+                      os.path.exists(fasta_path+drug + "_fasta_" + str(700) + "_min_score.fasta")]
     print(len(filtered_inter))
 
 
