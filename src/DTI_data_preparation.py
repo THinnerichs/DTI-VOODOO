@@ -92,8 +92,14 @@ def get_PPI_node_feature_mat_list():
     return np.array([1 for protein in protein_list])
 
 
+def test():
+    print("DTI", len(get_human_proteins()))
+    print("PPI", len(PPI_utils.get_human_protein_list()))
+
 
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph()
+    # write_human_DTI_graph()
+
+    test()
