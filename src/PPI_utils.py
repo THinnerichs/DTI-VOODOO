@@ -98,9 +98,14 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
         round += 1
 
-        result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in batch)
+        # result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(batch))
 
-        batch_dict = dict(zip(batch, result))
+        # batch_dict = dict(zip(batch, result))
+
+        batch_dict = {}
+        for protein in tqdm(batch):
+            batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
+
 
         with open(file=filename + '.pkl', mode='wb') as f:
             pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
