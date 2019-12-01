@@ -58,7 +58,7 @@ def write_PPI_graph(min_score=700):
     print("Finished writing {}.\n".format(graph_filename))
 
 def get_PPI_graph(min_score=700):
-    filename = "../data/PPI_data/PPI_graph_" + str(min_score) + "_min_score.pkl"
+    filename = "../data/PPI_data/PPI_graph_" + str(min_score) + "_min_score"
     with open(file= filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
