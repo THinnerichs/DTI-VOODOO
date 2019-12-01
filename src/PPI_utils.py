@@ -89,6 +89,8 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
     protein_subgraph_dict = {}
 
+    protein_subgraph_list = []
+
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"
     round = 1
@@ -96,7 +98,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     workers = 64
     for batch in [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]:
         print("Round {} of {}".format(round, int(len(protein_list)/batch_size+1)))
-        if False and round > 1:
+        if round > 1:
             with open(file=filename + '.pkl', mode='rb') as f:
                 protein_subgraph_dict = pickle.load(f)
 
@@ -117,26 +119,28 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
         for protein in batch:
             q.put(protein)
 
-        batch_dict = {}
+        batch_list = []
         def worker():
             while True:
                 protein = q.get()
                 if protein is None:  # EOF?
                     return
-                protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
-                                                   distance='score')
-        print("Batch", len(list(batch_dict.keys())))
+                batch_list.append((protein, nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
+                                                         distance='score')))
 
         threads = [threading.Thread(target=worker) for _i in range(workers)]
         for thread in threads:
             thread.start()
             q.put(None)  # one EOF marker for each thread
 
+        for thread in threads:
+            thread.join()
 
-        print(len(protein_subgraph_dict))
+        print("Batch", len(batch_list))
+        batch_dict = dict(batch_list)
 
-        # with open(file=filename + '.pkl', mode='wb') as f:
-            # pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
+        with open(file=filename + '.pkl', mode='wb') as f:
+            pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
 
     print("Finished.\n")
 
