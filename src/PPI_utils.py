@@ -96,7 +96,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     workers = 64
     for batch in [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]:
         print("Round {} of {}".format(round, int(len(protein_list)/batch_size+1)))
-        if round > 1:
+        if False and round > 1:
             with open(file=filename + '.pkl', mode='rb') as f:
                 protein_subgraph_dict = pickle.load(f)
 
@@ -123,19 +123,23 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
                 protein = q.get()
                 if protein is None:  # EOF?
                     return
-                batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
+                protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
                                                    distance='score')
-        print("Batch", len(list(batch_dict)))
+        print("Batch", len(list(batch_dict.keys())))
 
         threads = [threading.Thread(target=worker) for _i in range(workers)]
         for thread in threads:
             thread.start()
             q.put(None)  # one EOF marker for each thread
 
-        with open(file=filename + '.pkl', mode='wb') as f:
-            pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
+
+        print(len(protein_subgraph_dict))
+
+        # with open(file=filename + '.pkl', mode='wb') as f:
+            # pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
 
     print("Finished.\n")
+
 
 def get_protein_to_subgraph_dict():
     filename = "../data/PPI_data/protein_to_subgraph_dict"
