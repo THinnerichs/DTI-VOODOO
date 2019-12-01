@@ -33,7 +33,6 @@
   - Use human interactions data to build training/testing data
     - Utilize non-binary score? Sigmoid over score?
 
-- extract subgraphs for each target for specific radius
 - get node2vec embedding with node features
 (- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
@@ -42,6 +41,9 @@
 - Finally execute hmm\_pipeline !!! 
 
 - check if VPN is working
+
+- Run actual model (-> Without node features at first)
+  - When doing train/test split actually exclude test target? Given in from other species
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
 
