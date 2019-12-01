@@ -35,9 +35,37 @@ def test_target_subset():
                 # print("counter1", counter1)
                 pass
 
+def run_PPI_parallel():
+    import queue
+    import threading
+    import subprocess
 
+    q = queue.Queue()
+
+    workers = 6
+
+    for s,t in [(a.min(), a.max()) for a in np.array_split(np.arange(538), workers)]:
+        q.put((s,t))
+
+    def worker():
+        while True:
+            doublet = q.get()
+            if doublet is None:  # EOF?
+                return
+            s,t = doublet
+            command = "python3 PPI_utils.py "+str(s)+" "+str(t+1)
+            subprocess.call(command, shell=True)
+
+    threads = [threading.Thread(target=worker) for _i in range(workers)]
+    for thread in threads:
+        thread.start()
+        q.put(None)  # one EOF marker for each thread
 
 if __name__ == '__main__':
-    test_target_subset()
+    # test_target_subset()
+
+    run_PPI_parallel()
+
+    pass
 
 
