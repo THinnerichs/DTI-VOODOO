@@ -71,7 +71,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     for node1, node2 in PPI_graph.edges():
         PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
 
-    print("Build protein subgraph mapping ...")
+    print("Building protein subgraph mapping ...")
     # ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
     # protein_list = sorted(PPI_graph.nodes())
 
@@ -119,14 +119,14 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
         for protein in batch:
             q.put(protein)
 
-        batch_list = []
+        batch_dict = {}
         def worker():
             while True:
                 protein = q.get()
                 if protein is None:  # EOF?
                     return
-                batch_list.append((protein, nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
-                                                         distance='score')))
+                batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
+                print("Done", len(batch_dict))
 
         threads = [threading.Thread(target=worker) for _i in range(workers)]
         for thread in threads:
@@ -136,8 +136,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
         for thread in threads:
             thread.join()
 
-        print("Batch", len(batch_list))
-        batch_dict = dict(batch_list)
+        print("Batch", len(batch_dict))
 
         with open(file=filename + '.pkl', mode='wb') as f:
             pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
