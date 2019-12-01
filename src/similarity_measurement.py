@@ -15,7 +15,7 @@ import pickle
 
 import itertools
 
-from DDI_utils import *
+import DDI_utils
 
 
 def get_SIDER_drug_list():
@@ -346,14 +346,14 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     SIDER_drug_list = get_SIDER_drug_list()
     print("Finished.\n")
     print("Reading merged DDI graph ...")
-    merged_DDI_graph = get_merged_DDI_graph()
+    merged_DDI_graph = DDI_utils.get_merged_DDI_graph()
     print("Finished.\n")
 
     intersection = set(SIDER_drug_list) & set(merged_DDI_graph.nodes())
 
     fasta_path = "../data/fasta_files/"
-    files = os.listdir(fasta_path)
-    intersection_files = [drug_name + "_fasta_" + str(700) + "_min_score.fasta" for drug_name in intersection]
+    # files = os.listdir(fasta_path)
+    # intersection_files = [drug_name + "_fasta_" + str(700) + "_min_score.fasta" for drug_name in intersection]
     # fasta_filename = "../data/fasta_files/" + drug_name + "_fasta_" + str(min_score) + "_min_score.fasta"
 
     return intersection
