@@ -95,7 +95,7 @@ def write_protein_to_subgraph_dict(start_batch='',
     protein_subgraph_list = []
 
     protein_list = sorted(PPI_graph.nodes())
-    filename = "../data/PPI_data/protein_to_subgraph_dict"
+    filename = "../data/PPI_data/protein_to_subgraph_dict_"+start_batch
     round = 1
     batch_size = 32
     workers = 64
