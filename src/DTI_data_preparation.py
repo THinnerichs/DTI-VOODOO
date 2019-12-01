@@ -89,7 +89,33 @@ def get_PPI_adj_mat_list():
 def get_PPI_node_feature_mat_list():
     protein_list = get_human_proteins()
 
-    return np.array([1 for protein in protein_list])
+    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
+
+    return np.array([protein_node_feature_dict[protein] for protein in protein_list])
+
+def get_DTIs_():
+    drug_list = get_drug_list()
+    protein_list = get_human_proteins()
+
+    DTI_graph = get_human_DTI_graph()
+
+
+    y_data = np.zeros(len(drug_list)*len(protein_list))
+
+    for i in range(len(drug_list)):
+        drug = drug_list[i]
+
+        for protein in DTI_graph.neighbors(drug):
+            j = protein_list.index(protein)
+
+            y_data[i * len(drug_list) + j] = 1
+
+    return np.array(y_data, dtype=np.int8)
+
+
+
+
+
 
 
 def test():
@@ -100,6 +126,7 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph()
+    # write_human_DTI_graph()
 
-    test()
+    #  test()
+    pass

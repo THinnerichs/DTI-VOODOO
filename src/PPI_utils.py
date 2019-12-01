@@ -70,23 +70,41 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
         PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
 
     print("Build protein subgraph mapping ...")
-    protein_subgraph_dict = {}
     # ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
     # protein_list = sorted(PPI_graph.nodes())
 
     # result = Parallel(n_jobs=128)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(protein_list))
 
     # protein_subgraph_dict = dict(zip(protein_list, result))
+    '''
     for protein in tqdm(PPI_graph.nodes()):
         subgraph = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
 
         protein_subgraph_dict[protein] = subgraph
-    print("Finished.\n")
+    '''
 
-    print("Writing dict ...")
+    ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
+
+    protein_subgraph_dict = {}
+
+    protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"
-    with open(file=filename+'.pkl', mode='wb') as f:
-        pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
+    round = 1
+    for batch in np.array_split(np.array(protein_list), 150):
+        print("Round {} of 150".format(round))
+        if round > 1:
+            with open(file=filename + '.pkl', mode='rb') as f:
+                protein_subgraph_dict = pickle.load(f)
+
+        round += 1
+
+        result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(batch))
+
+        batch_dict = dict(zip(batch, result))
+
+        with open(file=filename + '.pkl', mode='wb') as f:
+            pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
+
     print("Finished.\n")
 
 def get_protein_to_subgraph_dict():
@@ -151,4 +169,4 @@ if __name__ == '__main__':
 
     # write_PPI_graph(min_score=700)
     write_protein_to_subgraph_dict()
-    write_protein_to_adj_mat_dict()
+    # write_protein_to_adj_mat_dict()
