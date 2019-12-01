@@ -59,7 +59,7 @@ def write_PPI_graph(min_score=700):
 
 def get_PPI_graph(min_score=700):
     filename = "../data/PPI_data/PPI_graph_" + str(min_score) + "_min_score.pkl"
-    with open(file= filename, mode='rb') as f:
+    with open(file= filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
 def write_protein_to_subgraph_dict(cutoff=0.7):
@@ -77,13 +77,13 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
     print("Writing dict ...")
     filename = "../data/PPI_data/protein_to_subgraph_dict"
-    with open(file=filename, mode='wb') as f:
+    with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
 def get_protein_to_subgraph_dict():
     filename = "../data/PPI_data/protein_to_subgraph_dict"
-    with open(file=filename, mode='rb') as f:
+    with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
 def write_protein_to_adj_mat_dict():
@@ -116,24 +116,24 @@ def write_protein_to_adj_mat_dict():
 
     print("Writing protein to adjacency matrix dict ...")
     filename = "../data/PPI_data/protein_to_adj_mat_dict"
-    with open(file=filename, mode='wb') as f:
+    with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_adj_mat_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
     print("Writing protein to node feature matrix dict ...")
     filename = "../data/PPI_data/protein_to_node_features_dict"
-    with open(file=filename, mode='wb') as f:
+    with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_node_feature_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
 def get_protein_to_adj_mat_dict():
     filename = "../data/PPI_data/protein_to_adj_mat_dict"
-    with open(file=filename, mode='rb') as f:
+    with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
 def get_protein_to_node_feature_dict():
     filename = "../data/PPI_data/protein_to_node_features_dict"
-    with open(file=filename, mode='rb') as f:
+    with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
 
@@ -141,6 +141,6 @@ def get_protein_to_node_feature_dict():
 if __name__ == '__main__':
     # prune_protein_protein_db(min_score=700)
 
-    # write_PPI_graph(min_score=700)
-
+    write_PPI_graph(min_score=700)
+    write_protein_to_subgraph_dict()
     write_protein_to_adj_mat_dict()
