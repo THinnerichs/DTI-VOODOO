@@ -6,6 +6,8 @@ from tqdm import tqdm
 import pickle
 
 from joblib import Parallel, delayed
+import queue
+import threading
 
 
 
@@ -90,8 +92,10 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"
     round = 1
-    for batch in [protein_list[i:i+32] for i in range(0, len(protein_list), 32)]:
-        print("Round {} of {}".format(round, int(len(protein_list)/32)+1))
+    batch_size = 128
+    workers = 32
+    for batch in [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]:
+        print("Round {} of {}".format(round, int(len(protein_list)/batch_size+1)))
         if round > 1:
             with open(file=filename + '.pkl', mode='rb') as f:
                 protein_subgraph_dict = pickle.load(f)
@@ -102,10 +106,29 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
         # batch_dict = dict(zip(batch, result))
 
-        batch_dict = {}
+        '''
         for protein in tqdm(batch):
             batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
+        '''
 
+        q = queue.Queue()
+
+        for protein in batch:
+            q.put(protein)
+
+        batch_dict = {}
+        def worker():
+            while True:
+                protein = q.get()
+                if protein is None:  # EOF?
+                    return
+                batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
+                                                   distance='score')
+
+        threads = [threading.Thread(target=worker) for _i in range(workers)]
+        for thread in threads:
+            thread.start()
+            q.put(None)  # one EOF marker for each thread
 
         with open(file=filename + '.pkl', mode='wb') as f:
             pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
