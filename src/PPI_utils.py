@@ -98,7 +98,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
         round += 1
 
-        result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(batch))
+        result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in batch)
 
         batch_dict = dict(zip(batch, result))
 
