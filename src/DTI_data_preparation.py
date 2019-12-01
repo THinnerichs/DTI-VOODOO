@@ -45,7 +45,13 @@ def get_human_DTI_graph():
         return pickle.load(f)
 
 def get_human_proteins():
-    return sorted(PPI_utils.get_human_protein_list())
+    human_DTI_graph = get_human_DTI_graph()
+    protein_list = []
+    for node in human_DTI_graph.nodes():
+        if not node.startswith('CID'):
+            protein_list.append(node)
+    # return sorted(PPI_utils.get_human_protein_list())
+    return sorted(protein_list)
 
 def get_drug_list():
     return sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
