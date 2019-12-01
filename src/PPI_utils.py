@@ -90,8 +90,8 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"
     round = 1
-    for batch in np.array_split(np.array(protein_list), 150):
-        print("Round {} of 150".format(round))
+    for batch in [protein_list[i:i+32] for i in range(0, len(protein_list), 32)]:
+        print("Round {} of {}".format(round, int(len(protein_list)/32)+1))
         if round > 1:
             with open(file=filename + '.pkl', mode='rb') as f:
                 protein_subgraph_dict = pickle.load(f)
