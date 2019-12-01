@@ -8,6 +8,7 @@ import pickle
 from joblib import Parallel, delayed
 import queue
 import threading
+import sys
 
 
 
@@ -66,7 +67,9 @@ def get_PPI_graph(min_score=700):
     with open(file= filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def write_protein_to_subgraph_dict(cutoff=0.7):
+def write_protein_to_subgraph_dict(start_batch='',
+                                   end_batch='',
+                                   cutoff=0.7):
     PPI_graph = get_PPI_graph()
     for node1, node2 in PPI_graph.edges():
         PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
@@ -96,7 +99,14 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     round = 1
     batch_size = 32
     workers = 64
-    for batch in [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]:
+    batches = [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]
+    print("Batches length", len(batches))
+    if start_batch:
+        batches = batches[int(start_batch):]
+    if end_batch:
+        batches = batches[:int(end_batch)-int(start_batch)]
+
+    for batch in batches:
         print("Round {} of {}".format(round, int(len(protein_list)/batch_size+1)))
         if round > 1:
             with open(file=filename + '.pkl', mode='rb') as f:
@@ -205,5 +215,8 @@ if __name__ == '__main__':
     # prune_protein_protein_db(min_score=700)
 
     # write_PPI_graph(min_score=700)
-    write_protein_to_subgraph_dict()
+
+    _, start, end = sys.argv
+    write_protein_to_subgraph_dict(start_batch=start, end_batch=end)
+
     # write_protein_to_adj_mat_dict()
