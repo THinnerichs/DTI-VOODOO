@@ -3,14 +3,17 @@ import networkx as nx
 
 import pickle
 
-from similarity_measurement import get_SIDER_Boyce_Drubank_drug_intersection
+import PPI_utils
+import DDI_utils
+import similarity_measurement
+
 
 
 def write_human_DTI_graph():
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
 
-    drug_set = get_SIDER_Boyce_Drubank_drug_intersection()
+    drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
 
     print("Parsing human drug-protein-links data ...")
     with open(file=filename, mode='r') as f:
@@ -40,6 +43,50 @@ def get_human_DTI_graph():
     filename = "../data/STITCH_data/human_only_DTI_graph"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
+
+def get_human_proteins():
+    return sorted(PPI_utils.get_human_protein_list())
+
+def get_drug_list():
+    return sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+
+def get_side_effect_similarity_feature_list():
+    SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
+    semsim_matrix = similarity_measurement.get_semantic_similarity_matrix()
+
+    intersect_drug_list = get_drug_list()
+
+    index_mapping = lambda drug: SIDER_drug_list.index(drug)
+
+    return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list])
+
+def get_DDI_feature_list():
+    intersect_drug_list = get_drug_list()
+    merged_graph = DDI_utils.get_merged_DDI_graph()
+
+    feature_vec_list = []
+    for drug in intersect_drug_list:
+        feature_vector = np.zeros(len(intersect_drug_list))
+        for neighbor in merged_graph.neighbors(drug):
+            feature_vector[intersect_drug_list.index(neighbor)] = 1
+        feature_vec_list.append(feature_vector)
+
+    return np.array(feature_vec_list)
+
+def get_PPI_adj_mat_list():
+    protein_list = get_human_proteins()
+    protein_to_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
+
+    return np.array([protein_to_adj_mat_dict[protein]
+                     for protein in protein_list])
+
+def get_PPI_node_feature_mat_list():
+    protein_list = get_human_proteins()
+
+    return np.array([1 for protein in protein_list])
+
+
+
 
 
 if __name__ == '__main__':

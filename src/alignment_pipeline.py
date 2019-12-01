@@ -97,6 +97,8 @@ def separate_prots_to_files(file_min_score=400,
             drug = split_line[0].replace('s', 'm')
             split_protein = split_line[1].strip().split('.')
             organism = split_protein.pop(0)
+            if organism == "9606": # if organism is human
+                continue
             protein = ".".join(split_protein)
             score = int(split_line[10])
 
