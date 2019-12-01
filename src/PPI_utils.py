@@ -5,6 +5,8 @@ import networkx as nx
 from tqdm import tqdm
 import pickle
 
+from joblib import Parallel, delayed
+
 
 
 def prune_protein_protein_db(min_score=700):
@@ -69,10 +71,18 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
     print("Build protein subgraph mapping ...")
     protein_subgraph_dict = {}
+    ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
+    protein_list = sorted(PPI_graph.nodes())
+
+    result = Parallel(n_jobs=32)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(protein_list))
+
+    protein_subgraph_dict = dict(zip(protein_list, result))
+    '''
     for protein in tqdm(PPI_graph.nodes()):
         subgraph = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
 
         protein_subgraph_dict[protein] = subgraph
+    '''
     print("Finished.\n")
 
     print("Writing dict ...")
@@ -98,7 +108,7 @@ def write_protein_to_adj_mat_dict():
     print("Calculating adjacency matrices ...")
     protein_to_adj_mat_dict = {}
     protein_to_node_feature_dict = {}
-    for protein, subgraph in protein_to_subgraph_dict.items():
+    for protein, subgraph in tqdm(protein_to_subgraph_dict.items()):
         adj_mat = np.zeros((max_nodes, max_nodes))
         help_mat = nx.adjacency_matrix(subgraph, weight=None)
 
