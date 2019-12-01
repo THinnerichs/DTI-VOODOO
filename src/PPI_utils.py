@@ -125,6 +125,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
                     return
                 batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True,
                                                    distance='score')
+        print("Batch", len(list(batch_dict)))
 
         threads = [threading.Thread(target=worker) for _i in range(workers)]
         for thread in threads:
