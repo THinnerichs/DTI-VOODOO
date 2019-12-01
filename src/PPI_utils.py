@@ -94,7 +94,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"
     round = 1
-    batch_size = 256
+    batch_size = 32
     workers = 64
     for batch in [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]:
         print("Round {} of {}".format(round, int(len(protein_list)/batch_size+1)))
@@ -109,17 +109,16 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
         # batch_dict = dict(zip(batch, result))
 
-        '''
+        batch_dict = {}
         for protein in tqdm(batch):
             batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
-        '''
 
+        '''
         q = queue.Queue()
 
         for protein in batch:
             q.put(protein)
 
-        batch_dict = {}
         def worker():
             while True:
                 protein = q.get()
@@ -137,6 +136,7 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
             thread.join()
 
         print("Batch", len(batch_dict))
+        '''
 
         with open(file=filename + '.pkl', mode='wb') as f:
             pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
