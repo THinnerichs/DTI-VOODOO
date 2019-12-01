@@ -71,18 +71,16 @@ def write_protein_to_subgraph_dict(cutoff=0.7):
 
     print("Build protein subgraph mapping ...")
     protein_subgraph_dict = {}
-    ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
-    protein_list = sorted(PPI_graph.nodes())
+    # ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
+    # protein_list = sorted(PPI_graph.nodes())
 
-    result = Parallel(n_jobs=128)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(protein_list))
+    # result = Parallel(n_jobs=128)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(protein_list))
 
-    protein_subgraph_dict = dict(zip(protein_list, result))
-    '''
+    # protein_subgraph_dict = dict(zip(protein_list, result))
     for protein in tqdm(PPI_graph.nodes()):
         subgraph = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
 
         protein_subgraph_dict[protein] = subgraph
-    '''
     print("Finished.\n")
 
     print("Writing dict ...")
