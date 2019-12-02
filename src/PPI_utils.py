@@ -167,7 +167,7 @@ def write_protein_to_adj_mat_dict(start):
         protein_to_adj_mat_dict[protein] = adj_mat
 
         node_feature_mat = np.zeros((max_nodes, 1))
-        help_mat = np.transpose(np.ones(len(subgraph.nodes())))
+        help_mat = np.ones((len(subgraph.nodes()),1))
         node_feature_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
         protein_to_node_feature_dict[protein] = node_feature_mat
 
