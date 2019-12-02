@@ -109,9 +109,11 @@ def write_protein_to_subgraph_dict(start_batch='',
         for neighbor in PPI_graph.neighbors(protein):
             if PPI_graph[protein][neighbor]['score'] > 950:
                 subgraph.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
+                '''
                 for deep_neighbor in PPI_graph.neighbors(neighbor):
                     if PPI_graph[neighbor][deep_neighbor]['score'] > 950:
                         subgraph.add_edge(neighbor, deep_neighbor, score=PPI_graph[protein][neighbor]['score'])
+                '''
 
         # print(len(subgraph.nodes()))
         protein_subgraph_dict[protein] = subgraph
@@ -250,11 +252,6 @@ if __name__ == '__main__':
     # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    # write_protein_to_subgraph_dict()
-
-    # merge_protein_to_subgraph_dicts()
-
-
-    write_protein_to_adj_mat_dict()
+    write_protein_to_subgraph_dict()
 
     pass
