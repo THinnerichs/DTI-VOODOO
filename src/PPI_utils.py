@@ -40,7 +40,7 @@ def prune_protein_protein_db(min_score=700):
             total_score_updated = total_score_updated_nop + p * (1-total_score_updated_nop)
             if total_score_updated * 1000 < min_score:
                 continue
-            targetfile.write(line)
+            targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(int(total_score_updated*1000)))
     print("Finished.")
 
 def get_human_protein_list(min_score=700):
@@ -223,12 +223,12 @@ def get_protein_to_node_feature_dict():
 
 
 if __name__ == '__main__':
-    # prune_protein_protein_db(min_score=700)
+    prune_protein_protein_db(min_score=700)
 
-    # write_PPI_graph(min_score=700)
+    write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    write_protein_to_subgraph_dict()
+    # write_protein_to_subgraph_dict()
 
     # merge_protein_to_subgraph_dicts()
 
