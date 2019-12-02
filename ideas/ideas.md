@@ -44,6 +44,10 @@
 
 - Run actual model (-> Without node features at first)
   - When doing train/test split actually exclude test target? Given in from other species
+
+./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000753_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000753_famsa_aligned_700_min_score.afa
+./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000888_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000888_famsa_aligned_700_min_score.afa
+
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
 

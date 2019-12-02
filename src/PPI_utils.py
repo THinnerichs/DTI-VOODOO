@@ -76,24 +76,10 @@ def write_protein_to_subgraph_dict(start_batch='',
         PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
 
     print("Building protein subgraph mapping ...")
+
     # ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
-    # protein_list = sorted(PPI_graph.nodes())
-
-    # result = Parallel(n_jobs=128)(delayed(ego_graph_wrapper)(prot) for prot in tqdm(protein_list))
-
-    # protein_subgraph_dict = dict(zip(protein_list, result))
-    '''
-    for protein in tqdm(PPI_graph.nodes()):
-        subgraph = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
-
-        protein_subgraph_dict[protein] = subgraph
-    '''
-
-    ego_graph_wrapper = lambda prot: nx.ego_graph(PPI_graph, prot, radius=1, center=True, undirected=True, distance='score')
 
     protein_subgraph_dict = {}
-
-    protein_subgraph_list = []
 
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict_"+start_batch
@@ -123,31 +109,6 @@ def write_protein_to_subgraph_dict(start_batch='',
         batch_dict = {}
         for protein in tqdm(batch):
             batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
-
-        '''
-        q = queue.Queue()
-
-        for protein in batch:
-            q.put(protein)
-
-        def worker():
-            while True:
-                protein = q.get()
-                if protein is None:  # EOF?
-                    return
-                batch_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
-                print("Done", len(batch_dict))
-
-        threads = [threading.Thread(target=worker) for _i in range(workers)]
-        for thread in threads:
-            thread.start()
-            q.put(None)  # one EOF marker for each thread
-
-        for thread in threads:
-            thread.join()
-
-        print("Batch", len(batch_dict))
-        '''
 
         with open(file=filename + '.pkl', mode='wb') as f:
             pickle.dump({**protein_subgraph_dict, **batch_dict}, f, pickle.HIGHEST_PROTOCOL)
