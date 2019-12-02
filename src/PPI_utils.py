@@ -162,13 +162,13 @@ def write_protein_to_adj_mat_dict(start):
         adj_mat = np.zeros((max_nodes, max_nodes))
         help_mat = nx.adjacency_matrix(subgraph, weight=None).todense()
 
-        adj_mat[:help_mat[0], :help_mat[1]] = help_mat
+        adj_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
 
         protein_to_adj_mat_dict[protein] = adj_mat
 
         node_feature_mat = np.zeros((max_nodes, 1))
         help_mat = np.transpose(np.ones(len(subgraph.nodes())))
-        node_feature_mat[:help_mat[0], :help_mat[1]] = help_mat
+        node_feature_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
         protein_to_node_feature_dict[protein] = node_feature_mat
 
 
