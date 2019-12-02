@@ -436,11 +436,10 @@ if __name__ == '__main__':
 
     run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=8,
-            threads_per_process=5,
+            workers=10,
+            threads_per_process=4,
             start=start,
-            end=end,
-            human_only=True)
+            end=end)
 
 
 
