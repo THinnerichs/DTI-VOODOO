@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     # run_PPI_parallel()
 
-    _, start = sys.argv()
+    _, start = sys.argv
     merge_protein_to_subgraph_dicts(start)
 
     pass
