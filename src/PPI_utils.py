@@ -107,9 +107,10 @@ def write_protein_to_subgraph_dict(start_batch='',
         subgraph = nx.Graph()
         for neighbor in PPI_graph.neighbors(protein):
             if PPI_graph[protein][neighbor]['score'] > 950:
+                subgraph.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
                 for deep_neighbor in PPI_graph.neighbors(neighbor):
                     if PPI_graph[neighbor][deep_neighbor]['score'] > 950:
-                        subgraph.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
+                        subgraph.add_edge(neighbor, deep_neighbor, score=PPI_graph[protein][neighbor]['score'])
 
         print(len(subgraph.nodes()))
         protein_subgraph_dict[protein] = subgraph
