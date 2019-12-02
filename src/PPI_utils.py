@@ -252,8 +252,9 @@ if __name__ == '__main__':
     # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    write_protein_to_subgraph_dict()
+    # write_protein_to_subgraph_dict()
 
-    write_protein_to_adj_mat_dict()
+    # write_protein_to_adj_mat_dict()
+    write_protein_to_node_feature_dict()
 
     pass
