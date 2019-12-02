@@ -155,7 +155,7 @@ def write_protein_to_subgraph_dict(start_batch='',
     print("Finished.\n")
 
 def merge_protein_to_subgraph_dicts():
-    dict_path = "../data/PPI_utils/"
+    dict_path = "../data/PPI_data/"
     super_dict = {}
     print("Merging dicts ...")
     for filename in tqdm(os.listdir(dict_path)):
