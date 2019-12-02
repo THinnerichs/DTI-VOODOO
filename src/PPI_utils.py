@@ -81,8 +81,8 @@ def write_protein_to_subgraph_dict(start_batch='',
                                    end_batch='',
                                    cutoff=0.975):
     PPI_graph = get_PPI_graph()
-    for node1, node2 in PPI_graph.edges():
-        PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
+    # for node1, node2 in PPI_graph.edges():
+        # PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
 
     print("Building protein subgraph mapping ...")
 
@@ -91,9 +91,9 @@ def write_protein_to_subgraph_dict(start_batch='',
 
     protein_list = sorted(PPI_graph.nodes())
     filename = "../data/PPI_data/protein_to_subgraph_dict"+("_"+start_batch if start_batch else "")
-    round = 1
+    # round = 1
     batch_size = 32
-    workers = 64
+    # workers = 64
     batches = [protein_list[i:i+batch_size] for i in range(0, len(protein_list), batch_size)]
     print("Batches length", len(batches))
     if start_batch:
@@ -104,12 +104,16 @@ def write_protein_to_subgraph_dict(start_batch='',
     protein_subgraph_dict = {}
     counter = 0
     for protein in tqdm(protein_list):
-        protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
+        G = nx.Graph()
+        for neighbor in PPI_graph.neighbors(protein):
+            G.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
+        protein_subgraph_dict[protein] = G
+        # protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
         counter += 1
-        if counter == 10:
-            testing_filename = "../data/PPI_data/test_protein_subgraph_dict"
-            with open(file=testing_filename+'.pkl', mode='wb') as f:
-                pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
+        # if counter == 10:
+            # testing_filename = "../data/PPI_data/test_protein_subgraph_dict"
+            # with open(file=testing_filename+'.pkl', mode='wb') as f:
+                # pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
 
     with open(file=filename + '.pkl', mode='wb') as f:
         pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
@@ -223,12 +227,12 @@ def get_protein_to_node_feature_dict():
 
 
 if __name__ == '__main__':
-    prune_protein_protein_db(min_score=700)
+    # prune_protein_protein_db(min_score=700)
 
-    write_PPI_graph(min_score=700)
+    # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    # write_protein_to_subgraph_dict()
+    write_protein_to_subgraph_dict()
 
     # merge_protein_to_subgraph_dicts()
 
