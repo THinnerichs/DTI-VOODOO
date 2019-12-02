@@ -1,4 +1,5 @@
 import numpy as np
+import networkx as nx
 
 import DTI_data_preparation
 
@@ -14,6 +15,11 @@ from keras.regularizers import *
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
 from keras_dgl.layers.graph_attention_cnn_layer import GraphAttentionCNN
 from keras_dgl.utils import *
+
+import stellargraph as sg
+from stellargraph import globalvar
+from stellargraph.mapper import GraphSAGENodeGenerator
+from stellargraph.layer import GraphSAGE
 
 
 def missing_drug_predictor(results_filename='../results/results_log',
