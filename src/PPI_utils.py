@@ -93,8 +93,14 @@ def write_protein_to_subgraph_dict(start_batch='',
         batches = batches[:int(end_batch)-int(start_batch)]
 
     protein_subgraph_dict = {}
+    counter = 0
     for protein in tqdm(protein_list):
         protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
+        counter += 1
+        if counter == 10:
+            testing_filename = "../data/PPI_data/test_protein_subgraph_dict"
+            with open(file=testing_filename+'.pkl', mode='wb') as f:
+                pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
 
     with open(file=filename + '.pkl', mode='wb') as f:
         pickle.dump(protein_subgraph_dict, f, pickle.HIGHEST_PROTOCOL)
