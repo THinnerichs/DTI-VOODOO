@@ -276,8 +276,8 @@ def run_MSA(min_score=800,
 
     files = None
     if human_only:
-        # intersect = get_SIDER_Boyce_Drubank_drug_intersection()
-        drug_list = get_SIDER_drug_list()
+        drug_list = get_SIDER_Boyce_Drubank_drug_intersection()
+        # drug_list = get_SIDER_drug_list()
         files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in drug_list]
     else:
         files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
@@ -435,11 +435,12 @@ if __name__ == '__main__':
     _, start, end = sys.argv + ['', '']
 
     run_MSA(min_score=700,
-            alignment_method='mafft',
-            workers=10,
-            threads_per_process=4,
+            alignment_method='famsa',
+            workers=32,
+            threads_per_process=1,
             start=start,
-            end=end)
+            end=end,
+            human_only=True)
 
 
 

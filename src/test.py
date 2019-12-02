@@ -61,6 +61,34 @@ def run_PPI_parallel():
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
+
+def merge_protein_to_subgraph_dicts():
+    import pickle
+
+    dict_path = "../data/PPI_data/"
+    super_dict = {}
+    print("Merging dicts ...")
+    for filename in os.listdir(dict_path):
+        if not 'protein_to_subgraph_dict_' in filename:
+            continue
+        if not any(char.isdigit() for char in filename):
+            continue
+
+        batch_dict = {}
+        with open(file=dict_path+filename, mode='rb') as f:
+            batch_dict = pickle.load(f)
+        print("batch_dict size:", len(batch_dict))
+
+        super_dict = {**super_dict, **batch_dict}
+
+    print("Finished.\n")
+
+    print("Writing merged dict to disk ...")
+    filename = "../data/PPI_data/protein_to_subgraph_dict"
+    with open(file=filename, mode='wb') as f:
+        pickle.dump(super_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
+
 if __name__ == '__main__':
     # test_target_subset()
 
