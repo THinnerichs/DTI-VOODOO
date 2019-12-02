@@ -4,7 +4,7 @@ import subprocess
 def run_jobs(parts=100,
              amount=637):
     # 637 drugs in intersect
-    # 186135 overall drugs in STITCH
+    # 186135 for all drugs in STITCH -> set human_only in msa to wrong
     # 1430 drugs in SIDER
     slurm_path = "../SLURM_JOBS/"
 
@@ -47,5 +47,5 @@ def cancel_jobs():
                     break
 
 if __name__ == '__main__':
-    run_jobs(parts=30, amount=1430)
+    run_jobs(parts=100, amount=186135)
     # cancel_jobs()
