@@ -3,7 +3,9 @@ import subprocess
 
 def run_jobs(parts=100,
              amount=637):
-    # amount 186135
+    # 637 drugs in intersect
+    # 186135 overall drugs in STITCH
+    # 1430 drugs in SIDER
     slurm_path = "../SLURM_JOBS/"
 
     sep_intervals = [(int(amount / parts * i), int(amount / parts * (i + 1))) for i in range(parts)]

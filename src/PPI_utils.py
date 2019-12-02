@@ -9,6 +9,7 @@ from joblib import Parallel, delayed
 import queue
 import threading
 import sys
+import os
 
 
 
@@ -153,6 +154,28 @@ def write_protein_to_subgraph_dict(start_batch='',
 
     print("Finished.\n")
 
+def merge_protein_to_subgraph_dicts():
+    dict_path = "../data/PPI_utils/"
+    super_dict = {}
+    print("Merging dicts ...")
+    for filename in tqdm(os.listdir(dict_path)):
+        if not 'protein_to_subgraph_dict_' in filename:
+            continue
+        if not any(char.isdigit() for char in filename):
+            continue
+
+        batch_dict = {}
+        with open(file=dict_path+filename+'.pkl', mode='rb') as f:
+            batch_dict = pickle.load(f)
+
+        super_dict = {**super_dict, **batch_dict}
+    print("Finished.\n")
+
+    print("Writing merged dict to disk ...")
+    filename = "../data/PPI_data/protein_to_subgraph_dict"
+    with open(file=filename, mode='wb') as f:
+        pickle.dump(super_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
 
 def get_protein_to_subgraph_dict():
     filename = "../data/PPI_data/protein_to_subgraph_dict"
@@ -216,7 +239,8 @@ if __name__ == '__main__':
 
     # write_PPI_graph(min_score=700)
 
-    _, start, end = sys.argv
-    write_protein_to_subgraph_dict(start_batch=start, end_batch=end)
+    # _, start, end = sys.argv
+    # write_protein_to_subgraph_dict(start_batch=start, end_batch=end)
 
+    merge_protein_to_subgraph_dicts()
     # write_protein_to_adj_mat_dict()

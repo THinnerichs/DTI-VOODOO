@@ -435,9 +435,9 @@ if __name__ == '__main__':
     _, start, end = sys.argv + ['', '']
 
     run_MSA(min_score=700,
-            alignment_method='famsa',
-            workers=6,
-            threads_per_process=8,
+            alignment_method='mafft',
+            workers=8,
+            threads_per_process=5,
             start=start,
             end=end,
             human_only=True)
