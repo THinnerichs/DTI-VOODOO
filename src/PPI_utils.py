@@ -79,7 +79,7 @@ def get_PPI_graph(min_score=700):
 
 def write_protein_to_subgraph_dict(start_batch='',
                                    end_batch='',
-                                   cutoff=0.975):
+                                   cutoff=0.98):
     PPI_graph = get_PPI_graph()
     # for node1, node2 in PPI_graph.edges():
         # PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
@@ -107,11 +107,11 @@ def write_protein_to_subgraph_dict(start_batch='',
         subgraph = nx.Graph()
         subgraph.add_node(protein)
         for neighbor in PPI_graph.neighbors(protein):
-            if PPI_graph[protein][neighbor]['score'] > 950:
+            if PPI_graph[protein][neighbor]['score'] > cutoff*1000:
                 subgraph.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
                 '''
                 for deep_neighbor in PPI_graph.neighbors(neighbor):
-                    if PPI_graph[neighbor][deep_neighbor]['score'] > 950:
+                    if PPI_graph[neighbor][deep_neighbor]['score'] > cutoff*1000:
                         subgraph.add_edge(neighbor, deep_neighbor, score=PPI_graph[protein][neighbor]['score'])
                 '''
 
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    # write_protein_to_subgraph_dict()
+    write_protein_to_subgraph_dict()
 
     write_protein_to_adj_mat_dict()
 
