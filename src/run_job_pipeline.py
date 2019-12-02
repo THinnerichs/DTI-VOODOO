@@ -45,5 +45,5 @@ def cancel_jobs():
                     break
 
 if __name__ == '__main__':
-    run_jobs(parts=50, amount=1430)
+    run_jobs(parts=30, amount=1430)
     # cancel_jobs()
