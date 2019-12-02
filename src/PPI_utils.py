@@ -40,7 +40,7 @@ def prune_protein_protein_db(min_score=700):
             total_score_updated = total_score_updated_nop + p * (1-total_score_updated_nop)
             if total_score_updated * 1000 < min_score:
                 continue
-            targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(int(total_score_updated*1000)))
+            targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(int(total_score_updated*1000))+'\n')
     print("Finished.")
 
 def get_human_protein_list(min_score=700):
