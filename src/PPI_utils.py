@@ -105,6 +105,7 @@ def write_protein_to_subgraph_dict(start_batch='',
     counter = 0
     for protein in tqdm(protein_list):
         subgraph = nx.Graph()
+        subgraph.add_node(protein)
         for neighbor in PPI_graph.neighbors(protein):
             if PPI_graph[protein][neighbor]['score'] > 950:
                 subgraph.add_edge(protein, neighbor, score=PPI_graph[protein][neighbor]['score'])
@@ -112,7 +113,7 @@ def write_protein_to_subgraph_dict(start_batch='',
                     if PPI_graph[neighbor][deep_neighbor]['score'] > 950:
                         subgraph.add_edge(neighbor, deep_neighbor, score=PPI_graph[protein][neighbor]['score'])
 
-        print(len(subgraph.nodes()))
+        # print(len(subgraph.nodes()))
         protein_subgraph_dict[protein] = subgraph
         # protein_subgraph_dict[protein] = nx.ego_graph(PPI_graph, protein, radius=1, center=True, undirected=True, distance='score')
         counter += 1
