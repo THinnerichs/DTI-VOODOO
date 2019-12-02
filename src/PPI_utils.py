@@ -160,7 +160,7 @@ def write_protein_to_adj_mat_dict(start):
     protein_to_node_feature_dict = {}
     for protein, subgraph in tqdm(protein_to_subgraph_dict.items()):
         adj_mat = np.zeros((max_nodes, max_nodes))
-        help_mat = nx.adjacency_matrix(subgraph, weight=None)
+        help_mat = nx.adjacency_matrix(subgraph, weight=None).todense()
 
         adj_mat[:help_mat[0], :help_mat[1]] = help_mat
 

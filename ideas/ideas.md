@@ -48,6 +48,7 @@
 
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000753_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000753_famsa_aligned_700_min_score.afa
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000888_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000888_famsa_aligned_700_min_score.afa
+./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm06442177_fasta_700_min_score.fasta ../data/alignment_targets/CIDm06442177_famsa_aligned_700_min_score.afa
 
 - build adjacency matrices over small dicts
 - then merge
