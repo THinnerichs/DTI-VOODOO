@@ -116,6 +116,7 @@ def write_protein_to_subgraph_dict(start_batch='',
     print("Finished.\n")
 
 def merge_protein_to_subgraph_dicts():
+    # memory overflow if under 128 GB RAM
     dict_path = "../data/PPI_data/"
     super_dict = {}
     print("Merging dicts ...")
@@ -140,13 +141,13 @@ def merge_protein_to_subgraph_dicts():
         pickle.dump(super_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
-def get_protein_to_subgraph_dict():
-    filename = "../data/PPI_data/protein_to_subgraph_dict"
+def get_protein_to_subgraph_dict(start):
+    filename = "../data/PPI_data/protein_to_subgraph_dict_"+start
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def write_protein_to_adj_mat_dict():
-    protein_to_subgraph_dict = get_protein_to_subgraph_dict()
+def write_protein_to_adj_mat_dict(start):
+    protein_to_subgraph_dict = get_protein_to_subgraph_dict(start)
 
     max_nodes = -1
     for protein, subgraph in protein_to_subgraph_dict.items():
@@ -174,13 +175,13 @@ def write_protein_to_adj_mat_dict():
     print("Finished.\n")
 
     print("Writing protein to adjacency matrix dict ...")
-    filename = "../data/PPI_data/protein_to_adj_mat_dict"
+    filename = "../data/PPI_data/protein_to_adj_mat_dict_"+start
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_adj_mat_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
     print("Writing protein to node feature matrix dict ...")
-    filename = "../data/PPI_data/protein_to_node_features_dict"
+    filename = "../data/PPI_data/protein_to_node_features_dict_"+start
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_node_feature_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
@@ -202,8 +203,12 @@ if __name__ == '__main__':
 
     # write_PPI_graph(min_score=700)
 
-    # _, start, end = sys.argv
+    _, start = sys.argv
     # write_protein_to_subgraph_dict(start_batch=start, end_batch=end)
 
-    merge_protein_to_subgraph_dicts()
-    # write_protein_to_adj_mat_dict()
+    # merge_protein_to_subgraph_dicts()
+
+
+    write_protein_to_adj_mat_dict(start=start)
+
+    pass

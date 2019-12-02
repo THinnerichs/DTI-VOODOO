@@ -23,6 +23,7 @@ def run_jobs(parts=100,
 
 #run the application:
 module load anaconda3/4.4.0
+module load gcc/6.4.0
 source /home/${USER}/.bashrc
 conda activate ~/.conda/envs/dti/
         

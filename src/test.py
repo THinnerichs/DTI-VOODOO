@@ -84,8 +84,7 @@ def merge_protein_to_subgraph_dicts(start):
     super_dict.update(batch_dict)
 
     print("Writing merged dict to disk ...")
-    filename = "../data/PPI_data/protein_to_subgraph_dict"
-    with open(file=filename+'.pkl', mode='wb') as f:
+    with open(file=super_filename, mode='wb') as f:
         pickle.dump(super_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 

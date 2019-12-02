@@ -37,6 +37,7 @@
 (- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
 - get phenotypes for drugs
+  - download OMIM -> get mapping
 
 - Finally execute hmm\_pipeline !!! 
 
@@ -47,6 +48,9 @@
 
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000753_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000753_famsa_aligned_700_min_score.afa
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000888_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000888_famsa_aligned_700_min_score.afa
+
+- build adjacency matrices over small dicts
+- then merge
 
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
@@ -67,6 +71,8 @@
 
 ## Ideas for presentation
 
+- include numbers of interactions
+  - histograms?
 - Other approaches lack ability to generalize -> guilt by association
 
 - histogram over scores of STRING and STITCH
