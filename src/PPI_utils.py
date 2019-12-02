@@ -167,8 +167,10 @@ def merge_protein_to_subgraph_dicts():
         batch_dict = {}
         with open(file=dict_path+filename, mode='rb') as f:
             batch_dict = pickle.load(f)
+        print("batch_dict size:", len(batch_dict))
 
         super_dict = {**super_dict, **batch_dict}
+
     print("Finished.\n")
 
     print("Writing merged dict to disk ...")
