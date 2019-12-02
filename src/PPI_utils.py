@@ -165,7 +165,7 @@ def merge_protein_to_subgraph_dicts():
             continue
 
         batch_dict = {}
-        with open(file=dict_path+filename+'.pkl', mode='rb') as f:
+        with open(file=dict_path+filename, mode='rb') as f:
             batch_dict = pickle.load(f)
 
         super_dict = {**super_dict, **batch_dict}
