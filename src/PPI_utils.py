@@ -177,7 +177,7 @@ def merge_protein_to_subgraph_dicts():
     print("Finished.\n")
 
 def get_protein_to_subgraph_dict():
-    filename = "../data/PPI_data/protein_to_subgraph_dict_"
+    filename = "../data/PPI_data/protein_to_subgraph_dict"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
