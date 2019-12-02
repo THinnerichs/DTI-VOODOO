@@ -192,7 +192,6 @@ def write_protein_to_adj_mat_dict():
 
     print("Calculating adjacency matrices ...")
     protein_to_adj_mat_dict = {}
-    protein_to_node_feature_dict = {}
     for protein, subgraph in tqdm(protein_to_subgraph_dict.items()):
         adj_mat = np.zeros((max_nodes, max_nodes))
         help_mat = nx.adjacency_matrix(subgraph, weight=None).todense()
@@ -200,19 +199,31 @@ def write_protein_to_adj_mat_dict():
         adj_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
 
         protein_to_adj_mat_dict[protein] = adj_mat
-
-        node_feature_mat = np.zeros((max_nodes, 1))
-        help_mat = np.ones((len(subgraph.nodes()),1))
-        node_feature_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
-        protein_to_node_feature_dict[protein] = node_feature_mat
-
-
     print("Finished.\n")
 
     print("Writing protein to adjacency matrix dict ...")
     filename = "../data/PPI_data/protein_to_adj_mat_dict"
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_adj_mat_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
+
+def write_protein_to_node_feature_dict():
+    protein_to_subgraph_dict = get_protein_to_subgraph_dict()
+
+    max_nodes = -1
+    for protein, subgraph in protein_to_subgraph_dict.items():
+        if len(subgraph.nodes()) > max_nodes:
+            max_nodes = len(subgraph.nodes())
+    print("Maximum nodes:", max_nodes)
+
+    print("Calculating node features ...")
+    protein_to_node_feature_dict = {}
+    for protein, subgraph in tqdm(protein_to_subgraph_dict.items()):
+        node_feature_mat = np.zeros((max_nodes, 1))
+        help_mat = np.ones((len(subgraph.nodes()), 1))
+        node_feature_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
+        protein_to_node_feature_dict[protein] = node_feature_mat
+
     print("Finished.\n")
 
     print("Writing protein to node feature matrix dict ...")
