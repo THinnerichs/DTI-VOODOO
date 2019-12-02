@@ -19,6 +19,7 @@ def prune_protein_protein_db(min_score=700):
     target_filename = "../data/STRING_data/9606.protein.links." + str(min_score) + "_min_score.v11.0.txt"
 
     print("Processing raw human protein links file ...")
+    p = 0.041 # see STRING documentation
     with open(file=filename, mode='r') as f, open(file=target_filename, mode='w') as targetfile:
         targetfile.write(f.readline())
 
@@ -29,7 +30,15 @@ def prune_protein_protein_db(min_score=700):
             if counter % 1000000 == 0:
                 print("Processed lines:", counter)
 
-            if int(line.strip().split(' ')[15]) < min_score:
+            split_line = line.strip().split(' ')
+
+            total_score = int(split_line[15])/1000
+            total_score_nop = (total_score-p)/(1-p)
+            txt_score = int(split_line[14])/1000
+            txt_score_nop = (txt_score - p)/(1-p)
+            total_score_updated_nop = 1 - (1-total_score_nop)/(1-txt_score_nop)
+            total_score_updated = total_score_updated_nop + p * (1-total_score_updated_nop)
+            if total_score_updated * 1000 < min_score:
                 continue
             targetfile.write(line)
     print("Finished.")
@@ -214,12 +223,12 @@ def get_protein_to_node_feature_dict():
 
 
 if __name__ == '__main__':
-    # prune_protein_protein_db(min_score=700)
+    prune_protein_protein_db(min_score=700)
 
-    # write_PPI_graph(min_score=700)
+    write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    write_protein_to_subgraph_dict()
+    # write_protein_to_subgraph_dict()
 
     # merge_protein_to_subgraph_dicts()
 
