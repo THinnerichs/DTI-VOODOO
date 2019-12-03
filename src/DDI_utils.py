@@ -28,7 +28,7 @@ def write_SITCH_db_Pubchem_mapping_dict():
     num_lines = 174324327
     db_pubchem_mapping_dict = {}
     with open(file=filename, mode='r') as f:
-        for line in tqdm(f, num_lines):
+        for line in tqdm(f, total=num_lines):
             drug, stereo, alias, source = line.split('\t')
             if alias.startswith('DB'):
                 alias = alias.replace('-', '')
