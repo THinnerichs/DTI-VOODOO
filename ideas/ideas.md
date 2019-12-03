@@ -19,8 +19,8 @@
 
 
 - get distibution over similarities and then take lowest, median and highest and fit above mapping to it
+- then merge
 
-- iSCB conference deadline is 30. January
 
 
 --------------------------------------------------------------------
@@ -38,6 +38,7 @@
 
 - get phenotypes for drugs
   - download OMIM -> get mapping
+  - Human phenotype ontology
 
 - Finally execute hmm\_pipeline !!! 
 
@@ -67,6 +68,12 @@
 - are there papers on DTI using PPIs?
 
 - PPI radius based on confidence? -> Ego Graph
+
+----------------------------------------------------
+Talk with Robert on 03.12.:
+- Test Graphsage
+- Get Phenotypes from OMIM
+- Hypothesis is about
 
 
 

@@ -423,7 +423,6 @@ def write_predicted_targets(min_score=800,
 
 
 
-
 if __name__ == '__main__':
     '''
     separate_prots_to_files(file_min_score=400,
@@ -436,8 +435,8 @@ if __name__ == '__main__':
 
     run_MSA(min_score=700,
             alignment_method='famsa',
-            workers=32,
-            threads_per_process=1,
+            workers=8,
+            threads_per_process=6,
             start=start,
             end=end,
             human_only=True)

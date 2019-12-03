@@ -83,8 +83,7 @@ def get_PPI_adj_mat_list():
     protein_list = get_human_proteins()
     protein_to_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
 
-    return np.array([protein_to_adj_mat_dict[protein]
-                     for protein in protein_list])
+    return np.array([protein_to_adj_mat_dict[protein] for protein in protein_list])
 
 def get_PPI_node_feature_mat_list():
     protein_list = get_human_proteins()

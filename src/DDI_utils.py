@@ -7,7 +7,6 @@ import networkx as nx
 
 from similarity_measurement import *
 
-import pubchempy as pcp
 
 
 def get_db_PubChem_id_mapping_dict():
