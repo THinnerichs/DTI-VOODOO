@@ -204,7 +204,7 @@ def run_MSA(min_score=800,
         if not os.path.exists(fasta_path+file):
             with open(file="../data/non_existent_fastas", mode='a') as f:
                 f.write(drug_name+'\n')
-
+            return
         # Check whether file is empty for speedup
         if os.stat(fasta_path+file).st_size == 0:
             return
