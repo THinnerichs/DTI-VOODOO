@@ -12,9 +12,8 @@ from similarity_measurement import *
 def get_db_PubChem_id_mapping_dict():
     filename = "../data/DDI_data/db_Pubchem_mapping_data"
     db_PubChem_id_mapping_dict = {}
-    num_lines = 174324327
     with open(file=filename, mode='r') as f:
-        for line in tqdm(f, num_lines):
+        for line in f:
             db_id, pubchem_id = line.split(',')
             pubchem_id = pubchem_id.strip()
             if len(pubchem_id) > 8:
@@ -26,9 +25,10 @@ def get_db_PubChem_id_mapping_dict():
 
 def write_SITCH_db_Pubchem_mapping_dict():
     filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"
+    num_lines = 174324327
     db_pubchem_mapping_dict = {}
     with open(file=filename, mode='r') as f:
-        for line in f:
+        for line in tqdm(f, num_lines):
             drug, stereo, alias, source = line.split('\t')
             if alias.startswith('DB'):
                 alias = alias.replace('-', '')
