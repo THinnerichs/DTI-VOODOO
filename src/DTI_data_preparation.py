@@ -46,11 +46,18 @@ def get_human_DTI_graph():
 
 def get_human_proteins():
     human_DTI_graph = get_human_DTI_graph()
+    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
+    protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
+
     protein_list = []
     for node in human_DTI_graph.nodes():
-        if not node.startswith('CID'):
+        if not node.startswith('CID') and \
+                node in list(protein_node_feature_dict.keys()) and \
+                node in list(protein_adj_mat_dict.keys()):
             protein_list.append(node)
+
     # return sorted(PPI_utils.get_human_protein_list())
+
     return sorted(protein_list)
 
 def get_drug_list():
