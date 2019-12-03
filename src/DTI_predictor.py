@@ -30,6 +30,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
                            batch_size=500,
                            plot=False):
 
+    print("Loading data ...")
     drug_list = DTI_data_preparation.get_drug_list()
     protein_list = DTI_data_preparation.get_human_proteins()
 
@@ -37,6 +38,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     # DDI_features = DTI_data_preparation.get_DDI_feature_list()
     # PPI_adj_mats = DTI_data_preparation.get_PPI_adj_mat_list()
     PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list()
+    print("Finished.\n")
 
     # skf = KFold(n_splits=5, random_state=42)
 

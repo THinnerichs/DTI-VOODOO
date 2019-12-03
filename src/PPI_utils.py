@@ -255,6 +255,10 @@ if __name__ == '__main__':
     # write_protein_to_subgraph_dict()
 
     # write_protein_to_adj_mat_dict()
-    write_protein_to_node_feature_dict()
+    # write_protein_to_node_feature_dict()
+
+    dicki = get_protein_to_node_feature_dict()
+    print(len(dicki))
+
 
     pass
