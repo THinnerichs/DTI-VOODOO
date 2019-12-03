@@ -55,6 +55,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     generator = GraphSAGENodeGenerator(G, batch_size, num_samples)
 
+    print("Generator", next(generator))
+
 
 
 
