@@ -44,21 +44,30 @@ def get_human_DTI_graph():
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def get_human_proteins():
+def write_human_protein_list():
     human_DTI_graph = get_human_DTI_graph()
     protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
     protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
 
+    print("Gathering proteins ...")
     protein_list = []
     for node in human_DTI_graph.nodes():
         if not node.startswith('CID') and \
                 node in list(protein_node_feature_dict.keys()) and \
                 node in list(protein_adj_mat_dict.keys()):
             protein_list.append(node)
+    print("Finished.\n")
 
     # return sorted(PPI_utils.get_human_protein_list())
 
-    return sorted(protein_list)
+    filename = "../data/human_protein_list"
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(sorted(protein_list), f, pickle.HIGHEST_PROTOCOL)
+
+def get_human_proteins():
+    filename = "../data/human_protein_list"
+    with open(file=filename+'.pkl', mode='rb') as f:
+        return pickle.load(f)
 
 def get_drug_list():
     return sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
@@ -99,6 +108,26 @@ def get_PPI_node_feature_mat_list():
 
     return np.array([protein_node_feature_dict[protein] for protein in protein_list])
 
+def get_PPI_dti_feature_list():
+    human_dti_graph = get_human_DTI_graph()
+
+    drug_list = get_drug_list()
+    protein_list = get_human_proteins()
+
+    protein_dti_mat = np.zeros((len(protein_list), len(drug_list)))
+    for protein_index in range(len(protein_list)):
+        protein = protein_list[protein_index]
+        neighbors = human_dti_graph.neighbors(protein)
+        for drug_index in range(len(drug_list)):
+            drug = drug_list[drug_index]
+            if drug in neighbors:
+                protein_dti_mat[protein_index, drug_index] = 1
+
+    return protein_dti_mat
+
+
+
+
 def get_DTIs_():
     drug_list = get_drug_list()
     protein_list = get_human_proteins()
@@ -135,4 +164,6 @@ if __name__ == '__main__':
     # write_human_DTI_graph()
 
     #  test()
+
+    write_human_protein_list()
     pass
