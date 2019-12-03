@@ -146,7 +146,7 @@ venv.bak/
 
 /src/MultiSequenceAlignment*
 
-/SLURM_JOBS/
+/SLURM_JOBS/*
 
 
 *aligned*

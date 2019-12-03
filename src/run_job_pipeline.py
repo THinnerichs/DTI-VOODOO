@@ -1,7 +1,7 @@
 import subprocess
 
 
-def run_jobs(parts=100,
+def run_jobs(parts=20,
              amount=637):
     # 637 drugs in intersect
     # 186135 for all drugs in STITCH -> set human_only in msa to wrong
@@ -18,7 +18,7 @@ def run_jobs(parts=100,
 #SBATCH -o MultiSequenceAlignment.%J.out
 #SBATCH -e MultiSequenceAlignment.%J.err
 #SBATCH --time=3-00:00:00
-#SBATCH --mem=230G
+#SBATCH --mem=240G
 #SBATCH --cpus-per-task=40
 
 #run the application:

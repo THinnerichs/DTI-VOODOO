@@ -442,7 +442,7 @@ if __name__ == '__main__':
 
     run_MSA(min_score=700,
             alignment_method='famsa',
-            workers=8,
+            workers=6,
             threads_per_process=6,
             start=start,
             end=end,
