@@ -2,10 +2,11 @@ import json
 import pickle
 import os
 from joblib import Parallel, delayed
+from tqdm import tqdm
 
 import networkx as nx
 
-from similarity_measurement import *
+import similarity_measurement
 
 
 
@@ -32,7 +33,7 @@ def get_drugbank_db_PubChem_id_mapping_dict():
 
     return db_PubChem_id_mapping_dict
 
-def write_SITCH_db_Pubchem_mapping_dict():
+def write_STITCH_db_Pubchem_mapping_dict():
     filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"
     num_lines = 174324327
     db_pubchem_mapping_dict = {}
@@ -90,12 +91,6 @@ def get_DDI_Boyce_graph():
             DDI_graph.add_edge(pubchem_id_1, pubchem_id_2)
 
     return DDI_graph
-
-    '''
-    graph_filename = "../data/pddi_data/DDI_Boyce_graph"
-    with open(file=graph_filename+'pkl', mode='wb') as f:
-        pickle.dump(DDI_graph, f, pickle.HIGHEST_PROTOCOL)
-    '''
 
 def write_DDI_drugbank_graph():
 
@@ -207,11 +202,10 @@ if __name__ == '__main__':
     # write_SITCH_db_Pubchem_mapping_dict()
     # get_STITCH_db_Pubchem_mapping_dict()
 
-    get_db_PubChem_id_mapping_dict()
-
     # get_DDI_Boyce_graph()
 
-    # write_DDI_drugbank_graph()
+    write_DDI_drugbank_graph()
+    print(len(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
 
     # evaluate_dicts_and_graph()
 
