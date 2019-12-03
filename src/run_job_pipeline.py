@@ -1,7 +1,7 @@
 import subprocess
 
 
-def run_jobs(parts=20,
+def run_jobs(parts=100,
              amount=637):
     # 637 drugs in intersect
     # 186135 for all drugs in STITCH -> set human_only in msa to wrong
@@ -48,5 +48,5 @@ def cancel_jobs():
                     break
 
 if __name__ == '__main__':
-    run_jobs(parts=100, amount=186135)
+    run_jobs(parts=20, amount=637)
     # cancel_jobs()

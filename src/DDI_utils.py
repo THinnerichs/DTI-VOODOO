@@ -23,6 +23,15 @@ def get_db_PubChem_id_mapping_dict():
 
     return db_PubChem_id_mapping_dict
 
+def get_SITCH_db_Pubchem_mapping_dict():
+    filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"
+    db_pubchem_mapping_dict = {}
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            drug, stereo, alias, source = line.split('\t')
+            if 'DB' in alias:
+                print(alias)
+
 def get_DDI_Boyce_graph():
 
     # db := drugbank
@@ -175,6 +184,8 @@ def evaluate_dicts_and_graph():
 
 
 if __name__ == '__main__':
+    get_SITCH_db_Pubchem_mapping_dict()
+
     # get_DDI_Boyce_graph()
 
     # write_DDI_drugbank_graph()
@@ -183,4 +194,6 @@ if __name__ == '__main__':
 
     # get_DDI_drugbank_graph()
 
-    print(get_merged_DDI_graph().nodes())
+    # print(get_merged_DDI_graph().nodes())
+
+    pass
