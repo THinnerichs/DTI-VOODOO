@@ -10,11 +10,13 @@ from similarity_measurement import *
 
 
 def get_db_PubChem_id_mapping_dict():
-    # STITCH_mapping = get_STITCH_db_Pubchem_mapping_dict()
+    STITCH_mapping = get_STITCH_db_Pubchem_mapping_dict()
     drugbank_mapping = get_drugbank_db_PubChem_id_mapping_dict()
 
-    print(list(drugbank_mapping.keys())[:100])
+    return_dict = {**STITCH_mapping, **drugbank_mapping}
 
+    print(len(return_dict))
+    print(len(set(return_dict.keys()) - set(drugbank_mapping.keys())))
 
 def get_drugbank_db_PubChem_id_mapping_dict():
     filename = "../data/DDI_data/db_Pubchem_mapping_data"
