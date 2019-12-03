@@ -10,6 +10,13 @@ from similarity_measurement import *
 
 
 def get_db_PubChem_id_mapping_dict():
+    # STITCH_mapping = get_STITCH_db_Pubchem_mapping_dict()
+    drugbank_mapping = get_drugbank_db_PubChem_id_mapping_dict()
+
+    print(list(drugbank_mapping.keys())[:100])
+
+
+def get_drugbank_db_PubChem_id_mapping_dict():
     filename = "../data/DDI_data/db_Pubchem_mapping_data"
     db_PubChem_id_mapping_dict = {}
     with open(file=filename, mode='r') as f:
@@ -195,8 +202,10 @@ def evaluate_dicts_and_graph():
 
 
 if __name__ == '__main__':
-    write_SITCH_db_Pubchem_mapping_dict()
-    get_STITCH_db_Pubchem_mapping_dict()
+    # write_SITCH_db_Pubchem_mapping_dict()
+    # get_STITCH_db_Pubchem_mapping_dict()
+
+    get_db_PubChem_id_mapping_dict()
 
     # get_DDI_Boyce_graph()
 
