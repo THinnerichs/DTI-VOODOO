@@ -25,47 +25,50 @@ from stellargraph.layer import GraphSAGE
 import PPI_utils
 
 
+'''
 def missing_drug_predictor(results_filename='../results/results_log',
                            nb_epochs=3,
                            batch_size=500,
                            plot=False):
+'''
 
-    print("Loading data ...")
-    drug_list = DTI_data_preparation.get_drug_list()
-    print("Get protein list ...")
-    protein_list = DTI_data_preparation.get_human_proteins()
+print("Loading data ...")
+drug_list = DTI_data_preparation.get_drug_list()
+print("Get protein list ...")
+protein_list = DTI_data_preparation.get_human_proteins()
+print("Finished.\n")
 
-    # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
-    # DDI_features = DTI_data_preparation.get_DDI_feature_list()
-    # PPI_adj_mats = DTI_data_preparation.get_PPI_adj_mat_list()
-    PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list()
-    print("Finished.\n")
+# side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
+# DDI_features = DTI_data_preparation.get_DDI_feature_list()
+# PPI_adj_mats = DTI_data_preparation.get_PPI_adj_mat_list()
+PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list()
+print("Finished.\n")
 
-    # skf = KFold(n_splits=5, random_state=42)
+# skf = KFold(n_splits=5, random_state=42)
 
-    cv_scores = {'acc': [],
-                 'auroc': [],
-                 'f1-score': []}
+cv_scores = {'acc': [],
+             'auroc': [],
+             'f1-score': []}
 
-    df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
-    PPI_graph = PPI_utils.get_PPI_graph()
-    G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
+df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
+PPI_graph = PPI_utils.get_PPI_graph()
+G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
 
-    print(G.info())
+print(G.info())
 
-    batch_size = 50
-    num_samples = [10, 10] # What do those values mean?
+batch_size = 50
+num_samples = [10, 10] # What do those values mean?
 
-    generator = GraphSAGENodeGenerator(G, batch_size, num_samples)
+generator = GraphSAGENodeGenerator(G, batch_size, num_samples)
 
-    print("Generator", next(generator))
-
-
-
-
+print("Generator", next(generator))
 
 
 
 
-if __name__ == '__main__':
-    missing_drug_predictor()
+
+
+
+
+# if __name__ == '__main__':
+    # missing_drug_predictor()
