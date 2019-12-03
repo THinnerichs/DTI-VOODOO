@@ -23,14 +23,24 @@ def get_db_PubChem_id_mapping_dict():
 
     return db_PubChem_id_mapping_dict
 
-def get_SITCH_db_Pubchem_mapping_dict():
+def write_SITCH_db_Pubchem_mapping_dict():
     filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"
     db_pubchem_mapping_dict = {}
     with open(file=filename, mode='r') as f:
         for line in f:
             drug, stereo, alias, source = line.split('\t')
-            if 'DB' in alias:
-                print(alias)
+            if alias.startswith('DB'):
+                alias = alias.replace('-', '')
+                db_pubchem_mapping_dict[alias] = drug
+
+    dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
+    with open(file=dict_filename+'.pkl', mode='wb') as f:
+        pickle.dump(db_pubchem_mapping_dict, f, pickle.HIGHEST_PROTOCOL)
+
+def get_STITCH_db_Pubchem_mapping_dict():
+    dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
+    with open(file=dict_filename+'.pkl', mode='rb') as f:
+        return pickle.load(f)
 
 def get_DDI_Boyce_graph():
 
@@ -184,7 +194,8 @@ def evaluate_dicts_and_graph():
 
 
 if __name__ == '__main__':
-    get_SITCH_db_Pubchem_mapping_dict()
+    write_SITCH_db_Pubchem_mapping_dict()
+    get_STITCH_db_Pubchem_mapping_dict()
 
     # get_DDI_Boyce_graph()
 
