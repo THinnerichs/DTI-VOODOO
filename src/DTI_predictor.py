@@ -32,6 +32,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     print("Loading data ...")
     drug_list = DTI_data_preparation.get_drug_list()
+    print("Get protein list ...")
     protein_list = DTI_data_preparation.get_human_proteins()
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()

@@ -221,9 +221,9 @@ def write_protein_to_node_feature_dict():
     print("Calculating node features ...")
     protein_to_node_feature_dict = {}
     for protein, subgraph in tqdm(protein_to_subgraph_dict.items()):
-        node_feature_mat = np.zeros((max_nodes, 1))
-        help_mat = np.ones((len(subgraph.nodes()), 1))
-        node_feature_mat[:help_mat.shape[0], :help_mat.shape[1]] = help_mat
+        node_feature_mat = np.zeros(max_nodes)
+        help_mat = np.ones(len(subgraph.nodes()))
+        node_feature_mat[:help_mat.shape[0]] = help_mat
         protein_to_node_feature_dict[protein] = node_feature_mat
 
     print("Finished.\n")
@@ -255,10 +255,6 @@ if __name__ == '__main__':
     # write_protein_to_subgraph_dict()
 
     # write_protein_to_adj_mat_dict()
-    # write_protein_to_node_feature_dict()
-
-    dicki = get_protein_to_node_feature_dict()
-    print(list(dicki.keys())[:100])
-
+    write_protein_to_node_feature_dict()
 
     pass
