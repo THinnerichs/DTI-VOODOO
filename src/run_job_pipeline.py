@@ -17,7 +17,7 @@ def run_jobs(parts=100,
 #SBATCH -J MSA
 #SBATCH -o MultiSequenceAlignment.%J.out
 #SBATCH -e MultiSequenceAlignment.%J.err
-#SBATCH --time=3-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --mem=120G
 #SBATCH --cpus-per-task=20
 
