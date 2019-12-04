@@ -11,12 +11,13 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 
-from tensorflow.python.keras.models import Input, Model
-from tensorflow.python.keras.utils import plot_model
-from tensorflow.python.keras import layers
-import tensorflow.python.keras.backend as K
-from tensorflow.python.keras.regularizers import *
-from tensorflow.python.keras import optimizers, losses
+import tensorflow.python
+from tensorflow.keras.models import Input, Model
+from tensorflow.keras.utils import plot_model
+from tensorflow.keras import layers
+import tensorflow.keras.backend as K
+from tensorflow.keras.regularizers import *
+from tensorflow.keras import optimizers, losses
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
