@@ -90,7 +90,7 @@ def get_DDI_feature_list():
     for drug in intersect_drug_list:
         feature_vector = np.zeros(len(intersect_drug_list))
         for neighbor in merged_graph.neighbors(drug):
-            if neighbor in intersect_drug_list.keys():
+            if neighbor in intersect_drug_list:
                 feature_vector[intersect_drug_list.index(neighbor)] = 1
         feature_vec_list.append(feature_vector)
 
