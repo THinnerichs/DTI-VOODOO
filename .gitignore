@@ -138,7 +138,12 @@ venv.bak/
 /data/PPI_data/protein_to_adj_mat_dict.pkl
 /data/PPI_data/protein_to_subgraph_dict.pkl
 
-/data/STITCH_data/
+/data/STITCH_data/protein_chemical.links.transfer.v5.0.tsv
+/data/STITCH_data/protein_chemical.links.min_score_400.tsv
+/data/STITCH_data/chemicals.v5.0.tsv
+/data/STITCH_data/chemical.aliases.v5.0.tsv
+/data/STITCH_data/protein.sequences.v10.fa
+/data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv
 
 /data/STRING_data/9606.protein.links.v11.0.txt
 
