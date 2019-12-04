@@ -93,10 +93,12 @@ def missing_drug_predictor(results_filename='../results/results_log',
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
+    print("Scaling data ...")
     DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(), len(protein_list))
     PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
     PPI_node_features = np.tile(DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list), len(protein_list))
     PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
+    print("Finished.\n")
 
 
     # PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list()
