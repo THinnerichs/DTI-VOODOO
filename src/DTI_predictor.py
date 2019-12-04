@@ -87,9 +87,9 @@ def missing_drug_predictor(results_filename='../results/results_log',
                            plot=False):
 
     print("Loading data ...")
-    drug_list = DTI_data_preparation.get_drug_list()
+    drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = DTI_data_preparation.get_human_proteins()
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
@@ -101,7 +101,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list()
 
 
-    print("Finished.\n")
+    print("Finished loading data.\n")
 
     skf = KFold(n_splits=5, random_state=42)
 
