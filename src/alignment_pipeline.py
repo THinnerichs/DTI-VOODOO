@@ -21,7 +21,7 @@ from similarity_measurement import *
 def write_pruned_SeqIO_fasta_dict():
     # Create protein amino acid sequence from fasta
     print("Reading fasta file to dict...")
-    fasta_filename = "../data/STITCH_data/protein.sequences.v10.fa"
+    fasta_filename = "../data/STITCH_data/9606.protein.sequences.v11.0.fa"
     protein_aa_seq_dict = SeqIO.index(fasta_filename, 'fasta')
     print("Finished.")
 
@@ -44,7 +44,6 @@ def write_pruned_SeqIO_fasta_dict():
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(pruned_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename)
-
 
 def prune_drug_protein_db(min_score=700):
 
@@ -393,7 +392,8 @@ def write_predicted_targets(min_score=800,
         predicted_targets_file = predicted_targets_path + drug_name + "_predicted_targets"
 
         # extract actual predicted targets from hmmsearch output file and write them to a new file
-        with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, open(file=predicted_targets_file, mode='w') as predicted_targets_filehandler:
+        with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, \
+                open(file=predicted_targets_file, mode='w') as predicted_targets_filehandler:
             # Skip first 14 lines
             for i in range(14):
                 hmmsearch_filehandler.readline()
@@ -440,6 +440,7 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
+    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
@@ -451,6 +452,9 @@ if __name__ == '__main__':
             start=start,
             end=end,
             human_only=True)
+    '''
+
+
 
 
 
