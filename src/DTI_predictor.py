@@ -95,37 +95,38 @@ def missing_drug_predictor(results_filename='../results/results_log',
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
     DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(), len(protein_list))
-    PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
-    PPI_node_features = np.tile(DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list), len(protein_list))
-    PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
+    # PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
+    PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list)
+    # PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
     print("Finished.\n")
 
-
-    # PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list()
-
+    PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(protein_list)
 
     print("Finished loading data.\n")
 
+
+    df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
+    PPI_graph = PPI_utils.get_PPI_graph()
+    G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
+
+    print(G.info())
+
+    graphsage_batch_size = 50
+    num_samples = [10, 10] # What do those values mean?
+
+    generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
+
+    # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
 
     cv_scores = {'acc': [],
                  'auroc': [],
                  'f1-score': []}
 
-    # df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
-    # PPI_graph = PPI_utils.get_PPI_graph()
-    # G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
-
-    # print(G.info())
-
-    graphsage_batch_size = 50
-    num_samples = [10, 10] # What do those values mean?
-
-    # generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
-
     model = None
     conf_matrix = None
     round = 0
+    print("Starting folds ...")
     for train, test in skf.split(protein_list):
         print("Round", round)
         round += 1
@@ -133,7 +134,6 @@ def missing_drug_predictor(results_filename='../results/results_log',
         y_train_dti_data = DTI_data_preparation.get_DTIs(train)
         y_test_dti_data = DTI_data_preparation.get_DTIs(test)
 
-        '''
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
         
         graphsage_model = GraphSAGE(layer_sizes=[32, 32],
@@ -173,8 +173,10 @@ def missing_drug_predictor(results_filename='../results/results_log',
         node_embeddings = graphsage_model.predict_generator()
 
         print(node_embeddings.shape)
-        '''
 
+        raise Exception
+
+        '''
         # build graph conv filters
         SYM_NORM = True
         num_filters = 32
@@ -217,6 +219,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
                   batch_size=batch_size,
                   validation_data=y_test_dti_data,
                   verbose=1)
+        '''
 
         raise Exception
 
