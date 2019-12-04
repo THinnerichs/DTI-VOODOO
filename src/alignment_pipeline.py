@@ -440,12 +440,14 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
-    _, start, end = sys.argv + ['', '']
+    args = sys.argv + ['', '']
+    start = args[1]
+    end = args[2]
 
     run_MSA(min_score=700,
             alignment_method='famsa',
-            workers=4,
-            threads_per_process=5,
+            workers=10,
+            threads_per_process=4,
             start=start,
             end=end,
             human_only=True)

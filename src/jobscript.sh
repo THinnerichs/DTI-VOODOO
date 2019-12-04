@@ -4,14 +4,15 @@
 #SBATCH -J MultiSequenceAlignment
 #SBATCH -o MultiSequenceAlignment.%J.out
 #SBATCH -e MultiSequenceAlignment.%J.err
-#SBATCH --time=48:00:00
-#SBATCH --mem=123G
+#SBATCH --time=3-00:00:00
+#SBATCH --mem=240G
 #SBATCH --constraint=[intel]
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=40
 
 #run the application:
 module load anaconda3/4.4.0
 source /home/${USER}/.bashrc
+module load gcc/6.4.0
 conda activate ~/.conda/envs/dti/
 
 python3 alignment_pipeline.py
