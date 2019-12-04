@@ -144,6 +144,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
                                 loss=losses.categorical_crossentropy,
                                 metrics=["acc"])
 
+        graphsage_model.summary()
+
         val_gen = generator.flow(protein_list[test], protein_list[test])
 
         history = model.fit_generator(
@@ -157,13 +159,15 @@ def missing_drug_predictor(results_filename='../results/results_log',
         if plot:
             plot_history(history)
 
+        # encoder = Model(input=x_inp, output=)
+
         overall_generator = generator.flow(protein_list, PPI_dti_features)
 
         node_embeddings = graphsage_model.predict_generator()
 
+        print(node_embeddings.shape)
 
-
-
+        raise Exception
 
 
         '''

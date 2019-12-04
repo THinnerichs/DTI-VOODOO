@@ -51,9 +51,6 @@
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000888_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000888_famsa_aligned_700_min_score.afa
 ./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm06442177_fasta_700_min_score.fasta ../data/alignment_targets/CIDm06442177_famsa_aligned_700_min_score.afa
 
-- build adjacency matrices over small dicts
-- then merge
-
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
 
@@ -68,6 +65,8 @@
 - are there papers on DTI using PPIs?
 
 - PPI radius based on confidence? -> Ego Graph
+
+- compare graph classification vs node classification
 
 ----------------------------------------------------
 Talk with Robert on 03.12.:
