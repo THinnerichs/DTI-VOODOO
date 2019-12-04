@@ -94,13 +94,13 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
-    DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(), len(protein_list))
+    DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(drug_list), len(protein_list))
     # PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
     PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list)
     # PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
     print("Finished.\n")
 
-    PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(protein_list)
+    PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
     print("Finished loading data.\n")
 
@@ -133,8 +133,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        y_train_dti_data = DTI_data_preparation.get_DTIs(protein_list, train)
-        y_test_dti_data = DTI_data_preparation.get_DTIs(protein_list, test)
+        y_train_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, train)
+        y_test_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, test)
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
         

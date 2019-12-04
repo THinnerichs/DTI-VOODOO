@@ -70,20 +70,23 @@ def get_human_proteins():
         return pickle.load(f)
 
 def get_drug_list():
-    return np.array(sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection())))
+    human_DTI_graph = get_human_DTI_graph()
+    drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
-def get_side_effect_similarity_feature_list():
+
+def get_side_effect_similarity_feature_list(intersect_drug_list):
     SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
     semsim_matrix = similarity_measurement.get_semantic_similarity_matrix()
 
-    intersect_drug_list = get_drug_list()
+    # intersect_drug_list = get_drug_list()
 
     index_mapping = lambda drug: SIDER_drug_list.index(drug)
 
     return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
 
-def get_DDI_feature_list():
-    intersect_drug_list = get_drug_list()
+def get_DDI_feature_list(intersect_drug_list):
+    # intersect_drug_list = get_drug_list()
     merged_graph = DDI_utils.get_merged_DDI_graph()
 
     feature_vec_list = []
@@ -109,10 +112,10 @@ def get_PPI_node_feature_mat_list(protein_list):
 
     return np.array([protein_node_feature_dict[protein] for protein in protein_list], dtype=np.int8)
 
-def get_PPI_dti_feature_list(protein_list):
+def get_PPI_dti_feature_list(drug_list, protein_list):
     human_dti_graph = get_human_DTI_graph()
 
-    drug_list = get_drug_list()
+    # drug_list = get_drug_list()
     # protein_list = get_human_proteins()
 
     protein_dti_mat = np.zeros((len(protein_list), len(drug_list)), dtype=np.int8)
@@ -127,21 +130,19 @@ def get_PPI_dti_feature_list(protein_list):
     return protein_dti_mat
 
 
-def get_DTIs(protein_list, indizes):
-    drug_list = get_drug_list()
-
+def get_DTIs(drug_list, protein_list, indices):
     DTI_graph = get_human_DTI_graph()
 
 
-    y_data = np.zeros(len(drug_list)*len(protein_list[indizes]))
+    y_data = np.zeros(len(drug_list)*len(protein_list[indices]))
 
     for i in range(len(drug_list)):
         drug = drug_list[i]
 
         for protein in DTI_graph.neighbors(drug):
-            if protein not in protein_list[indizes]:
+            if protein not in protein_list[indices]:
                 continue
-            j = list(protein_list[indizes]).index(protein)
+            j = list(protein_list[indices]).index(protein)
 
             y_data[i * len(drug_list) + j] = 1
 
