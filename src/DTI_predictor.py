@@ -89,13 +89,13 @@ def missing_drug_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:3000]
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(), len(protein_list))
-    PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(), len(drug_list))
-    PPI_node_features = np.tile(DTI_data_preparation.get_PPI_node_feature_mat_list(), len(protein_list))
+    PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
+    PPI_node_features = np.tile(DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list), len(protein_list))
     PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
 
 
@@ -110,16 +110,16 @@ def missing_drug_predictor(results_filename='../results/results_log',
                  'auroc': [],
                  'f1-score': []}
 
-    df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
-    PPI_graph = PPI_utils.get_PPI_graph()
-    G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
+    # df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
+    # PPI_graph = PPI_utils.get_PPI_graph()
+    # G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
 
-    print(G.info())
+    # print(G.info())
 
     graphsage_batch_size = 50
     num_samples = [10, 10] # What do those values mean?
 
-    generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
+    # generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
 
     model = None
     conf_matrix = None

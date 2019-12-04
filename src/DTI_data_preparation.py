@@ -96,24 +96,24 @@ def get_DDI_feature_list():
 
     return np.array(feature_vec_list)
 
-def get_PPI_adj_mat_list():
-    protein_list = get_human_proteins()
+def get_PPI_adj_mat_list(protein_list):
+    # protein_list = get_human_proteins()
     protein_to_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
 
     return np.array([protein_to_adj_mat_dict[protein] for protein in protein_list], dtype=np.int8)
 
-def get_PPI_node_feature_mat_list():
-    protein_list = get_human_proteins()
+def get_PPI_node_feature_mat_list(protein_list):
+    # protein_list = get_human_proteins()
 
     protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
     return np.array([protein_node_feature_dict[protein] for protein in protein_list], dtype=np.int8)
 
-def get_PPI_dti_feature_list():
+def get_PPI_dti_feature_list(protein_list):
     human_dti_graph = get_human_DTI_graph()
 
     drug_list = get_drug_list()
-    protein_list = get_human_proteins()
+    # protein_list = get_human_proteins()
 
     protein_dti_mat = np.zeros((len(protein_list), len(drug_list)), dtype=np.int8)
     for protein_index in range(len(protein_list)):
