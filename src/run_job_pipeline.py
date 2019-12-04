@@ -10,6 +10,10 @@ def run_jobs(parts=100,
 
     sep_intervals = [(int(amount / parts * i), int(amount / parts * (i + 1))) for i in range(parts)]
 
+    print(sep_intervals)
+
+    raise Exception
+
     for start, end in sep_intervals:
         preface_script = '''#!/bin/bash
 #SBATCH -N 1

@@ -207,6 +207,8 @@ def run_MSA(min_score=800,
             return
         # Check whether file is empty for speedup
         if os.stat(fasta_path+file).st_size == 0:
+            with open(file="../data/empty_fastas", mode='a') as f:
+                f.write(drug_name+'\n')
             return
 
         drug_name = file.split("_")[0].strip()
