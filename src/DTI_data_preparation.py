@@ -147,7 +147,7 @@ def get_DTIs(drug_list, protein_list, indices):
             if protein not in protein_list[indices]:
                 continue
             j = list(protein_list[indices]).index(protein)
-            # print(i, j, i * len(drug_list) + j)
+            print(i, j, i * len(drug_list) + j)
 
             y_data[i * len(drug_list) + j] = 1
 
