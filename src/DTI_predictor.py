@@ -128,7 +128,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
                  'auroc': [],
                  'f1-score': []}
 
-    model = None
+    # model = None
     conf_matrix = None
     round = 0
     print("Starting folds ...")
@@ -160,7 +160,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         val_gen = generator.flow(protein_list[test], protein_list[test])
 
-        history = model.fit_generator(
+        history = graphsage_model.fit_generator(
             train_gen,
             epochs=15,
             validation_data=val_gen,
