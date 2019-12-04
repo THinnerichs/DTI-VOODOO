@@ -162,7 +162,7 @@ def test():
 
 
 if __name__ == '__main__':
-    # write_human_DTI_graph()
+    write_human_DTI_graph()
 
     #  test()
 
