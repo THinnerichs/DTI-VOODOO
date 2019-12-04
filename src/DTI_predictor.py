@@ -11,12 +11,12 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 
-from tensorflow.keras.models import Input, Model
-from tensorflow.keras.utils import plot_model
-from tensorflow.keras import layers
-import tensorflow.keras.backend as K
-from tensorflow.keras.regularizers import *
-from tensorflow.keras import optimizers, losses
+from tensorflow.python.keras.models import Input, Model
+from tensorflow.python.keras.utils import plot_model
+from tensorflow.python.keras import layers
+import tensorflow.python.keras.backend as K
+from tensorflow.python.keras.regularizers import *
+from tensorflow.python.keras import optimizers, losses
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
@@ -88,7 +88,6 @@ def missing_drug_predictor(results_filename='../results/results_log',
                            plot=False):
 
     print("Loading data ...")
-    raise Exception
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
     protein_list = np.array(DTI_data_preparation.get_human_proteins())[:3000]
