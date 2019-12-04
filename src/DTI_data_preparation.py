@@ -90,7 +90,8 @@ def get_DDI_feature_list():
     for drug in intersect_drug_list:
         feature_vector = np.zeros(len(intersect_drug_list))
         for neighbor in merged_graph.neighbors(drug):
-            feature_vector[intersect_drug_list.index(neighbor)] = 1
+            if neighbor in intersect_drug_list.keys():
+                feature_vector[intersect_drug_list.index(neighbor)] = 1
         feature_vec_list.append(feature_vector)
 
     return np.array(feature_vec_list)
@@ -124,8 +125,6 @@ def get_PPI_dti_feature_list():
                 protein_dti_mat[protein_index, drug_index] = 1
 
     return protein_dti_mat
-
-
 
 
 def get_DTIs_():
