@@ -70,7 +70,7 @@ def get_human_proteins():
         return pickle.load(f)
 
 def get_drug_list():
-    return sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    return np.array(sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection())))
 
 def get_side_effect_similarity_feature_list():
     SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
@@ -80,7 +80,7 @@ def get_side_effect_similarity_feature_list():
 
     index_mapping = lambda drug: SIDER_drug_list.index(drug)
 
-    return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list])
+    return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
 
 def get_DDI_feature_list():
     intersect_drug_list = get_drug_list()
@@ -91,7 +91,7 @@ def get_DDI_feature_list():
         feature_vector = np.zeros(len(intersect_drug_list))
         for neighbor in merged_graph.neighbors(drug):
             if neighbor in intersect_drug_list:
-                feature_vector[intersect_drug_list.index(neighbor)] = 1
+                feature_vector[list(intersect_drug_list).index(neighbor)] = 1
         feature_vec_list.append(feature_vector)
 
     return np.array(feature_vec_list)
@@ -100,14 +100,14 @@ def get_PPI_adj_mat_list():
     protein_list = get_human_proteins()
     protein_to_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
 
-    return np.array([protein_to_adj_mat_dict[protein] for protein in protein_list])
+    return np.array([protein_to_adj_mat_dict[protein] for protein in protein_list], dtype=np.int8)
 
 def get_PPI_node_feature_mat_list():
     protein_list = get_human_proteins()
 
     protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
-    return np.array([protein_node_feature_dict[protein] for protein in protein_list])
+    return np.array([protein_node_feature_dict[protein] for protein in protein_list], dtype=np.int8)
 
 def get_PPI_dti_feature_list():
     human_dti_graph = get_human_DTI_graph()
@@ -115,7 +115,7 @@ def get_PPI_dti_feature_list():
     drug_list = get_drug_list()
     protein_list = get_human_proteins()
 
-    protein_dti_mat = np.zeros((len(protein_list), len(drug_list)))
+    protein_dti_mat = np.zeros((len(protein_list), len(drug_list)), dtype=np.int8)
     for protein_index in range(len(protein_list)):
         protein = protein_list[protein_index]
         neighbors = human_dti_graph.neighbors(protein)
