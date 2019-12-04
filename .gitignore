@@ -144,6 +144,8 @@ venv.bak/
 /data/similarity_results/jaccard_similarity_graph.pkl
 /data/similarity_results/semsim_drugs.txt
 
+/src/stellargraph/
+
 /src/MultiSequenceAlignment*
 
 /SLURM_JOBS/*
