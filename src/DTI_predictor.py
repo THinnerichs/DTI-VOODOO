@@ -104,7 +104,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     print("Finished loading data.\n")
 
-
+    # building stellar graph
+    print("Building Stellar graph data ...")
     df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
     PPI_graph = PPI_utils.get_PPI_graph()
     G = sg.StellarGraph(PPI_graph, node_features=df_node_features)
@@ -115,6 +116,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     num_samples = [10, 10] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
+    print("Finished.\n")
 
     # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
@@ -131,8 +133,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        y_train_dti_data = DTI_data_preparation.get_DTIs(train)
-        y_test_dti_data = DTI_data_preparation.get_DTIs(test)
+        y_train_dti_data = DTI_data_preparation.get_DTIs(protein_list, train)
+        y_test_dti_data = DTI_data_preparation.get_DTIs(protein_list, test)
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
         
