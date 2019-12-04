@@ -79,7 +79,7 @@ def get_PPI_graph(min_score=700):
 
 def write_protein_to_subgraph_dict(start_batch='',
                                    end_batch='',
-                                   cutoff=700):
+                                   cutoff=0.7):
     PPI_graph = get_PPI_graph()
     # for node1, node2 in PPI_graph.edges():
         # PPI_graph[node1][node2]['score'] = math.log(PPI_graph[node1][node2]['score']/1000, cutoff)
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    write_protein_to_subgraph_dict(cutoff=900)
+    write_protein_to_subgraph_dict(cutoff=0.9)
 
     write_protein_to_adj_mat_dict()
     write_protein_to_node_feature_dict()
