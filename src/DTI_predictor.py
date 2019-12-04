@@ -13,12 +13,10 @@ import tensorflow as tf
 
 import tensorflow.keras.models as models
 import tensorflow.keras.layers as layers
-# from tensorflow.keras.models import Input, Model
-# from tensorflow.keras.utils import plot_model
-# from tensorflow.keras import layers
-# import tensorflow.keras.backend as K
-# from tensorflow.keras.regularizers import *
-# from tensorflow.keras import optimizers, losses
+import tensorflow.keras.backend as K
+import tensorflow.keras.regularizers as regularizers
+import tensorflow.keras.optimizers as optimizers
+import tensorflow.keras.losses as losses
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
@@ -143,18 +141,17 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
         
-        graphsage_model = GraphSAGE(layer_sizes=[32, 32],
+        graphsage_model_layer = GraphSAGE(layer_sizes=[32, 32],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
 
-        x_inp, x_out = graphsage_model.build()
+        x_inp, x_out = graphsage_model_layer.build()
 
         prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
 
         graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
 
-        raise Exception
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
                                 loss=losses.categorical_crossentropy,
                                 metrics=["acc"])
