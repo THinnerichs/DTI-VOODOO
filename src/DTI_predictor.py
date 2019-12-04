@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 import tensorflow.python
-from tensorflow.keras.models import Input, Model
-from tensorflow.keras.utils import plot_model
-from tensorflow.keras import layers
-import tensorflow.keras.backend as K
-from tensorflow.keras.regularizers import *
-from tensorflow.keras import optimizers, losses
+# from tensorflow.keras.models import Input, Model
+# from tensorflow.keras.utils import plot_model
+# from tensorflow.keras import layers
+# import tensorflow.keras.backend as K
+# from tensorflow.keras.regularizers import *
+# from tensorflow.keras import optimizers, losses
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
@@ -38,6 +38,7 @@ import PPI_utils
 def dti_auroc(y_true, y_pred):
     return tf.py_func(metrics.roc_auc_score, (y_true, y_pred), tf.double)
 
+'''
 def dti_f1_score(y_true, y_pred):
     def recall(y_true, y_pred):
         """Recall metric.
@@ -67,6 +68,7 @@ def dti_f1_score(y_true, y_pred):
     precision = precision(y_true, y_pred)
     recall = recall(y_true, y_pred)
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
+'''
 
 def plot_history(history):
     metrics = sorted(history.history.keys())
@@ -147,10 +149,11 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         x_inp, x_out = graphsage_model.build()
 
-        prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
+        prediction = tf.keras.layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
 
-        graphsage_model = Model(inputs=x_inp, outputs=prediction)
+        graphsage_model = tf.keras.models.Model(inputs=x_inp, outputs=prediction)
 
+        raise Exception
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
                                 loss=losses.categorical_crossentropy,
                                 metrics=["acc"])
