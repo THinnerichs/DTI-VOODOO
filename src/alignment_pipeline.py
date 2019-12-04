@@ -313,9 +313,10 @@ def run_MSA(min_score=800,
         q.put(None)  # one EOF marker for each thread
 
 
-def write_predicted_targets(min_score=800,
-                            alignment_method='kalign',
-                            workers=20):
+def run_hmm_pipeline(min_score=700,
+                     alignment_method='famsa',
+                     workers=20,
+                     threads_per_worker=4):
     """
     A wrapper for the hmm pipeline that builds the Hidden Markov Model for each multi sequence alignment and also searches
     for it against the whole amount of amino acid sequences.
@@ -343,7 +344,6 @@ def write_predicted_targets(min_score=800,
         sym_frac = 0.5
         frag_thresh = 0.5
         rel_weight_method = 'wpb'
-        cores = 2
 
         drug_name = file.split("_")[0]
 
@@ -352,7 +352,7 @@ def write_predicted_targets(min_score=800,
 
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
-                  "--cpu "+str(cores)+" "+\
+                  "--cpu "+str(threads_per_worker)+" "+\
                   "--symfrac "+str(sym_frac)+" "+\
                   "--fragthresh " + str(frag_thresh) +" "+\
                   "--"+rel_weight_method+" "+\
@@ -367,7 +367,6 @@ def write_predicted_targets(min_score=800,
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
         max_flag = False
-        cores = 2
 
         all_prots_fasta_filename = "../data/STITCH_data/protein.sequences.v10.fa"
 
@@ -378,7 +377,7 @@ def write_predicted_targets(min_score=800,
                   ("--max " if max_flag else "") + \
                   "--nonli " + \
                   "--nontextw "+\
-                  "--cpu " + str(cores) + " " + \
+                  "--cpu " + str(threads_per_worker) + " " + \
                   hmmbuild_file + " " + all_prots_fasta_filename + " > " + hmmsearch_file
 
         start_time = time.time()
@@ -453,6 +452,12 @@ if __name__ == '__main__':
             end=end,
             human_only=True)
     '''
+
+    run_hmm_pipeline(min_score=700,
+                     alignment_method='famsa',
+                     workers=10,
+                     threads_per_worker=4)
+
 
 
 
