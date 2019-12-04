@@ -94,11 +94,12 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(), len(protein_list))
-    # PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(), len(drug_list))
-    PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list()
-    # PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
+    PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(), len(drug_list))
+    PPI_node_features = np.tile(DTI_data_preparation.get_PPI_node_feature_mat_list(), len(protein_list))
+    PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
 
-    PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list()
+
+    # PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list()
 
 
     print("Finished loading data.\n")
@@ -127,8 +128,12 @@ def missing_drug_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle = True)
+        y_train_dti_data = DTI_data_preparation.get_DTIs(train)
+        y_test_dti_data = DTI_data_preparation.get_DTIs(test)
 
+        '''
+        train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
+        
         graphsage_model = GraphSAGE(layer_sizes=[32, 32],
                                     generator=generator,
                                     bias=True,
@@ -166,29 +171,27 @@ def missing_drug_predictor(results_filename='../results/results_log',
         node_embeddings = graphsage_model.predict_generator()
 
         print(node_embeddings.shape)
-
-        raise Exception
-
-
         '''
+
         # build graph conv filters
         SYM_NORM = True
         num_filters = 32
-        graph_conv_filters = preprocess_adj_numpy(PPI_adj_mats, SYM_NORM)
-        graph_conv_filters = np.concatenate([graph_conv_filters, np.matmul(graph_conv_filters, graph_conv_filters)], axis=0)
-        graph_conv_filters = K.constant(graph_conv_filters)
+        graph_conv_filters = preprocess_adj_tensor_with_identity(PPI_adj_mats[train], SYM_NORM)
 
-        X_input = Input(shape=(PPI_node_features.shape[1], ))
-        # graph_conv_filters_input = Input(shape=(graph_conv_filters.shape[1], graph_conv_filters.shape[2]))
+        X_input = Input(shape=(PPI_node_features.shape[1], PPI_node_features.shape[2]))
+        # A_input = Input(shape=(PPI_adj_mats.shape[1], PPI_adj_mats.shape[2]))
+        graph_conv_filters_input = Input(shape=(graph_conv_filters.shape[1], graph_conv_filters.shape[2]))
 
-        convolutional_1 = GraphCNN(32, num_filters, graph_conv_filters, activation='elu')(X_input)
+        convolutional_1 = MultiGraphCNN(32, num_filters, graph_conv_filters, activation='elu')([X_input, graph_conv_filters_input])
         dropout_1 = layers.Dropout(0.4)(convolutional_1)
-        convolutional_2 = GraphCNN(64, num_filters, graph_conv_filters, activation='elu')(dropout_1)
+        convolutional_2 = MultiGraphCNN(64, num_filters, graph_conv_filters, activation='elu')([dropout_1, graph_conv_filters_input])
         dropout_2 = layers.Dropout(0.4)(convolutional_2)
-        convolutional_3 = GraphCNN(128, num_filters, graph_conv_filters, activation='relu')(dropout_2)
+        convolutional_3 = MultiGraphCNN(128, num_filters, graph_conv_filters, activation='relu')([dropout_2, graph_conv_filters_input])
         dropout_3 = layers.Dropout(0.2)(convolutional_3)
 
-        flatten_graph = layers.Flatten()(dropout_3)
+        graph_output = layers.Lambda(lambda x: K.mean(x, axis=1))(dropout_3)
+
+        flatten_graph = layers.Flatten()(graph_output)
 
         DDI_input = Input(shape=(DDI_features.shape[1],))
         flatten_DDIs = layers.Flatten()(DDI_input)
@@ -202,19 +205,18 @@ def missing_drug_predictor(results_filename='../results/results_log',
         output = layers.Dense(1, activation='sigmoid')(dropout_2)
 
 
-        model = Model(inputs=[X_input, DDI_input], outputs=output)
+        model = Model(inputs=[X_input, graph_conv_filters_input, DDI_input], outputs=output)
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[dti_auroc, 'acc'])
 
-        model.fit([PPI_adj_mats, DDI_features])
+        model.fit([PPI_node_features[train],
+                   graph_conv_filters[train],
+                   DDI_features[train]],
+                  y_train_dti_data,
+                  batch_size=batch_size,
+                  validation_data=y_test_dti_data,
+                  verbose=1)
 
-    '''
-
-
-
-
-
-
-
+        raise Exception
 
 
 if __name__ == '__main__':
