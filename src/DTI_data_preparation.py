@@ -149,7 +149,7 @@ def get_DTIs(drug_list, protein_list, indices):
             j = list(protein_list[indices]).index(protein)
             print(i, j, i * len(drug_list) + j)
 
-            y_data[i * len(drug_list) + j] = 1
+            y_data[i * len(protein_list[indices]) + j] = 1
 
     return np.array(y_data, dtype=np.int8)
 

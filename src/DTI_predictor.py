@@ -104,7 +104,6 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     print("Finished loading data.\n")
 
-    '''
     # building stellar graph
     print("Building Stellar graph data ...")
     df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
@@ -118,7 +117,6 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n")
-    '''
 
     # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
@@ -137,8 +135,6 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         y_train_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, train)
         y_test_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, test)
-
-        raise Exception
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
         
