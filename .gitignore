@@ -145,7 +145,7 @@ venv.bak/
 /data/STITCH_data/protein.sequences.v10.fa
 /data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv
 
-/data/STRING_data/9606.protein.links.v11.0.txt
+/data/STRING_data/9606.protein.links.full.v11.0.txt
 
 /data/SIDER_data/meddra_all_label_se.tsv
 
