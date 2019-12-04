@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 
-import tensorflow.python
+import tensorflow.keras.models as models
+import tensorflow.keras.layers as layers
 # from tensorflow.keras.models import Input, Model
 # from tensorflow.keras.utils import plot_model
 # from tensorflow.keras import layers
@@ -149,9 +150,9 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         x_inp, x_out = graphsage_model.build()
 
-        prediction = tf.keras.layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
+        prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
 
-        graphsage_model = tf.keras.models.Model(inputs=x_inp, outputs=prediction)
+        graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
 
         raise Exception
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
