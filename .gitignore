@@ -135,9 +135,12 @@ venv.bak/
 /data/DDI_data/DDI_data_full.json
 /data/pddi_data/CombinedDatasetNotConservative.csv
 
+/data/PPI_data/protein_to_adj_mat_dict.pkl
+/data/PPI_data/protein_to_subgraph_dict.pkl
+
 /data/STITCH_data/
 
-/data/STRING_data/protein.links.v11.0.txt
+/data/STRING_data/9606.protein.links.v11.0.txt
 
 /data/SIDER_data/meddra_all_label_se.tsv
 
