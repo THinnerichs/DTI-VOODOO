@@ -11,12 +11,13 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 
-import tensorflow.keras.models as models
-import tensorflow.keras.layers as layers
+from tensorflow.keras import models, layers, optimizers, losses
+# import tensorflow.keras.layers as layers
 import tensorflow.keras.backend as K
-import tensorflow.keras.regularizers as regularizers
-import tensorflow.keras.optimizers as optimizers
-import tensorflow.keras.losses as losses
+# import tensorflow.keras.regularizers as regularizers
+# import tensorflow.keras.optimizers as optimizers
+# import tensorflow.keras.losses as losses
+from keras.utils import plot_model
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
@@ -188,9 +189,63 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         print("Confusion matrix", conf_matrix)
 
+        tn = conf_matrix[0, 0]
+        tp = conf_matrix[1, 1]
+        fn = conf_matrix[0, 1]
+        fp = conf_matrix[1, 0]
+
+        precision = tp / (tp + fp)
+        recall = tp / (tp + fn)
+        accuracy = (tp + tn) / (tp + tn + fp + fn)
+
+        y_pred = (y_pred.reshape((y_pred.shape[0]))>0.5).astype(int)
+
+        auroc = metrics.roc_auc_score(y_test_data, y_pred)
+        f1_score = metrics.f1_score(y_test_data, y_pred)
+
+        # print("f1:", dti_f1_score(y_test_data, y_pred))
+        print("prec", precision)
+        print("recall", recall)
+
+        cv_scores['acc'].append(accuracy * 100)
+        cv_scores['auroc'].append(auroc * 100)
+        cv_scores['f1-score'].append(f1_score * 100)
+
+    print("Mean accuracy:", np.mean(cv_scores['acc']))
+    print("Mean auroc:", np.mean(cv_scores['auroc']))
+    print("Mean f1-score:", np.mean(cv_scores['f1-score']))
 
 
-        raise Exception
+    with open(file=filename, mode='a') as filehandler:
+        print("MISSING DRUG CLASSIFICATION", file=filehandler)
+        print("Smiles onehot", file=filehandler)
+        print("Graph CNN", file=filehandler)
+        print("Amino acid sequence chemical data", file=filehandler)
+        # print("Amino acid sequence onehot", file=filehandler)
+        print("Number of targets:\t", len(target_list))
+
+        print("Mean accuracy:", np.mean(cv_scores['acc']))
+        print("Mean auroc:", np.mean(cv_scores['auroc']))
+        print("Mean f1-score:", np.mean(cv_scores['f1-score']))
+
+        print("Number of drugs:\t", len(drug_list))
+        print("Epochs: {}, Batch size: {}".format(nb_epochs, batch_size), file=filehandler)
+        model.summary(print_fn=lambda x: filehandler.write(x + '\n'))
+
+        # print confusion matrix
+        print("Confusion matrix:",
+              conf_matrix,
+              file=filehandler)
+
+        print("------------------------------------------------\n")
+
+        # serialize model to JSON
+        if plot:
+            plot_model(model,
+                       show_shapes=True,
+                       to_file='../models/plotted_models/missing_drug_' + 'model.png')
+
+
 
 def GCN_missing_target_predictor():
     pass
@@ -241,4 +296,4 @@ def GCN_missing_target_predictor():
 
 if __name__ == '__main__':
     missing_target_predictor(batch_size=1000,
-                             nb_epochs=15)
+                             nb_epochs=50)
