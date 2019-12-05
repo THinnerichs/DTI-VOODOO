@@ -111,7 +111,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
     print("Building Stellar graph data ...")
     df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
     PPI_graph = PPI_utils.get_PPI_graph()
-    G = sg.StellarGraph(PPI_graph, node_features=PPI_utils.get_protein_to_node_feature_dict())
+    G = sg.StellarGraph(PPI_graph, node_features=DTI_data_preparation.get_pruned_node_feature_dict(protein_list))
+
 
     print(G.info())
 

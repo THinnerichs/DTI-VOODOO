@@ -147,6 +147,13 @@ def get_DTIs(drug_list, protein_list, indices):
 
     return np.array(y_data, dtype=np.int8)
 
+def get_pruned_node_feature_dict(protein_list):
+    node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
+
+    return {protein: node_feature_dict[protein] for protein in protein_list}
+
+
+
 
 
 
