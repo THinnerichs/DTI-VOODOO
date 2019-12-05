@@ -165,9 +165,11 @@ def missing_target_predictor(results_filename='../results/results_log',
                       metrics=[dti_utils.dti_auroc,
                                'accuracy'])
 
+        '''
         model.fit([,
                    DDI_features],
                   y_dti_train_data)
+        '''
 
 
 
