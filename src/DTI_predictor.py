@@ -164,6 +164,10 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         model.summary()
 
+        imb_ratio = (len(y_dti_train_data)-y_dti_train_data.sum())/y_dti_train_data.sum()
+
+        class_weight = {0: 1.,
+                        1: 1/imb_ratio}
         model.fit([train_protein_node_embeddings,
                    DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list)))],
                   y_dti_train_data,
@@ -172,6 +176,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                                    DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list)))],
                                    y_dti_test_data),
                   epochs=nb_epochs,
+                  class_weight=class_weight,
                   shuffle=True
                   )
 
@@ -235,4 +240,5 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    missing_target_predictor()
+    missing_target_predictor(batch_size=1000,
+                             nb_epochs=15)
