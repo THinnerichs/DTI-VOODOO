@@ -154,7 +154,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
         graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
 
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
-                                loss=losses.sparse_categorical_crossentropy,
+                                loss=losses.categorical_crossentropy,
                                 metrics=["acc"])
 
         graphsage_model.summary()
