@@ -113,7 +113,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         history = graphsage_model.fit_generator(
             train_gen,
-            epochs=15,
+            epochs=2,
             # validation_data=val_gen,
             verbose=1,
             shuffle=False
