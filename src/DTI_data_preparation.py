@@ -157,9 +157,6 @@ def get_annotated_PPI_graph():
 
     return PPI_graph
 
-
-
-
 def test():
     # print("DTI", len(get_human_proteins()))
     # print("PPI", len(PPI_utils.get_human_protein_list()))

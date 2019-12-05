@@ -287,6 +287,7 @@ def run_MSA(min_score=800,
         drug_list = get_SIDER_Boyce_Drubank_drug_intersection()
         # drug_list = get_SIDER_drug_list()
         files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in drug_list]
+        shuffle(files)
     else:
         files = [file for file in os.listdir(fasta_path) if (str(min_score) in file and os.stat(fasta_path+file).st_size!=0)]
 
@@ -439,24 +440,24 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
-    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
 
     run_MSA(min_score=700,
             alignment_method='famsa',
-            workers=10,
-            threads_per_process=4,
+            workers=4,
+            threads_per_process=10,
             start=start,
             end=end,
             human_only=True)
-    '''
 
+    '''
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
                      workers=10,
                      threads_per_worker=4)
+    '''
 
 
 
