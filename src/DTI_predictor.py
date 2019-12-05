@@ -119,8 +119,8 @@ def missing_target_predictor(results_filename='../results/results_log',
             shuffle=False
         )
 
-        if plot:
-            dti_utils.plot_history(history)
+        # if plot:
+            # dti_utils.plot_history(history)
 
         overall_generator = generator.flow(protein_list)
 
@@ -313,4 +313,5 @@ def GCN_missing_target_predictor():
 
 if __name__ == '__main__':
     missing_target_predictor(batch_size=1000,
-                             nb_epochs=50)
+                             nb_epochs=50,
+                             plot=True)
