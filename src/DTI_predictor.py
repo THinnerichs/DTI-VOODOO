@@ -122,7 +122,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         if plot:
             dti_utils.plot_history(history)
 
-        encoder = models.Model(input=x_inp, output=x_out)
+        encoder = models.Model(inputs=x_inp, outputs=x_out)
 
         overall_generator = generator.flow(protein_list)
 
