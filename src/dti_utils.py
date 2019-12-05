@@ -1,13 +1,19 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, ac
 import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
 from keras.callbacks import Callback
 
 
+
+def dti_auroc_fix(y_true, y_pred):
+    if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
+        return 0
+    return roc_auc_score(y_true, y_pred)
+
 def dti_auroc(y_true, y_pred):
-    return tf.py_func(roc_auc_score, (y_true, y_pred), tf.double)
+    return tf.py_func(dti_auroc_fix, (y_true, y_pred), tf.double)
 
 def dti_f1_score(y_true, y_pred):
     def recall(y_true, y_pred):
