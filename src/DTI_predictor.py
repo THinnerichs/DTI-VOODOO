@@ -34,10 +34,10 @@ import dti_utils
 
 
 
-def missing_drug_predictor(results_filename='../results/results_log',
-                           nb_epochs=3,
-                           batch_size=500,
-                           plot=False):
+def missing_target_predictor(results_filename='../results/results_log',
+                             nb_epochs=3,
+                             batch_size=500,
+                             plot=False):
 
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -109,7 +109,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         graphsage_model.summary()
 
-        val_gen = generator.flow(protein_list[test], protein_list[test])
+        # val_gen = generator.flow(protein_list[test], protein_list[test], shuffle=True)
 
         history = graphsage_model.fit_generator(
             train_gen,
@@ -124,61 +124,60 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
         # encoder = Model(input=x_inp, output=)
 
-        overall_generator = generator.flow(protein_list, PPI_dti_features)
+        overall_generator = generator.flow(protein_list)
 
-        node_embeddings = graphsage_model.predict_generator()
+        node_embeddings = graphsage_model.predict_generator(overall_generator)
 
         print(node_embeddings.shape)
 
         raise Exception
 
-        '''
-        # build graph conv filters
-        SYM_NORM = True
-        num_filters = 32
-        graph_conv_filters = preprocess_adj_tensor_with_identity(PPI_adj_mats[train], SYM_NORM)
+def GCN_missing_target_predictor():
+    pass
+    '''
+    # build graph conv filters
+    SYM_NORM = True
+    num_filters = 32
+    graph_conv_filters = preprocess_adj_tensor_with_identity(PPI_adj_mats[train], SYM_NORM)
 
-        X_input = Input(shape=(PPI_node_features.shape[1], PPI_node_features.shape[2]))
-        # A_input = Input(shape=(PPI_adj_mats.shape[1], PPI_adj_mats.shape[2]))
-        graph_conv_filters_input = Input(shape=(graph_conv_filters.shape[1], graph_conv_filters.shape[2]))
+    X_input = Input(shape=(PPI_node_features.shape[1], PPI_node_features.shape[2]))
+    # A_input = Input(shape=(PPI_adj_mats.shape[1], PPI_adj_mats.shape[2]))
+    graph_conv_filters_input = Input(shape=(graph_conv_filters.shape[1], graph_conv_filters.shape[2]))
 
-        convolutional_1 = MultiGraphCNN(32, num_filters, graph_conv_filters, activation='elu')([X_input, graph_conv_filters_input])
-        dropout_1 = layers.Dropout(0.4)(convolutional_1)
-        convolutional_2 = MultiGraphCNN(64, num_filters, graph_conv_filters, activation='elu')([dropout_1, graph_conv_filters_input])
-        dropout_2 = layers.Dropout(0.4)(convolutional_2)
-        convolutional_3 = MultiGraphCNN(128, num_filters, graph_conv_filters, activation='relu')([dropout_2, graph_conv_filters_input])
-        dropout_3 = layers.Dropout(0.2)(convolutional_3)
+    convolutional_1 = MultiGraphCNN(32, num_filters, graph_conv_filters, activation='elu')([X_input, graph_conv_filters_input])
+    dropout_1 = layers.Dropout(0.4)(convolutional_1)
+    convolutional_2 = MultiGraphCNN(64, num_filters, graph_conv_filters, activation='elu')([dropout_1, graph_conv_filters_input])
+    dropout_2 = layers.Dropout(0.4)(convolutional_2)
+    convolutional_3 = MultiGraphCNN(128, num_filters, graph_conv_filters, activation='relu')([dropout_2, graph_conv_filters_input])
+    dropout_3 = layers.Dropout(0.2)(convolutional_3)
 
-        graph_output = layers.Lambda(lambda x: K.mean(x, axis=1))(dropout_3)
+    graph_output = layers.Lambda(lambda x: K.mean(x, axis=1))(dropout_3)
 
-        flatten_graph = layers.Flatten()(graph_output)
+    flatten_graph = layers.Flatten()(graph_output)
 
-        DDI_input = Input(shape=(DDI_features.shape[1],))
-        flatten_DDIs = layers.Flatten()(DDI_input)
+    DDI_input = Input(shape=(DDI_features.shape[1],))
+    flatten_DDIs = layers.Flatten()(DDI_input)
 
-        merge_1 = layers.Concatenate(axis=1)([flatten_graph, flatten_DDIs])
+    merge_1 = layers.Concatenate(axis=1)([flatten_graph, flatten_DDIs])
 
-        dense_1 = layers.Dense(100, activation='relu')(merge_1)
-        dropout_1 = layers.Dropout(0.5)(dense_1)
-        dense_2 = layers.Dense(10, activation='relu')(dropout_1)
-        dropout_2 = layers.Dropout(0.5)(dense_2)
-        output = layers.Dense(1, activation='sigmoid')(dropout_2)
+    dense_1 = layers.Dense(100, activation='relu')(merge_1)
+    dropout_1 = layers.Dropout(0.5)(dense_1)
+    dense_2 = layers.Dense(10, activation='relu')(dropout_1)
+    dropout_2 = layers.Dropout(0.5)(dense_2)
+    output = layers.Dense(1, activation='sigmoid')(dropout_2)
 
 
-        model = Model(inputs=[X_input, graph_conv_filters_input, DDI_input], outputs=output)
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[dti_auroc, 'acc'])
+    model = Model(inputs=[X_input, graph_conv_filters_input, DDI_input], outputs=output)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[dti_auroc, 'acc'])
 
-        model.fit([PPI_node_features[train],
-                   graph_conv_filters[train],
-                   DDI_features[train]],
-                  y_train_dti_data,
-                  batch_size=batch_size,
-                  validation_data=y_test_dti_data,
-                  verbose=1)
-        '''
-
-        raise Exception
-
+    model.fit([PPI_node_features[train],
+               graph_conv_filters[train],
+               DDI_features[train]],
+              y_train_dti_data,
+              batch_size=batch_size,
+              validation_data=y_test_dti_data,
+              verbose=1)
+    '''
 
 if __name__ == '__main__':
-    missing_drug_predictor()
+    missing_target_predictor()
