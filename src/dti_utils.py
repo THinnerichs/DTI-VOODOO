@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics import roc_auc_score, ac
+from sklearn.metrics import roc_auc_score
 import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
 from keras.callbacks import Callback
