@@ -147,13 +147,19 @@ def get_DTIs(drug_list, protein_list, indices):
 
     return np.array(y_data, dtype=np.int8)
 
-def get_pruned_node_feature_dict(protein_list):
+def test_node_feature_dict():
+    PPI_graph = PPI_utils.get_PPI_graph()
     node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
-    return {protein: node_feature_dict[protein] for protein in protein_list}
+    key_list = list(node_feature_dict.keys())
+    node_list = list(PPI_graph.nodes())
 
+    print(key_list[:100])
+    print(node_list[:100])
+    print(len(key_list))
+    print(len(node_list))
 
-
+    print(len(set(key_list) & set(node_list)))
 
 
 
@@ -168,9 +174,11 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph()
+    # write_human_DTI_graph()
 
     #  test()
 
-    write_human_protein_list()
+    # write_human_protein_list()
+
+    test_node_feature_dict()
     pass
