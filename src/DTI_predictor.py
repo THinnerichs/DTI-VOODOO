@@ -92,7 +92,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=[32, 64, graphsage_output_size],
+        graphsage_model_layer = GraphSAGE(layer_sizes=[64, graphsage_output_size],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
@@ -114,7 +114,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         history = graphsage_model.fit_generator(
             train_gen,
-            epochs=2,
+            epochs=15,
             # validation_data=val_gen,
             verbose=1,
             shuffle=False
