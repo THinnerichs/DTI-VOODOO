@@ -114,7 +114,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
         history = graphsage_model.fit_generator(
             train_gen,
             epochs=15,
-            validation_data=val_gen,
+            # validation_data=val_gen,
             verbose=1,
             shuffle=False
         )
