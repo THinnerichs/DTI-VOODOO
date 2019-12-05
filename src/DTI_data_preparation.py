@@ -151,7 +151,9 @@ def get_annotated_PPI_graph():
     PPI_graph = PPI_utils.get_PPI_graph()
     node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
-    nx.set_node_attributes(PPI_graph, 'node_feature', node_feature_dict)
+    # nx.set_node_attributes(PPI_graph, 'node_feature', node_feature_dict)
+    for protein in PPI_graph.nodes():
+        PPI_graph.node[protein]['node_feature'] = node_feature_dict[protein]
 
     return PPI_graph
 
