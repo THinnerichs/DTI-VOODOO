@@ -30,10 +30,7 @@ from stellargraph import globalvar
 from stellargraph.mapper import GraphSAGENodeGenerator
 from stellargraph.layer import GraphSAGE
 
-import PPI_utils
-
-
-
+import dti_utils
 
 
 
@@ -59,6 +56,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     PPI_dti_features = tf.keras.utils.to_categorical(DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list))
     print(DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list).shape)
 
+    raise Exception
     print("Finished loading data.\n")
 
     # building stellar graph
@@ -119,12 +117,12 @@ def missing_drug_predictor(results_filename='../results/results_log',
             train_gen,
             epochs=15,
             validation_data=val_gen,
-            verbose=0,
+            verbose=1,
             shuffle=False
         )
 
         if plot:
-            plot_history(history)
+            dti_utils.plot_history(history)
 
         # encoder = Model(input=x_inp, output=)
 
