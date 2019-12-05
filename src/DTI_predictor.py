@@ -42,19 +42,21 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:1000]
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
-    PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list)
+    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
 
+    print("Get DTIs")
     PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
     y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
     y_dti_data = y_dti_data.reshape((len(protein_list), len(drug_list)))
+    print("Finished.\n")
     print("Finished loading data.\n")
 
     # building stellar graph
@@ -67,9 +69,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     num_samples = [100, 50, 20] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
-    print("Finished.\n")
-
-    # Fold parameters
+    print("Finished.\n") # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
 
     cv_scores = {'acc': [],
@@ -83,11 +83,6 @@ def missing_target_predictor(results_filename='../results/results_log',
     for train, test in skf.split(protein_list):
         print("Round", round)
         round += 1
-
-        print(DDI_features[:, train].shape)
-        print(DDI_features[:, test].shape)
-
-        raise Exception
 
         # parameters
         graphsage_output_size = 128
@@ -129,11 +124,11 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         protein_node_embeddings = encoder.predict_generator(overall_generator)
 
-        train_node_protein_embeddings = protein_node_embeddings[train]
-        test_node_protein_embeddings = protein_node_embeddings[test]
+        train_protein_node_embeddings = protein_node_embeddings[train]
+        test_protein_node_embeddings = protein_node_embeddings[test]
 
-        train_protein_node_embeddings = np.repeat(train_node_protein_embeddings, len(drug_list), axis=0)
-        test_protein_node_embeddings = np.repeat(test_node_protein_embeddings, len(drug_list), axis=0)
+        train_protein_node_embeddings = np.repeat(train_protein_node_embeddings, len(drug_list), axis=0)
+        test_protein_node_embeddings = np.repeat(test_protein_node_embeddings, len(drug_list), axis=0)
 
         print(protein_node_embeddings.shape)
 
@@ -165,11 +160,26 @@ def missing_target_predictor(results_filename='../results/results_log',
                       metrics=[dti_utils.dti_auroc,
                                'accuracy'])
 
-        '''
-        model.fit([,
-                   DDI_features],
-                  y_dti_train_data)
-        '''
+        model.summary()
+
+        model.fit([train_protein_node_embeddings,
+                   DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list)))],
+                  y_dti_train_data,
+                  batch_size=batch_size,
+                  validation_data=([test_protein_node_embeddings,
+                                   DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list)))],
+                                   y_dti_test_data),
+                  epochs=nb_epochs,
+                  shuffle=True
+                  )
+
+        y_pred = model.predict([test_protein_node_embeddings,
+                                DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list)))])
+
+        conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
+                                               y_pred=(y_pred.reshape((len(y_pred))) >= 0.5).astype(int))
+
+        print("Confusion matrix", conf_matrix)
 
 
 
