@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import metrics
+from sklearn.metrics import roc_auc_score
 import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
 
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 def dti_auroc(y_true, y_pred):
-    return tf.py_func(metrics.roc_auc_score, (y_true, y_pred), tf.double)
+    return tf.py_func(roc_auc_score, (y_true, y_pred), tf.double)
 
 def dti_f1_score(y_true, y_pred):
     def recall(y_true, y_pred):
