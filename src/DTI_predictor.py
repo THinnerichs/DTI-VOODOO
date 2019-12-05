@@ -156,7 +156,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                              outputs=output)
 
         model.compile(loss=losses.binary_crossentropy,
-                      optimizer=optimizers.Adam,
+                      optimizer=optimizers.Adam(lr=0.005),
                       metrics=[dti_utils.dti_auroc,
                                'accuracy'])
 
