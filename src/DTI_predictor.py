@@ -42,7 +42,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:3000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
@@ -67,7 +67,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print(G.info())
 
     graphsage_batch_size = 50
-    num_samples = [100, 50] # What do those values mean?
+    num_samples = [100, 50, 20] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n")
@@ -88,11 +88,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         round += 1
 
         # parameters
-        graphsage_output_size = 641
+        graphsage_output_size = 128
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=[64, graphsage_output_size],
+        graphsage_model_layer = GraphSAGE(layer_sizes=[32, 64, graphsage_output_size],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
@@ -102,7 +102,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
 
         encoder = models.Model(inputs=x_inp, outputs=x_out)
-        graphsage_model = models.Model(inputs=x_inp, outputs=x_out)
+        graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
 
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
                                 loss=losses.binary_crossentropy,
@@ -123,9 +123,6 @@ def missing_target_predictor(results_filename='../results/results_log',
         if plot:
             dti_utils.plot_history(history)
 
-
-
-
         overall_generator = generator.flow(protein_list)
 
         node_embeddings = encoder.predict_generator(overall_generator)
@@ -136,6 +133,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         y_dti_test_data = y_dti_data[test].flatten()
 
         # Build actual dti model
+        PPI_input = layers.Input(shape=(graphsage_output_size,))
+
+        DDI_input = layers.Input(shape=(DDI_features.shape[1],))
+
+        merge_1 = layers.Concatenate
 
 
 

@@ -161,8 +161,11 @@ def get_annotated_PPI_graph():
 
 
 def test():
-    print("DTI", len(get_human_proteins()))
-    print("PPI", len(PPI_utils.get_human_protein_list()))
+    # print("DTI", len(get_human_proteins()))
+    # print("PPI", len(PPI_utils.get_human_protein_list()))
+    dti_graph = get_human_DTI_graph()
+    print(len(dti_graph.nodes()))
+    print(len(dti_graph.edges()))
 
 
 
@@ -170,9 +173,9 @@ def test():
 if __name__ == '__main__':
     # write_human_DTI_graph()
 
-    #  test()
+    test()
 
     # write_human_protein_list()
 
-    print(get_annotated_PPI_graph())
+    # print(get_annotated_PPI_graph())
     pass
