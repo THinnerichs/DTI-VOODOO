@@ -84,9 +84,8 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        print(y_dti_data.shape)
-        print(y_dti_data[train].shape)
-        print(y_dti_data[test].shape)
+        print(DDI_features[:, train].shape)
+        print(DDI_features[:, test].shape)
 
         raise Exception
 
@@ -158,7 +157,18 @@ def missing_target_predictor(results_filename='../results/results_log',
         dropout_1 = layers.Dropout(0.5)(dense_1)
         output = layers.Dense(1, activation='sigmoid')(dropout_1)
 
-        model = models.Model(inputs=[PPI_input, DDI_input],)
+        model = models.Model(inputs=[PPI_input, DDI_input],
+                             outputs=output)
+
+        model.compile(loss=losses.binary_crossentropy,
+                      optimizers=optimizers.Adam,
+                      metrics=[dti_utils.dti_auroc,
+                               'accuracy'])
+
+        model.fit([,
+                   DDI_features],
+                  y_dti_train_data)
+
 
 
         raise Exception
