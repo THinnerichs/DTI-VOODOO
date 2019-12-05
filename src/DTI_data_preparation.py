@@ -147,21 +147,13 @@ def get_DTIs(drug_list, protein_list, indices):
 
     return np.array(y_data, dtype=np.int8)
 
-def test_node_feature_dict():
+def get_annotated_PPI_graph():
     PPI_graph = PPI_utils.get_PPI_graph()
     node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
-    key_list = list(node_feature_dict.keys())
-    node_list = list(PPI_graph.nodes())
+    nx.set_node_attributes(PPI_graph, 'node_feature', node_feature_dict)
 
-    print(key_list[:100])
-    print(node_list[:100])
-    print(len(key_list))
-    print(len(node_list))
-
-    print(len(set(key_list) & set(node_list)))
-
-
+    return PPI_graph
 
 
 
@@ -180,5 +172,5 @@ if __name__ == '__main__':
 
     # write_human_protein_list()
 
-    test_node_feature_dict()
+    print(get_annotated_PPI_graph())
     pass
