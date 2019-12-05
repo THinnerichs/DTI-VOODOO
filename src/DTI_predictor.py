@@ -53,7 +53,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     # PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
     print("Finished.\n")
 
-    PPI_dti_features = tf.keras.utils.to_categorical(DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list))
+    PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
     print("Finished loading data.\n")
 
@@ -104,7 +104,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
         graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
 
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
-                                loss=losses.categorical_crossentropy,
+                                loss=losses.sparse_categorical_crossentropy,
                                 metrics=["acc"])
 
         graphsage_model.summary()
