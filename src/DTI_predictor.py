@@ -47,23 +47,20 @@ def missing_target_predictor(results_filename='../results/results_log',
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
-    DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(drug_list), len(protein_list))
+    DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
     PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list)
     print("Finished.\n")
 
     PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
     y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
-    y_dti_data = y_dti_data.reshape((len(drug_list), len(protein_list)))
+    y_dti_data = y_dti_data.reshape((len(protein_list), len(drug_list)))
     print("Finished loading data.\n")
 
     # building stellar graph
     print("Building Stellar graph data ...")
-    df_node_features = pd.DataFrame(PPI_node_features, index=protein_list)
     PPI_graph = DTI_data_preparation.get_annotated_PPI_graph()
     G = sg.StellarGraph(PPI_graph, node_features='node_feature')
-
-
     print(G.info())
 
     graphsage_batch_size = 50
@@ -86,6 +83,12 @@ def missing_target_predictor(results_filename='../results/results_log',
     for train, test in skf.split(protein_list):
         print("Round", round)
         round += 1
+
+        print(y_dti_data.shape)
+        print(y_dti_data[train].shape)
+        print(y_dti_data[test].shape)
+
+        raise Exception
 
         # parameters
         graphsage_output_size = 128
@@ -125,9 +128,15 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         overall_generator = generator.flow(protein_list)
 
-        node_embeddings = encoder.predict_generator(overall_generator)
+        protein_node_embeddings = encoder.predict_generator(overall_generator)
 
-        print(node_embeddings.shape)
+        train_node_protein_embeddings = protein_node_embeddings[train]
+        test_node_protein_embeddings = protein_node_embeddings[test]
+
+        train_protein_node_embeddings = np.repeat(train_node_protein_embeddings, len(drug_list), axis=0)
+        test_protein_node_embeddings = np.repeat(test_node_protein_embeddings, len(drug_list), axis=0)
+
+        print(protein_node_embeddings.shape)
 
         y_dti_train_data = y_dti_data[train].flatten()
         y_dti_test_data = y_dti_data[test].flatten()
@@ -137,8 +146,19 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         DDI_input = layers.Input(shape=(DDI_features.shape[1],))
 
-        merge_1 = layers.Concatenate
+        merge_1 = layers.Concatenate(axis=1)([PPI_input, DDI_input])
 
+        dense_1 = layers.Dense(100, activation='relu')(merge_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
+        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
+        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
+        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
+        output = layers.Dense(1, activation='sigmoid')(dropout_1)
+
+        model = models.Model(inputs=[PPI_input, DDI_input],)
 
 
         raise Exception

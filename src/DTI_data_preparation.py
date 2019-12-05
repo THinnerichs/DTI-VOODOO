@@ -135,15 +135,15 @@ def get_DTIs(drug_list, protein_list):
 
     y_data = np.zeros(len(drug_list)*len(protein_list))
 
-    for i in range(len(drug_list)):
-        drug = drug_list[i]
+    for i in range(len(protein_list)):
+        protein = protein_list[i]
 
-        for protein in DTI_graph.neighbors(drug):
-            if protein not in protein_list:
+        for drug in DTI_graph.neighbors(protein):
+            if drug not in drug_list:
                 continue
-            j = list(protein_list).index(protein)
+            j = list(drug_list).index(drug)
 
-            y_data[i * len(protein_list) + j] = 1
+            y_data[i * len(drug_list) + j] = 1
 
     return np.array(y_data, dtype=np.int8)
 
