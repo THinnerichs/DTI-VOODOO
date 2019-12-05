@@ -77,7 +77,8 @@ def missing_target_predictor(results_filename='../results/results_log',
                  'auroc': [],
                  'f1-score': []}
 
-    # model = None
+    model = None
+    graphsage_model = None
     conf_matrix = None
     round = 0
     print("Starting folds ...")
@@ -159,6 +160,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         model.compile(loss=losses.binary_crossentropy,
                       optimizer=optimizers.Adam(lr=0.005),
                       metrics=[dti_utils.dti_f1_score,
+                               dti_utils.dti_auroc,
                                'accuracy'])
 
         print(y_dti_train_data.sum())
@@ -200,8 +202,8 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         y_pred = (y_pred.reshape((y_pred.shape[0]))>0.5).astype(int)
 
-        auroc = metrics.roc_auc_score(y_test_data, y_pred)
-        f1_score = metrics.f1_score(y_test_data, y_pred)
+        auroc = metrics.roc_auc_score(y_dti_test_data, y_pred)
+        f1_score = metrics.f1_score(y_dti_test_data, y_pred)
 
         # print("f1:", dti_f1_score(y_test_data, y_pred))
         print("prec", precision)
@@ -216,19 +218,20 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Mean f1-score:", np.mean(cv_scores['f1-score']))
 
 
-    with open(file=filename, mode='a') as filehandler:
-        print("MISSING DRUG CLASSIFICATION", file=filehandler)
-        print("Smiles onehot", file=filehandler)
-        print("Graph CNN", file=filehandler)
-        print("Amino acid sequence chemical data", file=filehandler)
-        # print("Amino acid sequence onehot", file=filehandler)
-        print("Number of targets:\t", len(target_list))
+    with open(file=results_filename, mode='a') as filehandler:
+        print("DTI PREDICTION", file=filehandler)
+        print("Including:")
+        print("- PPIs")
+        print("- DDIs")
+        # print("- similarity scores")
+        # print("- HMM node features")
+        print("Number of targets:\t", len(protein_list), file=filehandler)
+        print("Number of drugs:\t", len(drug_list), file=filehandler)
 
-        print("Mean accuracy:", np.mean(cv_scores['acc']))
-        print("Mean auroc:", np.mean(cv_scores['auroc']))
-        print("Mean f1-score:", np.mean(cv_scores['f1-score']))
+        print("Mean accuracy:", np.mean(cv_scores['acc']), file=filehandler)
+        print("Mean auroc:", np.mean(cv_scores['auroc']), file=filehandler)
+        print("Mean f1-score:", np.mean(cv_scores['f1-score']), file=filehandler)
 
-        print("Number of drugs:\t", len(drug_list))
         print("Epochs: {}, Batch size: {}".format(nb_epochs, batch_size), file=filehandler)
         model.summary(print_fn=lambda x: filehandler.write(x + '\n'))
 
@@ -241,9 +244,12 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # serialize model to JSON
         if plot:
+            plot_model(graphsage_model,
+                       show_shapes=True,
+                       to_file='../models/')
             plot_model(model,
                        show_shapes=True,
-                       to_file='../models/plotted_models/missing_drug_' + 'model.png')
+                       to_file='../models/missing_drug_' + 'model.png')
 
 
 
