@@ -130,20 +130,20 @@ def get_PPI_dti_feature_list(drug_list, protein_list):
     return protein_dti_mat
 
 
-def get_DTIs(drug_list, protein_list, indices):
+def get_DTIs(drug_list, protein_list):
     DTI_graph = get_human_DTI_graph()
 
-    y_data = np.zeros(len(drug_list)*len(protein_list[indices]))
+    y_data = np.zeros(len(drug_list)*len(protein_list))
 
     for i in range(len(drug_list)):
         drug = drug_list[i]
 
         for protein in DTI_graph.neighbors(drug):
-            if protein not in protein_list[indices]:
+            if protein not in protein_list:
                 continue
-            j = list(protein_list[indices]).index(protein)
+            j = list(protein_list).index(protein)
 
-            y_data[i * len(protein_list[indices]) + j] = 1
+            y_data[i * len(protein_list) + j] = 1
 
     return np.array(y_data, dtype=np.int8)
 

@@ -47,14 +47,14 @@ def missing_target_predictor(results_filename='../results/results_log',
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
-    ## DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(drug_list), len(protein_list))
-    # PPI_adj_mats = np.tile(DTI_data_preparation.get_PPI_adj_mat_list(protein_list), len(drug_list))
+    DDI_features = np.repeat(DTI_data_preparation.get_DDI_feature_list(drug_list), len(protein_list))
     PPI_node_features = DTI_data_preparation.get_PPI_node_feature_mat_list(protein_list)
-    # PPI_node_features = PPI_node_features.reshape(PPI_node_features.shape + (1,))
     print("Finished.\n")
 
     PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
+    y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
+    y_dti_data = y_dti_data.reshape((len(drug_list), len(protein_list)))
     print("Finished loading data.\n")
 
     # building stellar graph
@@ -67,7 +67,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print(G.info())
 
     graphsage_batch_size = 50
-    num_samples = [20, 20] # What do those values mean?
+    num_samples = [100, 50] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n")
@@ -87,12 +87,12 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        # y_train_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, train)
-        # y_test_dti_data = DTI_data_preparation.get_DTIs(drug_list, protein_list, test)
+        # parameters
+        graphsage_output_size = 641
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
-        
-        graphsage_model_layer = GraphSAGE(layer_sizes=[32, 32],
+
+        graphsage_model_layer = GraphSAGE(layer_sizes=[32, 64, graphsage_output_size],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
@@ -101,7 +101,8 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
 
-        graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
+        encoder = models.Model(inputs=x_inp, outputs=x_out)
+        graphsage_model = models.Model(inputs=x_inp, outputs=x_out)
 
         graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
                                 loss=losses.binary_crossentropy,
@@ -122,13 +123,21 @@ def missing_target_predictor(results_filename='../results/results_log',
         if plot:
             dti_utils.plot_history(history)
 
-        encoder = models.Model(inputs=x_inp, outputs=x_out)
+
+
 
         overall_generator = generator.flow(protein_list)
 
         node_embeddings = encoder.predict_generator(overall_generator)
 
         print(node_embeddings.shape)
+
+        y_dti_train_data = y_dti_data[train].flatten()
+        y_dti_test_data = y_dti_data[test].flatten()
+
+        # Build actual dti model
+
+
 
         raise Exception
 
