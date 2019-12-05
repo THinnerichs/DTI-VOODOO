@@ -54,9 +54,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
     print("Finished.\n")
 
     PPI_dti_features = tf.keras.utils.to_categorical(DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list))
-    print(DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list).shape)
 
-    raise Exception
     print("Finished loading data.\n")
 
     # building stellar graph
@@ -68,7 +66,7 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     print(G.info())
 
-    graphsage_batch_size = 50
+    graphsage_batch_size = 100
     num_samples = [10, 10] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
