@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from tf.keras import metrics
-from tf.keras.backend as K
+import tf.keras.backend as K
 import matplotlib.pyplot as plt
 
 
