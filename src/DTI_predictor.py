@@ -257,10 +257,10 @@ def missing_target_predictor(results_filename='../results/results_log',
         if plot:
             plot_model(graphsage_model,
                        show_shapes=True,
-                       to_file='../models/')
+                       to_file='../models/graphsage_model.png')
             plot_model(model,
                        show_shapes=True,
-                       to_file='../models/missing_drug_' + 'model.png')
+                       to_file='../models/overall_model.png')
 
 
 

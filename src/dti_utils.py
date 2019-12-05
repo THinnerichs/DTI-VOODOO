@@ -9,7 +9,7 @@ from keras.callbacks import Callback
 
 def dti_auroc_fix(y_true, y_pred):
     if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
-        return 0
+        return 0.5
     return roc_auc_score(y_true, y_pred)
 
 def dti_auroc(y_true, y_pred):
