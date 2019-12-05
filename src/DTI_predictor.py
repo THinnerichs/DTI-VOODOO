@@ -167,7 +167,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         imb_ratio = (len(y_dti_train_data)-y_dti_train_data.sum())/y_dti_train_data.sum()
 
         class_weight = {0: 1.,
-                        1: 1/imb_ratio}
+                        1: imb_ratio}
         model.fit([train_protein_node_embeddings,
                    DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list)))],
                   y_dti_train_data,
