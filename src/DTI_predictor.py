@@ -66,8 +66,8 @@ def missing_drug_predictor(results_filename='../results/results_log',
 
     print(G.info())
 
-    graphsage_batch_size = 100
-    num_samples = [10, 10] # What do those values mean?
+    graphsage_batch_size = 50
+    num_samples = [20, 20] # What do those values mean?
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n")
