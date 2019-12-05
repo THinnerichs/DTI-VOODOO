@@ -43,7 +43,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:1000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
