@@ -122,11 +122,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         if plot:
             dti_utils.plot_history(history)
 
-        # encoder = Model(input=x_inp, output=)
+        encoder = models.Model(input=x_inp, output=x_out)
 
         overall_generator = generator.flow(protein_list)
 
-        node_embeddings = graphsage_model.predict_generator(overall_generator)
+        node_embeddings = encoder.predict_generator(overall_generator)
 
         print(node_embeddings.shape)
 
