@@ -47,8 +47,8 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Finished.\n")
 
     print("Scaling data ...")
-    side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
-    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
+    # side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
+    # side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
     DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
@@ -147,11 +147,11 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         DDI_input = layers.Input(shape=(DDI_features.shape[2],))
 
-        side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
+        # side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
         merge_1 = layers.Concatenate(axis=1)([PPI_input,
                                               DDI_input,
-                                              side_effect_input
+                                              # side_effect_input
                                               ])
 
         dense_1 = layers.Dense(500, activation='relu')(merge_1)
@@ -166,7 +166,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         model = models.Model(inputs=[PPI_input,
                                      DDI_input,
-                                     side_effect_input
+                                     # side_effect_input
                                      ],
                              outputs=output)
 
@@ -186,13 +186,13 @@ def missing_target_predictor(results_filename='../results/results_log',
                         1: imb_ratio}
         model.fit([train_protein_node_embeddings,
                    DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list))),
-                   side_effect_features[train].reshape((len(drug_list)*len(train), len(drug_list)))
+                   # side_effect_features[train].reshape((len(drug_list)*len(train), len(drug_list)))
                    ],
                   y_dti_train_data,
                   batch_size=batch_size,
                   validation_data=([test_protein_node_embeddings,
                                    DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                   side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                   # side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
                                     ],
                                    y_dti_test_data),
                   epochs=nb_epochs,
@@ -213,7 +213,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         y_pred = model.predict([test_protein_node_embeddings,
                                 DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                # side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
                                 ])
 
         conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
@@ -253,7 +253,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Including:")
         print("- PPIs")
         print("- DDIs")
-        print("- similarity scores")
+        # print("- similarity scores")
         # print("- HMM node features")
         print("Number of targets:\t", len(protein_list), file=filehandler)
         print("Number of drugs:\t", len(drug_list), file=filehandler)
