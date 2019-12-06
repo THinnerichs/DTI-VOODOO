@@ -37,7 +37,7 @@ conda activate ~/.conda/envs/dti/
 
 
 def cancel_jobs():
-    subprocess.call("squeue | grep 'hinnertr' | grep 'Hmmer' > cancellist")
+    subprocess.call("squeue | grep 'hinnertr' | grep 'Hmmer' > cancellist", shell=True)
     filename = "cancellist"
     with open(file=filename, mode='r') as f:
         for line in f:
