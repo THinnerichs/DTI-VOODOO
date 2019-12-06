@@ -88,11 +88,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         round += 1
 
         # parameters
-        graphsage_output_size = 128
+        graphsage_output_size = 64
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=[64, graphsage_output_size],
+        graphsage_model_layer = GraphSAGE(layer_sizes=[32, graphsage_output_size],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
