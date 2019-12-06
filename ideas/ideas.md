@@ -9,22 +9,7 @@
 
 - Put more comments to code
 
-- run FAMSA on Ibex
-
-- Run Alignment on min_score 700 to avoid that many 0 target drugs
-- execute hmm_pipeline on MSA results
-
 - how to map e values from [0,inf) with 0 as hit and inf as no hit to [0,1] where 0 no hit and 1 is hit
-- how to compare both similarity measures? (-> Maxat)
-
-
-- get distibution over similarities and then take lowest, median and highest and fit above mapping to it
-- then merge
-
-
-
---------------------------------------------------------------------
-- move repo to project folder (reach out to Ramy)
 
 - Build alignment over all targets
   - build hmms over alignments
@@ -32,9 +17,6 @@
   - Build STRING graph only on human data (Y)
   - Use human interactions data to build training/testing data
     - Utilize non-binary score? Sigmoid over score?
-
-- get node2vec embedding with node features
-(- use node2vec and add my embedding on top of that) -> destroys idea of approach
 
 - get phenotypes for drugs
   - download OMIM -> get mapping
@@ -44,17 +26,8 @@
 
 - check if VPN is working
 
-- Run actual model (-> Without node features at first)
-  - When doing train/test split actually exclude test target? Given in from other species
-
-./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000753_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000753_famsa_aligned_700_min_score.afa
-./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm00000888_fasta_700_min_score.fasta ../data/alignment_targets/CIDm00000888_famsa_aligned_700_min_score.afa
-./famsa-1.2.5-linux -t 4 ../data/fasta_files/CIDm06442177_fasta_700_min_score.fasta ../data/alignment_targets/CIDm06442177_famsa_aligned_700_min_score.afa
-
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
-
-- What are GCNs exactly doing?
 
 - What do links in PPI graph mean? (-> STRING data/documentation)
   - what does closeness in enriched PPI graph means?
@@ -64,9 +37,12 @@
 
 - are there papers on DTI using PPIs?
 
-- PPI radius based on confidence? -> Ego Graph
-
-- compare graph classification vs node classification
+- test unsupervised node embdding learning
+- Fix Hmm pipeline
+- Hannes BA lesen
+- Get other method to run on my dataset (literature!!)
+  - HAve to get SMILES and stuff too -> meh
+- prepare presentation
 
 ----------------------------------------------------
 Talk with Robert on 03.12.:
