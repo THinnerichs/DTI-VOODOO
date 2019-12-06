@@ -349,4 +349,4 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=64)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100, 50], graphsage_layer_sizes= [64, 64, 64], graphsage_output_size=128)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 80, 50], graphsage_layer_sizes= [32, 64, 64], graphsage_output_size=64)
