@@ -38,7 +38,10 @@ import dti_utils
 def missing_target_predictor(results_filename='../results/results_log',
                              nb_epochs=3,
                              batch_size=500,
-                             plot=False):
+                             plot=False,
+                             num_samples=[100,20],
+                             graphsage_layer_sizes=[32,64],
+                             graphsage_output_size=32):
     results_table_filename = "../results/results_table"
 
     print("Loading data ...")
@@ -69,10 +72,11 @@ def missing_target_predictor(results_filename='../results/results_log',
     print(G.info())
 
     graphsage_batch_size = 50
-    num_samples = [100, 50] # What do those values mean? [100,50,20]
+    # num_samples = [100, 50] # What do those values mean? [100,50,20]
     # parameters
-    graphsage_output_size = 64
-    graphsage_layer_sizes = [32, graphsage_output_size]
+    # graphsage_output_size = 64
+    # graphsage_layer_sizes = [32, graphsage_output_size]
+    graphsage_layer_sizes[-1] = graphsage_output_size
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n") # Fold parameters
@@ -341,6 +345,8 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    missing_target_predictor(batch_size=5000,
-                             nb_epochs=20,
-                             plot=True)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=32)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=64)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=64)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=64)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100, 50], graphsage_layer_sizes= [64, 64], graphsage_output_size=128)
