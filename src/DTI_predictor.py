@@ -43,7 +43,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())
     print("Finished.\n")
 
     # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
@@ -67,7 +67,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print(G.info())
 
     graphsage_batch_size = 50
-    num_samples = [50, 20] # What do those values mean? [100,50,20]
+    num_samples = [100, 50] # What do those values mean? [100,50,20]
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n") # Fold parameters
@@ -87,11 +87,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         round += 1
 
         # parameters
-        graphsage_output_size = 64
+        graphsage_output_size = 128
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=[32, graphsage_output_size],
+        graphsage_model_layer = GraphSAGE(layer_sizes=[64, graphsage_output_size],
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
