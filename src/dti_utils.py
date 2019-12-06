@@ -10,7 +10,7 @@ import math
 
 def dti_auroc_fix(y_true, y_pred):
     if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
-        return accuracy_score(y_true, y_pred)
+        return accuracy_score(y_true, y_pred.round(), normalize=False)
     return roc_auc_score(y_true, y_pred)
 
 def dti_auroc(y_true, y_pred):
