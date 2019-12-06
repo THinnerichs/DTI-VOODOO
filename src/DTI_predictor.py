@@ -39,6 +39,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                              nb_epochs=3,
                              batch_size=500,
                              plot=False):
+    results_table_filename = "../results/results_table"
 
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -81,7 +82,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     model = None
     graphsage_model = None
     conf_matrix = None
-    round = 0
+    round = 1
     print("Starting folds ...")
     for train, test in skf.split(protein_list):
         print("Round", round)
@@ -249,7 +250,12 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Mean auroc:", np.mean(cv_scores['auroc']))
     print("Mean f1-score:", np.mean(cv_scores['f1-score']))
 
-
+    with open(file=results_table_filename, mode='a') as f:
+        print("1" +"\t"+ "1" +"\t"+ "0" +"\t"+ "0" +"\t"+
+              str(len(protein_list)) +"\t"+ str(len(drug_list)) +"\t"+
+              str(nb_epochs) +"\t"+
+              str(np.mean(cv_scores['acc'])) +"\t"+ str(np.mean(cv_scores['auroc'])) +"\t"+ str(np.mean(cv_scores['f1-score'])),
+              file=f)
     with open(file=results_filename, mode='a') as filehandler:
         print("DTI PREDICTION", file=filehandler)
         print("Including:")
