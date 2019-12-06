@@ -54,7 +54,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
     side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
-    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
+    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), 1430))
     print("Finished.\n")
 
     print("Get DTIs")
@@ -192,13 +192,13 @@ def missing_target_predictor(results_filename='../results/results_log',
                         1: imb_ratio}
         model.fit([train_protein_node_embeddings,
                    DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list))),
-                   side_effect_features[train].reshape((len(drug_list)*len(train), len(drug_list)))
+                   side_effect_features[train].reshape((len(drug_list)*len(train), side_effect_features.shape[-1]))
                    ],
                   y_dti_train_data,
                   batch_size=batch_size,
                   validation_data=([test_protein_node_embeddings,
                                    DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                   side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                   side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
                                     ],
                                    y_dti_test_data),
                   epochs=nb_epochs,
@@ -219,7 +219,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         y_pred = model.predict([test_protein_node_embeddings,
                                 DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
                                 ])
 
         conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
