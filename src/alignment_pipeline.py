@@ -354,17 +354,18 @@ def run_hmm_pipeline(min_score=700,
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
                   "--cpu "+str(threads_per_worker)+" "+\
-                  "--symfrac "+str(sym_frac)+" "+\
-                  "--fragthresh " + str(frag_thresh) +" "+\
-                  "--"+rel_weight_method+" "+\
                   hmmbuild_file+" "+\
                   alignment_file
+        # "--symfrac "+str(sym_frac)+" "+\
+        # "--fragthresh " + str(frag_thresh) +" "+\
+        # "--"+rel_weight_method+" "+\
+
         print(command)
         subprocess.call(command, shell=True)
         print("Finished.\n")
 
         # Parallel(n_jobs=10)(delayed(hmm_build)(filename) for filename in [file for file in os.listdir(alignment_path) if file.startswith("CID")])
-
+        '''
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
         max_flag = False
@@ -409,6 +410,7 @@ def run_hmm_pipeline(min_score=700,
                         split_list.append(ele)
                 protein_id = split_list[8].strip()
                 predicted_targets_filehandler.write(protein_id+'\n')
+        '''
 
     q = queue.Queue()
     files = os.listdir(alignment_path)
@@ -440,6 +442,7 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
+    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
@@ -451,13 +454,12 @@ if __name__ == '__main__':
             start=start,
             end=end,
             human_only=True)
-
     '''
+
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
-                     workers=10,
-                     threads_per_worker=4)
-    '''
+                     workers=4,
+                     threads_per_worker=10)
 
 
 

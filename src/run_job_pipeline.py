@@ -48,6 +48,13 @@ def cancel_jobs():
                     subprocess.call("scancel " + ele, shell=True)
                     break
 
+def submit_jobscript_n_tims(n):
+    for _ in n:
+        subprocess.call("sbatch jobscript.sh", shell=True)
+
 if __name__ == '__main__':
     # run_jobs(parts=60, amount=646)
-    cancel_jobs()
+    submit_jobscript_n_tims(50)
+    # cancel_jobs()
+
+    pass
