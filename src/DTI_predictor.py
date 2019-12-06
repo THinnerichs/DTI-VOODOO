@@ -235,9 +235,11 @@ def missing_target_predictor(results_filename='../results/results_log',
         auroc = metrics.roc_auc_score(y_dti_test_data, y_pred)
         f1_score = metrics.f1_score(y_dti_test_data, y_pred)
 
-        # print("f1:", dti_f1_score(y_test_data, y_pred))
-        print("prec", precision)
-        print("recall", recall)
+        print("accuracy", accuracy * 100)
+        print("prec", precision * 100)
+        print("recall", recall * 100)
+        print("auroc", auroc * 100)
+        print("f1-score", f1_score * 100)
 
         cv_scores['acc'].append(accuracy * 100)
         cv_scores['auroc'].append(auroc * 100)
