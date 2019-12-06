@@ -17,7 +17,7 @@ import tensorflow.keras.backend as K
 # import tensorflow.keras.regularizers as regularizers
 # import tensorflow.keras.optimizers as optimizers
 # import tensorflow.keras.losses as losses
-from keras.utils import plot_model
+# from tensorflow.keras.utils import plot_model
 
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
@@ -284,12 +284,12 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # serialize model to JSON
         if plot:
-            plot_model(graphsage_model,
-                       show_shapes=True,
-                       to_file='../models/graphsage_model.png')
-            plot_model(model,
-                       show_shapes=True,
-                       to_file='../models/overall_model.png')
+            tf.keras.utils.plot_model(graphsage_model,
+                                      show_shapes=True,
+                                      to_file='../models/graphsage_model.png')
+            tf.keras.utils.plot_model(model,
+                                      show_shapes=True,
+                                      to_file='../models/overall_model.png')
 
 
 
