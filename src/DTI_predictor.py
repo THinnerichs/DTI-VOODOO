@@ -312,6 +312,6 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    missing_target_predictor(batch_size=1000,
-                             nb_epochs=50,
+    missing_target_predictor(batch_size=5000,
+                             nb_epochs=20,
                              plot=True)
