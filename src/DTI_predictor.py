@@ -70,6 +70,9 @@ def missing_target_predictor(results_filename='../results/results_log',
 
     graphsage_batch_size = 50
     num_samples = [100, 50] # What do those values mean? [100,50,20]
+    # parameters
+    graphsage_output_size = 64
+    graphsage_layer_sizes = [32, graphsage_output_size]
 
     generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n") # Fold parameters
@@ -88,12 +91,10 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        # parameters
-        graphsage_output_size = 64
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=[32, graphsage_output_size],
+        graphsage_model_layer = GraphSAGE(layer_sizes=graphsage_layer_sizes,
                                     generator=generator,
                                     bias=True,
                                     dropout=0.5)
@@ -254,6 +255,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("1" +"\t"+ "1" +"\t"+ "0" +"\t"+ "0" +"\t"+
               str(len(protein_list)) +"\t"+ str(len(drug_list)) +"\t"+
               str(nb_epochs) +"\t"+
+              str(graphsage_layer_sizes) + "\t" +
               str(np.mean(cv_scores['acc'])) +"\t"+ str(np.mean(cv_scores['auroc'])) +"\t"+ str(np.mean(cv_scores['f1-score'])),
               file=f)
     with open(file=results_filename, mode='a') as filehandler:
