@@ -79,8 +79,6 @@ def get_side_effect_similarity_feature_list(intersect_drug_list):
     SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
     semsim_matrix = similarity_measurement.get_semantic_similarity_matrix()
 
-    # intersect_drug_list = get_drug_list()
-
     index_mapping = lambda drug: SIDER_drug_list.index(drug)
 
     return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)

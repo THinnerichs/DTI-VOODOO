@@ -43,11 +43,12 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
     print("Finished.\n")
 
-    # side_effect_features = DTI_data_preparation.get_side_effect_similarity_feature_list()
     print("Scaling data ...")
+    side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
+    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
     DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
@@ -122,15 +123,19 @@ def missing_target_predictor(results_filename='../results/results_log',
         # if plot:
             # dti_utils.plot_history(history)
 
+        print("\nCalculate node embeddings ...")
         overall_generator = generator.flow(protein_list)
 
         protein_node_embeddings = encoder.predict_generator(overall_generator)
+        print("Finished.\n")
 
+        print("Scaling node embeddings ...")
         train_protein_node_embeddings = protein_node_embeddings[train]
         test_protein_node_embeddings = protein_node_embeddings[test]
 
         train_protein_node_embeddings = np.repeat(train_protein_node_embeddings, len(drug_list), axis=0)
         test_protein_node_embeddings = np.repeat(test_protein_node_embeddings, len(drug_list), axis=0)
+        print("Finished.\n")
 
         print(protein_node_embeddings.shape)
 
@@ -140,21 +145,29 @@ def missing_target_predictor(results_filename='../results/results_log',
         # Build actual dti model
         PPI_input = layers.Input(shape=(graphsage_output_size,))
 
-        DDI_input = layers.Input(shape=(DDI_features.shape[1],))
+        DDI_input = layers.Input(shape=(DDI_features.shape[2],))
 
-        merge_1 = layers.Concatenate(axis=1)([PPI_input, DDI_input])
+        side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
-        dense_1 = layers.Dense(100, activation='relu')(merge_1)
+        merge_1 = layers.Concatenate(axis=1)([PPI_input,
+                                              DDI_input,
+                                              side_effect_input
+                                              ])
+
+        dense_1 = layers.Dense(500, activation='relu')(merge_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
         dense_1 = layers.Dense(100, activation='relu')(dropout_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
-        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
+        dense_1 = layers.Dense(50, activation='relu')(dropout_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
-        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
+        dense_1 = layers.Dense(20, activation='relu')(dropout_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
         output = layers.Dense(1, activation='sigmoid')(dropout_1)
 
-        model = models.Model(inputs=[PPI_input, DDI_input],
+        model = models.Model(inputs=[PPI_input,
+                                     DDI_input,
+                                     side_effect_input
+                                     ],
                              outputs=output)
 
         model.compile(loss=losses.binary_crossentropy,
