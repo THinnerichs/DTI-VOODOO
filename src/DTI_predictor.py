@@ -52,9 +52,9 @@ def missing_target_predictor(results_filename='../results/results_log',
 
     print("Scaling data ...")
     side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
-    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
+    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), 1430))
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
-    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), 1430))
+    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
 
     print("Get DTIs")
