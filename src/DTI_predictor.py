@@ -185,11 +185,15 @@ def missing_target_predictor(results_filename='../results/results_log',
         class_weight = {0: 1.,
                         1: imb_ratio}
         model.fit([train_protein_node_embeddings,
-                   DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list)))],
+                   DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list))),
+                   side_effect_features[train].reshape((len(drug_list)*len(train), len(drug_list)))
+                   ],
                   y_dti_train_data,
                   batch_size=batch_size,
                   validation_data=([test_protein_node_embeddings,
-                                   DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list)))],
+                                   DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
+                                   side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                    ],
                                    y_dti_test_data),
                   epochs=nb_epochs,
                   class_weight=class_weight,
@@ -208,7 +212,9 @@ def missing_target_predictor(results_filename='../results/results_log',
         '''
 
         y_pred = model.predict([test_protein_node_embeddings,
-                                DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list)))])
+                                DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
+                                side_effect_features[test].reshape((len(drug_list)*len(test), len(drug_list)))
+                                ])
 
         conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
                                                y_pred=(y_pred.reshape((len(y_pred))) >= 0.5).astype(int))
@@ -247,7 +253,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Including:")
         print("- PPIs")
         print("- DDIs")
-        # print("- similarity scores")
+        print("- similarity scores")
         # print("- HMM node features")
         print("Number of targets:\t", len(protein_list), file=filehandler)
         print("Number of drugs:\t", len(drug_list), file=filehandler)
