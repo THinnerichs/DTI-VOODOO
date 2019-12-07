@@ -46,6 +46,7 @@
 
 - prepare presentation
 - maybe try other stellargraph embeddings as well :)))
+- run link prediction over whole graph
 
 
 

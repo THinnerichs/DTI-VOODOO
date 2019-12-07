@@ -117,6 +117,9 @@ def missing_target_predictor(results_filename='../results/results_log',
                                             generator=train_gen,
                                             bias=True,
                                             dropout=0.5)
+            else:
+                print("No valid embedding method chosen.")
+                raise Exception
         else:
             train_gen = generator
             if embedding_method == 'attr2vec':
@@ -124,8 +127,9 @@ def missing_target_predictor(results_filename='../results/results_log',
                                             generator=train_gen,
                                             bias=True,
                                             normalize=None)
-
-
+            else:
+                print("No valid embedding method chosen.")
+                raise Exception
 
         x_inp, x_out = embedding_layer.build()
 
@@ -373,7 +377,7 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=32)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=32, embedding_method='attr2vec')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
