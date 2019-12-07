@@ -78,6 +78,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print(G.info())
 
     embedding_batch_size = 50
+    protein_node_embeddings = None
     generator = None
     if supervised:
         if embedding_method=='graphsage':
@@ -96,9 +97,42 @@ def missing_target_predictor(results_filename='../results/results_log',
             print("No valid embedding method chosen.")
             raise Exception
 
+        train_gen = generator
 
+        embedding_layer=None
+        if embedding_method == 'attr2vec':
+            embedding_layer = Attri2Vec(layer_sizes=embedding_layer_sizes,
+                                        generator=train_gen,
+                                        bias=True,
+                                        normalize=None)
+        x_inp, x_out = embedding_layer.build()
+        prediction = link_classification(
+            output_dim=1, output_act="sigmoid", edge_embedding_method='ip'
+        )(x_out)
 
+        model = models.Model(inputs=x_inp, outputs=prediction)
 
+        model.compile(
+            optimizer=optimizers.Adam(lr=1e-3),
+            loss=losses.binary_crossentropy,
+            metrics=['acc'],
+        )
+
+        history = model.fit_generator(
+            generator,
+            epochs=1,
+            verbose=1,
+            use_multiprocessing=True,
+            workers=10000,
+            shuffle=True
+        )
+
+        x_inp_src = x_inp[0]
+        x_out_src = x_out[0]
+        embedding_model = models.Model(inputs=x_inp_src, outputs=x_out_src)
+
+        node_gen = Attri2VecNodeGenerator(G, batch_size).flow(protein_list)
+        protein_node_embeddings = embedding_model.predict_generator(node_gen, workers=4, verbose=1)
 
     print("Finished.\n") # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
@@ -116,7 +150,6 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Round", round)
         round += 1
 
-        protein_node_embeddings = None
         embedding_layer = None
         if supervised:
             train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
@@ -155,41 +188,7 @@ def missing_target_predictor(results_filename='../results/results_log',
             protein_node_embeddings = encoder.predict_generator(overall_generator)
             print("Finished.\n")
         else:
-            train_gen = generator
-            if embedding_method == 'attr2vec':
-                embedding_layer = Attri2Vec(layer_sizes=embedding_layer_sizes,
-                                            generator=train_gen,
-                                            bias=True,
-                                            normalize=None)
-            x_inp, x_out = embedding_layer.build()
-            prediction = link_classification(
-                output_dim=1, output_act="sigmoid", edge_embedding_method='ip'
-            )(x_out)
-
-            model = models.Model(inputs=x_inp, outputs=prediction)
-
-            model.compile(
-                optimizer=optimizers.Adam(lr=1e-3),
-                loss=losses.binary_crossentropy,
-                metrics=['acc'],
-            )
-
-            history = model.fit_generator(
-                generator,
-                epochs=1,
-                verbose=1,
-                use_multiprocessing=False,
-                workers=10000,
-                shuffle=True,
-            )
-
-            x_inp_src = x_inp[0]
-            x_out_src = x_out[0]
-            embedding_model = keras.Model(inputs=x_inp_src, outputs=x_out_src)
-
-            node_gen = Attri2VecNodeGenerator(G, batch_size).flow(protein_list)
-            protein_node_embeddings = embedding_model.predict_generator(node_gen, workers=4, verbose=1)
-
+            pass
         print(protein_node_embeddings.shape)
 
         raise Exception
