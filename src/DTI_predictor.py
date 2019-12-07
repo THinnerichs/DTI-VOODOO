@@ -47,7 +47,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:8000]
     print("Finished.\n")
 
     print("Scaling data ...")
@@ -264,11 +264,11 @@ def missing_target_predictor(results_filename='../results/results_log',
               file=f)
     with open(file=results_filename, mode='a') as filehandler:
         print("DTI PREDICTION", file=filehandler)
-        print("Including:")
-        print("- PPIs")
-        print("- DDIs")
-        print("- similarity scores")
-        # print("- HMM node features")
+        print("Including:", file=filehandler)
+        print("- PPIs", file=filehandler)
+        print("- DDIs", file=filehandler)
+        print("- similarity scores", file=filehandler)
+        # print("- HMM node features", file=filehandler)
         print("Number of targets:\t", len(protein_list), file=filehandler)
         print("Number of drugs:\t", len(drug_list), file=filehandler)
 
@@ -345,7 +345,7 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=32)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=64)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=64)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], graphsage_layer_sizes= [32, 64], graphsage_output_size=128)
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=32)
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=64)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], graphsage_layer_sizes= [128, 64], graphsage_output_size=64)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], graphsage_layer_sizes= [128, 64], graphsage_output_size=128)
