@@ -11,6 +11,7 @@
 
 #run the application:
 module load anaconda3/4.4.0
+module load hmmer/3.2.1
 source /home/${USER}/.bashrc
 module load gcc/6.4.0
 conda activate ~/.conda/envs/dti/
