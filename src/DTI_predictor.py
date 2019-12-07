@@ -32,7 +32,7 @@ from stellargraph.mapper import GraphSAGENodeGenerator, \
     Attri2VecNodeGenerator, Attri2VecLinkGenerator, \
     HinSAGENodeGenerator, \
     FullBatchNodeGenerator
-from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN
+from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN, link_classification
 from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
