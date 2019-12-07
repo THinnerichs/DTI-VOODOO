@@ -91,7 +91,7 @@ def missing_target_predictor(results_filename='../results/results_log',
             number_of_walks = 300
             length = 3
             unsupervised_samples = UnsupervisedSampler(G, nodes=list(G.nodes()), length=length, number_of_walks=number_of_walks)
-            generator = Attri2VecLinkGenerator(G, batch_size=embedding_batch_size).flow(unsupervised_samples)
+            generator = Attri2VecLinkGenerator(G, embedding_batch_size).flow(unsupervised_samples)
         else:
             print("No valid embedding method chosen.")
             raise Exception
@@ -175,8 +175,8 @@ def missing_target_predictor(results_filename='../results/results_log',
             )
 
             history = model.fit_generator(
-                train_gen,
-                epochs=5,
+                generator,
+                epochs=1,
                 verbose=1,
                 use_multiprocessing=False,
                 workers=10000,
