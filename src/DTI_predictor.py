@@ -179,7 +179,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                 epochs=5,
                 verbose=1,
                 use_multiprocessing=False,
-                workers=1,
+                workers=10000,
                 shuffle=True,
             )
 
