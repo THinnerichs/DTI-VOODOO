@@ -42,8 +42,11 @@
 - Hannes BA lesen
 - Get other method to run on my dataset (literature!!)
   - HAve to get SMILES and stuff too -> meh
+  - How can this be made proof? Model is tweaked on this dataset while foreign methods are not
+
 - prepare presentation
-- maybe try other stellargraph metrics as well :)))
+- maybe try other stellargraph embeddings as well :)))
+
 
 
 ----------------------------------------------------

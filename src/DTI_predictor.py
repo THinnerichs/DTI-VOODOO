@@ -28,7 +28,7 @@ from keras_dgl.utils import *
 
 import stellargraph as sg
 from stellargraph import globalvar
-from stellargraph.mapper import GraphSAGENodeGenerator
+from stellargraph.mapper import GraphSAGENodeGenerator, Attri2VecNodeGenerator, HinSAGENodeGenerator,
 from stellargraph.layer import GraphSAGE
 
 import dti_utils
@@ -40,14 +40,15 @@ def missing_target_predictor(results_filename='../results/results_log',
                              batch_size=500,
                              plot=False,
                              num_samples=[100,20],
-                             graphsage_layer_sizes=[32,64],
-                             graphsage_output_size=32):
+                             embedding_layer_sizes=[32,64],
+                             embedding_output_size=32,
+                             embedding_method='graphsage'):
     results_table_filename = "../results/results_table"
 
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:8000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
     print("Finished.\n")
 
     print("Scaling data ...")
@@ -71,14 +72,16 @@ def missing_target_predictor(results_filename='../results/results_log',
     G = sg.StellarGraph(PPI_graph, node_features='node_feature')
     print(G.info())
 
-    graphsage_batch_size = 50
-    # num_samples = [100, 50] # What do those values mean? [100,50,20]
-    # parameters
-    # graphsage_output_size = 64
-    # graphsage_layer_sizes = [32, graphsage_output_size]
-    graphsage_layer_sizes[-1] = graphsage_output_size
+    generator = None
+    if embedding_method=='graphsage':
+        graphsage_batch_size = 50
+        # num_samples = [100, 50] # What do those values mean? [100,50,20]
+        # parameters
+        # graphsage_output_size = 64
+        # graphsage_layer_sizes = [32, graphsage_output_size]
+        embedding_layer_sizes[-1] = embedding_output_size
 
-    generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
+        generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
     print("Finished.\n") # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
 
@@ -98,33 +101,38 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
 
-        graphsage_model_layer = GraphSAGE(layer_sizes=graphsage_layer_sizes,
-                                    generator=generator,
-                                    bias=True,
-                                    dropout=0.5)
+        embedding_layer = None
+        if embedding_method == 'graphsage':
+            embedding_layer = GraphSAGE(layer_sizes=embedding_layer_sizes,
+                                        generator=generator,
+                                        bias=True,
+                                        dropout=0.5)
 
-        x_inp, x_out = graphsage_model_layer.build()
 
-        prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="softmax")(x_out)
+        x_inp, x_out = embedding_layer.build()
+
+        prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="linear")(x_out)
 
         encoder = models.Model(inputs=x_inp, outputs=x_out)
-        graphsage_model = models.Model(inputs=x_inp, outputs=prediction)
+        embedding_model = models.Model(inputs=x_inp, outputs=prediction)
 
-        graphsage_model.compile(optimizer=optimizers.Adam(lr=0.005),
+        embedding_model.compile(optimizer=optimizers.Adam(lr=0.005),
                                 loss=losses.binary_crossentropy,
                                 metrics=["acc"])
 
-        graphsage_model.summary()
+        embedding_model.summary()
 
-        # val_gen = generator.flow(protein_list[test], protein_list[test], shuffle=True)
+        val_gen = generator.flow(protein_list[test], protein_list[test], shuffle=True)
 
-        history = graphsage_model.fit_generator(
+        history = embedding_model.fit_generator(
             train_gen,
             epochs=2,
-            # validation_data=val_gen,
+            validation_data=val_gen,
             verbose=1,
             shuffle=False
         )
+
+        raise Exception
 
         # if plot:
             # dti_utils.plot_history(history)
@@ -149,7 +157,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         y_dti_test_data = y_dti_data[test].flatten()
 
         # Build actual dti model
-        PPI_input = layers.Input(shape=(graphsage_output_size,))
+        PPI_input = layers.Input(shape=(embedding_output_size,))
 
         DDI_input = layers.Input(shape=(DDI_features.shape[2],))
 
@@ -259,11 +267,13 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("1" +"\t"+ "1" +"\t"+ "1" +"\t"+ "0" +"\t"+
               str(len(protein_list)) +"\t"+ str(len(drug_list)) +"\t"+
               str(nb_epochs) +"\t"+
-              str(graphsage_layer_sizes) + "\t" +
+              str(embedding_layer_sizes) + "\t" +
+              str(embedding_method) + "\t" +
               str(np.mean(cv_scores['acc'])) +"\t"+ str(np.mean(cv_scores['auroc'])) +"\t"+ str(np.mean(cv_scores['f1-score'])),
               file=f)
     with open(file=results_filename, mode='a') as filehandler:
         print("DTI PREDICTION", file=filehandler)
+
         print("Including:", file=filehandler)
         print("- PPIs", file=filehandler)
         print("- DDIs", file=filehandler)
@@ -345,7 +355,7 @@ def GCN_missing_target_predictor():
     '''
 
 if __name__ == '__main__':
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=32)
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], graphsage_layer_sizes= [32, 32], graphsage_output_size=64)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], graphsage_layer_sizes= [128, 64], graphsage_output_size=64)
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], graphsage_layer_sizes= [128, 64], graphsage_output_size=128)
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=32)
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=64)
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
