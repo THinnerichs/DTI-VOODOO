@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J MultiSequenceAlignment
-#SBATCH -o MultiSequenceAlignment.%J.out
-#SBATCH -e MultiSequenceAlignment.%J.err
+#SBATCH -J Hmmer
+#SBATCH -o Hmmer.%J.out
+#SBATCH -e Hmmer.%J.err
 #SBATCH --time=3-00:00:00
 #SBATCH --mem=240G
 #SBATCH --constraint=[intel]

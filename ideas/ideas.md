@@ -43,6 +43,8 @@
 - Get other method to run on my dataset (literature!!)
   - HAve to get SMILES and stuff too -> meh
 - prepare presentation
+- maybe try other stellargraph metrics as well :)))
+
 
 ----------------------------------------------------
 Talk with Robert on 03.12.:
