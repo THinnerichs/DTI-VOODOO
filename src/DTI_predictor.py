@@ -28,8 +28,9 @@ from keras_dgl.utils import *
 
 import stellargraph as sg
 from stellargraph import globalvar
-from stellargraph.mapper import GraphSAGENodeGenerator
-from stellargraph.layer import GraphSAGE
+from stellargraph.mapper import GraphSAGENodeGenerator, Attri2VecNodeGenerator, HinSAGENodeGenerator
+from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE
+from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
 
@@ -42,7 +43,8 @@ def missing_target_predictor(results_filename='../results/results_log',
                              num_samples=[100,20],
                              embedding_layer_sizes=[32,64],
                              embedding_output_size=32,
-                             embedding_method='graphsage'):
+                             embedding_method='graphsage',
+                             supervised=True):
     results_table_filename = "../results/results_table"
 
     print("Loading data ...")
@@ -72,16 +74,23 @@ def missing_target_predictor(results_filename='../results/results_log',
     G = sg.StellarGraph(PPI_graph, node_features='node_feature')
     print(G.info())
 
+    embedding_batch_size = 50
     generator = None
-    if embedding_method=='graphsage':
-        graphsage_batch_size = 50
-        # num_samples = [100, 50] # What do those values mean? [100,50,20]
-        # parameters
-        # graphsage_output_size = 64
-        # graphsage_layer_sizes = [32, graphsage_output_size]
-        embedding_layer_sizes[-1] = embedding_output_size
+    if supervised:
+        if embedding_method=='graphsage':
+            embedding_layer_sizes[-1] = embedding_output_size
+            generator = GraphSAGENodeGenerator(G, embedding_batch_size, num_samples)
+    else:
+        if embedding_method == 'attr2vec':
+            number_of_walks = 300
+            length = 3
+            unsupervised_samples = UnsupervisedSampler(G, nodes=list(G.nodes()), length=length, number_of_walks=number_of_walks)
+            generator = Attri2VecNodeGenerator(G, batch_size=embedding_batch_size).flow(unsupervised_samples)
 
-        generator = GraphSAGENodeGenerator(G, graphsage_batch_size, num_samples)
+
+
+
+
     print("Finished.\n") # Fold parameters
     skf = KFold(n_splits=5, random_state=42)
 
@@ -97,16 +106,25 @@ def missing_target_predictor(results_filename='../results/results_log',
     for train, test in skf.split(protein_list):
         print("Round", round)
         round += 1
-
-
-        train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
+        train_gen = None
 
         embedding_layer = None
-        if embedding_method == 'graphsage':
-            embedding_layer = GraphSAGE(layer_sizes=embedding_layer_sizes,
-                                        generator=generator,
-                                        bias=True,
-                                        dropout=0.5)
+        if supervised:
+            train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
+
+            if embedding_method == 'graphsage':
+                embedding_layer = GraphSAGE(layer_sizes=embedding_layer_sizes,
+                                            generator=train_gen,
+                                            bias=True,
+                                            dropout=0.5)
+        else:
+            train_gen = generator
+            if embedding_method == 'attr2vec':
+                embedding_layer = Attri2Vec(layer_sizes=embedding_layer_sizes,
+                                            generator=train_gen,
+                                            bias=True,
+                                            normalize=None)
+
 
 
         x_inp, x_out = embedding_layer.build()
@@ -122,12 +140,12 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         embedding_model.summary()
 
-        val_gen = generator.flow(protein_list[test], PPI_dti_features[test], shuffle=True)
+        val_gen = generator.flow(protein_list[test], PPI_dti_features[test])
 
         history = embedding_model.fit_generator(
             train_gen,
             epochs=2,
-            validation_data=val_gen,
+            # validation_data=val_gen,
             verbose=1,
             shuffle=False
         )
