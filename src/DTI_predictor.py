@@ -88,6 +88,7 @@ def missing_target_predictor(results_filename='../results/results_log',
             number_of_walks = 300
             length = 3
             unsupervised_samples = UnsupervisedSampler(G, nodes=list(G.nodes()), length=length, number_of_walks=number_of_walks)
+            print(unsupervised_samples)
             generator = Attri2VecNodeGenerator(G, batch_size=embedding_batch_size).flow(unsupervised_samples)
         else:
             print("No valid embedding method chosen.")
