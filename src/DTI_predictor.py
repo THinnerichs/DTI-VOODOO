@@ -171,7 +171,7 @@ def missing_target_predictor(results_filename='../results/results_log',
             model.compile(
                 optimizer=optimizers.Adam(lr=1e-3),
                 loss=losses.binary_crossentropy,
-                metrics=metrics.binary_accuracy,
+                metrics=['acc'],
             )
 
             history = model.fit_generator(
