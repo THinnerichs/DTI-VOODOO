@@ -122,7 +122,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         embedding_model.summary()
 
-        val_gen = generator.flow(protein_list[test], protein_list[test], shuffle=True)
+        val_gen = generator.flow(protein_list[test], PPI_dti_features[test], shuffle=True)
 
         history = embedding_model.fit_generator(
             train_gen,
