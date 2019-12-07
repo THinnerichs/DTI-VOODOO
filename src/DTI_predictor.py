@@ -176,7 +176,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
             history = model.fit_generator(
                 train_gen,
-                epochs=epochs,
+                epochs=5,
                 verbose=1,
                 use_multiprocessing=False,
                 workers=1,
@@ -189,6 +189,8 @@ def missing_target_predictor(results_filename='../results/results_log',
 
             node_gen = Attri2VecNodeGenerator(G, batch_size).flow(protein_list)
             protein_node_embeddings = embedding_model.predict_generator(node_gen, workers=4, verbose=1)
+
+        print(protein_node_embeddings.shape)
 
         raise Exception
 
