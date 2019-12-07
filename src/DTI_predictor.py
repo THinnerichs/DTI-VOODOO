@@ -48,21 +48,21 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:4000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:1000]
     print("Finished.\n")
 
     print("Scaling data ...")
-    side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
-    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), 1430))
-    DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
-    DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
+    # side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
+    # side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), 1430))
+    # DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
+    # DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
 
     print("Get DTIs")
     PPI_dti_features = DTI_data_preparation.get_PPI_dti_feature_list(drug_list, protein_list)
 
-    y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
-    y_dti_data = y_dti_data.reshape((len(protein_list), len(drug_list)))
+    # y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
+    # y_dti_data = y_dti_data.reshape((len(protein_list), len(drug_list)))
     print("Finished.\n")
     print("Finished loading data.\n")
 
