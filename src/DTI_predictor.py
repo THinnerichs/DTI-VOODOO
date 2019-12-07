@@ -28,8 +28,11 @@ from keras_dgl.utils import *
 
 import stellargraph as sg
 from stellargraph import globalvar
-from stellargraph.mapper import GraphSAGENodeGenerator, Attri2VecNodeGenerator, HinSAGENodeGenerator
-from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE
+from stellargraph.mapper import GraphSAGENodeGenerator, \
+    Attri2VecNodeGenerator, \
+    HinSAGENodeGenerator, \
+    FullBatchNodeGenerator
+from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN
 from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
@@ -88,7 +91,7 @@ def missing_target_predictor(results_filename='../results/results_log',
             number_of_walks = 300
             length = 3
             unsupervised_samples = UnsupervisedSampler(G, nodes=list(G.nodes()), length=length, number_of_walks=number_of_walks)
-            print(unsupervised_samples)
+            print(np.array(unsupervised_samples))
             generator = Attri2VecNodeGenerator(G, batch_size=embedding_batch_size).flow(unsupervised_samples)
         else:
             print("No valid embedding method chosen.")
