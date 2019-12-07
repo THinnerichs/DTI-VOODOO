@@ -324,6 +324,7 @@ def missing_target_predictor(results_filename='../results/results_log',
               str(len(protein_list)) +"\t"+ str(len(drug_list)) +"\t"+
               str(nb_epochs) +"\t"+
               str(embedding_layer_sizes) + "\t" +
+              str(supervised) + '\t' +
               str(embedding_method) + "\t" +
               str(np.mean(cv_scores['acc'])) +"\t"+ str(np.mean(cv_scores['auroc'])) +"\t"+ str(np.mean(cv_scores['f1-score'])),
               file=f)
