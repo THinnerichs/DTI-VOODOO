@@ -351,6 +351,9 @@ def run_hmm_pipeline(min_score=700,
         alignment_file = alignment_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
         hmmbuild_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
 
+        if os.stat(hmmbuild_file).st_size != 0:
+            return
+
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
                   "--cpu "+str(threads_per_worker)+" "+\
