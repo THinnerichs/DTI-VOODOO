@@ -28,7 +28,7 @@ from keras_dgl.utils import *
 
 import stellargraph as sg
 from stellargraph import globalvar
-from stellargraph.mapper import GraphSAGENodeGenerator, Attri2VecNodeGenerator, HinSAGENodeGenerator
+from stellargraph.mapper import GraphSAGENodeGenerator
 from stellargraph.layer import GraphSAGE
 
 import dti_utils
