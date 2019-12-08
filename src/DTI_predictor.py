@@ -181,7 +181,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                     attn_dropout=0.5,
                     normalize=None
                 )
-            x_inp, x_out = embedding_layer.build()
+            x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat'] else embedding_layer.node_model()
 
             prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="linear")(x_out)
 
