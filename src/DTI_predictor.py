@@ -34,7 +34,7 @@ from stellargraph.mapper import GraphSAGENodeGenerator, \
     FullBatchNodeGenerator
 from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN, link_classification, GAT
 from stellargraph.layer.ppnp import PPNP
-from stellargraph.layer.appnp import appnp
+from stellargraph.layer.appnp import APPNP
 from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
