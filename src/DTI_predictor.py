@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 
-from tensorflow.keras import models, layers, optimizers, losses
+from tensorflow.keras import models, layers, optimizers, losses, regularizers
 # import tensorflow.keras.layers as layers
 import tensorflow.keras.backend as K
 # import tensorflow.keras.regularizers as regularizers
@@ -33,6 +33,8 @@ from stellargraph.mapper import GraphSAGENodeGenerator, \
     HinSAGENodeGenerator, \
     FullBatchNodeGenerator
 from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN, link_classification, GAT
+from stellargraph.layer.ppnp import PPNP
+from stellargraph.layer.appnp import appnp
 from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
@@ -84,9 +86,16 @@ def missing_target_predictor(results_filename='../results/results_log',
         embedding_layer_sizes[-1] = embedding_output_size
         if embedding_method=='graphsage':
             generator = GraphSAGENodeGenerator(G, embedding_batch_size, num_samples)
-        elif embedding_method == 'gcn' or embedding_method == 'chebyshev' or \
-                embedding_method == 'sgc' or embedding_method == 'gat':
+        elif embedding_method == 'hinsage':
+            generator = HinSAGENodeGenerator(G, batch_size, num_samples)
+        elif embedding_method in ['gcn', 'chebyshev', 'sgc', 'gat']:
             generator = FullBatchNodeGenerator(G, method=embedding_method)
+        elif embedding_method == 'ppnp':
+            generator = FullBatchNodeGenerator(G,
+                                               method="ppnp",
+                                               sparse=False,
+                                               teleport_probability=0.1
+                                               )
         else:
             print("No valid embedding method chosen.")
             raise Exception
@@ -145,7 +154,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                  'f1-score': []}
 
     model = None
-    graphsage_model = None
+    embedding_model = None
     conf_matrix = None
     round = 1
     print("Starting folds ...")
@@ -182,9 +191,20 @@ def missing_target_predictor(results_filename='../results/results_log',
                     normalize=None
                 )
             elif embedding_method == 'hinsage':
-                pass
+                embedding_layer = HinSAGE(
+                    embedding_layer_sizes,
+                    train_gen,
+                    bias=True,
+                    dropout=0.5
+                )
+            elif embedding_method == 'ppnp':
+                ppnp = PPNP(layer_sizes=embedding_layer_sizes,
+                            activations=['relu']*len(embedding_layer_sizes),
+                            generator=generator,
+                            dropout=0.5,
+                            kernel_regularizer=regularizers.l2(0.001))
 
-            x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat'] else embedding_layer.node_model()
+            x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat', 'ppnp'] else embedding_layer.node_model()
 
             prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="linear")(x_out)
 
@@ -219,7 +239,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # if plot:
             # dti_utils.plot_history(history)
-        if embedding_method == 'gcn':
+        if embedding_method in ['gcn', 'gat', 'ppnp']:
             protein_node_embeddings = protein_node_embeddings.reshape(protein_node_embeddings.shape[1],
                                                                       protein_node_embeddings.shape[2])
 
@@ -363,9 +383,9 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Number of targets:\t", len(protein_list), file=filehandler)
         print("Number of drugs:\t", len(drug_list), file=filehandler)
 
-        print("Mean accuracy:", np.mean(cv_scores['acc']), file=filehandler)
-        print("Mean auroc:", np.mean(cv_scores['auroc']), file=filehandler)
-        print("Mean f1-score:", np.mean(cv_scores['f1-score']), file=filehandler)
+        print("Mean accuracy: {},\t Std: {}".format(np.mean(cv_scores['acc']), np.std(cv_scores['acc'])), file=filehandler)
+        print("Mean auroc: {},\t Std: {}".format(np.mean(cv_scores['auroc']), np.std(cv_scores['auroc'])), file=filehandler)
+        print("Mean f1: {},\t Std: {}".format(np.mean(cv_scores['f1-score']), np.std(cv_scores['f1-score'])), file=filehandler)
 
         print("Epochs: {}, Batch size: {}".format(nb_epochs, batch_size), file=filehandler)
         model.summary(print_fn=lambda x: filehandler.write(x + '\n'))
@@ -379,7 +399,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # serialize model to JSON
         if plot:
-            tf.keras.utils.plot_model(graphsage_model,
+            tf.keras.utils.plot_model(embedding_model,
                                       show_shapes=True,
                                       to_file='../models/'+embedding_method+'_model.png')
             tf.keras.utils.plot_model(model,
@@ -441,5 +461,7 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='hinsage')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='ppnp')
