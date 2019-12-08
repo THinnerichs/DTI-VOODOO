@@ -53,7 +53,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Loading data ...")
     drug_list = np.array(DTI_data_preparation.get_drug_list())
     print("Get protein list ...")
-    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:1000]
+    protein_list = np.array(DTI_data_preparation.get_human_proteins())[:5000]
     print("Finished.\n")
 
     print("Scaling data ...")
@@ -81,12 +81,12 @@ def missing_target_predictor(results_filename='../results/results_log',
     protein_node_embeddings = None
     generator = None
     if supervised:
+        embedding_layer_sizes[-1] = embedding_output_size
         if embedding_method=='graphsage':
-            embedding_layer_sizes[-1] = embedding_output_size
             generator = GraphSAGENodeGenerator(G, embedding_batch_size, num_samples)
         elif embedding_method == 'gcn' or embedding_method == 'chebyshev' or \
-                embedding_method == 'sgc' or embedding_method == 'self_loops':
-            generator = FullBatchNodeGenerator(G, method='gcn')
+                embedding_method == 'sgc' or embedding_method == 'gat':
+            generator = FullBatchNodeGenerator(G, method=embedding_method)
         else:
             print("No valid embedding method chosen.")
             raise Exception
@@ -181,6 +181,9 @@ def missing_target_predictor(results_filename='../results/results_log',
                     attn_dropout=0.5,
                     normalize=None
                 )
+            elif embedding_method == 'hinsage':
+                pass
+
             x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat'] else embedding_layer.node_model()
 
             prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="linear")(x_out)
@@ -216,6 +219,9 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # if plot:
             # dti_utils.plot_history(history)
+        if embedding_method == 'gcn':
+            protein_node_embeddings = protein_node_embeddings.reshape(protein_node_embeddings.shape[1],
+                                                                      protein_node_embeddings.shape[2])
 
         print("Scaling node embeddings ...")
         train_protein_node_embeddings = protein_node_embeddings[train]
@@ -436,4 +442,4 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
