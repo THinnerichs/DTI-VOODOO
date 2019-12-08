@@ -87,7 +87,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         if embedding_method=='graphsage':
             generator = GraphSAGENodeGenerator(G, embedding_batch_size, num_samples)
         elif embedding_method == 'hinsage':
-            generator = HinSAGENodeGenerator(G, batch_size, num_samples)
+            generator = HinSAGENodeGenerator(G, embedding_batch_size, num_samples)
         elif embedding_method in ['gcn', 'chebyshev', 'sgc', 'gat']:
             generator = FullBatchNodeGenerator(G, method=embedding_method)
         elif embedding_method == 'ppnp':
@@ -194,8 +194,8 @@ def missing_target_predictor(results_filename='../results/results_log',
                 )
             elif embedding_method == 'hinsage':
                 embedding_layer = HinSAGE(
-                    embedding_layer_sizes,
-                    train_gen,
+                    layer_sizes=embedding_layer_sizes,
+                    generator=train_gen,
                     bias=True,
                     dropout=0.5
                 )
@@ -477,6 +477,6 @@ if __name__ == '__main__':
 
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], embedding_output_size=64, embedding_method='hinsage')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
