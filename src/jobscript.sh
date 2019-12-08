@@ -4,7 +4,7 @@
 #SBATCH -J Hmmer
 #SBATCH -o jobscript_outputs/Hmmer.%J.out
 #SBATCH -e jobscript_outputs/Hmmer.%J.err
-#SBATCH --time=1-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --mem=240G
 #SBATCH --constraint=[intel]
 #SBATCH --cpus-per-task=40
