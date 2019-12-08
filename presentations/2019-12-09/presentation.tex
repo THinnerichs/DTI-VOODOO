@@ -384,7 +384,18 @@
 \begin{frame}{How to learn a sufficient embedding?}
 	\begin{itemize}
 		\item Use Filtered results as node features
-		\item Build a node classification algorithm
+		\item Run different models for classification of proteins/nodes in the graph:
+		\begin{itemize}
+			\item GraphSage
+			\item HinSage
+			\item Attri2Vec
+			\item Graph Attention Network (GAT)
+			\item Graph Convolutional Network (GCN) for node classification
+			\item GCNs for graph classification of induced subgraph
+			\item SimpleGCN
+			\item Personalized Propagation of Neural Predictions (PPNP)
+			\item Approximate Personalized Propagation of Neural Predictions (APPNP)
+		\end{itemize}
 	\end{itemize}
 	
 \end{frame}

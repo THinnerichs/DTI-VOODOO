@@ -372,7 +372,7 @@ def run_hmm_pipeline(min_score=700,
         # hmmsearch params
         max_flag = False
 
-        all_prots_fasta_filename = "../data/STITCH_data/9606.protein.sequences.v10.fa"
+        all_prots_fasta_filename = "../data/STITCH_data/9606.protein.sequences.v11.0.fa"
 
         hmm_search_results_path = '../data/hmm_search_results/'
         hmmsearch_file = hmm_search_results_path + drug_name + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
