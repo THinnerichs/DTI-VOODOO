@@ -59,8 +59,8 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Finished.\n")
 
     print("Scaling data ...")
-    # side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
-    # side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), 1430))
+    side_effect_features = np.tile(DTI_data_preparation.get_side_effect_similarity_feature_list(drug_list), (len(protein_list),1))
+    side_effect_features = side_effect_features.reshape((len(protein_list), len(drug_list), 1430))
     DDI_features = np.tile(DTI_data_preparation.get_DDI_feature_list(drug_list), (len(protein_list),1))
     DDI_features = DDI_features.reshape((len(protein_list), len(drug_list), len(drug_list)))
     print("Finished.\n")
@@ -286,11 +286,11 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         DDI_input = layers.Input(shape=(DDI_features.shape[2],))
 
-        # side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
+        side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
         merge_1 = layers.Concatenate(axis=1)([PPI_input,
                                               DDI_input,
-                                              # side_effect_input
+                                              side_effect_input
                                               ])
 
         dense_1 = layers.Dense(500, activation='relu')(merge_1)
@@ -305,7 +305,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         model = models.Model(inputs=[PPI_input,
                                      DDI_input,
-                                     # side_effect_input
+                                     side_effect_input
                                      ],
                              outputs=output)
 
@@ -325,13 +325,13 @@ def missing_target_predictor(results_filename='../results/results_log',
                         1: imb_ratio}
         model.fit([train_protein_node_embeddings,
                    DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list))),
-                   # side_effect_features[train].reshape((len(drug_list)*len(train), side_effect_features.shape[-1]))
+                   side_effect_features[train].reshape((len(drug_list)*len(train), side_effect_features.shape[-1]))
                    ],
                   y_dti_train_data,
                   batch_size=batch_size,
                   validation_data=([test_protein_node_embeddings,
                                    DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                   # side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
+                                   side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
                                     ],
                                    y_dti_test_data),
                   epochs=nb_epochs,
@@ -352,7 +352,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         y_pred = model.predict([test_protein_node_embeddings,
                                 DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                # side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
+                                side_effect_features[test].reshape((len(drug_list)*len(test), side_effect_features.shape[-1]))
                                 ])
 
         conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
@@ -403,7 +403,7 @@ def missing_target_predictor(results_filename='../results/results_log',
         print("Including:", file=filehandler)
         print("- PPIs", file=filehandler)
         print("- DDIs", file=filehandler)
-        # print("- side similarity scores", file=filehandler)
+        print("- side similarity scores", file=filehandler)
         # print("- HMM node features", file=filehandler)
         print("Number of targets:\t", len(protein_list), file=filehandler)
         print("Number of drugs:\t", len(drug_list), file=filehandler)
@@ -486,9 +486,9 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
