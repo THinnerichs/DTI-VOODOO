@@ -32,7 +32,7 @@ from stellargraph.mapper import GraphSAGENodeGenerator, \
     Attri2VecNodeGenerator, Attri2VecLinkGenerator, \
     HinSAGENodeGenerator, \
     FullBatchNodeGenerator
-from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN, link_classification
+from stellargraph.layer import GraphSAGE, Attri2Vec, HinSAGE, GCN, link_classification, GAT
 from stellargraph.data import UnsupervisedSampler
 
 import dti_utils
@@ -155,7 +155,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         embedding_layer = None
         if supervised:
-            train_gen = generator.flow(protein_list[train], PPI_dti_features[train], shuffle=True)
+            train_gen = generator.flow(protein_list[train], PPI_dti_features[train])
 
             if embedding_method == 'graphsage':
                 embedding_layer = GraphSAGE(
@@ -164,12 +164,22 @@ def missing_target_predictor(results_filename='../results/results_log',
                     bias=True,
                     dropout=0.5
                 )
-            if embedding_method == 'gcn':
+            elif embedding_method == 'gcn':
                 embedding_layer = GCN(
                     layer_sizes=embedding_layer_sizes,
                     activations=['relu', 'relu'],
                     generator=generator,
                     dropout=0.5
+                )
+            elif embedding_method == 'gat':
+                embedding_layer = GAT(
+                    layer_sizes=embedding_layer_sizes,
+                    activations=["elu", "relu"],
+                    attn_heads=8,
+                    generator=generator,
+                    in_dropout=0.5,
+                    attn_dropout=0.5,
+                    normalize=None
                 )
             x_inp, x_out = embedding_layer.build()
 
@@ -191,7 +201,7 @@ def missing_target_predictor(results_filename='../results/results_log',
                 epochs=2,
                 # validation_data=val_gen,
                 verbose=1,
-                shuffle=False
+                shuffle=True
             )
 
             print("\nCalculate node embeddings ...")
@@ -337,7 +347,7 @@ def missing_target_predictor(results_filename='../results/results_log',
               str(np.mean(cv_scores['acc'])) +"\t"+ str(np.mean(cv_scores['auroc'])) +"\t"+ str(np.mean(cv_scores['f1-score'])),
               file=f)
     with open(file=results_filename, mode='a') as filehandler:
-        print("DTI PREDICTION", file=filehandler)
+        print("DTI "+embedding_method+ " PREDICTION", file=filehandler)
 
         print("Including:", file=filehandler)
         print("- PPIs", file=filehandler)
@@ -426,3 +436,4 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
