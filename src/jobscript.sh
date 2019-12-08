@@ -2,8 +2,8 @@
 #SBATCH -N 1
 #SBATCH --partition=batch
 #SBATCH -J Hmmer
-#SBATCH -o Hmmer.%J.out
-#SBATCH -e Hmmer.%J.err
+#SBATCH -o jobscript_outputs/Hmmer.%J.out
+#SBATCH -e jobscript_outputs/Hmmer.%J.err
 #SBATCH --time=3-00:00:00
 #SBATCH --mem=240G
 #SBATCH --constraint=[intel]
