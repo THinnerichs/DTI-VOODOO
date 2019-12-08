@@ -50,6 +50,8 @@
 - run link prediction over whole graph
 
 
+- run unsupervised methods now as more RAM is available
+
 
 ----------------------------------------------------
 Talk with Robert on 03.12.:
