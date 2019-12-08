@@ -96,6 +96,8 @@ def missing_target_predictor(results_filename='../results/results_log',
                                                sparse=False,
                                                teleport_probability=0.1
                                                )
+        elif embedding_method == 'appnp':
+            generator = FullBatchNodeGenerator(G, method="gcn", sparse=True)
         else:
             print("No valid embedding method chosen.")
             raise Exception
@@ -198,11 +200,23 @@ def missing_target_predictor(results_filename='../results/results_log',
                     dropout=0.5
                 )
             elif embedding_method == 'ppnp':
-                ppnp = PPNP(layer_sizes=embedding_layer_sizes,
-                            activations=['relu']*len(embedding_layer_sizes),
-                            generator=generator,
-                            dropout=0.5,
-                            kernel_regularizer=regularizers.l2(0.001))
+                embedding_layer = PPNP(
+                    layer_sizes=embedding_layer_sizes,
+                    activations=['relu']*len(embedding_layer_sizes),
+                    generator=generator,
+                    dropout=0.5,
+                    kernel_regularizer=regularizers.l2(0.001)
+                )
+            elif embedding_method == 'appnp':
+                embedding_layer = APPNP(
+                    layer_sizes=embedding_layer_sizes,
+                    activations=['relu'] * len(embedding_layer_sizes),
+                    bias=True,
+                    generator=generator,
+                    teleport_probability=0.1,
+                    dropout=0.5,
+                    kernel_regularizer=regularizers.l2(0.001)
+                )
 
             x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat', 'ppnp'] else embedding_layer.node_model()
 
@@ -461,7 +475,8 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
-    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='hinsage')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50,50], embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='ppnp')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], embedding_output_size=64, embedding_method='hinsage')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')

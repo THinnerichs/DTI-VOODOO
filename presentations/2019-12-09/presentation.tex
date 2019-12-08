@@ -63,7 +63,7 @@
 
 \definecolor{myblue}{RGB}{80,80,160}
 \definecolor{mygreen}{RGB}{80,160,80}
-\definecolor{myturk}{RGB}{160,160,160}
+\definecolor{myturk}{RGB}{240,60,60}
 
 \begin{document}
 	
@@ -83,7 +83,7 @@
 	\begin{tikzpicture}[thick,
 	every node/.style={draw,circle},
 	fsnode/.style={fill=myblue},
-	fs1node/.style={fill=myturk},
+	fs1node/.style={fill=myblue},
 	ssnode/.style={fill=mygreen},
 	%every fit/.style={ellipse,draw,inner sep=-1pt,text width=2cm},
 	%->,shorten >= 3pt,shorten <= 3pt
@@ -128,7 +128,7 @@
 \end{frame}
 
 \section{Recent approaches}
-\begin{frame}{Classification of recent approaches\footnote{Chen Wang et al., Briefings in Bioinformatics, 2018}\footnote{Yu Ding, Briefings in Bioinformatics, 2019}}
+\begin{frame}{Classification of recent approaches\footnote{Chen Wang et al., Briefings in Bioinformatics, 2018}\footnote{Yu Ding et al., Briefings in Bioinformatics, 2019}}
 	\begin{table}
 		\begin{tabularx}{\textwidth}{|>{\setlength\hsize{.5\hsize}\setlength\linewidth{\hsize}}X|>{\setlength\hsize{1.25\hsize}\setlength\linewidth{\hsize}}X|>{\setlength\hsize{1.25\hsize}\setlength\linewidth{\hsize}}X|}
 			\hline
@@ -161,14 +161,17 @@
 \begin{frame}{Problems of recent approaches}
 	Main issues:
 	\begin{itemize}
-		\item lack of generalization
+		\item Lack ability to generalize or are unable to spot small differences
 		\item Usually only top-down or bottom-up
+		\item Not making use of interaction networks
 	\end{itemize}
 	\pause
 	\begin{tikzpicture}[thick,
 	every node/.style={draw,circle},
 	fsnode/.style={fill=myblue},
 	fs1node/.style={fill=myturk},
+	trainlegendnode/.style={fill=myblue},
+	testlegendnode/.style={fill=myturk},
 	ssnode/.style={fill=mygreen},
 	%every fit/.style={ellipse,draw,inner sep=-1pt,text width=2cm},
 	%->,shorten >= 3pt,shorten <= 3pt
@@ -192,6 +195,17 @@
 	\node[ssnode,on chain] (s\i) [label=right: T\i] {};
 	\end{scope}
 	
+	% legend
+	\begin{scope}[xshift=7cm,yshift=-0.25cm,start chain=going below,node distance=7mm]
+	\foreach \i in {1}
+	\node[trainlegendnode,on chain] (trainlegend\i) [label=right: Train] {};
+	\end{scope}
+	
+	\begin{scope}[xshift=7cm,yshift=-0.25cm, node distance=1mm]
+	\foreach \i in {1}
+	\node[testlegendnode,on chain] (testlegend\i) [label=right: Test] {};
+	\end{scope}
+	
 	% the set U
 	%\node [myblue, fit=(f1) (f3)] {};
 	\node [white,fit=(f1) (f5),label=above:$Drugs$] {};
@@ -212,6 +226,9 @@
 	
 \end{frame}
 
+\begin{frame}{}
+	
+\end{frame}
 
 \section{A medium approach to DTI prediction}
 

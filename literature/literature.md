@@ -1,5 +1,6 @@
 ## Readworthy papers
 
+- [PREDICT paper](https://www.embopress.org/doi/full/10.1038/msb.2011.26)
 
 ## Bioinformatics briefings
 ### [Review and comparative assessment of similarity-based methods for prediction of drug–protein interactions in the druggable human proteome](https://academic.oup.com/bib/advance-article/doi/10.1093/bib/bby069/5066711?searchresult=1)
