@@ -17,20 +17,26 @@
 \headcommand {\beamer@sectionpages {4}{6}}
 \headcommand {\beamer@subsectionpages {4}{6}}
 \headcommand {\sectionentry {3}{A medium approach to DTI prediction}{7}{A medium approach to DTI prediction}{0}}
-\headcommand {\slideentry {3}{0}{1}{7/7}{}{0}}
-\headcommand {\beamer@framepages {7}{7}}
-\headcommand {\beamer@subsectionpages {7}{7}}
-\headcommand {\beamer@subsectionentry {0}{3}{1}{8}{Filtering possible targets}}
-\headcommand {\slideentry {3}{1}{1}{8/9}{Filtering possible targets}{0}}
-\headcommand {\beamer@framepages {8}{9}}
-\headcommand {\slideentry {3}{1}{2}{10/11}{Filtering possible targets}{0}}
-\headcommand {\beamer@framepages {10}{11}}
-\headcommand {\slideentry {3}{1}{3}{12/12}{Filtering possible targets}{0}}
-\headcommand {\beamer@framepages {12}{12}}
-\headcommand {\slideentry {3}{1}{4}{13/13}{Filtering possible targets}{0}}
+\headcommand {\slideentry {3}{0}{1}{7/8}{}{0}}
+\headcommand {\beamer@framepages {7}{8}}
+\headcommand {\beamer@subsectionpages {7}{8}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{9}{Filtering possible targets}}
+\headcommand {\slideentry {3}{1}{1}{9/10}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {9}{10}}
+\headcommand {\slideentry {3}{1}{2}{11/12}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {11}{12}}
+\headcommand {\slideentry {3}{1}{3}{13/13}{Filtering possible targets}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\beamer@partpages {1}{13}}
-\headcommand {\beamer@subsectionpages {8}{13}}
-\headcommand {\beamer@sectionpages {7}{13}}
-\headcommand {\beamer@documentpages {13}}
-\headcommand {\gdef \inserttotalframenumber {10}}
+\headcommand {\slideentry {3}{1}{4}{14/14}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {3}{1}{5}{15/15}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\slideentry {3}{1}{6}{16/16}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {3}{1}{7}{17/17}{Filtering possible targets}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\beamer@partpages {1}{17}}
+\headcommand {\beamer@subsectionpages {9}{17}}
+\headcommand {\beamer@sectionpages {7}{17}}
+\headcommand {\beamer@documentpages {17}}
+\headcommand {\gdef \inserttotalframenumber {13}}

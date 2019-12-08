@@ -88,8 +88,10 @@ def missing_target_predictor(results_filename='../results/results_log',
             generator = GraphSAGENodeGenerator(G, embedding_batch_size, num_samples)
         elif embedding_method == 'hinsage':
             generator = HinSAGENodeGenerator(G, embedding_batch_size, num_samples)
-        elif embedding_method in ['gcn', 'chebyshev', 'sgc', 'gat']:
+        elif embedding_method in ['gcn', 'chebyshev', 'gat']:
             generator = FullBatchNodeGenerator(G, method=embedding_method)
+        elif embedding_method == 'sgc':
+            generator = FullBatchNodeGenerator(G, method='sgc', k=2)
         elif embedding_method == 'ppnp':
             generator = FullBatchNodeGenerator(G,
                                                method="ppnp",
@@ -217,8 +219,17 @@ def missing_target_predictor(results_filename='../results/results_log',
                     dropout=0.5,
                     kernel_regularizer=regularizers.l2(0.001)
                 )
+            elif embedding_method == 'sgc':
+                embedding_layer = GCN(
+                    layer_sizes=[embedding_output_size],
+                    generator=generator,
+                    bias=True,
+                    dropout=0.5,
+                    activations=["softmax"],
+                    kernel_regularizer=regularizers.l2(5e-4),
+                )
 
-            x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat', 'ppnp'] else embedding_layer.node_model()
+            x_inp, x_out = embedding_layer.build() if embedding_method not in ['gcn', 'gat', 'ppnp', 'appnp', 'sgc'] else embedding_layer.node_model()
 
             prediction = layers.Dense(units=PPI_dti_features.shape[1], activation="linear")(x_out)
 
@@ -253,7 +264,7 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         # if plot:
             # dti_utils.plot_history(history)
-        if embedding_method in ['gcn', 'gat', 'ppnp']:
+        if embedding_method in ['gcn', 'gat', 'ppnp', 'appnp', 'sgc']:
             protein_node_embeddings = protein_node_embeddings.reshape(protein_node_embeddings.shape[1],
                                                                       protein_node_embeddings.shape[2])
 
@@ -477,6 +488,7 @@ if __name__ == '__main__':
 
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
     missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')

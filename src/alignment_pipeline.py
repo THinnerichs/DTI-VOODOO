@@ -364,9 +364,10 @@ def run_hmm_pipeline(min_score=700,
         # "--"+rel_weight_method+" "+\
 
         print(command)
-        # subprocess.call(command, shell=True)
+        subprocess.call(command, shell=True)
         print("Finished.\n")
 
+        '''
         # Parallel(n_jobs=10)(delayed(hmm_build)(filename) for filename in [file for file in os.listdir(alignment_path) if file.startswith("CID")])
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
@@ -378,9 +379,6 @@ def run_hmm_pipeline(min_score=700,
         hmmsearch_file = hmm_search_results_path + drug_name + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
 
         command = "hmmsearch " + \
-                  ("--max " if max_flag else "") + \
-                  "--nonli " + \
-                  "--nontextw "+\
                   "--cpu " + str(threads_per_worker) + " " + \
                   hmmbuild_file + " " + all_prots_fasta_filename + " > " + hmmsearch_file
 
@@ -412,6 +410,7 @@ def run_hmm_pipeline(min_score=700,
                         split_list.append(ele)
                 protein_id = split_list[8].strip()
                 predicted_targets_filehandler.write(protein_id+'\n')
+        '''
 
     q = queue.Queue()
     files = os.listdir(alignment_path)
@@ -459,8 +458,8 @@ if __name__ == '__main__':
 
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
-                     workers=5,
-                     threads_per_worker=8)
+                     workers=1,
+                     threads_per_worker=40)
 
 
 

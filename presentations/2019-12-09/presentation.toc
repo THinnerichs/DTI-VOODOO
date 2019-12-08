@@ -2,4 +2,4 @@
 \beamer@sectionintoc {1}{Problem Description}{3}{0}{1}
 \beamer@sectionintoc {2}{Recent approaches}{4}{0}{2}
 \beamer@sectionintoc {3}{A medium approach to DTI prediction}{7}{0}{3}
-\beamer@subsectionintoc {3}{1}{Filtering possible targets}{8}{0}{3}
+\beamer@subsectionintoc {3}{1}{Filtering possible targets}{9}{0}{3}

@@ -57,7 +57,7 @@
 
 %presentation
 \expandafter\def\expandafter\insertshorttitle\expandafter{%
-	\insertshorttitle\hspace{5cm}%
+	\insertshorttitle\hspace{4.5cm}%
 	\insertframenumber\,/\,\inserttotalframenumber
 }
 
@@ -232,6 +232,12 @@
 		\item For each drug, filter possible targets according to protein based measurement
 		\item Bring those together with the interaction networks for the prediction
 	\end{enumerate}
+	\pause
+	Two hypotheses to be tested:
+	\begin{itemize}
+		\item Interaction only network sufficient?
+		\item Does filter method increase performance?
+	\end{itemize}
 \end{frame}
 
 \subsection{Filtering possible targets}
@@ -262,10 +268,151 @@
 	\end{enumerate}
 	\pause
 	\vspace{0.5cm}
-	This is very expensive to compute \dots (10000 hours for alignments of 614 drugs + IBEX queue times for such big jobs)
+	This is quite expensive to compute \dots (8000 hours for alignments of 614 drugs + IBEX queue times for such big jobs)
 \end{frame}
 
-\begin{frame}{}
+\begin{frame}{Other features for the model}
+	\begin{itemize}
+		\item Protein-protein-interaction network from STRING (only human)
+		\item Drug-drug-interaction network from Boyce\footnote{Boyce et al., 2015} and Drugbank
+		\item Side-effect data for drugs from SIDER, annotated with MedDRA hierarchy (semantic similarity)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Features in context}
+	\begin{tikzpicture}[thick,
+	every node/.style={draw,circle},
+	fsnode/.style={fill=myblue},
+	fs1node/.style={fill=myturk},
+	drughierarchynode/.style={fill=myturk},
+	druglegendnode/.style={fill=myblue},
+	hierarchylegendnode/.style={fill=myturk},
+	targetlegendnode/.style={fill=mygreen},
+	ssnode/.style={fill=mygreen},
+	%every fit/.style={ellipse,draw,inner sep=-1pt,text width=2cm},
+	%->,shorten >= 3pt,shorten <= 3pt
+	]
+	
+	% the vertices of U
+	\begin{scope}[xshift=2.25cm,yshift=-3cm,start chain=going right,node distance=5mm]
+	\foreach \i in {1,2,...,6}
+	\node[fsnode,on chain] (f\i) {};
+	\end{scope}
+	
+	\begin{scope}[xshift=3.5cm,yshift=-2.5cm,start chain=going right,node distance=5mm]
+	\foreach \i in {7,8,...,10}
+	\node[fsnode,on chain] (f\i) {};
+	\end{scope}
+	
+	% Hierarchy nodes
+	\begin{scope}[xshift=2cm,yshift=-4.2cm,start chain=going right,node distance=7mm]
+	\foreach \i in {1,2,...,6}
+	\node[drughierarchynode,on chain] (dh\i) {};
+	\end{scope}
+	
+	
+	% the vertices of V
+	\begin{scope}[xshift=2.5cm,yshift=0cm,start chain=going right,node distance=7mm]
+	\foreach \i in {1,2,...,5}
+	\node[ssnode,on chain] (s\i) {};
+	\end{scope}
+	\begin{scope}[xshift=3cm,yshift=-1cm,start chain=going right,node distance=7mm]
+	\foreach \i in {6,7,...,9}
+	\node[ssnode,on chain] (s\i) {};
+	\end{scope}
+	
+	% legend
+	\begin{scope}[xshift=9cm,yshift=0cm, node distance=1mm]
+	\foreach \i in {1}
+	\node[hierarchylegendnode] (hlegend\i) [label=right: Side effects] {};
+	\end{scope}
+	\begin{scope}[xshift=9cm,yshift=-0.5cm, node distance=1mm]
+	\foreach \i in {1}
+	\node[druglegendnode] (dlegend\i) [label=right: Drugs] {};
+	\end{scope}
+	\begin{scope}[xshift=9cm,yshift=-1cm, node distance=1mm]
+	\foreach \i in {1}
+	\node[targetlegendnode] (tlegend\i) [label=right: Targets] {};
+	\end{scope}
+	
+	
+	\node [white, fit=(dh3) (dh4),label=below:$\textbf{\dots}$] {};
+	\node [white, fit=(f3),label=below:$\textbf{\dots}$] {};
+	\node [white,fit=(f7), label=above:$\textbf{\dots}$] {};
+	
+	\node [white,fit=(s5), label=right:$\approx17000$] {};
+	\node [white,fit=(f10), label=right:$\approx600$] {};
+	\node [white,fit=(dh6), label=right:$\approx1400$] {};
+	
+	
+	% the set U
+	%\node [myblue, fit=(f1) (f3)] {};
+	
+	% DTI edges
+	\draw (f1) -- (s6);
+	\draw (f2) -- (s6);
+	
+	% PPI edges
+	\draw (s1) -- (s6);
+	\draw (s1) -- (s2);
+	\draw (s1) -- (s6);
+	\draw (s1) -- (s7);
+	\draw (s2) -- (s6);
+	\draw (s4) -- (s9);
+	\draw (s3) -- (s7);
+	\draw (s4) -- (s8);
+	\draw (s4) -- (s7);
+	\draw (s2) -- (s9);
+	\draw (s5) -- (s8);
+	
+	% DDI edges
+	\draw (f3) -- (f7);
+	\draw (f4) -- (f7);
+	\draw (f5) -- (f7);
+	\draw (f3) -- (f4);
+	\draw (f5) -- (f10);
+	\draw (f2) -- (f7);
+	
+	% Side effect edges
+	\draw (f1) -- (dh1);
+	\draw (f2) -- (dh1);
+	
+	
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{How to learn a sufficient embedding?}
+	\begin{itemize}
+		\item Use Filtered results as node features
+		\item Build a node classification algorithm
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{First results}
+	\begin{figure}
+		\small
+		\centering
+		\begingroup
+		\def\arraystretch{1.2}
+		\begin{tabular}{|l|r|r|r|r|r|r|r|r|}
+			\hline
+			Approach  & \multicolumn{2}{c}{Layers} & \multicolumn{3}{|c|}{Acceptor} & \multicolumn{3}{c|}{Donor} \\
+			\cline{2-9}
+			&Conv. & Others & Acc. & Prec. & Rec. & Acc. & Prec. & Rec. \\
+			\hline
+			CNN DPDB & 4 & 5 & 94.4 & 95.4 & 94.6 & 94.9 & 94.4 & 94.7 \\
+			CNN DPDB & 4 & 7 & 93.5 & 93.3 & 94.5 & 94.0 & 94.0 & 93.3 \\
+			CNN DPDB & 6 & 5 & 94.0 & 93.9 & 94.9 & 94.2 & 95.4 & 91.6 \\
+			CNN DPDB & 6 & 5 & 94.4 & 97.0 & 93.8 & 95.2 & 96.5 & 93.7 \\
+			CNN DPDB & 2 & 4 & 94.3 & 95.6 & 94.3 & 95.3 & 96.9 & 94.4 \\
+			SpliceRover & 4 & 2 & 96.1 & 93.9 & 97.4 & 95.4 & 95.6 & 96.7 \\
+			Splice2Deep & - & - & 95.2 &  -- & 94.9 & 95.6 & -- & 98.8\\
+			
+			\hline  
+		\end{tabular}
+		\endgroup
+	\end{figure}
 \end{frame}
 
 
@@ -274,6 +421,8 @@
 	\begin{itemize}
 		\item Yu Ding, Hong Wang, Hewei Zheng, Lianzong Wang, Guosi Zhang, Jiaxin Yang, Xiaoyan Lu, Yu Bai, Haotian Zhang, Jing Li, Wenyan Gao, Fukun Chen, Shui Hu, Jingqi Wu, Liangde Xu, Evaluation of drug efficacy based on the spatial position comparison of drug–target interaction centers, Briefings in Bioinformatics, , bbz024, https://doi.org/10.1093/bib/bbz024
 		\item Chen Wang, Lukasz Kurgan, Review and comparative assessment of similarity-based methods for prediction of drug–protein interactions in the druggable human proteome, Briefings in Bioinformatics, , bby069, https://doi.org/10.1093/bib/bby069
+		\item Toward a complete dataset of drug–drug interaction information from publicly available sources, SerkanAyvazaJohnHornbOktieHassanzadehcQianZhudJohannStaneNicholas P.TatonettifSantiagoVilarfMathiasBrochhausengMatthiasSamwaldhMajidRastegar-MojaradiMichelDumontierjRichard D.Boyce, 2015
+		
 	\end{itemize}
 \end{frame}
 
