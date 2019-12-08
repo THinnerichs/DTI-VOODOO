@@ -351,7 +351,7 @@ def run_hmm_pipeline(min_score=700,
         alignment_file = alignment_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
         hmmbuild_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
 
-        if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size != 0:
+        if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size == 0:
             return
 
         print("Building Hidden Markov Model ...")
@@ -364,10 +364,9 @@ def run_hmm_pipeline(min_score=700,
         # "--"+rel_weight_method+" "+\
 
         print(command)
-        subprocess.call(command, shell=True)
+        # subprocess.call(command, shell=True)
         print("Finished.\n")
 
-        '''
         # Parallel(n_jobs=10)(delayed(hmm_build)(filename) for filename in [file for file in os.listdir(alignment_path) if file.startswith("CID")])
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
@@ -410,7 +409,6 @@ def run_hmm_pipeline(min_score=700,
                         split_list.append(ele)
                 protein_id = split_list[8].strip()
                 predicted_targets_filehandler.write(protein_id+'\n')
-        '''
 
     q = queue.Queue()
     files = os.listdir(alignment_path)
@@ -458,8 +456,8 @@ if __name__ == '__main__':
 
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
-                     workers=1,
-                     threads_per_worker=40)
+                     workers=5,
+                     threads_per_worker=8)
 
 
 
