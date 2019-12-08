@@ -226,11 +226,48 @@
 	
 \end{frame}
 
-\begin{frame}{}
-	
+\section{A medium approach to DTI prediction}
+\begin{frame}{How to bring both approaches together?}
+	\begin{enumerate}
+		\item For each drug, filter possible targets according to protein based measurement
+		\item Bring those together with the interaction networks for the prediction
+	\end{enumerate}
 \end{frame}
 
-\section{A medium approach to DTI prediction}
+\subsection{Filtering possible targets}
+\begin{frame}{How to build such a filter?}
+	STITCH database got 
+	\begin{itemize}
+		\item 390 000 chemicals, and
+		\item 3.6 million proteins
+		\item from over 2000 organisms
+	\end{itemize}
+	\pause 
+	\vspace{0.5cm}
+	For each drug, find a motif in the target amino acid sequences and query that against all possible proteins and use the results as features for the prediction
+\end{frame}
+
+\begin{frame}{How to find motifs?}
+	\begin{enumerate}
+		\item Build multi sequence alignment with alignment tool of choice over non-human proteins
+			\begin{itemize}
+				\item FAMSA, MAFFT, Kalign, MSA Props, Muscle, \dots
+			\end{itemize}
+		\item Build representation of that alignment
+			\begin{itemize}
+				\item Hidden Markov model with HMMER
+				\item PWM
+			\end{itemize}
+		\item Query representation against database
+	\end{enumerate}
+	\pause
+	\vspace{0.5cm}
+	This is very expensive to compute \dots (10000 hours for alignments of 614 drugs + IBEX queue times for such big jobs)
+\end{frame}
+
+\begin{frame}{}
+\end{frame}
+
 
 \begin{frame}{Full citations}
 	\footnotesize

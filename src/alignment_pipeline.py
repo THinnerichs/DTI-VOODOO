@@ -461,8 +461,8 @@ if __name__ == '__main__':
 
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
-                     workers=4,
-                     threads_per_worker=10)
+                     workers=1,
+                     threads_per_worker=40)
 
 
 
