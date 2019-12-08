@@ -89,8 +89,8 @@ def missing_target_predictor(results_filename='../results/results_log',
             raise Exception
     else:
         if embedding_method == 'attr2vec':
-            number_of_walks = 300
-            length = 3
+            number_of_walks = 10
+            length = 1
             unsupervised_samples = UnsupervisedSampler(G, nodes=list(G.nodes()), length=length, number_of_walks=number_of_walks)
             generator = Attri2VecLinkGenerator(G, embedding_batch_size).flow(unsupervised_samples)
         else:
@@ -187,8 +187,9 @@ def missing_target_predictor(results_filename='../results/results_log',
 
             protein_node_embeddings = encoder.predict_generator(overall_generator)
             print("Finished.\n")
-        else:
-            pass
+
+
+
         print(protein_node_embeddings.shape)
 
         raise Exception

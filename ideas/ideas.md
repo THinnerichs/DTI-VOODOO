@@ -45,6 +45,7 @@
   - How can this be made proof? Model is tweaked on this dataset while foreign methods are not
 
 - prepare presentation
+- read PREDICT paper
 - maybe try other stellargraph embeddings as well :)))
 - run link prediction over whole graph
 
