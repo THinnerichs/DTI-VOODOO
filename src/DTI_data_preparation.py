@@ -182,7 +182,7 @@ def write_drug_to_HMM_filtered_targets_dict():
 
 def get_drug_to_HMM_filtered_targets_dict():
     filename = "../data/drug_to_HMM_filtered_targets_dict"
-    with open(file=filename, mode='rb') as f:
+    with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
 def get_protein_HMM_filtered_features(drug_list):
