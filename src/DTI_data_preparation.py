@@ -4,6 +4,7 @@ import networkx as nx
 import pickle
 
 import os
+from tqdm import tqdm
 
 import PPI_utils
 import DDI_utils
@@ -160,8 +161,30 @@ def get_annotated_PPI_graph():
 def write_drug_to_HMM_filtered_targets_dict():
     predicted_targets_dir = "../data/predicted_targets/"
 
+    print("Parsing targets from Hmmer prediction ...")
     files = os.listdir(predicted_targets_dir)
+    drug_filtered_targets_dict = {}
+    for file in tqdm(files):
+        drug = file.split('_')[0]
+        target_list = []
+        with open(file=predicted_targets_dir + file, mode='r') as f:
+            f.readline()
+            for line in f:
+                target_list.append(line.strip())
 
+        print(len(target_list))
+        drug_filtered_targets_dict[drug] = target_list
+
+    print("Writing dict ...")
+    filename = "../data/drug_to_HMM_filtered_targets_dict"
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(drug_filtered_targets_dict, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
+
+def get_drug_to_HMM_filtered_targets_dict():
+    filename = "../data/drug_to_HMM_filtered_targets_dict"
+    with open(file=filename, mode='rb') as f:
+        return pickle.load(f)
 
 def test():
     # print("DTI", len(get_human_proteins()))
@@ -176,9 +199,11 @@ def test():
 if __name__ == '__main__':
     # write_human_DTI_graph()
 
-    test()
+    # test()
 
     # write_human_protein_list()
 
     # print(get_annotated_PPI_graph())
+
+    write_drug_to_HMM_filtered_targets_dict()
     pass

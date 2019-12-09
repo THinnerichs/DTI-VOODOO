@@ -33,8 +33,14 @@
 
 ----------------------------------------------------
 
-- run gaphsage as link predictor
+- run graphsage as link predictor
 - extract predictions from search results
+
+- Read paper how convolution over node features is done
+  - Otherwise use same structure but with different node labels?
+
+- update targets based on new alignments
+  - update after new hmm\_search went trough :)
 
 
 
