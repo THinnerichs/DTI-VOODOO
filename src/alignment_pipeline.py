@@ -286,7 +286,7 @@ def run_MSA(min_score=800,
     files = None
     if human_only:
         merged_DDI_graph = DDI_utils.get_merged_DDI_graph()
-        drug_list = list(merged_DDI_graph.nodes())
+        drug_list = set(merged_DDI_graph.nodes()) | set(get_SIDER_drug_list())
         # drug_list = get_SIDER_Boyce_Drubank_drug_intersection()
         # drug_list = get_SIDER_drug_list()
         files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in drug_list]
@@ -452,7 +452,7 @@ if __name__ == '__main__':
 
     run_MSA(min_score=700,
             alignment_method='mafft',
-            workers=4,
+            workers=2,
             threads_per_process=10,
             start=start,
             end=end,

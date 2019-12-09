@@ -6,6 +6,7 @@ def run_jobs(parts=100,
     # 637 drugs in intersect
     # 186135 for all drugs in STITCH -> set human_only in msa to wrong
     # 1430 drugs in SIDER
+    # 2254 union SIDER and merged graph
     slurm_path = "../SLURM_JOBS/"
 
     sep_intervals = [(int(amount / parts * i), int(amount / parts * (i + 1))) for i in range(parts)]
@@ -14,9 +15,9 @@ def run_jobs(parts=100,
         preface_script = '''#!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J MSA
-#SBATCH -o MultiSequenceAlignment.%J.out
-#SBATCH -e MultiSequenceAlignment.%J.err
+#SBATCH -J MAFFTMSA
+#SBATCH -o MAFFTMultiSequenceAlignment.%J.out
+#SBATCH -e MAFFTMultiSequenceAlignment.%J.err
 #SBATCH --time=2-00:00:00
 #SBATCH --mem=120G
 #SBATCH --cpus-per-task=20
@@ -53,8 +54,8 @@ def submit_jobscript_n_times(n):
         subprocess.call("sbatch jobscript.sh", shell=True)
 
 if __name__ == '__main__':
-    # run_jobs(parts=60, amount=646)
+    run_jobs(parts=150, amount=2254)
     # cancel_jobs()
-    submit_jobscript_n_times(15)
+    # submit_jobscript_n_times(15)
 
     pass
