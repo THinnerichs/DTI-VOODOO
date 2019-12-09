@@ -485,19 +485,21 @@ def pure_HMM_predictor():
     drug_list = DTI_data_preparation.get_drug_list()
     protein_list = DTI_data_preparation.get_human_proteins()
 
-    y_dtis = DTI_data_preparation.get_DTIs(drug_list, protein_list)
 
-    y_pred = np.zeros(len(protein_list) * len(drug_list))
 
-    for i in range(len(drug_list)):
-        drug = drug_list[i]
-        if drug == 'CIDm00000753':
-            continue
+    drug_intersect = sorted(list(set(drug_to_Hmm_filtered_targets_dict.keys()) &
+                                 set(drug_list)))
+
+    y_pred = np.zeros(len(protein_list) * len(drug_intersect))
+    y_dtis = DTI_data_preparation.get_DTIs(drug_intersect, protein_list)
+
+    for i in range(len(drug_intersect)):
+        drug = drug_intersect[i]
         for j in range(len(protein_list)):
             protein = protein_list[j]
 
             if protein in drug_to_Hmm_filtered_targets_dict[drug]:
-                y_pred[j * len(drug_list) + i] = 1
+                y_pred[j * len(drug_intersect) + i] = 1
 
     conf_matrix = metrics.confusion_matrix(y_true=y_dtis, y_pred=y_pred)
 
