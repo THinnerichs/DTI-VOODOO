@@ -503,6 +503,8 @@ def pure_HMM_predictor():
 
     conf_matrix = metrics.confusion_matrix(y_true=y_dtis, y_pred=y_pred)
 
+    print(conf_matrix)
+
     tn = conf_matrix[0, 0]
     tp = conf_matrix[1, 1]
     fp = conf_matrix[0, 1]
