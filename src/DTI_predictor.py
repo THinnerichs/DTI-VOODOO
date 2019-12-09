@@ -520,7 +520,7 @@ def pure_HMM_predictor():
     print("f1-score", f1_score * 100)
 
 def test():
-    y_true = np.array([0])
+    y_true = np.array([1])
     y_pred = np.array([1])
 
     print(metrics.confusion_matrix(y_true=y_true, y_pred=y_pred))
