@@ -228,10 +228,12 @@
 
 \section{A medium approach to DTI prediction}
 \begin{frame}{How to bring both approaches together?}
-	\begin{enumerate}
-		\item For each drug, filter possible targets according to protein based measurement
-		\item Bring those together with the interaction networks for the prediction
-	\end{enumerate}
+	\begin{exampleblock}{Algorithm}
+		\begin{enumerate}
+			\item For each drug, filter possible targets according to protein based measurement
+			\item Bring those together with the interaction networks for the prediction
+		\end{enumerate}
+	\end{exampleblock}
 	\pause
 	Two hypotheses to be tested:
 	\begin{itemize}
@@ -402,24 +404,43 @@
 
 \begin{frame}{First results}
 	\begin{figure}
-		\small
 		\centering
 		\begingroup
+		
+		\footnotesize
 		\def\arraystretch{1.2}
-		\begin{tabular}{|l|r|r|r|r|r|r|r|r|}
+		\begin{tabular}{|r|r|r|r|r|r|r|r|}
 			\hline
-			Approach  & \multicolumn{2}{c}{Layers} & \multicolumn{3}{|c|}{Acceptor} & \multicolumn{3}{c|}{Donor} \\
-			\cline{2-9}
-			&Conv. & Others & Acc. & Prec. & Rec. & Acc. & Prec. & Rec. \\
+			\multicolumn{4}{|c|}{Used data}&layer sizes&model&Acc&AUC\\
+			%\hline
+			PPI&DDI&SE&HMM&&&&\\
 			\hline
-			CNN DPDB & 4 & 5 & 94.4 & 95.4 & 94.6 & 94.9 & 94.4 & 94.7 \\
-			CNN DPDB & 4 & 7 & 93.5 & 93.3 & 94.5 & 94.0 & 94.0 & 93.3 \\
-			CNN DPDB & 6 & 5 & 94.0 & 93.9 & 94.9 & 94.2 & 95.4 & 91.6 \\
-			CNN DPDB & 6 & 5 & 94.4 & 97.0 & 93.8 & 95.2 & 96.5 & 93.7 \\
-			CNN DPDB & 2 & 4 & 94.3 & 95.6 & 94.3 & 95.3 & 96.9 & 94.4 \\
-			SpliceRover & 4 & 2 & 96.1 & 93.9 & 97.4 & 95.4 & 95.6 & 96.7 \\
-			Splice2Deep & - & - & 95.2 &  -- & 94.9 & 95.6 & -- & 98.8\\
-			
+			1&1&0&0&641&graphsage&88.97&66.20\\
+			1&1&0&0&641&graphsage&80.28&70.51\\
+			1&1&0&0&641&graphsage&87.44&67.80\\
+			1&1&0&0&641&graphsage&86.46&68.39\\
+			1&1&0&0&641&graphsage&88.84&66.62\\
+			1&1&1&0&641&graphsage&93.34&62.42\\
+			1&1&1&0&641&graphsage&73.20&62.53\\
+			1&1&1&0&641&graphsage&93.27&64.81\\
+			1&1&1&0&641&graphsage&74.28&59.18\\
+			1&1&1&0&641&graphsage&72.40&63.93\\
+			1&1&1&0&641&gcn&88.61&67.27\\
+			1&1&1&0&641&gat&82.65&71.69\\
+			1&1&1&0&641&hinsage&83.18&70.33\\
+			1&1&1&0&641&ppnp&89.80&67.78\\
+			1&1&1&0&641&appnp&84.35&71.82\\
+			1&1&1&0&641&sgc&86.50&68.45\\
+			1&1&1&0&641&gcn&59.84&50.10\\
+			1&1&1&0&641&gcn&97.11&56.02\\
+			1&1&1&0&641&gat&59.77&50.06\\
+			1&1&1&0&641&gat&55.48&55.93\\
+			1&1&1&0&641&hinsage&59.77&50.06\\
+			1&1&1&0&641&hinsage&94.06&63.52\\
+			1&1&1&0&641&ppnp&21.54&50.15\\
+			1&1&1&0&641&ppnp&77.98&55.85\\
+			1&1&1&0&641&appnp&40.71&50.13\\
+			1&1&1&0&641&sgc&2.27&50.18\\
 			\hline  
 		\end{tabular}
 		\endgroup
@@ -428,12 +449,13 @@
 
 \begin{frame}{Future Work}
 	\begin{itemize}
+		\item Prove improvement of generalization
 		\item Test performance against recent approaches
 		\item Tweak model properly
 		\item If performance and generalization is good enough:
 		\begin{itemize}
 			\item Test some predicted interactions in vitro
-			\item Use DTI for Side-effect-phenotype mapping for future projects
+			\item Use DTI for Side-effect-phenotype mapping
 		\end{itemize}
 	\end{itemize}
 \end{frame}

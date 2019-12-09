@@ -113,13 +113,36 @@ def merge_protein_to_subgraph_dicts(start):
     print("Finished.\n")
     '''
 
+def prepare_results():
+    filename = "../results/results_table"
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            split_line = line.strip().split('\t')
+            split_line.pop(6)
+            split_line.pop(-1)
+            if len(split_line) == 9:
+                split_line.insert(-2, 'graphsage')
+            else:
+                split_line.pop(-4)
+
+            split_line.pop(4)
+            split_line.pop(5)
+
+            split_line[-1] = "%.2f" % float(split_line[-1])
+            split_line[-2] = "%.2f" % float(split_line[-2])
+            print('&'.join(split_line) + "\\\\")
+
+
+
 if __name__ == '__main__':
     # test_target_subset()
 
     # run_PPI_parallel()
 
-    _, start = sys.argv
-    merge_protein_to_subgraph_dicts(start)
+    # _, start = sys.argv
+    # merge_protein_to_subgraph_dicts(start)
+
+    prepare_results()
 
     pass
 

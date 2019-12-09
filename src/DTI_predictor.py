@@ -389,7 +389,7 @@ def missing_target_predictor(results_filename='../results/results_log',
     print("Mean f1-score:", np.mean(cv_scores['f1-score']))
 
     with open(file=results_table_filename, mode='a') as f:
-        print("1" +"\t"+ "1" +"\t"+ "1" +"\t"+ "0" +"\t"+
+        print("1" +"\t"+ "0" +"\t"+ "1" +"\t"+ "0" +"\t"+
               str(len(protein_list)) +"\t"+ str(len(drug_list)) +"\t"+
               str(nb_epochs) +"\t"+
               str(embedding_layer_sizes) + "\t" +
@@ -486,9 +486,11 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[100, 100], embedding_layer_sizes= [128, 64], embedding_output_size=64)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[200, 100], embedding_layer_sizes= [128, 64], embedding_output_size=128)
 
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gcn')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32,32], embedding_output_size=64, embedding_method='gat')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[32], num_samples=[100], embedding_output_size=64, embedding_method='hinsage')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
+    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64], embedding_output_size=128, embedding_method='graphsage')
+
