@@ -362,8 +362,8 @@ def missing_target_predictor(results_filename='../results/results_log',
 
         tn = conf_matrix[0, 0]
         tp = conf_matrix[1, 1]
-        fn = conf_matrix[0, 1]
-        fp = conf_matrix[1, 0]
+        fp = conf_matrix[0, 1]
+        fn = conf_matrix[1, 0]
 
         precision = tp / (tp + fp)
         recall = tp / (tp + fn)
@@ -501,29 +501,21 @@ def pure_HMM_predictor():
 
     tn = conf_matrix[0, 0]
     tp = conf_matrix[1, 1]
-    fn = conf_matrix[0, 1]
-    fp = conf_matrix[1, 0]
+    fp = conf_matrix[0, 1]
+    fn = conf_matrix[1, 0]
 
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     accuracy = (tp + tn) / (tp + tn + fp + fn)
 
-    y_pred = (y_pred.reshape((y_pred.shape[0])) > 0.5).astype(int)
-
-    auroc = metrics.roc_auc_score(y_dti_test_data, y_pred)
-    f1_score = metrics.f1_score(y_dti_test_data, y_pred)
+    auroc = metrics.roc_auc_score(y_dtis, y_pred)
+    f1_score = metrics.f1_score(y_dtis, y_pred)
 
     print("accuracy", accuracy * 100)
     print("prec", precision * 100)
     print("recall", recall * 100)
     print("auroc", auroc * 100)
     print("f1-score", f1_score * 100)
-
-def test():
-    y_true = np.array([0,0,1])
-    y_pred = np.array([0,0,1])
-
-    print(metrics.confusion_matrix(y_true=y_true, y_pred=y_pred))
 
 
 
@@ -541,5 +533,5 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64], embedding_output_size=128, embedding_method='graphsage')
 
-    test()
+    pure_HMM_predictor()
 
