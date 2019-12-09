@@ -443,6 +443,7 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
+    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
@@ -454,13 +455,12 @@ if __name__ == '__main__':
             start=start,
             end=end,
             human_only=True)
-
     '''
+
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
                      workers=5,
                      threads_per_worker=8)
-    '''
 
 
 
