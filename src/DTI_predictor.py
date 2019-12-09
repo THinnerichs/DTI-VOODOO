@@ -480,6 +480,53 @@ def GCN_missing_target_predictor():
               verbose=1)
     '''
 
+def pure_HMM_predictor():
+    drug_to_Hmm_filtered_targets_dict = DTI_data_preparation.get_drug_to_HMM_filtered_targets_dict()
+    drug_list = DTI_data_preparation.get_drug_list()
+    protein_list = DTI_data_preparation.get_human_proteins()
+
+    y_dtis = DTI_data_preparation.get_DTIs(drug_list, protein_list)
+
+    y_pred = np.zeros(len(protein_list) * len(drug_list))
+
+    for i in range(drug_list):
+        drug = drug_list[i]
+        for j in range(protein_list):
+            protein = protein_list[j]
+
+            if protein in drug_to_Hmm_filtered_targets_dict[drug]:
+                y_pred[j * len(drug_list) + i] = 1
+
+    conf_matrix = metrics.confusion_matrix(y_true=y_dtis, y_pred=y_pred)
+
+    tn = conf_matrix[0, 0]
+    tp = conf_matrix[1, 1]
+    fn = conf_matrix[0, 1]
+    fp = conf_matrix[1, 0]
+
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+
+    y_pred = (y_pred.reshape((y_pred.shape[0])) > 0.5).astype(int)
+
+    auroc = metrics.roc_auc_score(y_dti_test_data, y_pred)
+    f1_score = metrics.f1_score(y_dti_test_data, y_pred)
+
+    print("accuracy", accuracy * 100)
+    print("prec", precision * 100)
+    print("recall", recall * 100)
+    print("auroc", auroc * 100)
+    print("f1-score", f1_score * 100)
+
+def test():
+    y_true = np.array([0])
+    y_pred = np.array([1])
+
+    print(metrics.confusion_matrix(y_true=y_true, y_pred=y_pred))
+
+
+
 if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=32, embedding_method='attr2vec', supervised=False)
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, num_samples=[50, 50], embedding_layer_sizes= [32, 32], embedding_output_size=64)
@@ -492,5 +539,7 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='ppnp')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='appnp')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
-    missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64], embedding_output_size=128, embedding_method='graphsage')
+    # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64], embedding_output_size=128, embedding_method='graphsage')
+
+    test()
 

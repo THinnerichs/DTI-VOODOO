@@ -172,7 +172,6 @@ def write_drug_to_HMM_filtered_targets_dict():
             for line in f:
                 target_list.append(line.strip())
 
-        print(len(target_list))
         drug_filtered_targets_dict[drug] = target_list
 
     print("Writing dict ...")
@@ -185,6 +184,13 @@ def get_drug_to_HMM_filtered_targets_dict():
     filename = "../data/drug_to_HMM_filtered_targets_dict"
     with open(file=filename, mode='rb') as f:
         return pickle.load(f)
+
+def get_protein_HMM_filtered_features(drug_list):
+    # drug_toHMM_filtered_targets_dict = get_drug_HMM_filtered_features()
+    pass
+
+
+
 
 def test():
     # print("DTI", len(get_human_proteins()))
