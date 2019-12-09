@@ -184,8 +184,12 @@ def evaluate_dicts_and_graph():
     print(len(drugbank_graph.nodes()))
     print(len(boyce_graph.nodes()))
 
+    intersect = set(drugbank_graph.nodes()) & set(boyce_graph.nodes())
+    print(len(intersect))
 
-    print(len(set(drugbank_graph.nodes()) & set(boyce_graph.nodes())))
+    SIDER_drugs = set(similarity_measurement.get_SIDER_drug_list())
+
+    print(len(SIDER_drugs | intersect))
 
 
     # SIDER_only_graph = get_SIDER_only_graph()
@@ -202,10 +206,10 @@ if __name__ == '__main__':
 
     # get_DDI_Boyce_graph()
 
-    write_DDI_drugbank_graph()
-    print(len(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    # write_DDI_drugbank_graph()
+    # print(len(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
 
-    # evaluate_dicts_and_graph()
+    evaluate_dicts_and_graph()
 
     # get_DDI_drugbank_graph()
 
