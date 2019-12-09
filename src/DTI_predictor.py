@@ -489,12 +489,10 @@ def pure_HMM_predictor():
 
     y_pred = np.zeros(len(protein_list) * len(drug_list))
 
-    print(len(set(drug_to_Hmm_filtered_targets_dict.keys()) & set(drug_list)))
-
-    raise Exception
-
     for i in range(len(drug_list)):
         drug = drug_list[i]
+        if drug == 'CIDm00000753':
+            continue
         for j in range(len(protein_list)):
             protein = protein_list[j]
 
