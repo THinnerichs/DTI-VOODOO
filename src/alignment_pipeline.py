@@ -392,7 +392,7 @@ def run_hmm_pipeline(min_score=700,
 
         # Evaluate the results of the search
         predicted_targets_path = "../data/predicted_targets/"
-        predicted_targets_file = predicted_targets_path + drug_name + "_predicted_targets"
+        predicted_targets_file = predicted_targets_path + drug_name + "_"+alignment_method+"_predicted_targets"
 
         # extract actual predicted targets from hmmsearch output file and write them to a new file
         with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, \
@@ -432,6 +432,9 @@ def run_hmm_pipeline(min_score=700,
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
+def write_predicted_targets():
+    pass
+
 
 
 
@@ -443,24 +446,24 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
-    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
 
     run_MSA(min_score=700,
-            alignment_method='famsa',
+            alignment_method='mafft',
             workers=4,
             threads_per_process=10,
             start=start,
             end=end,
             human_only=True)
-    '''
 
+    '''
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
                      workers=5,
                      threads_per_worker=8)
+    '''
 
 
 
