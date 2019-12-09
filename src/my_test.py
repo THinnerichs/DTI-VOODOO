@@ -126,7 +126,7 @@ def prepare_results():
                 split_line.pop(-4)
 
             split_line.pop(4)
-            split_line.pop(5)
+            split_line.pop(4)
 
             split_line[-1] = "%.2f" % float(split_line[-1])
             split_line[-2] = "%.2f" % float(split_line[-2])

@@ -16,6 +16,7 @@ from Bio import SeqIO
 from Bio.Align.Applications import ClustalOmegaCommandline, MuscleCommandline, MafftCommandline, MSAProbsCommandline, TCoffeeCommandline
 
 from similarity_measurement import *
+import DDI_utils
 
 
 def write_pruned_SeqIO_fasta_dict():
@@ -284,7 +285,9 @@ def run_MSA(min_score=800,
 
     files = None
     if human_only:
-        drug_list = get_SIDER_Boyce_Drubank_drug_intersection()
+        merged_DDI_graph = DDI_utils.get_merged_DDI_graph()
+        drug_list = list(merged_DDI_graph.nodes())
+        # drug_list = get_SIDER_Boyce_Drubank_drug_intersection()
         # drug_list = get_SIDER_drug_list()
         files = [drug_name+"_fasta_" + str(min_score) + "_min_score.fasta" for drug_name in drug_list]
         shuffle(files)
@@ -440,7 +443,6 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
-    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
@@ -452,12 +454,13 @@ if __name__ == '__main__':
             start=start,
             end=end,
             human_only=True)
-    '''
 
+    '''
     run_hmm_pipeline(min_score=700,
                      alignment_method='famsa',
                      workers=5,
                      threads_per_worker=8)
+    '''
 
 
 

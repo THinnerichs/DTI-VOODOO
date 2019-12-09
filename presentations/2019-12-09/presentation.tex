@@ -415,32 +415,46 @@
 			%\hline
 			PPI&DDI&SE&HMM&&&&\\
 			\hline
-			1&1&0&0&641&graphsage&88.97&66.20\\
-			1&1&0&0&641&graphsage&80.28&70.51\\
-			1&1&0&0&641&graphsage&87.44&67.80\\
-			1&1&0&0&641&graphsage&86.46&68.39\\
-			1&1&0&0&641&graphsage&88.84&66.62\\
-			1&1&1&0&641&graphsage&93.34&62.42\\
-			1&1&1&0&641&graphsage&73.20&62.53\\
-			1&1&1&0&641&graphsage&93.27&64.81\\
-			1&1&1&0&641&graphsage&74.28&59.18\\
-			1&1&1&0&641&graphsage&72.40&63.93\\
-			1&1&1&0&641&gcn&88.61&67.27\\
-			1&1&1&0&641&gat&82.65&71.69\\
-			1&1&1&0&641&hinsage&83.18&70.33\\
-			1&1&1&0&641&ppnp&89.80&67.78\\
-			1&1&1&0&641&appnp&84.35&71.82\\
-			1&1&1&0&641&sgc&86.50&68.45\\
-			1&1&1&0&641&gcn&59.84&50.10\\
-			1&1&1&0&641&gcn&97.11&56.02\\
-			1&1&1&0&641&gat&59.77&50.06\\
-			1&1&1&0&641&gat&55.48&55.93\\
-			1&1&1&0&641&hinsage&59.77&50.06\\
-			1&1&1&0&641&hinsage&94.06&63.52\\
-			1&1&1&0&641&ppnp&21.54&50.15\\
-			1&1&1&0&641&ppnp&77.98&55.85\\
-			1&1&1&0&641&appnp&40.71&50.13\\
-			1&1&1&0&641&sgc&2.27&50.18\\
+			1&1&0&0&[32, 32]&graphsage&80.28&70.51\\
+			1&1&0&0&[64]&hinsage&83.18&70.33\\
+			1&1&0&0&[32, 64]&gcn&88.61&67.27\\
+			1&1&0&0&[32, 64]&gat&82.65&71.69\\
+			1&1&0&0&[64, 64, 128]&ppnp&89.80&67.78\\
+			1&1&0&0&[64, 64, 128]&appnp&84.35&71.82\\
+			
+			\hline  
+		\end{tabular}
+		\endgroup
+	\end{figure}
+\end{frame}
+
+\begin{frame}{First results}
+	\begin{figure}
+		\centering
+		\begingroup
+		
+		\footnotesize
+		\def\arraystretch{1.2}
+		\begin{tabular}{|r|r|r|r|r|r|r|r|}
+			\hline
+			\multicolumn{4}{|c|}{Used data}&layer sizes&model&Acc&AUC\\
+			%\hline
+			PPI&DDI&SE&HMM&&&&\\
+			\hline
+			1&1&1&0&[32, 64]&graphsage&93.27&64.81\\
+			1&1&1&0&[64]&hinsage&94.06&63.52\\
+			1&1&1&0&[32, 64]&gcn&97.11&56.02\\
+			1&1&1&0&[32, 64]&gat&59.77&50.06\\
+			1&1&1&0&[64, 64, 128]&ppnp&77.98&55.85\\
+			1&1&1&0&[64, 64, 128]&appnp&94.43&66.43\\
+			1&1&1&0&[64, 64, 128]&sgc&86.50&68.45\\
+			1&0&1&0&[64]&hinsage&59.77&50.06\\
+			1&0&1&0&[32, 64]&gcn&59.84&50.10\\
+			1&0&1&0&[32, 64]&gat&55.48&55.93\\
+			1&0&1&0&[64, 64, 128]&ppnp&21.54&50.15\\
+			1&0&1&0&[64, 64, 128]&appnp&40.71&50.13\\
+			1&0&1&0&[64, 64, 128]&sgc&2.27&50.18\\
+			
 			\hline  
 		\end{tabular}
 		\endgroup
@@ -470,6 +484,64 @@
 		
 	\end{itemize}
 \end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{../../models/graphsage_model.png}
+		\caption{Graphsage model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[height=0.9\textheight]{../../models/hinsage_model.png}
+		\caption{Hinsage model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{../../models/gcn_model.png}
+		\caption{GCN model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{../../models/gat_model.png}
+		\caption{GAT model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[height=0.9\textheight]{../../models/ppnp_model.png}
+		\caption{PPNP model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[height=0.9\textheight]{../../models/appnp_model.png}
+		\caption{APPNP model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{../../models/sgc_model.png}
+		\caption{SGC model}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\includegraphics[height=0.9\textheight]{../../models/overall_model.png}
+		\caption{Overall model}
+	\end{figure}
+\end{frame}
+
+
 
 
 \end{document}

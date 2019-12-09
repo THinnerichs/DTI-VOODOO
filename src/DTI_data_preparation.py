@@ -3,6 +3,8 @@ import networkx as nx
 
 import pickle
 
+import os
+
 import PPI_utils
 import DDI_utils
 import similarity_measurement
@@ -154,6 +156,12 @@ def get_annotated_PPI_graph():
         PPI_graph.node[protein]['node_feature'] = node_feature_dict[protein]
 
     return PPI_graph
+
+def write_drug_to_HMM_filtered_targets_dict():
+    predicted_targets_dir = "../data/predicted_targets/"
+
+    files = os.listdir(predicted_targets_dir)
+
 
 def test():
     # print("DTI", len(get_human_proteins()))
