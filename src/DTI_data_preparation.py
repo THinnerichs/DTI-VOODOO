@@ -168,7 +168,9 @@ def write_drug_to_HMM_filtered_targets_dict():
         drug = file.split('_')[0]
         target_list = []
         with open(file=predicted_targets_dir + file, mode='r') as f:
-            f.readline()
+            first_line = f.readline()
+            if '---' not in first_line:
+                target_list.append(first_line.strip())
             for line in f:
                 target_list.append(line.strip())
 

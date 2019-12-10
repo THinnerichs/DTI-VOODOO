@@ -317,22 +317,26 @@ def run_MSA(min_score=800,
         q.put(None)  # one EOF marker for each thread
 
 
-def run_hmm_pipeline(min_score=700,
-                     alignment_method='famsa',
-                     workers=20,
-                     threads_per_worker=4):
+def run_hmm_build_pipeline(min_score=700,
+                           alignment_method='famsa',
+                           workers=20,
+                           threads_per_worker=4,
+                           rel_weight_method='wpb'
+                           ):
     """
     A wrapper for the hmm pipeline that builds the Hidden Markov Model for each multi sequence alignment and also searches
     for it against the whole amount of amino acid sequences.
     :param min_score:                       min_score for both filename
     :param alignment_method:                alignment method that was used in the previous msa step
     :param workers:                         number of workers that will each execute the pipeline for a single alignment
+    :param threads_per_worker:              Number of threads used per worker
+    :param rel_weight_method:               options: wpb, wgsc, wblosum, wnone; Parameter for hmmbuild
     :return:
     """
 
     alignment_path = '../data/alignment_targets/'
 
-    def hmm_pipeline(file):
+    def hmm_build_pipeline(file):
         # Check whether right min_score is present
         if str(min_score) not in file:
             return
@@ -347,19 +351,19 @@ def run_hmm_pipeline(min_score=700,
         # hmmbuild params
         sym_frac = 0.5
         frag_thresh = 0.5
-        rel_weight_method = 'wpb'
 
         drug_name = file.split("_")[0]
 
         alignment_file = alignment_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.afa"
-        hmmbuild_file = hmmbuild_target_path + drug_name + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
+        hmmbuild_file = hmmbuild_target_path + drug_name + "_" + rel_weight_method + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
 
-        if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size == 0:
+        if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size != 0:
             return
 
         print("Building Hidden Markov Model ...")
         command = "hmmbuild --amino "\
                   "--cpu "+str(threads_per_worker)+" "+\
+                  "--" + rel_weight_method + " " +\
                   hmmbuild_file+" "+\
                   alignment_file
         # "--symfrac "+str(sym_frac)+" "+\
@@ -367,10 +371,52 @@ def run_hmm_pipeline(min_score=700,
         # "--"+rel_weight_method+" "+\
 
         print(command)
-        # subprocess.call(command, shell=True)
+        subprocess.call(command, shell=True)
         print("Finished.\n")
 
-        # Parallel(n_jobs=10)(delayed(hmm_build)(filename) for filename in [file for file in os.listdir(alignment_path) if file.startswith("CID")])
+    q = queue.Queue()
+    files = os.listdir(alignment_path)
+    shuffle(files)
+
+    for fileName in files:
+        q.put(fileName)
+
+    def worker():
+        while True:
+            fileName = q.get()
+            if fileName is None:  # EOF?
+                return
+            hmm_build_pipeline(fileName)
+
+    threads = [threading.Thread(target=worker) for _i in range(workers)]
+    for thread in threads:
+        thread.start()
+        q.put(None)  # one EOF marker for each thread
+
+def run_hmm_search_pipeline(min_score=700,
+                            alignment_method='famsa',
+                            workers=20,
+                            threads_per_worker=4,
+                            rel_weight_method='wpb'
+                            ):
+    hmmbuild_target_path = '../data/hmm_builds/'
+
+    def hmm_search_pipeline(file):
+
+        drug_name = file.split("_")[0]
+        hmmbuild_file = hmmbuild_target_path + drug_name + "_" + rel_weight_method + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
+
+        # Check whether right min_score is present
+        if str(min_score) not in file:
+            return
+        # Only calculate builds for certain alignment method
+        if alignment_method not in file:
+            return
+        # Check whether hmm_build file exists at all
+        if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size == 0:
+            return
+        # Check whether file is empty for speedup
+
         # run hmm search on previously computed hidden markov model over all sequences
         # hmmsearch params
         max_flag = False
@@ -378,10 +424,11 @@ def run_hmm_pipeline(min_score=700,
         all_prots_fasta_filename = "../data/STITCH_data/9606.protein.sequences.v11.0.fa"
 
         hmm_search_results_path = '../data/hmm_search_results/'
-        hmmsearch_file = hmm_search_results_path + drug_name + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
+        hmmsearch_file = hmm_search_results_path + drug_name + "_" + rel_weight_method + "_" + alignment_method + "_aligned_" + str(min_score) + "_min_score.out"
 
         command = "hmmsearch " + \
                   "--cpu " + str(threads_per_worker) + " " + \
+                  "--nonull2 --nobias " +\
                   hmmbuild_file + " " + all_prots_fasta_filename + " > " + hmmsearch_file
 
         start_time = time.time()
@@ -397,8 +444,8 @@ def run_hmm_pipeline(min_score=700,
         # extract actual predicted targets from hmmsearch output file and write them to a new file
         with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, \
                 open(file=predicted_targets_file, mode='w') as predicted_targets_filehandler:
-            # Skip first 14 lines
-            for i in range(14):
+            # Skip first 15 lines
+            for i in range(15):
                 hmmsearch_filehandler.readline()
             for line in hmmsearch_filehandler:
                 if line.strip() == "":
@@ -406,15 +453,13 @@ def run_hmm_pipeline(min_score=700,
                     break
                 if "inclusion threshold" in line:
                     break
-                split_list = []
-                for ele in line.split(' '):
-                    if not ele == '':
-                        split_list.append(ele)
-                protein_id = split_list[8].strip()
-                predicted_targets_filehandler.write(protein_id+'\n')
+                split_list = list(filter(None, line.split(' ')))
+                e_value = split_list[0]
+                protein_id = split_list[8]
+                predicted_targets_filehandler.write(protein_id+'\t'+e_value+'\n')
 
     q = queue.Queue()
-    files = os.listdir(alignment_path)
+    files = os.listdir(hmmbuild_target_path)
     shuffle(files)
 
     for fileName in files:
@@ -425,15 +470,31 @@ def run_hmm_pipeline(min_score=700,
             fileName = q.get()
             if fileName is None:  # EOF?
                 return
-            hmm_pipeline(fileName)
+            hmm_search_pipeline(fileName)
 
     threads = [threading.Thread(target=worker) for _i in range(workers)]
     for thread in threads:
         thread.start()
         q.put(None)  # one EOF marker for each thread
 
-def write_predicted_targets():
-    pass
+def write_predicted_targets(alignment_method='famsa'):
+    hmm_search_path = "../data/hmm_search_results/"
+    files = [filename for filename in os.listdir(hmm_search_path)
+             if alignment_method in filename]
+
+    for file in files:
+        drug_name = file.split('_')[0]
+        with open(file=hmm_search_path + file, mode='r') as f:
+            for i in range(15):
+                f.readline()
+            for line in f:
+                split_line = list(filter(None, line.split(' ')))  # remove empty strings from list
+                e_value = float(split_line[0])
+
+
+
+
+
 
 
 
@@ -446,6 +507,7 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
+    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
@@ -457,16 +519,56 @@ if __name__ == '__main__':
             start=start,
             end=end,
             human_only=True)
-
-    '''
-    run_hmm_pipeline(min_score=700,
-                     alignment_method='famsa',
-                     workers=5,
-                     threads_per_worker=8)
     '''
 
+    # famsa builds
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='famsa',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wpb')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='famsa',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wgsc')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='famsa',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wlosum')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='famsa',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wnone')
 
-
-
-
-
+    # mafft builds
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='mafft',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wpb')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='mafft',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wgsc')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='mafft',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wlosum')
+    run_hmm_build_pipeline(min_score=700,
+                           alignment_method='mafft',
+                           workers=2,
+                           threads_per_worker=10,
+                           rel_weight_method='wnone')
+    
+    '''
+    run_hmm_search_pipeline(min_score=700,
+                            alignment_method='famsa',
+                            workers=5,
+                            threads_per_worker=4,
+                            rel_weight_method='wpb')
+    '''
