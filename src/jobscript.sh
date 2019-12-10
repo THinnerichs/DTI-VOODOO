@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J HmmerBuild
-#SBATCH -o jobscript_outputs/HmmerBuild.%J.out
-#SBATCH -e jobscript_outputs/HmmerBuild.%J.err
+#SBATCH -J HmmerSearch
+#SBATCH -o jobscript_outputs/HmmerSearch.%J.out
+#SBATCH -e jobscript_outputs/HmmerSearch.%J.err
 #SBATCH --time=2-00:00:00
 #SBATCH --mem=120G
 #SBATCH --constraint=[intel]

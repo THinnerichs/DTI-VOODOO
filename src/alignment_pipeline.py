@@ -439,7 +439,7 @@ def run_hmm_search_pipeline(min_score=700,
 
         # Evaluate the results of the search
         predicted_targets_path = "../data/predicted_targets/"
-        predicted_targets_file = predicted_targets_path + drug_name + "_"+alignment_method+"_predicted_targets"
+        predicted_targets_file = predicted_targets_path + drug_name + "_" + rel_weight_method + "_" + alignment_method+"_predicted_targets"
 
         # extract actual predicted targets from hmmsearch output file and write them to a new file
         with open(file=hmmsearch_file, mode='r') as hmmsearch_filehandler, \
@@ -521,6 +521,7 @@ if __name__ == '__main__':
             human_only=True)
     '''
 
+    '''
     # famsa builds
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='famsa',
@@ -564,11 +565,27 @@ if __name__ == '__main__':
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wnone')
-    
     '''
+
+    # hmm search
     run_hmm_search_pipeline(min_score=700,
                             alignment_method='famsa',
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wpb')
-    '''
+    run_hmm_search_pipeline(min_score=700,
+                            alignment_method='famsa',
+                            workers=5,
+                            threads_per_worker=4,
+                            rel_weight_method='wgsc')
+    run_hmm_search_pipeline(min_score=700,
+                            alignment_method='famsa',
+                            workers=5,
+                            threads_per_worker=4,
+                            rel_weight_method='wlosum')
+    run_hmm_search_pipeline(min_score=700,
+                            alignment_method='famsa',
+                            workers=5,
+                            threads_per_worker=4,
+                            rel_weight_method='wnone')
+
