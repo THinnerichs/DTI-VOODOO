@@ -404,13 +404,16 @@ def run_hmm_search_pipeline(min_score=700,
     def hmm_search_pipeline(file):
 
         drug_name = file.split("_")[0]
-        hmmbuild_file = hmmbuild_target_path + drug_name + "_" + rel_weight_method + "_"+alignment_method+"_aligned_"+str(min_score)+"_min_score.hmm"
+        hmmbuild_file = hmmbuild_target_path + file
 
         # Check whether right min_score is present
         if str(min_score) not in file:
             return
         # Only calculate builds for certain alignment method
         if alignment_method not in file:
+            return
+        # Only run if weighting method is correct
+        if rel_weight_method not in file:
             return
         # Check whether hmm_build file exists at all
         if os.path.exists(hmmbuild_file) and os.stat(hmmbuild_file).st_size == 0:
