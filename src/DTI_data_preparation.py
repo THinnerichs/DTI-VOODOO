@@ -203,7 +203,7 @@ def test():
     print(len(dti_graph.edges()))
 
     ppi_graph = PPI_utils.get_PPI_graph()
-    print(set(dti_graph.nodes()) & set(ppi_graph.nodes()))
+    print(len(set(dti_graph.nodes()) & set(ppi_graph.nodes())))
 
 
 
