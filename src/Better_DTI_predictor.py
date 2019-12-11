@@ -131,11 +131,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               # side_effect_input
                                               ])
 
-        dense_1 = layers.Dense(500, activation='relu')(merge_1)
-        dropout_1 = layers.Dropout(0.5)(dense_1)
-        dense_1 = layers.Dense(100, activation='relu')(dropout_1)
-        dropout_1 = layers.Dropout(0.5)(dense_1)
-        dense_1 = layers.Dense(50, activation='relu')(dropout_1)
+        dense_1 = layers.Dense(100, activation='relu')(merge_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
         dense_1 = layers.Dense(20, activation='relu')(dropout_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
@@ -150,7 +146,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         model.compile(loss=losses.binary_crossentropy,
                       optimizer=optimizers.Adam(lr=0.005),
                       metrics=[dti_utils.dti_f1_score,
-                               dti_utils.dti_auroc,
+                               # dti_utils.dti_auroc,
                                'accuracy'])
 
         model.summary()
