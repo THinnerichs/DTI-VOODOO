@@ -162,7 +162,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         print("Starting training ...")
         for epoch in range(nb_epochs):
-            results = np.array([], dtype=np.int8).reshape(0,len(protein_list))
+            results = np.array([])
 
             for j in tqdm(range(len(drug_list))):
                 epoch_DDI_feature = np.repeat([DDI_features[j,:]], len(protein_list), axis=0)
@@ -179,14 +179,14 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                           epochs=1,
                           shuffle=False,
                           class_weight=class_weight,
-                          verbose=0)
+                          verbose=1)
 
                 epoch_y_pred = model.predict([node_feature_mat,
                                               epoch_DDI_feature
                                               ],
                                              batch_size=len(protein_list))
 
-                results = np.vstack(results, epoch_y_pred)
+                results = np.vstack([results, epoch_y_pred]) if results.size else epoch_y_pred
 
 
             epoch_y_train_true = y_dti_data[:, train].flatten()
