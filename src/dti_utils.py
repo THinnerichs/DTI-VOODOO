@@ -90,3 +90,54 @@ class roc_callback(Callback):
     def on_batch_end(self, batch, logs=None):
         return
 
+class OverallTrainingDataGenerator(tf.keras.utils.Sequence):
+    def __init__(self, DDI_data, side_effect_data,  Y, batch_size):
+        # Keras generator
+
+        # Real time multiple input data augmentation
+        # self.genX1 = self.generator.flow(X1, Y, batch_size=batch_size)
+        # self.genX2 = self.generator.flow(X2, Y, batch_size=batch_size)
+        pass
+
+    def __len__(self):
+        """It is mandatory to implement it on Keras Sequence"""
+        return self.genX1.__len__()
+
+    def __getitem__(self, index):
+        """Getting items from the 2 generators and packing them"""
+        X1_batch, Y_batch = self.genX1.__getitem__(index)
+        X2_batch, Y_batch = self.genX2.__getitem__(index)
+
+        X_batch = [X1_batch, X2_batch]
+
+        return X_batch, Y_batch
+
+class DataGenerator(tf.keras.utils.Sequence):
+    'Generates data for Keras'
+
+    def __init__(self, data, labels, batch_size=32, shuffle=True):
+        'Initialization'
+        self.batch_size = batch_size
+        self.labels = labels
+        self.data = data
+        self.shuffle = shuffle
+        self.on_epoch_end()
+
+    def __len__(self):
+        'Denotes the number of batches per epoch'
+        return int(np.floor(len(self.data) / self.batch_size))
+
+    def __getitem__(self, index):
+        'Generate one batch of data'
+        # Generate indexes of the batch
+        indexes = np.array(self.indexes[index * self.batch_size:(index + 1) * self.batch_size])
+
+        return self.data[indexes], tf.keras.utils.to_categorical(self.labels[indexes], num_classes=2)
+
+    '''
+    def on_epoch_end(self):
+        'Updates indexes after each epoch'
+        self.indexes = np.arange(len(self.data))
+        if self.shuffle == True:
+            np.random.shuffle(self.indexes)
+    '''
