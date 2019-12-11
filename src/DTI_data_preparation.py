@@ -197,9 +197,15 @@ def get_protein_HMM_filtered_features(drug_list):
 def test():
     # print("DTI", len(get_human_proteins()))
     # print("PPI", len(PPI_utils.get_human_protein_list()))
+
     dti_graph = get_human_DTI_graph()
     print(len(dti_graph.nodes()))
     print(len(dti_graph.edges()))
+
+    ppi_graph = PPI_utils.get_PPI_graph()
+    print(set(dti_graph.nodes()) & set(ppi_graph.nodes()))
+
+
 
 
 
@@ -207,11 +213,11 @@ def test():
 if __name__ == '__main__':
     # write_human_DTI_graph()
 
-    # test()
+    test()
 
     # write_human_protein_list()
 
     # print(get_annotated_PPI_graph())
 
-    write_drug_to_HMM_filtered_targets_dict()
+    # write_drug_to_HMM_filtered_targets_dict()
     pass
