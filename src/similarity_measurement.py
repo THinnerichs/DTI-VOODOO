@@ -207,7 +207,7 @@ def write_enriched_SIDER_graph():
     side_effect_list = get_SIDER_side_effect_list()
 
     # Add SIDER nodes to MedDRA RDF graph
-    kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/rdf_syntax#")
+    kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/drugs#")
     counter = 0
     # build annotation graph with rdf labels
     annotation_graph = nx.Graph()
