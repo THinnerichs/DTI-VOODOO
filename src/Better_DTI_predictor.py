@@ -2,6 +2,8 @@ import numpy as np
 import networkx as nx
 import pandas as pd
 
+from tqdm import tqdm
+
 import DTI_data_preparation
 
 from sklearn.model_selection import KFold
@@ -158,15 +160,15 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         class_weight = {0: 1.,
                         1: imb_ratio}
 
+        print("Starting training ...")
         for epoch in range(nb_epochs):
-            results = None
+            results = np.array([], dtype=np.int8).reshape(0,len(protein_list))
 
-            for j in range(len(drug_list)):
+            for j in tqdm(range(len(drug_list))):
                 epoch_DDI_feature = np.repeat([DDI_features[j,:]], len(protein_list), axis=0)
                 # epoch_side_effect_feature = np.repeat()
 
                 epoch_y_train = y_graph_dti_train_data[j, :]
-                epoch_y_test = y_graph_dti_test_data[j, :]
 
                 model.fit([node_feature_mat,
                            epoch_DDI_feature
@@ -184,7 +186,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               ],
                                              batch_size=len(protein_list))
 
-                results = np.vstack(results, epoch_y_pred) if results else epoch_y_pred
+                results = np.vstack(results, epoch_y_pred)
 
 
             epoch_y_train_true = y_dti_data[:, train].flatten()
