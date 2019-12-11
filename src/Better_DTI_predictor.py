@@ -100,7 +100,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         print("Round", round)
         round += 1
 
-        train_filter_mask = np.zeros(y_dti_data.shape[0])
+        train_filter_mask = np.zeros(len(protein_list))
         train_filter_mask[train] = 1
 
         y_graph_dti_train_data = np.zeros(y_dti_data.shape)
@@ -335,5 +335,5 @@ if __name__ == '__main__':
                                     plot=False,
                                     embedding_layer_sizes=[]
                                     )
-    
+
 
