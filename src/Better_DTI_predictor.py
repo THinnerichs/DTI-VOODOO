@@ -120,7 +120,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                  activation='elu')(dropout_1)
 
 
-        DDI_input = layers.Input(shape=(DDI_features.shape[2],))
+        DDI_input = layers.Input(shape=(len(drug_list),))
 
         # side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
