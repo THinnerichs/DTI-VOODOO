@@ -3,6 +3,11 @@
 - Extend VPN access (only valid until 30.12.19)
 - Visit ithelpdesk on Sunday for VPN credentials
 
+For Sumyyah: (-> Put it on IBEX)
+- STITCH database in RDF
+- SIDER as RDF 
+- MedDRA? as RDF 
+
 ## TODO
 
 - actually do some literature search!!!
@@ -41,7 +46,6 @@
 
 - update targets based on new alignments
   - update after new hmm\_search went trough :)
-
 
 
 ----------------------------------------------------

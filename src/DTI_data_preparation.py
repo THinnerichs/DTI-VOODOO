@@ -189,7 +189,17 @@ def get_drug_to_HMM_filtered_targets_dict():
 
 def get_protein_HMM_filtered_features(drug_list):
     # drug_toHMM_filtered_targets_dict = get_drug_HMM_filtered_features()
-    pass
+
+    print("Not implemented yet!")
+    raise Exception
+
+def get_PPI_DTI_graph_intersection():
+    dti_graph = get_human_DTI_graph()
+    ppi_graph = PPI_utils.get_PPI_graph()
+
+    protein_set = set(dti_graph.nodes()) & set(ppi_graph.nodes())
+
+    return ppi_graph.subgraph(protein_set)
 
 
 
@@ -204,6 +214,7 @@ def test():
 
     ppi_graph = PPI_utils.get_PPI_graph()
     print(len(set(dti_graph.nodes()) & set(ppi_graph.nodes())))
+
 
 
 
