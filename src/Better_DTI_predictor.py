@@ -163,6 +163,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
             for j in range(len(drug_list)):
                 epoch_DDI_feature = np.repeat(DDI_features[j,:], len(protein_list), axis=0)
+                print("DDI_feature shape", epoch_DDI_feature.shape)
                 # epoch_side_effect_feature = np.repeat()
 
                 epoch_y_train = y_graph_dti_train_data[j, :]
