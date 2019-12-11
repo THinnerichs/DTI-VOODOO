@@ -165,7 +165,6 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                 # epoch_side_effect_feature = np.repeat()
 
                 epoch_y_train = y_graph_dti_train_data[j, :]
-                print("Got data.")
 
                 model.fit([node_feature_mat,
                            epoch_DDI_feature
@@ -176,7 +175,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                           epochs=1,
                           shuffle=False,
                           class_weight=class_weight,
-                          verbose=1)
+                          verbose=0)
 
                 epoch_y_pred = model.predict([node_feature_mat,
                                               epoch_DDI_feature
