@@ -119,13 +119,12 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         graph_layer_2 = GraphCNN(32, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
                                  activation='elu')(dropout_1)
 
-        graph_output = layers.Flatten()(graph_layer_2)
 
         DDI_input = layers.Input(shape=(DDI_features.shape[2],))
 
         # side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
-        merge_1 = layers.Concatenate(axis=1)([graph_output,
+        merge_1 = layers.Concatenate(axis=1)([graph_layer_2,
                                               DDI_input,
                                               # side_effect_input
                                               ])
