@@ -186,7 +186,8 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               ],
                                              batch_size=len(protein_list))
 
-                results = np.vstack([results, epoch_y_pred.reshape(epoch_y_pred.shape[0])]) if results.size else epoch_y_pred
+                epoch_y_pred = epoch_y_pred.reshape(epoch_y_pred.shape[0])
+                results = np.vstack([results, epoch_y_pred]) if results.size else epoch_y_pred
             print("results shape", results.shape)
 
             epoch_y_train_true = y_dti_data[:, train].flatten()
