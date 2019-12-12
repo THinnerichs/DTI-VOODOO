@@ -116,12 +116,12 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         # Build actual dti model
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
+        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
                                activation='elu')(PPI_input)
         graph_layer = layers.Dropout(0.2)(graph_layer)
 
         for size in embedding_layer_sizes:
-            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
+            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
                                    activation='elu')(graph_layer)
 
             graph_layer = layers.Dropout(0.2)(graph_layer)
@@ -188,7 +188,6 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
                 epoch_y_pred = (epoch_y_pred.reshape((epoch_y_pred.shape[0])) >= 0.5).astype(int)
                 results = np.vstack([results, epoch_y_pred]) if results.size else epoch_y_pred
-            print("results shape", results.shape)
 
             epoch_y_train_true = y_dti_data[:, train].flatten()
             epoch_y_train_pred = results[:, train].flatten()
@@ -294,7 +293,7 @@ if __name__ == '__main__':
 
     better_missing_target_predictor(nb_epochs=30,
                                     plot=False,
-                                    embedding_layer_sizes=[16, 32, 64]
+                                    embedding_layer_sizes=[32]
                                     )
 
 
