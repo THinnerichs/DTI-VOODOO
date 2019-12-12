@@ -116,16 +116,13 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         # Build actual dti model
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        first = True
-        graph_layer = None
+        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
+                               activation='elu')(PPI_input)
+        graph_layer = layers.Dropout(0.2)(graph_layer)
+
         for size in embedding_layer_sizes:
-            if first:
-                graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
-                                 activation='elu')(PPI_input)
-                first = False
-            else:
-                graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
-                                       activation='elu')(PPI_input)
+            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
+                                   activation='elu')(PPI_input)
 
             graph_layer = layers.Dropout(0.2)(graph_layer)
 
@@ -157,6 +154,9 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                'accuracy'])
 
         model.summary()
+
+
+        raise Exception
 
         imb_ratio = (len(y_graph_dti_train_data) - y_graph_dti_train_data.sum()) / y_graph_dti_train_data.sum()
 
