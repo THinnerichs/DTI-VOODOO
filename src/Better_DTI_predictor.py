@@ -115,18 +115,24 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         # Build actual dti model
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        graph_layer_1 = GraphCNN(16, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
+        first = True
+        graph_layer = None
+        for size in embedding_layer_sizes:
+            if first:
+                graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
                                  activation='elu')(PPI_input)
-        dropout_1 = layers.Dropout(0.2)(graph_layer_1)
-        graph_layer_2 = GraphCNN(32, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
-                                 activation='elu')(dropout_1)
+                first = False
+            else:
+                graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-3),
+                                       activation='elu')(PPI_input)
 
+            graph_layer = layers.Dropout(0.2)(graph_layer)
 
         DDI_input = layers.Input(shape=(len(drug_list),))
 
         # side_effect_input = layers.Input(shape=(side_effect_features.shape[2],))
 
-        merge_1 = layers.Concatenate(axis=1)([graph_layer_2,
+        merge_1 = layers.Concatenate(axis=1)([graph_layer,
                                               DDI_input,
                                               # side_effect_input
                                               ])
@@ -181,6 +187,10 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               epoch_DDI_feature
                                               ],
                                              batch_size=len(protein_list))
+
+                print("epoch_y_pred shape", epoch_y_pred.shape)
+
+                raise Exception
 
                 results = np.vstack([results, epoch_y_pred]) if results.size else epoch_y_pred
             print("results shape", results.shape)
@@ -331,7 +341,7 @@ if __name__ == '__main__':
 
     better_missing_target_predictor(nb_epochs=10,
                                     plot=False,
-                                    embedding_layer_sizes=[]
+                                    embedding_layer_sizes=[16, 32, 64]
                                     )
 
 
