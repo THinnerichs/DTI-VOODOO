@@ -42,6 +42,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                     nb_epochs = 3,
                                     plot = False,
                                     embedding_layer_sizes = [32, 64],
+                                    embedding_method='gcn',
                                     ):
     results_table_filename = "../results/results_table"
 
@@ -188,13 +189,8 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               ],
                                              batch_size=len(protein_list))
 
-                print("epoch_y_pred shape", epoch_y_pred.shape)
-
-                raise Exception
-
-                results = np.vstack([results, epoch_y_pred]) if results.size else epoch_y_pred
+                results = np.vstack([results, epoch_y_pred.reshape(epoch_y_pred.shape[0])]) if results.size else epoch_y_pred
             print("results shape", results.shape)
-
 
             epoch_y_train_true = y_dti_data[:, train].flatten()
             epoch_y_train_pred = results[:, train].flatten()
@@ -221,125 +217,84 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                   "train_mcc= {:.4f}".format(train_mcc), "test_mcc= {:.4f}".format(test_mcc),
                   )
 
+            if epoch == nb_epochs-1:
 
+                conf_matrix = metrics.confusion_matrix(y_true=epoch_y_test_true,
+                                                       y_pred=(epoch_y_test_pred.reshape((len(epoch_y_test_pred))) >= 0.5).astype(int))
 
+                print("Confusion matrix", conf_matrix)
 
-    '''
-        model.fit([train_protein_node_embeddings,
-                   DDI_features[train].reshape((len(drug_list)*len(train), len(drug_list))),
-                   # side_effect_features[train].reshape((len(drug_list) * len(train), side_effect_features.shape[-1]))
-                   ],
-                  y_dti_train_data,
-                  batch_size=batch_size,
-                  validation_data=([test_protein_node_embeddings,
-                                    # DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                    side_effect_features[test].reshape(
-                                        (len(drug_list) * len(test), side_effect_features.shape[-1]))
-                                    ],
-                                   y_dti_test_data),
-                  epochs=nb_epochs,
-                  class_weight=class_weight,
-                  shuffle=True,
-                  )
+                tn = conf_matrix[0, 0]
+                tp = conf_matrix[1, 1]
+                fp = conf_matrix[0, 1]
+                fn = conf_matrix[1, 0]
 
-        callbacks = [dti_utils.roc_callback(training_data=([train_protein_node_embeddings,
-                                                            DDI_features[train].reshape(
-                                                                (len(drug_list) * len(train), len(drug_list)))],
-                                                           y_dti_train_data),
-                                            validation_data=([test_protein_node_embeddings,
-                                                              DDI_features[test].reshape(
-                                                                  (len(drug_list) * len(test), len(drug_list)))],
-                                                             y_dti_test_data))]
+                precision = tp / (tp + fp)
+                recall = tp / (tp + fn)
+                accuracy = (tp + tn) / (tp + tn + fp + fn)
 
-        y_pred = model.predict([test_protein_node_embeddings,
-                                # DDI_features[test].reshape((len(drug_list)*len(test), len(drug_list))),
-                                side_effect_features[test].reshape(
-                                    (len(drug_list) * len(test), side_effect_features.shape[-1]))
-                                ])
+                auroc = metrics.roc_auc_score(epoch_y_test_true, epoch_y_test_pred)
+                f1_score = metrics.f1_score(epoch_y_test_true, epoch_y_test_pred)
 
-        conf_matrix = metrics.confusion_matrix(y_true=y_dti_test_data,
-                                               y_pred=(y_pred.reshape((len(y_pred))) >= 0.5).astype(int))
+                print("accuracy", accuracy * 100)
+                print("prec", precision * 100)
+                print("recall", recall * 100)
+                print("auroc", auroc * 100)
+                print("f1-score", f1_score * 100)
 
-        print("Confusion matrix", conf_matrix)
+                cv_scores['acc'].append(accuracy * 100)
+                cv_scores['auroc'].append(auroc * 100)
+                cv_scores['f1-score'].append(f1_score * 100)
 
-        tn = conf_matrix[0, 0]
-        tp = conf_matrix[1, 1]
-        fp = conf_matrix[0, 1]
-        fn = conf_matrix[1, 0]
+                print("Mean accuracy:", np.mean(cv_scores['acc']))
+                print("Mean auroc:", np.mean(cv_scores['auroc']))
+                print("Mean f1-score:", np.mean(cv_scores['f1-score']))
 
-        precision = tp / (tp + fp)
-        recall = tp / (tp + fn)
-        accuracy = (tp + tn) / (tp + tn + fp + fn)
+        with open(file=results_table_filename, mode='a') as f:
+            print("1" + "\t" + "1" + "\t" + "0" + "\t" + "0" + "\t" +
+                  str(len(protein_list)) + "\t" + str(len(drug_list)) + "\t" +
+                  str(nb_epochs) + "\t" +
+                  str(embedding_layer_sizes) + "\t" +
+                  'better_' + embedding_method + '\t' +
+                  str(np.mean(cv_scores['acc'])) + "\t" + str(np.mean(cv_scores['auroc'])) + "\t" + str(
+                np.mean(cv_scores['f1-score'])),
+                  file=f)
+        with open(file=results_filename, mode='a') as filehandler:
+            print("BETTER DTI " + embedding_method + " PREDICTION", file=filehandler)
 
-        y_pred = (y_pred.reshape((y_pred.shape[0])) > 0.5).astype(int)
+            print("Including:", file=filehandler)
+            print("- PPIs", file=filehandler)
+            # print("- DDIs", file=filehandler)
+            print("- side similarity scores", file=filehandler)
+            # print("- HMM node features", file=filehandler)
+            print("Number of targets:\t", len(protein_list), file=filehandler)
+            print("Number of drugs:\t", len(drug_list), file=filehandler)
 
-        auroc = metrics.roc_auc_score(y_dti_test_data, y_pred)
-        f1_score = metrics.f1_score(y_dti_test_data, y_pred)
+            print("Mean accuracy: {},\t Std: {}".format(np.mean(cv_scores['acc']), np.std(cv_scores['acc'])), file=filehandler)
+            print("Mean auroc: {},\t Std: {}".format(np.mean(cv_scores['auroc']), np.std(cv_scores['auroc'])), file=filehandler)
+            print("Mean f1: {},\t Std: {}".format(np.mean(cv_scores['f1-score']), np.std(cv_scores['f1-score'])),
+                  file=filehandler)
 
-        print("accuracy", accuracy * 100)
-        print("prec", precision * 100)
-        print("recall", recall * 100)
-        print("auroc", auroc * 100)
-        print("f1-score", f1_score * 100)
+            print("Epochs: {} ".format(nb_epochs), file=filehandler)
+            model.summary(print_fn=lambda x: filehandler.write(x + '\n'))
 
-        cv_scores['acc'].append(accuracy * 100)
-        cv_scores['auroc'].append(auroc * 100)
-        cv_scores['f1-score'].append(f1_score * 100)
+            # print confusion matrix
+            print("Confusion matrix:",
+                  conf_matrix,
+                  file=filehandler)
 
-    print("Mean accuracy:", np.mean(cv_scores['acc']))
-    print("Mean auroc:", np.mean(cv_scores['auroc']))
-    print("Mean f1-score:", np.mean(cv_scores['f1-score']))
+            print("------------------------------------------------\n")
 
-    with open(file=results_table_filename, mode='a') as f:
-        print("1" + "\t" + "0" + "\t" + "1" + "\t" + "0" + "\t" +
-              str(len(protein_list)) + "\t" + str(len(drug_list)) + "\t" +
-              str(nb_epochs) + "\t" +
-              str(embedding_layer_sizes) + "\t" +
-              str(supervised) + '\t' +
-              str(embedding_method) + "\t" +
-              str(np.mean(cv_scores['acc'])) + "\t" + str(np.mean(cv_scores['auroc'])) + "\t" + str(
-            np.mean(cv_scores['f1-score'])),
-              file=f)
-    with open(file=results_filename, mode='a') as filehandler:
-        print("DTI " + embedding_method + " PREDICTION", file=filehandler)
-
-        print("Including:", file=filehandler)
-        print("- PPIs", file=filehandler)
-        # print("- DDIs", file=filehandler)
-        print("- side similarity scores", file=filehandler)
-        # print("- HMM node features", file=filehandler)
-        print("Number of targets:\t", len(protein_list), file=filehandler)
-        print("Number of drugs:\t", len(drug_list), file=filehandler)
-
-        print("Mean accuracy: {},\t Std: {}".format(np.mean(cv_scores['acc']), np.std(cv_scores['acc'])), file=filehandler)
-        print("Mean auroc: {},\t Std: {}".format(np.mean(cv_scores['auroc']), np.std(cv_scores['auroc'])), file=filehandler)
-        print("Mean f1: {},\t Std: {}".format(np.mean(cv_scores['f1-score']), np.std(cv_scores['f1-score'])),
-              file=filehandler)
-
-        print("Epochs: {}, Batch size: {}".format(nb_epochs, batch_size), file=filehandler)
-        model.summary(print_fn=lambda x: filehandler.write(x + '\n'))
-
-        # print confusion matrix
-        print("Confusion matrix:",
-              conf_matrix,
-              file=filehandler)
-
-        print("------------------------------------------------\n")
-
-        # serialize model to JSON
-        if plot:
-            tf.keras.utils.plot_model(embedding_model,
-                                      show_shapes=True,
-                                      to_file='../models/' + embedding_method + '_model.png')
-            tf.keras.utils.plot_model(model,
-                                      show_shapes=True,
-                                      to_file='../models/overall_model.png')
-    '''
+            # serialize model to JSON
+            if plot:
+                tf.keras.utils.plot_model(model,
+                                          show_shapes=True,
+                                          to_file='../models/better_gcn_model.png')
 
 
 if __name__ == '__main__':
 
-    better_missing_target_predictor(nb_epochs=10,
+    better_missing_target_predictor(nb_epochs=30,
                                     plot=False,
                                     embedding_layer_sizes=[16, 32, 64]
                                     )

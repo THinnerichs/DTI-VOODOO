@@ -55,6 +55,14 @@ Talk with Robert on 03.12.:
 - Hypothesis is about
 
 
+---------------------------------------------------
+- DTI\_graph:
+  - min\_score:
+    - > 700: 18987
+    - > 400: 33549
+    - all: 171168
+
+
 
 ## Ideas for presentation
 
