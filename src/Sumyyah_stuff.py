@@ -74,6 +74,37 @@ def get_human_DTI_graph():
     with open(file=filename + '.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def write_human_DTI_graph_to_RDF():
+    dti_graph = get_human_DTI_graph()
+
+    dti_RDF_graph = rdflib.Graph()
+    kaust_drug_url = rdflib.Namespace("http://www.kaust_dti_rdf.edu.sa/drugs#")
+    kaust_protein_url = rdflib.Namespace("http://www.kaust_dti_rdf.edu.sa/protein#")
+    counter = 0
+    for start_node, end_node in dti_graph.edges():
+        # Switch if end_node is drug
+        if 'CID' in end_node:
+            start_node, end_node = end_node, start_node
+
+        subject = rdflib.term.URIRef(kaust_drug_url+start_node)
+        predicate = rdflib.term.URIRef(kaust_drug_url+"interacts_with")
+
+        object = rdflib.term.URIRef(kaust_protein_url + end_node)
+        if object == None:
+            continue
+        counter += 1
+
+        dti_RDF_graph.add((subject, predicate, object))
+
+        if counter % 10000 == 0:
+            print("Added edges:", counter)
+
+    print("Writing meddra RDF graph to disc ...")
+    target_filename = "/data/SIDER_only_RDF.ttl"
+    dti_RDF_graph.serialize(destination=target_filename, format='turtle')
+    print("Finished writing ", target_filename, '\n')
+
+
 def get_MedDRA_mapping():
     # Read MRCUI mapping file
     MRCUI_filename = "/data/MRCUI.RRF"
@@ -172,7 +203,7 @@ def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
     print("Reading meddra RDF graph ...")
-    graph_filename = "../data/MedDRA_data/meddra_RDF_graph"
+    graph_filename = "/data/meddra_RDF_graph"
     meddra_RDF_graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
          meddra_RDF_graph = pickle.load(f)
@@ -190,8 +221,6 @@ def write_enriched_SIDER_graph():
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
 
     updated_SIDER_graph = get_updated_MedDRA_label_SIDER_graph()
-    drug_list = get_SIDER_drug_list()
-    side_effect_list = get_SIDER_side_effect_list()
 
     # Add SIDER nodes to MedDRA RDF graph
     kaust_url = rdflib.Namespace("http://www.kaust_rdf.edu.sa/drugs#")
@@ -222,15 +251,22 @@ def write_enriched_SIDER_graph():
 
     # Write result to disc
     print("Writing meddra RDF graph to disc ...")
-    target_filename = "../data/MedDRA_data/MedDRA_enriched_SIDER_RDF_graph.ttl"
+    target_filename = "/data/MedDRA_enriched_SIDER_RDF_graph.ttl"
     meddra_RDF_graph.serialize(destination=target_filename, format='turtle')
     print("Finished writing ", target_filename, '\n')
 
     # Write annotation graph to disc
     print("Writing meddra annotation graph to disc ...")
-    filename = "../data/SIDER_data/SIDER_annotation_graph"
+    filename = "/data/SIDER_annotation_graph"
     with open(filename + '.pkl', 'wb') as f:
         pickle.dump(annotation_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 
+if __name__ == '__main__':
+    write_SIDER_only_graph()
+    write_dti_graph(min_score=0)
+    write_human_DTI_graph_to_RDF()
+    write_updated_MedDRA_label_SIDER_graph()
+    write_meddra_graph_to_disk()
+    write_enriched_SIDER_graph()
