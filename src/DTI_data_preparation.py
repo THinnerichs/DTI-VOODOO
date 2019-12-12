@@ -12,7 +12,7 @@ import similarity_measurement
 
 
 
-def write_human_DTI_graph(min_score=700):
+def write_human_DTI_graph(min_score=400):
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
 
