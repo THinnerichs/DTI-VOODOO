@@ -32,8 +32,8 @@ def write_human_DTI_graph(min_score=400):
 
             dti_graph.add_node(drug)
             dti_graph.add_node(target)
-            if score >= min_score:
-                dti_graph.add_edge(drug, target, score=score)
+            # if score >= min_score:
+            dti_graph.add_edge(drug, target, score=score)
 
     print("Finished.\n")
 
