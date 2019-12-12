@@ -12,7 +12,7 @@ import similarity_measurement
 
 
 
-def write_human_DTI_graph():
+def write_human_DTI_graph(min_score=700):
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
 
@@ -32,7 +32,8 @@ def write_human_DTI_graph():
 
             dti_graph.add_node(drug)
             dti_graph.add_node(target)
-            dti_graph.add_edge(drug, target, score=score)
+            if score >= min_score:
+                dti_graph.add_edge(drug, target, score=score)
 
     print("Finished.\n")
 
@@ -241,11 +242,16 @@ def sumyyah_request():
 
 
 if __name__ == '__main__':
-    # write_human_DTI_graph()
+    write_human_DTI_graph()
 
-    test()
+    dti_graph = get_human_DTI_graph()
+    print("Nodes", len(dti_graph.nodes()))
+    print("Edges", len(dti_graph.edges()))
 
-    # write_human_protein_list()
+
+    # test()
+
+    write_human_protein_list()
 
     # print(get_annotated_PPI_graph())
 
