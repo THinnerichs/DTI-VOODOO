@@ -156,7 +156,9 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         model.summary()
 
         imb_ratio = (len(y_graph_dti_train_data) - y_graph_dti_train_data.sum()) / y_graph_dti_train_data.sum()
+        print('imb_ratio', imb_ratio)
 
+        raise Exception
         class_weight = {0: 1.,
                         1: 30*imb_ratio}
 
