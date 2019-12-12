@@ -116,12 +116,12 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         # Build actual dti model
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
+        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
                                activation='elu')(PPI_input)
         graph_layer = layers.Dropout(0.2)(graph_layer)
 
         for size in embedding_layer_sizes:
-            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-4),
+            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-2),
                                    activation='elu')(graph_layer)
 
             graph_layer = layers.Dropout(0.2)(graph_layer)
