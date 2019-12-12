@@ -169,11 +169,10 @@ def get_jaccard_se_similarity_graph():
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
-def write_meddra_graph_to_disc():
+def write_meddra_graph_to_disk():
     meddra_rdf_graph_filename = "../data/MedDRA_data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
-    print(result)
 
     print("Writing meddra RDF graph to disc ...")
     filename = "../data/MedDRA_data/meddra_RDF_graph"
