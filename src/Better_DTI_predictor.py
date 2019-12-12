@@ -159,6 +159,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         print('imb_ratio', imb_ratio)
         print(len(y_graph_dti_train_data))
+        print(y_graph_dti_train_data.shape)
 
         raise Exception
         class_weight = {0: 1.,
