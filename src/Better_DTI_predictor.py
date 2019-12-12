@@ -158,7 +158,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         imb_ratio = (len(y_graph_dti_train_data) - y_graph_dti_train_data.sum()) / y_graph_dti_train_data.sum()
 
         class_weight = {0: 1.,
-                        1: imb_ratio}
+                        1: 4*imb_ratio}
 
         print("Starting training ...")
         for epoch in range(nb_epochs):
@@ -291,9 +291,9 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
 if __name__ == '__main__':
 
-    better_missing_target_predictor(nb_epochs=30,
+    better_missing_target_predictor(nb_epochs=20,
                                     plot=False,
-                                    embedding_layer_sizes=[32]
+                                    embedding_layer_sizes=[16]
                                     )
 
 
