@@ -121,7 +121,16 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         '''
         graph_layer = GraphCNN(GCN_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
                                activation='elu')(PPI_input)
-        graph_layer = layers.Dropout(0.2)(graph_layer)
+        graph_layer = layers.Dropout(0.2)(graph_
+        graph_layer = GraphAttentionCNN(GCN_layer_sizes.pop(0),
+                                        num_filters,
+                                        graph_conv_filters,
+                                        num_attention_heads=8,
+                                        attention_combine='concat',
+                                        attention_dropout=0.6,
+                                        kernel_regularizer=regularizers.l2(5e-1),
+                                        activation='elu')(graph_layer)
+        graph_layer = layers.Dropout(0.4)(graph_layer)layer)
 
         for size in GCN_layer_sizes:
             graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-2),
@@ -132,6 +141,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         '''
 
         graph_layer = GraphAttentionCNN(GCN_layer_sizes.pop(0),
+                                        PPI_adj_mat,
                                         num_filters,
                                         graph_conv_filters,
                                         num_attention_heads=8,
@@ -143,6 +153,8 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         for size in GCN_layer_sizes:
             graph_layer = GraphAttentionCNN(size,
+                                            PPI_adj_mat,
+                                            num_filters,
                                             num_filters,
                                             graph_conv_filters,
                                             num_attention_heads=8,
