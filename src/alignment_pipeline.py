@@ -524,13 +524,14 @@ if __name__ == '__main__':
             human_only=True)
     '''
 
-    '''
     # famsa builds
+    '''
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='famsa',
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wpb')
+    '''
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='famsa',
                            workers=2,
@@ -540,13 +541,16 @@ if __name__ == '__main__':
                            alignment_method='famsa',
                            workers=2,
                            threads_per_worker=10,
-                           rel_weight_method='wlosum')
+                           rel_weight_method='wblosum')
+    '''
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='famsa',
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wnone')
+    '''
 
+    '''
     # mafft builds
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='mafft',
@@ -562,7 +566,7 @@ if __name__ == '__main__':
                            alignment_method='mafft',
                            workers=2,
                            threads_per_worker=10,
-                           rel_weight_method='wlosum')
+                           rel_weight_method='wblosum')
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='mafft',
                            workers=2,
@@ -570,6 +574,7 @@ if __name__ == '__main__':
                            rel_weight_method='wnone')
     '''
 
+    '''
     # hmm search
     run_hmm_search_pipeline(min_score=700,
                             alignment_method='famsa',
@@ -591,4 +596,5 @@ if __name__ == '__main__':
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wnone')
+    '''
 
