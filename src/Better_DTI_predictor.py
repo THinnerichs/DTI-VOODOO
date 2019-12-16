@@ -20,8 +20,6 @@ from keras.utils import plot_model
 
 from keras_dgl.layers.graph_cnn_layer import GraphCNN
 from keras_dgl.layers.graph_attention_cnn_layer import GraphAttentionCNN
-from keras_dgl.layers.multi_graph_cnn_layer import MultiGraphCNN
-from keras_dgl.layers.multi_graph_attention_cnn_layer import MultiGraphAttentionCNN
 from keras_dgl.utils import *
 
 import stellargraph as sg
@@ -117,15 +115,40 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         # Build actual dti model
         GCN_layer_sizes = embedding_layer_sizes[:]
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        graph_layer = GraphCNN(GCN_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
-                               activation='elu')(PPI_input)
-        graph_layer = layers.Dropout(0.2)(graph_layer)
+        graph_layer = None
 
-        for size in GCN_layer_sizes:
-            graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-2),
-                                   activation='elu')(graph_layer)
-
+        if embedding_method == 'gcn':
+            graph_layer = GraphCNN(GCN_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
+                                   activation='elu')(PPI_input)
             graph_layer = layers.Dropout(0.2)(graph_layer)
+
+            for size in GCN_layer_sizes:
+                graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-2),
+                                       activation='elu')(graph_layer)
+
+                graph_layer = layers.Dropout(0.2)(graph_layer)
+        elif embedding_method == 'gat':
+            graph_layer = GraphAttentionCNN(GCN_layer_sizes.pop(0),
+                                            num_filters,
+                                            graph_conv_filters,
+                                            num_attention_heads=8,
+                                            attention_combine='concat',
+                                            attention_dropout=0.6,
+                                            kernel_regularizer=regularizers.l2(5e-1),
+                                            activation='elu')(PPI_input)
+            graph_layer = layers.Dropout(0.4)(graph_layer)
+
+            for size in GCN_layer_sizes:
+                graph_layer = GraphAttentionCNN(size,
+                                                num_filters,
+                                                graph_conv_filters,
+                                                num_attention_heads=8,
+                                                attention_combine='concat',
+                                                attention_dropout=0.6,
+                                                kernel_regularizer=regularizers.l2(5e-2),
+                                                activation='elu')(graph_layer)
+
+                graph_layer = layers.Dropout(0.4)(graph_layer)
 
         DDI_input = layers.Input(shape=(len(drug_list),))
 
@@ -301,7 +324,8 @@ if __name__ == '__main__':
 
     better_missing_target_predictor(nb_epochs=50,
                                     plot=True,
-                                    embedding_layer_sizes=[32, 64, 128]
+                                    embedding_layer_sizes=[32, 64, 128],
+                                    embedding_method='gat'
                                     )
 
 
