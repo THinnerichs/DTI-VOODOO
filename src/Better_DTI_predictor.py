@@ -115,12 +115,13 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
 
         # Build actual dti model
+        GCN_layer_sizes = embedding_layer_sizes[:]
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
-        graph_layer = GraphCNN(embedding_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
+        graph_layer = GraphCNN(GCN_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
                                activation='elu')(PPI_input)
         graph_layer = layers.Dropout(0.2)(graph_layer)
 
-        for size in embedding_layer_sizes:
+        for size in GCN_layer_sizes:
             graph_layer = GraphCNN(size, num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-2),
                                    activation='elu')(graph_layer)
 
@@ -157,7 +158,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
         imb_ratio = (np.prod(y_graph_dti_train_data.shape) - y_graph_dti_train_data.sum()) / y_graph_dti_train_data.sum()
 
-        print('imb_ratio', imb_ratio)
+        print('imb_ratio:', imb_ratio)
 
         class_weight = {0: 1.,
                         1: imb_ratio}
