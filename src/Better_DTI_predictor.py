@@ -320,7 +320,7 @@ if __name__ == '__main__':
     better_missing_target_predictor(nb_epochs=50,
                                     plot=True,
                                     embedding_layer_sizes=[32, 64, 128],
-                                    embedding_method='gcn'
+                                    embedding_method='gat'
                                     )
 
 
