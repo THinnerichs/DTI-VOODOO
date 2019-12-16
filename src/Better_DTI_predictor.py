@@ -136,8 +136,13 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                               # side_effect_input
                                               ])
 
+        dense_1 = layers.Dense(500, activation='relu')(merge_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
+        dense_1 = layers.Dense(200, activation='relu')(merge_1)
+        dropout_1 = layers.Dropout(0.5)(dense_1)
         dense_1 = layers.Dense(100, activation='relu')(merge_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
+
         dense_1 = layers.Dense(20, activation='relu')(dropout_1)
         dropout_1 = layers.Dropout(0.5)(dense_1)
         output = layers.Dense(1, activation='sigmoid')(dropout_1)
@@ -294,9 +299,9 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
 if __name__ == '__main__':
 
-    better_missing_target_predictor(nb_epochs=20,
-                                    plot=False,
-                                    embedding_layer_sizes=[16]
+    better_missing_target_predictor(nb_epochs=50,
+                                    plot=True,
+                                    embedding_layer_sizes=[32, 64, 128]
                                     )
 
 
