@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J HmmerFamsaBuild
-#SBATCH -o jobscript_outputs/HmmerFamsaBuild.%J.out
-#SBATCH -e jobscript_outputs/HmmerFamsaBuild.%J.err
-#SBATCH --time=3-00:00:00
-#SBATCH --mem=120G
+#SBATCH -J MSAFamsa
+#SBATCH -o jobscript_outputs/MSAFamsa.%J.out
+#SBATCH -e jobscript_outputs/MSAFamsa.%J.err
+#SBATCH --time=6-00:00:00
+#SBATCH --mem=240G
 #SBATCH --constraint=[intel]
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=40
 
 #run the application:
 module load anaconda3/4.4.0

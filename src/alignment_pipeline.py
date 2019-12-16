@@ -510,19 +510,17 @@ if __name__ == '__main__':
 
     # create_fasta_files(min_score=700)
 
-    '''
     args = sys.argv + ['', '']
     start = args[1]
     end = args[2]
 
     run_MSA(min_score=700,
-            alignment_method='mafft',
-            workers=2,
-            threads_per_process=10,
+            alignment_method='famsa',
+            workers=1,
+            threads_per_process=40,
             start=start,
             end=end,
             human_only=True)
-    '''
 
     # famsa builds
     '''
@@ -548,6 +546,7 @@ if __name__ == '__main__':
                            rel_weight_method='wnone')
     '''
 
+    '''
     # mafft builds
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='mafft',
@@ -569,6 +568,7 @@ if __name__ == '__main__':
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wnone')
+    '''
 
     '''
     # hmm search
