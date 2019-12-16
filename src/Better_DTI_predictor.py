@@ -310,7 +310,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
             # serialize model to JSON
             if plot:
-                tf.keras.utils.plot_model(model   ,
+                tf.keras.utils.plot_model(model,
                                           show_shapes=True,
                                           to_file='../models/better_'+ embedding_method +'_model.png')
 
@@ -319,8 +319,8 @@ if __name__ == '__main__':
 
     better_missing_target_predictor(nb_epochs=30,
                                     plot=True,
-                                    embedding_layer_sizes=[32, 64, 128],
-                                    embedding_method='gcn'
+                                    embedding_layer_sizes=[32, 64],
+                                    embedding_method='gat'
                                     )
 
 
