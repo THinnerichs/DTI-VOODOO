@@ -117,7 +117,6 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         PPI_input = layers.Input(shape=(node_feature_mat.shape[1],))
         graph_layer = layers.Dropout(0.)(PPI_input)
 
-        '''
         # if embedding_method == 'gcn':
         graph_layer = GraphCNN(GCN_layer_sizes.pop(0), num_filters, graph_conv_filters, kernel_regularizer=regularizers.l2(5e-1),
                                activation='elu')(PPI_input)
@@ -128,8 +127,8 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                    activation='elu')(graph_layer)
 
             graph_layer = layers.Dropout(0.2)(graph_layer)
-        '''
         # elif embedding_method == 'gat':
+        '''
         graph_layer = GraphAttentionCNN(GCN_layer_sizes.pop(0),
                                         num_filters,
                                         graph_conv_filters,
@@ -145,6 +144,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
                                    activation='elu')(graph_layer)
 
             graph_layer = layers.Dropout(0.2)(graph_layer)
+        '''
 
         DDI_input = layers.Input(shape=(len(drug_list),))
 
@@ -321,7 +321,7 @@ if __name__ == '__main__':
     better_missing_target_predictor(nb_epochs=50,
                                     plot=True,
                                     embedding_layer_sizes=[32, 64, 128],
-                                    embedding_method='gat'
+                                    embedding_method='gcn'
                                     )
 
 
