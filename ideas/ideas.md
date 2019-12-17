@@ -1,12 +1,6 @@
 ## Important
 
-- Extend VPN access (only valid until 30.12.19)
-- Visit ithelpdesk on Sunday for VPN credentials
-
-For Sumyyah: (-> Put it on IBEX)
-- STITCH database in RDF
-- SIDER as RDF 
-- MedDRA? as RDF 
+- Extend VPN access (only valid until 31.12.19)
 
 ## TODO
 
@@ -16,10 +10,6 @@ For Sumyyah: (-> Put it on IBEX)
 
 - how to map e values from [0,inf) with 0 as hit and inf as no hit to [0,1] where 0 no hit and 1 is hit
 
-- get phenotypes for drugs
-  - download OMIM -> get mapping
-  - Human phenotype ontology
-
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
 
@@ -27,18 +17,16 @@ For Sumyyah: (-> Put it on IBEX)
 
 - test unsupervised node embedding learning
 - Get other method to run on my dataset (literature!!)
-  - HAve to get SMILES and stuff too -> meh
+  - Have to get SMILES and stuff too -> meh
   - How can this be made proof? Model is tweaked on this dataset while foreign methods are not
 
 - read PREDICT paper
 - maybe try other stellargraph embeddings as well :)))
-- run link prediction over whole graph
 
 - run unsupervised methods now as more RAM is available
 
 ----------------------------------------------------
 
-- run graphsage as link predictor
 - extract predictions from search results
 
 - Read paper how convolution over node features is done
@@ -47,20 +35,27 @@ For Sumyyah: (-> Put it on IBEX)
 - update targets based on new alignments
   - update after new hmm\_search went trough :)
 
-
-----------------------------------------------------
-Talk with Robert on 03.12.:
-- Test Graphsage
-- Get Phenotypes from OMIM
-- Hypothesis is about
-
-
 ---------------------------------------------------
 - DTI\_graph:
   - min\_score:
     - > 700: 18987
     - > 400: 33549
     - all: 171168
+
+---------------------------------------------------
+
+- Find SOTA for DTI
+  - take intersection of data and perform on that
+  - Maybe one top-down and one bottom up?
+
+- Get Stellargraph models to run with my data -> Compare results
+  - Rebuild their models (See model images)
+
+- Finally attach filter data to graph!!
+
+- Test different filter methods and their performance
+  - Test different parameters for hmm\_build and search 
+
 
 
 
