@@ -184,7 +184,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         print('imb_ratio:', imb_ratio)
 
         class_weight = {0: 1.,
-                        1: 0.85*imb_ratio}
+                        1: 0.65*imb_ratio}
 
         print("Starting training ...")
         for epoch in range(nb_epochs):
@@ -317,8 +317,8 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
 
 if __name__ == '__main__':
 
-    better_missing_target_predictor(nb_epochs=30,
-                                    plot=True,
+    better_missing_target_predictor(nb_epochs=8,
+                                    plot=False,
                                     embedding_layer_sizes=[32, 64],
                                     embedding_method='gcn'
                                     )
