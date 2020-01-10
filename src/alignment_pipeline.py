@@ -572,6 +572,7 @@ if __name__ == '__main__':
                            rel_weight_method='wnone')
     '''
 
+    '''
     # hmm search
     run_hmm_search_pipeline(min_score=700,
                             alignment_method='famsa',
@@ -593,8 +594,8 @@ if __name__ == '__main__':
                             workers=2,
                             threads_per_worker=10,
                             rel_weight_method='wnone')
+    '''
 
-    '''
     # hmm search
     run_hmm_search_pipeline(min_score=700,
                             alignment_method='mafft',
@@ -616,4 +617,3 @@ if __name__ == '__main__':
                             workers=2,
                             threads_per_worker=10,
                             rel_weight_method='wnone')
-    '''
