@@ -55,5 +55,5 @@ def submit_jobscript_n_times(n):
 
 if __name__ == '__main__':
     # run_jobs(parts=150, amount=2254)
-    cancel_jobs()
-    submit_jobscript_n_times(30)
+    # cancel_jobs()
+    submit_jobscript_n_times(50)
