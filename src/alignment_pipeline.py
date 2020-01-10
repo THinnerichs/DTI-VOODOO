@@ -548,6 +548,7 @@ if __name__ == '__main__':
                            rel_weight_method='wnone')
     '''
 
+    '''
     # mafft builds
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='mafft',
@@ -569,28 +570,27 @@ if __name__ == '__main__':
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wnone')
-
     '''
+
     # hmm search
     run_hmm_search_pipeline(min_score=700,
-                            alignment_method='famsa',
+                            alignment_method='mafft',
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wpb')
     run_hmm_search_pipeline(min_score=700,
-                            alignment_method='famsa',
+                            alignment_method='mafft',
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wgsc')
     run_hmm_search_pipeline(min_score=700,
-                            alignment_method='famsa',
+                            alignment_method='mafft',
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wlosum')
     run_hmm_search_pipeline(min_score=700,
-                            alignment_method='famsa',
+                            alignment_method='mafft',
                             workers=5,
                             threads_per_worker=4,
                             rel_weight_method='wnone')
-    '''
 

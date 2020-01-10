@@ -56,7 +56,31 @@
 - Test different filter methods and their performance
   - Test different parameters for hmm\_build and search 
 
+--------------------------------------------------
 
+Talk with Robert on 09.01.:
+
+Work until now:
+  - Lacking motivation
+  - Knee pain
+
+  - performed mafft and FAMSA alignment with search -> poor results
+    1. tweak this! because its new!
+    2. take other bottom up approach to fix this
+  - Tweaking GCN, GAT model -> not really sufficient, performs horrible 
+    - heavy problems getting that to run -> decompose stellargraph methods
+    - other library?! -> you had time over christmas
+      - Top k pooling? pooling layers in general?
+      - Pytorch geometric
+
+  - artificially reduce PPI > 700 score
+
+  - Take Proteins without links into model at the end, not for tuning
+  
+  - used DTIs accurate? currently just taking all with score aboth 700 (just captures cooccurence)
+  - used PPIs accurate? Currently taking all of them
+
+  - Deadline? Icsb is in June
 
 
 ## Ideas for presentation

@@ -480,7 +480,8 @@ def GCN_missing_target_predictor():
               verbose=1)
     '''
 
-def pure_HMM_predictor():
+def pure_HMM_predictor(alignment_method='famsa',
+                       build_method=''):
     drug_to_Hmm_filtered_targets_dict = DTI_data_preparation.get_drug_to_HMM_filtered_targets_dict()
     drug_list = DTI_data_preparation.get_drug_list()
     protein_list = DTI_data_preparation.get_human_proteins()
@@ -539,7 +540,7 @@ if __name__ == '__main__':
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64, 64], embedding_output_size=128, embedding_method='sgc')
     # missing_target_predictor(batch_size=10000, nb_epochs=20, plot=True, embedding_layer_sizes=[64, 64], embedding_output_size=128, embedding_method='graphsage')
 
-    # pure_HMM_predictor()
+    pure_HMM_predictor()
 
-    better_missing_target_predictor()
+    # better_missing_target_predictor()
 

@@ -184,7 +184,7 @@ def better_missing_target_predictor(results_filename = '../results/results_log',
         print('imb_ratio:', imb_ratio)
 
         class_weight = {0: 1.,
-                        1: 0.65*imb_ratio}
+                        1: imb_ratio}
 
         print("Starting training ...")
         for epoch in range(nb_epochs):
