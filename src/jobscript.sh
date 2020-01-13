@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J MafftSearch
-#SBATCH -o jobscript_outputs/MafftSearch.%J.out
-#SBATCH -e jobscript_outputs/MafftSearch.%J.err
+#SBATCH -J FamsaMSA
+#SBATCH -o jobscript_outputs/FamsaMSA.%J.out
+#SBATCH -e jobscript_outputs/FamsaMSA.%J.err
 #SBATCH --time=5-00:00:00
 #SBATCH --mem=120G
 #SBATCH --constraint=[intel]
