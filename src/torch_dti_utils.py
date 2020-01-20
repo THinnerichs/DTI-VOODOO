@@ -23,8 +23,8 @@ class FullNetworkDataset(Dataset):
             being saved to disk. (default: :obj:`None`)
     """
 
-    def __init__(self, root, transform=None, pre_transform=None):
-        super(FullNetworkDataset, self).__init__(root, transform, pre_transform)
+    def __init__(self, transform=None, pre_transform=None):
+        # super(FullNetworkDataset, self).__init__(root, transform, pre_transform)
 
         print("Loading data ...")
         drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -57,21 +57,23 @@ class FullNetworkDataset(Dataset):
         self.num_drugs = len(drug_list)
         print("Finished.\n")
 
-    '''
     @property
     def raw_file_names(self):
+        print("raw_file_names")
         return []
 
     @property
     def processed_file_names(self):
+        print("processed_file_names")
         return ['../pytorch_data/PPI_network.dataset']
 
     def download(self):
+        print("download")
         pass
 
     def process(self):
+        print("process")
         pass
-    '''
 
     def set_graph_train_mask(self, indizes):
         self.full_PPI_graph_Data.train_idx = torch.tensor(indizes, dtype=torch.long)
