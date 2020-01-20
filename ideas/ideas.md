@@ -61,9 +61,6 @@
 Talk with Robert on 09.01.:
 
 Work until now:
-  - Lacking motivation
-  - Knee pain
-
   - performed mafft and FAMSA alignment with search -> poor results
     1. tweak this! because its new!
     2. take other bottom up approach to fix this

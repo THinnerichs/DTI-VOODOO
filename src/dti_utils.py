@@ -3,7 +3,6 @@ import tensorflow as tf
 from sklearn.metrics import roc_auc_score, accuracy_score
 import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
-from keras.callbacks import Callback
 
 import math
 
@@ -59,85 +58,4 @@ def plot_history(history):
         plt.legend(['train', 'test'], loc='best')
         plt.show()
 
-class roc_callback(Callback):
-    def __init__(self,training_data,validation_data):
-        self.x = training_data[0]
-        self.y = training_data[1]
-        self.x_val = validation_data[0]
-        self.y_val = validation_data[1]
 
-
-    def on_train_begin(self, logs=None):
-        return
-
-    def on_train_end(self, logs=None):
-        return
-
-    def on_epoch_begin(self, epoch, logs=None):
-        return
-
-    def on_epoch_end(self, epoch, logs=None):
-        y_pred = self.model.predict(self.x)
-        roc = roc_auc_score(self.y, y_pred)
-        y_pred_val = self.model.predict(self.x_val)
-        roc_val = roc_auc_score(self.y_val, y_pred_val)
-        print('\rroc-auc: %s - roc-auc_val: %s' % (str(round(roc,4)),str(round(roc_val,4))),end=100*' '+'\n')
-        return
-
-    def on_batch_begin(self, batch, logs=None):
-        return
-
-    def on_batch_end(self, batch, logs=None):
-        return
-
-class OverallTrainingDataGenerator(tf.keras.utils.Sequence):
-    def __init__(self, DDI_data, side_effect_data,  Y, batch_size):
-        # Keras generator
-
-        # Real time multiple input data augmentation
-        # self.genX1 = self.generator.flow(X1, Y, batch_size=batch_size)
-        # self.genX2 = self.generator.flow(X2, Y, batch_size=batch_size)
-        pass
-
-    def __len__(self):
-        """It is mandatory to implement it on Keras Sequence"""
-        return self.genX1.__len__()
-
-    def __getitem__(self, index):
-        """Getting items from the 2 generators and packing them"""
-        X1_batch, Y_batch = self.genX1.__getitem__(index)
-        X2_batch, Y_batch = self.genX2.__getitem__(index)
-
-        X_batch = [X1_batch, X2_batch]
-
-        return X_batch, Y_batch
-
-class DataGenerator(tf.keras.utils.Sequence):
-    'Generates data for Keras'
-
-    def __init__(self, data, labels, batch_size=32, shuffle=True):
-        'Initialization'
-        self.batch_size = batch_size
-        self.labels = labels
-        self.data = data
-        self.shuffle = shuffle
-        self.on_epoch_end()
-
-    def __len__(self):
-        'Denotes the number of batches per epoch'
-        return int(np.floor(len(self.data) / self.batch_size))
-
-    def __getitem__(self, index):
-        'Generate one batch of data'
-        # Generate indexes of the batch
-        indexes = np.array(self.indexes[index * self.batch_size:(index + 1) * self.batch_size])
-
-        return self.data[indexes], tf.keras.utils.to_categorical(self.labels[indexes], num_classes=2)
-
-    '''
-    def on_epoch_end(self):
-        'Updates indexes after each epoch'
-        self.indexes = np.arange(len(self.data))
-        if self.shuffle == True:
-            np.random.shuffle(self.indexes)
-    '''
