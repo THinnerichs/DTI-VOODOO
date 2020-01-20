@@ -10,7 +10,7 @@ from torch_dti_utils import *
 import torch
 import torch.nn.functional as F
 
-def enlightened_missing_target_predictor(results_filename='../results/torched_reults_log',
+def enlightened_missing_target_predictor(results_filename='../results/torched_results_log',
                                          nb_epochs=3,
                                          plot=False,
                                          embedding_layer_sizes=[32, 64],
@@ -20,3 +20,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
     print("Finished.")
 
+
+
+if __name__ == '__main__':
+    enlightened_missing_target_predictor()
