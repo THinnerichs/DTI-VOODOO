@@ -37,6 +37,12 @@ class FullNetworkDataset(Dataset):
         # PPI data
         print("Loading PPI graph ...")
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        print(PPI_graph.nodes())
+        print(PPI_graph.edges())
+        edge_list = torch.tensor(np.transpose(np.array(PPI_graph.edges())), dtype=torch.long)
+
+        print(edge_list)
+
         self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
         print(self.full_PPI_graph_Data)
 
