@@ -37,8 +37,8 @@ class FullNetworkDataset(Dataset):
         # PPI data
         print("Loading PPI graph ...")
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
-        print(PPI_graph.nodes())
-        print(PPI_graph.edges())
+        print(list(PPI_graph.nodes())[:20])
+        print(list(PPI_graph.edges())[:20])
         edge_list = torch.tensor(np.transpose(np.array(PPI_graph.edges())), dtype=torch.long)
 
         print(edge_list)
