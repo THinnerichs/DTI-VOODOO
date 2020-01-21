@@ -159,11 +159,13 @@ def get_annotated_PPI_graph():
 
     return PPI_graph
 
-def write_drug_to_HMM_filtered_targets_dict():
+def write_drug_to_HMM_filtered_targets_dict(mode='none',
+                                            alignment_method='mafft'):
     predicted_targets_dir = "../data/predicted_targets/"
 
     print("Parsing targets from Hmmer prediction ...")
-    files = os.listdir(predicted_targets_dir)
+    files = [file for file in os.listdir(predicted_targets_dir)
+             if mode in file and alignment_method in file]
     drug_filtered_targets_dict = {}
     for file in tqdm(files):
         drug = file.split('_')[0]

@@ -27,40 +27,41 @@ class FullNetworkDataset(Dataset):
         # super(FullNetworkDataset, self).__init__(root, transform, pre_transform)
 
         print("Loading data ...")
-        drug_list = np.array(DTI_data_preparation.get_drug_list())
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print("Get protein list ...")
-        protein_list = np.array(DTI_data_preparation.get_human_proteins())
+        self.protein_list = np.array(DTI_data_preparation.get_human_proteins())
 
-        print(len(drug_list))
-        print(len(protein_list))
+        print(len(self.drug_list))
+        print(len(self.protein_list))
 
         # PPI data
         print("Loading PPI graph ...")
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
         print(list(PPI_graph.nodes())[:20])
         print(list(PPI_graph.edges())[:20])
-        edge_list = torch.tensor(np.transpose(np.array(PPI_graph.edges())), dtype=torch.long)
+        self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
+        edge_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                     for node1, node2 in list(PPI_graph.edges())]
+        edge_list = torch.tensor(np.transpose(np.array(edge_list)), dtype=torch.long)
 
-        print(edge_list)
-
-        self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
+        # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
         print(self.full_PPI_graph_Data)
 
         # DDI data
         print("Loading DDI features ...")
-        DDI_features = DTI_data_preparation.get_DDI_feature_list(drug_list)
+        DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
         print(DDI_features.shape)
 
         # DTI data
         print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=drug_list, protein_list=protein_list)
-        y_dti_data = y_dti_data.reshape((len(protein_list), len(drug_list)))
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
+        y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
         y_dti_data = np.transpose(y_dti_data)
         print(y_dti_data.shape)
 
         # calculate dimensions of network
         self.num_proteins = len(PPI_graph.nodes())
-        self.num_drugs = len(drug_list)
+        self.num_drugs = len(self.drug_list)
         print("Finished.\n")
 
     @property
@@ -86,6 +87,15 @@ class FullNetworkDataset(Dataset):
 
     def set_graph_test_mask(self, indizes):
         self.full_PPI_graph_Data.test_idx = torch.tensor(indizes, dtype=torch.long)
+
+    def get_protein_to_index_dict(self):
+        return self.protein_to_index_dict
+
+    def get_protein_list(self):
+        return self.protein_list
+
+    def get_drug_list(self):
+        return self.drug_list
 
     def __getitem__(self, index):
         print("Index: {}".format(index))
