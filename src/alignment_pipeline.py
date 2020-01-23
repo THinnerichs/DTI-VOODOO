@@ -481,6 +481,7 @@ def run_hmm_search_pipeline(min_score=700,
         q.put(None)  # one EOF marker for each thread
 
 def write_predicted_targets(alignment_method='famsa'):
+    # @TODO Finish implementation of this function
     hmm_search_path = "../data/hmm_search_results/"
     files = [filename for filename in os.listdir(hmm_search_path)
              if alignment_method in filename]
@@ -548,6 +549,7 @@ if __name__ == '__main__':
                            rel_weight_method='wnone')
     '''
 
+    '''
     # mafft builds
     run_hmm_build_pipeline(min_score=700,
                            alignment_method='mafft',
@@ -569,6 +571,7 @@ if __name__ == '__main__':
                            workers=2,
                            threads_per_worker=10,
                            rel_weight_method='wnone')
+    '''
 
     '''
     # hmm search
@@ -594,7 +597,6 @@ if __name__ == '__main__':
                             rel_weight_method='wnone')
     '''
 
-    '''
     # hmm search
     run_hmm_search_pipeline(min_score=700,
                             alignment_method='mafft',
@@ -616,4 +618,3 @@ if __name__ == '__main__':
                             workers=2,
                             threads_per_worker=10,
                             rel_weight_method='wnone')
-    '''

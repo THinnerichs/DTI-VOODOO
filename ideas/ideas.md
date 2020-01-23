@@ -1,36 +1,22 @@
-## Important
-
-- Extend VPN access (only valid until 31.12.19)
-
 ## TODO
 
+1. Perform hmm\_search pipeline and extract features
+2. Build dummy features and get torch network to run
+3. put in real features
+
 - actually do some literature search!!!
-
-- Put more comments to code
-
-- how to map e values from [0,inf) with 0 as hit and inf as no hit to [0,1] where 0 no hit and 1 is hit
 
 ---------------------------------------------------
 - read Roberts Hypothesis testing paper for title and outline
 
-- are there papers on DTI using PPIs?
-
-- test unsupervised node embedding learning
 - Get other method to run on my dataset (literature!!)
   - Have to get SMILES and stuff too -> meh
   - How can this be made proof? Model is tweaked on this dataset while foreign methods are not
 
 - read PREDICT paper
-- maybe try other stellargraph embeddings as well :)))
-
-- run unsupervised methods now as more RAM is available
-
 ----------------------------------------------------
 
 - extract predictions from search results
-
-- Read paper how convolution over node features is done
-  - Otherwise use same structure but with different node labels?
 
 - update targets based on new alignments
   - update after new hmm\_search went trough :)
@@ -47,14 +33,6 @@
 - Find SOTA for DTI
   - take intersection of data and perform on that
   - Maybe one top-down and one bottom up?
-
-- Get Stellargraph models to run with my data -> Compare results
-  - Rebuild their models (See model images)
-
-- Finally attach filter data to graph!!
-
-- Test different filter methods and their performance
-  - Test different parameters for hmm\_build and search 
 
 --------------------------------------------------
 

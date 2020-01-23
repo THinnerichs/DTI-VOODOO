@@ -43,6 +43,7 @@ class FullNetworkDataset(Dataset):
         edge_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
                      for node1, node2 in list(PPI_graph.edges())]
         edge_list = torch.tensor(np.transpose(np.array(edge_list)), dtype=torch.long)
+        feature_matrix =
 
         # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
         print(self.full_PPI_graph_Data)

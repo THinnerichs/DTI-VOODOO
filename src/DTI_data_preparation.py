@@ -159,13 +159,13 @@ def get_annotated_PPI_graph():
 
     return PPI_graph
 
-def write_drug_to_HMM_filtered_targets_dict(mode='none',
+def write_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
                                             alignment_method='mafft'):
     predicted_targets_dir = "../data/predicted_targets/"
 
     print("Parsing targets from Hmmer prediction ...")
     files = [file for file in os.listdir(predicted_targets_dir)
-             if mode in file and alignment_method in file]
+             if rel_weight_method in file and alignment_method in file]
     drug_filtered_targets_dict = {}
     for file in tqdm(files):
         drug = file.split('_')[0]
@@ -180,17 +180,44 @@ def write_drug_to_HMM_filtered_targets_dict(mode='none',
         drug_filtered_targets_dict[drug] = target_list
 
     print("Writing dict ...")
-    filename = "../data/drug_to_HMM_filtered_targets_dict"
+    filename = "../data/drug_to_HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_targets_dict"
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(drug_filtered_targets_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
-def get_drug_to_HMM_filtered_targets_dict():
-    filename = "../data/drug_to_HMM_filtered_targets_dict"
+def get_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
+                                          alignment_method='mafft'):
+    filename = "../data/drug_to_HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_targets_dict"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def write_drug_protein_HMM_filtered_feature_matrix(drug_list,
+                                                   protein_list,
+                                                   alignment_method='mafft',
+                                                   rel_weight_method='wnone'):
+    return_matrix = np.zeros((len(protein_list),len(drug_list)))
+    drug_HMM_filtered_targets_dict = get_drug_to_HMM_filtered_targets_dict(alignment_method=alignment_method,
+                                                                           rel_weight_method=rel_weight_method)
+
+    for protein_index, protein in enumerate(protein_list):
+        for drug_index, drug in enumerate(drug_list):
+            for predicted_target in drug_HMM_filtered_targets_dict[drug]:
+                if predicted_target == protein:
+                    return_matrix[protein_index, drug_index] = 1
+
+    filename = "../data/HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_"+"feature_matrix"
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(return_matrix, f, pickle.HIGHEST_PROTOCOL)
+    print("Finished.\n")
+
+def get_drug_protein_HMM_filtered_feature_matrix(alignment_method='mafft',
+                                                 rel_weight_method='wnone'):
+    filename = "../data/HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_"+"feature_matrix"
+    with open(file=filename, mode='rb') as f:
+        return pickle.load(f)
+
 def get_protein_HMM_filtered_features(drug_list):
+    # @TODO Implement this function for protein features
     # drug_toHMM_filtered_targets_dict = get_drug_HMM_filtered_features()
 
     print("Not implemented yet!")
@@ -203,8 +230,6 @@ def get_PPI_DTI_graph_intersection():
     protein_set = set(dti_graph.nodes()) & set(ppi_graph.nodes())
 
     return ppi_graph.subgraph(protein_set)
-
-
 
 
 def test():
