@@ -209,6 +209,11 @@ def write_protein_to_adj_mat_dict():
         pickle.dump(protein_to_adj_mat_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
 
+def get_protein_to_adj_mat_dict():
+    filename = "../data/PPI_data/protein_to_adj_mat_dict"
+    with open(file=filename+'.pkl', mode='rb') as f:
+        return pickle.load(f)
+
 def write_protein_to_node_feature_dict():
     protein_to_subgraph_dict = get_protein_to_subgraph_dict()
 
@@ -233,11 +238,6 @@ def write_protein_to_node_feature_dict():
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(protein_to_node_feature_dict, f, pickle.HIGHEST_PROTOCOL)
     print("Finished.\n")
-
-def get_protein_to_adj_mat_dict():
-    filename = "../data/PPI_data/protein_to_adj_mat_dict"
-    with open(file=filename+'.pkl', mode='rb') as f:
-        return pickle.load(f)
 
 def get_protein_to_node_feature_dict():
     filename = "../data/PPI_data/protein_to_node_features_dict"

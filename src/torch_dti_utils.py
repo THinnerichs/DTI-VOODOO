@@ -37,16 +37,22 @@ class FullNetworkDataset(Dataset):
         # PPI data
         print("Loading PPI graph ...")
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        PPI_graph = PPI_graph.subgraph(self.protein_list)
         print(list(PPI_graph.nodes())[:20])
         print(list(PPI_graph.edges())[:20])
+        print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
+        print("Building edge list ...")
         edge_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
                      for node1, node2 in list(PPI_graph.edges())]
         edge_list = torch.tensor(np.transpose(np.array(edge_list)), dtype=torch.long)
-        feature_matrix =
+        print("Building feature matrix ...")
+        feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
 
         # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
+        self.full_PPI_graph_Data = Data(x=feature_matrix, edge_index=edge_list)
         print(self.full_PPI_graph_Data)
+
 
         # DDI data
         print("Loading DDI features ...")
