@@ -107,7 +107,7 @@ class FullNetworkDataset(Dataset):
     def get_drug_list(self):
         return self.drug_list
 
-    def __getitem__(self, index):
+    def get(self, index):
         print("Index: {}".format(index))
 
 
