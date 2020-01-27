@@ -30,11 +30,10 @@ class FullNetworkDataset(Dataset):
 
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        print(len(self.drug_list), "drugs present")
         print("Get protein list ...")
         self.protein_list = np.array(DTI_data_preparation.get_human_proteins())
-
-        print(len(self.drug_list))
-        print(len(self.protein_list))
+        print(len(self.protein_list), "proteins present")
 
         # PPI data
         print("Loading PPI graph ...")
