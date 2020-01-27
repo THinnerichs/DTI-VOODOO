@@ -85,11 +85,12 @@ class FullNetworkDataset(Dataset):
         return ['../pytorch_data/PPI_network.dataset']
 
     def download(self):
-        print("download")
         pass
 
     def process(self):
-        print("process")
+        pass
+
+    def transform(self):
         pass
 
     def set_graph_train_mask(self, indizes):
