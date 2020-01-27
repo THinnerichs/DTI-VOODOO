@@ -21,8 +21,8 @@ class SimpleConvGCN(torch.nn.Module):
         self.conv1 = torch_geometric.nn.GCNConv(num_features, 16, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(16, GCN_num_outchannels, cached=False)
 
-        # self.self.reg_params = self.conv1.parameters()
-        # self.non_reg_params = self.conv2.parameters()
+        self.reg_params = self.conv1.parameters()
+        self.non_reg_params = self.conv2.parameters()
 
     def forward(self, DDI_feature, protein_mask, PPI_data):
 
