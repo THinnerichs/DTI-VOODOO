@@ -108,23 +108,26 @@ class FullNetworkDataset(Dataset):
     def get_drug_list(self):
         return self.drug_list
 
-    def get(self, index):
-        print("Index: {}".format(index))
+    def get(self, indices):
 
+        return_list = []
+        for index in indices:
+            print("Index: {}".format(index))
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
 
-        drug_index = index // self.num_proteins
-        protein_index = index % self.num_proteins
+            # build protein mask
+            protein_mask = np.zeros(self.num_proteins)
+            protein_mask[protein_index] = 1
+            protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
-        # build protein mask
-        protein_mask = np.zeros(self.num_proteins)
-        protein_mask[protein_index] = 1
-        protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
+            target = self.y_dti_data[drug_index, protein_index]
 
-        target = self.y_dti_data[drug_index, protein_index]
+            DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
-        DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
+            return_list.append((DDI_features, protein_mask, self.full_PPI_graph_Data, target))
 
-        return DDI_features, protein_mask, self.full_PPI_graph_Data, target
+        return np.array(return_list)
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
