@@ -59,7 +59,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
             torch.cuda.synchronize(device=device)
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
-                              num_features=dataset.num_PPI_features).to(device)
+                              num_features=dataset.num_PPI_features)
         optimizer = torch.optim.Adam([dict(params=model.reg_params, weight_decay=5e-4),
                                       dict(params=model.non_reg_params, weight_decay=0)],
                                      lr=0.01)
