@@ -1,6 +1,8 @@
 import numpy as np
 
 import torch
+import torch.nn.functional as F
+
 import torch_geometric
 from torch_geometric.data import Dataset
 from torch_geometric.data import Data
@@ -50,6 +52,7 @@ class FullNetworkDataset(Dataset):
         edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
         feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
+        self.num_PPI_features = feature_matrix.shape[1]
 
         # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
         self.full_PPI_graph_Data = Data(x=feature_matrix, edge_index=edge_list)
@@ -116,14 +119,50 @@ class FullNetworkDataset(Dataset):
         # build protein mask
         protein_mask = np.zeros(self.num_proteins)
         protein_mask[protein_index] = 1
-        protein_mask = torch.tensor(protein_mask, dtype=torch.uint8)
+        protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
         target = self.y_dti_data[drug_index, protein_index]
 
-        DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.uint8)
+        DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
         return DDI_features, protein_mask, self.full_PPI_graph_Data, target
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
+
+def train(model, optimizer, loader, device):
+    model.train()
+    total_loss = 0
+    for data in loader:
+        optimizer.zero_grad()
+        data = data.to(device)
+        out = model(data)
+        loss = F.nll_loss(out, data.y.view(-1))
+        loss.backward()
+        total_loss += loss.item() * loader.batch_size
+        optimizer.step()
+    return total_loss / len(loader.dataset)
+
+def eval_acc(model, loader, device):
+    model.eval()
+
+    correct = 0
+    for data in loader:
+        data = data.to(device)
+        with torch.no_grad():
+            pred = model(data).max(1)[1]
+        correct += pred.eq(data.y.view(-1)).sum().item()
+    return correct / len(loader.dataset)
+
+
+def eval_loss(model, loader, device):
+    model.eval()
+
+    loss = 0
+    for data in loader:
+        data = data.to(device)
+        with torch.no_grad():
+            out = model(data)
+        loss += F.nll_loss(out, data.y.view(-1), reduction='sum').item()
+    return loss / len(loader.dataset)
