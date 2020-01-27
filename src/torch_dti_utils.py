@@ -43,9 +43,11 @@ class FullNetworkDataset(Dataset):
         print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
         print("Building edge list ...")
-        edge_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                     for node1, node2 in list(PPI_graph.edges())]
-        edge_list = torch.tensor(np.transpose(np.array(edge_list)), dtype=torch.long)
+        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                              for node1, node2 in list(PPI_graph.edges())]
+        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                               for node2, node1 in list(PPI_graph.edges())]
+        edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
         feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
 
@@ -56,15 +58,15 @@ class FullNetworkDataset(Dataset):
 
         # DDI data
         print("Loading DDI features ...")
-        DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
-        print(DDI_features.shape)
+        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
+        print(self.DDI_features.shape)
 
         # DTI data
         print("Loading DTI links ...")
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
         y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
-        y_dti_data = np.transpose(y_dti_data)
-        print(y_dti_data.shape)
+        self.y_dti_data = np.transpose(y_dti_data)
+        print(self.y_dti_data.shape)
 
         # calculate dimensions of network
         self.num_proteins = len(PPI_graph.nodes())
@@ -107,6 +109,20 @@ class FullNetworkDataset(Dataset):
     def __getitem__(self, index):
         print("Index: {}".format(index))
 
+
+        drug_index = index // self.num_proteins
+        protein_index = index % self.num_proteins
+
+        # build protein mask
+        protein_mask = np.zeros(self.num_proteins)
+        protein_mask[protein_index] = 1
+        protein_mask = torch.tensor(protein_mask, dtype=torch.uint8)
+
+        target = self.y_dti_data[drug_index, protein_index]
+
+        DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.uint8)
+
+        return DDI_features, protein_mask, self.full_PPI_graph_Data, target
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
