@@ -1,6 +1,6 @@
 import numpy as np
 
-from tqdm import tqdm
+
 
 import torch
 import torch.nn.functional as F
@@ -9,7 +9,12 @@ import torch_geometric
 from torch_geometric.data import Dataset
 from torch_geometric.data import Data
 
+from tqdm import tqdm
+from joblib import Parallel, delayed
+
 import DTI_data_preparation
+
+
 
 class FullNetworkDataset(Dataset):
     """
@@ -114,7 +119,8 @@ class FullNetworkDataset(Dataset):
         print("get")
 
         return_list = []
-        for index in tqdm(indices):
+
+        def get_features(index):
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
 
@@ -127,9 +133,9 @@ class FullNetworkDataset(Dataset):
 
             DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
-            return_list.append((DDI_features, protein_mask, self.full_PPI_graph_Data, target))
+            return DDI_features, protein_mask, self.full_PPI_graph_Data, target
 
-        return np.array(return_list)
+        return np.array(Parallel(n_jobs=8)(delayed(get_features)(index) for index in tqdm(indices)))
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
