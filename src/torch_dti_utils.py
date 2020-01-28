@@ -120,7 +120,7 @@ class FullNetworkDataset(Dataset):
 
         return_list = []
 
-        def get_features(index):
+        for index in tqdm(indices):
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
 
@@ -133,9 +133,9 @@ class FullNetworkDataset(Dataset):
 
             DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
-            return DDI_features, protein_mask, self.full_PPI_graph_Data, target
+            return_list.append(Data(x=(DDI_features, protein_mask, self.full_PPI_graph_Data), y=target)
 
-        return np.array(Parallel(n_jobs=8)(delayed(get_features)(index) for index in indices))
+        return np.array(return_list)
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
