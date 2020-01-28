@@ -109,10 +109,10 @@ class FullNetworkDataset(Dataset):
         return self.drug_list
 
     def get(self, indices):
+        print("get")
 
         return_list = []
         for index in indices:
-            print("Index: {}".format(index))
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
 
