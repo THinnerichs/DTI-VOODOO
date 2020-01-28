@@ -135,7 +135,7 @@ class FullNetworkDataset(Dataset):
 
             return DDI_features, protein_mask, self.full_PPI_graph_Data, target
 
-        return np.array(Parallel(n_jobs=8)(delayed(get_features)(index) for index in tqdm(indices)))
+        return np.array(Parallel(n_jobs=8)(delayed(get_features)(index) for index in indices))
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
