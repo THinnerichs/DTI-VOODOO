@@ -1,7 +1,5 @@
 import numpy as np
 
-
-
 import torch
 import torch.nn.functional as F
 
@@ -10,6 +8,7 @@ from torch_geometric.data import Dataset
 from torch_geometric.data import Data
 
 from tqdm import tqdm
+import copy
 
 import DTI_data_preparation
 
@@ -53,14 +52,14 @@ class FullNetworkDataset(Dataset):
                               for node1, node2 in list(PPI_graph.edges())]
         backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
                                for node2, node1 in list(PPI_graph.edges())]
-        edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
+        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
-        feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
-        self.num_PPI_features = feature_matrix.shape[1]
+        self.feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
+        self.num_PPI_features = self.feature_matrix.shape[1]
 
         # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
-        self.full_PPI_graph_Data = Data(x=feature_matrix, edge_index=edge_list)
-        print(self.full_PPI_graph_Data)
+        # self.full_PPI_graph_Data = Data(x=feature_matrix, edge_index=edge_list)
+        # print(self.full_PPI_graph_Data)
 
 
         # DDI data
@@ -117,7 +116,7 @@ class FullNetworkDataset(Dataset):
     def get(self, indices):
         print("get")
 
-        return_list = []
+        data_list = []
 
         for index in tqdm(indices):
             drug_index = index // self.num_proteins
@@ -128,13 +127,17 @@ class FullNetworkDataset(Dataset):
             protein_mask[protein_index] = 1
             protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
-            target = self.y_dti_data[drug_index, protein_index]
+            y = self.y_dti_data[drug_index, protein_index]
 
             DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
-            return_list.append((DDI_features, protein_mask, self.full_PPI_graph_Data, target))
+            full_PPI_graph = Data(x=self.feature_matrix, edge_index=self.edge_list, y=y)
+            full_PPI_graph.DDI_features = DDI_features
+            full_PPI_graph.protein_mask = protein_mask
 
-        return np.array(return_list)
+            data_list.append(full_PPI_graph)
+
+        return data_list
 
     def __len__(self):
         return self.num_proteins * self.num_drugs

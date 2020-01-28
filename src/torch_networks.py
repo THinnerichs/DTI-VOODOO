@@ -24,11 +24,13 @@ class SimpleConvGCN(torch.nn.Module):
         self.reg_params = self.conv1.parameters()
         self.non_reg_params = self.conv2.parameters()
 
-    def forward(self, DDI_feature, protein_mask, PPI_data):
+    def forward(self, PPI_data_object):
+        DDI_feature = PPI_data_object.DDI_features
+        protein_mask = PPI_data_object.protein_mask
 
 
         # PPI graph network
-        PPI_x = F.relu(self.conv1(PPI_data))
+        PPI_x = F.relu(self.conv1(PPI_data_object))
         PPI_x = F.dropout(PPI_x, training=self.training)
         PPI_x = self.conv2(PPI_x)
         PPI_x = F.relu(PPI_x)

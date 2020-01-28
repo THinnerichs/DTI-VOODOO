@@ -9,7 +9,6 @@ from torch_dti_utils import *
 from torch_networks import *
 
 import torch
-import torch.utils.data as data_utils
 import torch.nn.functional as F
 from torch.nn import Linear
 import torch_geometric.data as data
@@ -53,8 +52,8 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
         test_dataset = dataset[test_indices]
 
         # build DataLoaders
-        train_loader = data_utils.DataLoader(train_dataset, batch_size, shuffle=True)
-        test_loader = data_utils.DataLoader(test_dataset, batch_size, shuffle=False)
+        train_loader = data.DataLoader(train_dataset, batch_size, shuffle=True)
+        test_loader = data.DataLoader(test_dataset, batch_size, shuffle=False)
 
         if torch.cuda.is_available():
             torch.cuda.synchronize(device=device)
