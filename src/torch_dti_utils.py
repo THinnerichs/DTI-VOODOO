@@ -133,7 +133,7 @@ class FullNetworkDataset(Dataset):
 
             DDI_features = torch.tensor(self.DDI_features[drug_index, :], dtype=torch.bool)
 
-            return_list.append(Data(x=(DDI_features, protein_mask, self.full_PPI_graph_Data), y=target)
+            return_list.append((DDI_features, protein_mask, self.full_PPI_graph_Data, target))
 
         return np.array(return_list)
 
