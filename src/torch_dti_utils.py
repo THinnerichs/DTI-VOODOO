@@ -142,7 +142,7 @@ class FullNetworkDataset(Dataset):
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
-
+'''
 def train(model, optimizer, loader, device):
     model.train()
     total_loss = 0
@@ -155,6 +155,26 @@ def train(model, optimizer, loader, device):
         total_loss += loss.item() * loader.batch_size
         optimizer.step()
     return total_loss / len(loader.dataset)
+'''
+
+
+def train(model, device, train_loader, optimizer, epoch):
+    print('Training on {} samples...'.format(len(train_loader.dataset)))
+    model.train()
+    for batch_idx, data in enumerate(train_loader):
+        data = data.to(device)
+        optimizer.zero_grad()
+        output = model(data)
+        loss = F.nll_loss(output, data.y.view(-1, 1).float().to(device))
+        loss.backward()
+        optimizer.step()
+        if batch_idx % 1 == 0:
+            print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
+                                                                           batch_idx * len(data.x),
+                                                                           len(train_loader.dataset),
+                                                                           100. * batch_idx / len(train_loader),
+                                                                           loss.item()))
+
 
 def eval_acc(model, loader, device):
     model.eval()

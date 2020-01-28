@@ -65,7 +65,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
                                      lr=0.01)
 
         for epoch in range(1, num_epochs + 1):
-            train_loss = train(model=model, optimizer=optimizer, loader=train_loader, device=device)
+            train_loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
             val_loss = eval_loss(model, test_loader, device)
             val_losses.append(val_loss)
             test_acc = eval_acc(model, test_loader, device)
