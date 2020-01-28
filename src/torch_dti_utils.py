@@ -134,6 +134,7 @@ class FullNetworkDataset(Dataset):
             full_PPI_graph = Data(x=self.feature_matrix, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
             full_PPI_graph.protein_mask = protein_mask
+            full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
 
@@ -175,7 +176,21 @@ def train(model, device, train_loader, optimizer, epoch):
                                                                            100. * batch_idx / len(train_loader),
                                                                            loss.item()))
 
+def predicting(model, device, loader):
+    model.eval()
+    total_preds = torch.Tensor()
+    total_labels = torch.Tensor()
+    print('Make prediction for {} samples...'.format(len(loader.dataset)))
+    with torch.no_grad():
+        for data in loader:
+            data = data.to(device)
+            output = model(data)
+            total_preds = torch.cat((total_preds, output.cpu()), 0)
+            total_labels = torch.cat((total_labels, data.y.view(-1, 1).cpu()), 0)
+    return total_labels.numpy().flatten(),total_preds.numpy().flatten()
 
+
+'''
 def eval_acc(model, loader, device):
     model.eval()
 
@@ -198,3 +213,4 @@ def eval_loss(model, loader, device):
             out = model(data)
         loss += F.nll_loss(out, data.y.view(-1), reduction='sum').item()
     return loss / len(loader.dataset)
+'''

@@ -66,12 +66,9 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
         for epoch in range(1, num_epochs + 1):
             train_loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
-            val_loss = eval_loss(model, test_loader, device)
-            val_losses.append(val_loss)
-            test_acc = eval_acc(model, test_loader, device)
-            accs.append(test_acc)
+            print(train_loss)
 
-            print('{:02d}/{:03d}: Val Loss: {:.4f}, Test Accuracy: {:.3f}'.format(fold, epoch, val_loss, test_acc))
+            # print('{:02d}/{:03d}: Val Loss: {:.4f}, Test Accuracy: {:.3f}'.format(fold, epoch, val_loss, test_acc))
 
         if torch.cuda.is_available():
             torch.cuda.synchronize(device=device)
