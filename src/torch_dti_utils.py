@@ -1,5 +1,7 @@
 import numpy as np
 
+from tqdm import tqdm
+
 import torch
 import torch.nn.functional as F
 
@@ -112,7 +114,7 @@ class FullNetworkDataset(Dataset):
         print("get")
 
         return_list = []
-        for index in indices:
+        for index in tqdm(indices):
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
 
