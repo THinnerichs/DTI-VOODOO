@@ -40,7 +40,6 @@ class SimpleConvGCN(torch.nn.Module):
         print(type(PPI_x))
         print(type(PPI_edge_index))
 
-        raise Exception
 
         # PPI graph network
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
