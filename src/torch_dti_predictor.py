@@ -60,9 +60,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_features=dataset.num_PPI_features)
-        optimizer = torch.optim.Adam([dict(params=model.reg_params, weight_decay=5e-4),
-                                      dict(params=model.non_reg_params, weight_decay=0)],
-                                     lr=0.01)
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
         for epoch in range(1, num_epochs + 1):
             train_loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
