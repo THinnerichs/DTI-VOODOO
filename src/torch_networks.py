@@ -24,7 +24,7 @@ class SimpleConvGCN(torch.nn.Module):
         print(self.conv1.weight)
         print(type(self.conv1.weight))
 
-        self.conv1.weight = self.conv1.weight.byte()
+        self.conv1.weight = torch.nn.Parameter(self.conv1.weight.byte())
 
         print(self.conv1.weight)
         print(type(self.conv1.weight))
