@@ -27,19 +27,20 @@ class SimpleConvGCN(torch.nn.Module):
     def forward(self, PPI_data_object):
         DDI_feature = PPI_data_object.DDI_features
         protein_mask = PPI_data_object.protein_mask
-
+        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
         # PPI graph network
-        PPI_x = F.relu(self.conv1(PPI_data_object))
+        PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.dropout(PPI_x, training=self.training)
-        PPI_x = self.conv2(PPI_x)
+        PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
-        print(PPI_x.shape)
+        print("PPI_shape:", PPI_x.shape)
 
 
         # DDI feature network
         DDI_x = F.relu(self.fc1(DDI_feature))
         DDI_x = F.relu(self.fc2(DDI_x))
         DDI_x = F.relu(self.fc3(DDI_x))
+        print("DDI_shape:", DDI_x.shape)
         raise Exception
         return x
