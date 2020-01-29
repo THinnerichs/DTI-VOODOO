@@ -21,13 +21,14 @@ class SimpleConvGCN(torch.nn.Module):
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
 
-        print(self.conv1.weight)
+        # print(self.conv1.weight)
         print(type(self.conv1.weight))
 
-        self.conv1.weight = torch.nn.Parameter(self.conv1.weight.byte())
 
-        print(self.conv1.weight)
-        print(type(self.conv1.weight))
+        # self.conv1.weight = torch.nn.Parameter(self.conv1.weight.byte())
+
+        # print(self.conv1.weight)
+        # print(type(self.conv1.weight))
 
 
 
@@ -35,6 +36,11 @@ class SimpleConvGCN(torch.nn.Module):
         DDI_feature = PPI_data_object.DDI_features
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
+
+        print(type(PPI_x))
+        print(type(PPI_edge_index))
+
+        raise Exception
 
         # PPI graph network
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
