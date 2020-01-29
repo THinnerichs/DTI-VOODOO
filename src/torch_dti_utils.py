@@ -136,6 +136,13 @@ class FullNetworkDataset(Dataset):
             full_PPI_graph.protein_mask = protein_mask
             full_PPI_graph.__num_nodes__ = self.num_proteins
 
+            print(type(y))
+            print(type(DDI_features))
+            print(type(protein_mask))
+            print(type(self.num_proteins))
+
+            raise Exception
+
             data_list.append(full_PPI_graph)
 
         return data_list
