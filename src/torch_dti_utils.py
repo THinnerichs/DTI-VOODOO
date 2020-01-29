@@ -45,7 +45,7 @@ class FullNetworkDataset(Dataset):
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
         PPI_graph = PPI_graph.subgraph(self.protein_list)
 
-        print("Building index dict ...")
+        print("Building index dict ...":kiss:kiss)
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
         print("Building edge list ...")
         forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
@@ -54,7 +54,7 @@ class FullNetworkDataset(Dataset):
                                for node2, node1 in list(PPI_graph.edges())]
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
-        self.feature_matrix = DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list)
+        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.uint8)
         self.num_PPI_features = self.feature_matrix.shape[1]
 
         # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
