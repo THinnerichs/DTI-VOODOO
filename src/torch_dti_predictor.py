@@ -23,7 +23,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
     batch_size = 32
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(torch.get_num_threads())
-    torch.set_num_threads(32)
+    torch.set_num_threads(128)
     print(torch.get_num_threads())
 
     raise Exception
