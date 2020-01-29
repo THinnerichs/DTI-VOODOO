@@ -21,10 +21,6 @@ class SimpleConvGCN(torch.nn.Module):
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
 
-        # print(self.conv1.weight)
-        print(type(self.conv1.weight))
-
-
         # self.conv1.weight = torch.nn.Parameter(self.conv1.weight.byte())
 
         # print(self.conv1.weight)

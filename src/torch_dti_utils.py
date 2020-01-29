@@ -109,8 +109,6 @@ class FullNetworkDataset(Dataset):
         return self.drug_list
 
     def get(self, indices):
-        print("get")
-
         data_list = []
 
         for index in tqdm(indices):

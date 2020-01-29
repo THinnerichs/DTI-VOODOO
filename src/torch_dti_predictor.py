@@ -22,6 +22,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
     # Learning parameters
     batch_size = 32
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    torch.set_num_threads(32)
 
     print("Loading data ...")
     dataset = FullNetworkDataset("../data/torch_raw/")
