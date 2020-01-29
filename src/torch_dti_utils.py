@@ -45,7 +45,7 @@ class FullNetworkDataset(Dataset):
         PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
         PPI_graph = PPI_graph.subgraph(self.protein_list)
 
-        print("Building index dict ...":kiss:kiss)
+        print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
         print("Building edge list ...")
         forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
