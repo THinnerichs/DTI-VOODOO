@@ -21,8 +21,8 @@ class SimpleConvGCN(torch.nn.Module):
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
 
-        # self.reg_params = self.conv1.parameters()
-        # self.non_reg_params = self.conv2.parameters()
+        print(self.conv1.weight)
+        print(type(self.conv1.weight))
 
     def forward(self, PPI_data_object):
         DDI_feature = PPI_data_object.DDI_features

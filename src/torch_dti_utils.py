@@ -56,14 +56,6 @@ class FullNetworkDataset(Dataset):
         print("Building feature matrix ...")
         self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.uint8)
         self.num_PPI_features = self.feature_matrix.shape[1]
-        print(type(self.num_PPI_features))
-
-        raise Exception
-
-        # self.full_PPI_graph_Data = torch_geometric.utils.from_networkx(PPI_graph)
-        # self.full_PPI_graph_Data = Data(x=feature_matrix, edge_index=edge_list)
-        # print(self.full_PPI_graph_Data)
-
 
         # DDI data
         print("Loading DDI features ...")
