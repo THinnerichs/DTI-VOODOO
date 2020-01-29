@@ -24,6 +24,13 @@ class SimpleConvGCN(torch.nn.Module):
         print(self.conv1.weight)
         print(type(self.conv1.weight))
 
+        self.conv1.weight = self.conv1.weight.byte()
+
+        print(self.conv1.weight)
+        print(type(self.conv1.weight))
+
+
+
     def forward(self, PPI_data_object):
         DDI_feature = PPI_data_object.DDI_features
         protein_mask = PPI_data_object.protein_mask
