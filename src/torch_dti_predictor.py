@@ -21,7 +21,8 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
                                          embedding_method='gcn'):
     # Learning parameters
     batch_size = 512
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     print(torch.get_num_threads())
     torch.set_num_threads(1)
     print(torch.get_num_threads())
