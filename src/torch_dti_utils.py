@@ -3,12 +3,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-import torch_geometric
-from torch_geometric.data import Dataset
-from torch_geometric.data import Data
+from torch_geometric.data import Dataset, Data
 
 from tqdm import tqdm
-import copy
 
 import DTI_data_preparation
 
@@ -54,7 +51,7 @@ class FullNetworkDataset(Dataset):
                                for node2, node1 in list(PPI_graph.edges())]
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
-        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.float)
+        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.half)
         self.num_PPI_features = self.feature_matrix.shape[1]
 
         # DDI data

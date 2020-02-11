@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch_geometric
-import torch_geometric.nn as nn
+# import torch_geometric.nn as nn
 
 
 class SimpleConvGCN(torch.nn.Module):
