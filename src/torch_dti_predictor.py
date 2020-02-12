@@ -20,9 +20,9 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
                                          embedding_layer_sizes=[32, 64],
                                          embedding_method='gcn'):
     # Learning parameters
-    batch_size = 32
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('cpu')
+    batch_size = 512
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     torch.set_num_threads(64)
 
     print("Loading data ...")
