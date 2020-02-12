@@ -48,7 +48,6 @@ class SimpleConvGCN(torch.nn.Module):
         PPI_x = F.relu(PPI_x)
 
         PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch)
-        print("PPI_shape:", PPI_x.shape)
 
         # flatten
         PPI_x = self.fc_g1(PPI_x)
@@ -56,14 +55,13 @@ class SimpleConvGCN(torch.nn.Module):
         PPI_x = self.dropout(PPI_x)
         PPI_x = self.fc_g2(PPI_x)
         PPI_x = self.dropout(PPI_x)
-        print("PPI_shape:", PPI_x.shape)
 
         # DDI feature network
         DDI_x = torch.cat((PPI_x, DDI_feature), 1)
         DDI_x = self.fc1(DDI_x)
         DDI_x = F.relu(DDI_x)
-        DDI_x = F.relu(self.fc2(DDI_x))
-        DDI_x = F.relu(self.fc3(DDI_x))
-        print("DDI_shape:", DDI_x.shape)
-        raise Exception
-        return x
+        DDI_x = self.fc2(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc3(DDI_x)
+        DDI_x = F.sigmoid(DDI_x)
+        return DDI_x
