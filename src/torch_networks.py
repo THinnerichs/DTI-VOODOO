@@ -20,7 +20,7 @@ class SimpleConvGCN(torch.nn.Module):
         # GCN layers
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
-        self.fc_g1 = torch.nn.Linear(num_features*4, 1028)
+        self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
         self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
 
         self.relu = torch.nn.ReLU()
