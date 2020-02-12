@@ -119,7 +119,7 @@ class FullNetworkDataset(Dataset):
 
             y = int(self.y_dti_data[drug_index, protein_index])
 
-            DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float)
+            DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
 
             full_PPI_graph = Data(x=self.feature_matrix, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
