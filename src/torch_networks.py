@@ -47,6 +47,9 @@ class SimpleConvGCN(torch.nn.Module):
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
 
+        print("PPI_x", PPI_x.shape)
+
+        raise Exception
         PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch)
 
         # flatten
