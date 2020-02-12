@@ -59,8 +59,8 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
         train_loader = data.DataLoader(train_dataset, batch_size, shuffle=True)
         test_loader = data.DataLoader(test_dataset, batch_size, shuffle=False)
 
-        if torch.cuda.is_available():
-            torch.cuda.synchronize(device=device)
+        # if torch.cuda.is_available():
+            # torch.cuda.synchronize(device=device)
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_features=dataset.num_PPI_features)
