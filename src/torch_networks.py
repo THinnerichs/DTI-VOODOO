@@ -7,8 +7,11 @@ import torch_geometric
 
 
 class SimpleConvGCN(torch.nn.Module):
-    def __init__(self, num_drugs, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
+    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
         super(SimpleConvGCN, self).__init__()
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
 
         # DDI feature layers
         self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
@@ -46,6 +49,8 @@ class SimpleConvGCN(torch.nn.Module):
         # PPI_x = F.dropout(PPI_x, training=self.training)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
+
+        PPI_x = PPI_x.view((512, self.num_prots, PPI_x.shape[-1]))
 
         print("PPI_x", PPI_x.shape)
 

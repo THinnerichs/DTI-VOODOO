@@ -61,6 +61,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
             # torch.cuda.synchronize(device=device)
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
+                              num_prots=dataset.num_proteins,
                               num_features=dataset.num_PPI_features)
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -70,8 +71,8 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
             # print('{:02d}/{:03d}: Val Loss: {:.4f}, Test Accuracy: {:.3f}'.format(fold, epoch, val_loss, test_acc))
 
-        if torch.cuda.is_available():
-            torch.cuda.synchronize(device=device)
+        # if torch.cuda.is_available():
+            # torch.cuda.synchronize(device=device)
 
     loss, acc = np.array(val_losses), np.array(accs)
     print("Acc mean:", acc.mean())
