@@ -33,10 +33,6 @@ class SimpleConvGCN(torch.nn.Module):
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
-        print(type(PPI_x))
-        print(type(PPI_edge_index))
-
-
         # PPI graph network
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
