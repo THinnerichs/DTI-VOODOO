@@ -51,7 +51,7 @@ class FullNetworkDataset(Dataset):
                                for node2, node1 in list(PPI_graph.edges())]
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
-        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.half)
+        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.float)
         self.num_PPI_features = self.feature_matrix.shape[1]
 
         # DDI data
