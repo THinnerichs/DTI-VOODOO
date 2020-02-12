@@ -49,7 +49,8 @@ class SimpleConvGCN(torch.nn.Module):
         print("PPI_shape:", PPI_x.shape)
 
         # flatten
-        PPI_x = self.relu(self.fc_g1(PPI_x))
+        PPI_x = self.fc_g1(PPI_x)
+        PPI_x = self.relu(PPI_x)
         PPI_x = self.dropout(PPI_x)
         PPI_x = self.fc_g2(PPI_x)
         PPI_x = self.dropout(PPI_x)
