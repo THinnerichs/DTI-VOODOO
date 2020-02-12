@@ -41,6 +41,8 @@ class SimpleConvGCN(torch.nn.Module):
         PPI_x = F.relu(PPI_x)
         print("PPI_shape:", PPI_x.shape)
 
+        print(self.fc1.weight)
+        print(self.fc1.weight.shape)
 
         # DDI feature network
         DDI_x = self.fc1(DDI_feature)
