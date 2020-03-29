@@ -16,11 +16,10 @@ import torch_geometric.data as data
 
 def enlightened_missing_target_predictor(results_filename='../results/torched_results_log',
                                          num_epochs=3,
+                                         batch_size=512,
                                          plot=False,
                                          embedding_layer_sizes=[32, 64],
                                          embedding_method='gcn'):
-    # Learning parameters
-    batch_size = 512
     # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     device = torch.device('cpu')
     torch.set_num_threads(64)
@@ -81,4 +80,5 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
 
 if __name__ == '__main__':
-    enlightened_missing_target_predictor(num_epochs=3)
+    enlightened_missing_target_predictor(num_epochs=3,
+                                         batch_size=512)

@@ -41,6 +41,8 @@ class SimpleConvGCN(torch.nn.Module):
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
+        batch_size = PPI_x.size(0)
+
         print(DDI_feature.shape)
 
         # PPI graph network
@@ -50,10 +52,10 @@ class SimpleConvGCN(torch.nn.Module):
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
 
-        PPI_x = PPI_x.view((512, self.num_prots, PPI_x.shape[-1]))
+        PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
 
-        print("PPI_x.shape, PPI_batch.shape", PPI_x.size(), PPI_batch.size())
-        PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch)
+        PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch.view((batch_size, -1)))
+        print("Global_max_pool.size", PPI_x.size())
 
         # flatten
         PPI_x = self.fc_g1(PPI_x)
