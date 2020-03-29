@@ -26,7 +26,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
     torch.set_num_threads(64)
 
     print("Loading data ...")
-    dataset = FullNetworkDataset("../data/torch_raw/")
+    dataset = FullNetworkDataset(num_proteins=1000)
     # dataset is present in dimension (num_drugs * num_proteins)
     print("Finished.")
 
