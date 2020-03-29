@@ -52,11 +52,6 @@ class SimpleConvGCN(torch.nn.Module):
 
         PPI_x = PPI_x.view((512, self.num_prots, PPI_x.shape[-1]))
 
-        print("PPI_x", PPI_x.shape)
-
-        print(protein_mask.shape)
-
-        raise Exception
         PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch)
 
         # flatten
