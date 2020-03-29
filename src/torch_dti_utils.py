@@ -83,6 +83,9 @@ class FullNetworkDataset(Dataset):
         return ['../pytorch_data/PPI_network.dataset']
     '''
 
+    def transform(self, data):
+        return data
+
     def set_graph_train_mask(self, indizes):
         self.full_PPI_graph_Data.train_idx = torch.tensor(indizes, dtype=torch.long)
 
