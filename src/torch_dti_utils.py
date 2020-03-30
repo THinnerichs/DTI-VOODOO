@@ -151,8 +151,8 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        # print('output.size()', output.size(), data.y.view(-1, 1).size())
-        loss = F.nll_loss(output.view(-1), data.y.view(-1).float().to(device))
+        print('output.size()', output.size(), data.y.view(-1, 1).size())
+        loss = F.nll_loss(output.view(-1, 1), data.y.view(-1, 1).float().to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 1 == 0:
