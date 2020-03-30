@@ -1,6 +1,7 @@
 import numpy as np
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 from torch_geometric.data import Dataset, Data
@@ -152,7 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
         optimizer.zero_grad()
         output = model(data)
         print('output.size()', output.size(), data.y.view(-1, 1).size())
-        loss = F.nll_loss(output.view(-1, 1), data.y.view(-1, 1).float().to(device))
+        loss = nn.CrossEntropyLoss(output.view(-1, 1), data.y.view(-1, 1).float().to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 1 == 0:
