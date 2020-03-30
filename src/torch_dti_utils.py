@@ -151,7 +151,7 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        print('output.size()', output.size(), data.y.view(-1, 1).size())
+        # print('output.size()', output.size(), data.y.view(-1, 1).size())
         loss = nn.MSELoss()(output, data.y.view(-1, 1).float().to(device))
         loss.backward()
         optimizer.step()
