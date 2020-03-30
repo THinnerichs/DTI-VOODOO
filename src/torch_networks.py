@@ -34,8 +34,6 @@ class SimpleConvGCN(torch.nn.Module):
         # print(self.conv1.weight)
         # print(type(self.conv1.weight))
 
-
-
     def forward(self, PPI_data_object):
         DDI_feature = PPI_data_object.DDI_features
         protein_mask = PPI_data_object.protein_mask
@@ -43,7 +41,10 @@ class SimpleConvGCN(torch.nn.Module):
 
         batch_size = DDI_feature.size(0)
 
-        print(DDI_feature.shape)
+        # print(DDI_feature.shape)
+        print('protein_mask.size()', protein_mask.size)
+
+        raise Exception
 
         # PPI graph network
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
