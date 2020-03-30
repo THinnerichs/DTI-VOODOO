@@ -81,4 +81,4 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
 if __name__ == '__main__':
     enlightened_missing_target_predictor(num_epochs=3,
-                                         batch_size=32)
+                                         batch_size=64)

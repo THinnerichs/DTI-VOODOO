@@ -155,7 +155,7 @@ def train(model, device, train_loader, optimizer, epoch):
         loss = nn.MSELoss()(output, data.y.view(-1, 1).float().to(device))
         loss.backward()
         optimizer.step()
-        if batch_idx % 1 == 0:
+        if batch_idx % 10 == 0:
             print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
                                                                            batch_idx * output.size(0),
                                                                            len(train_loader.dataset),
