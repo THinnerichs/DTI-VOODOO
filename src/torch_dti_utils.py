@@ -144,7 +144,6 @@ def train(model, optimizer, loader, device):
     return total_loss / len(loader.dataset)
 '''
 
-
 def train(model, device, train_loader, optimizer, epoch):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     model.train()
