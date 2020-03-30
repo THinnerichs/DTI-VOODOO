@@ -42,7 +42,7 @@ class SimpleConvGCN(torch.nn.Module):
         batch_size = DDI_feature.size(0)
 
         # print(DDI_feature.shape)
-        print('protein_mask.size()', protein_mask.size)
+        print('protein_mask.size()', protein_mask.size())
 
         raise Exception
 
