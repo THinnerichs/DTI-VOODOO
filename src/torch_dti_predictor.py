@@ -20,9 +20,9 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
                                          plot=False,
                                          embedding_layer_sizes=[32, 64],
                                          embedding_method='gcn'):
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    device = torch.device('cpu')
-    torch.set_num_threads(64)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cpu')
+    # torch.set_num_threads(64)
 
     print("Loading data ...")
     dataset = FullNetworkDataset(num_proteins=1000)
@@ -61,7 +61,7 @@ def enlightened_missing_target_predictor(results_filename='../results/torched_re
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_prots=dataset.num_proteins,
-                              num_features=dataset.num_PPI_features)
+                              num_features=dataset.num_PPI_features).to(device)
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
         for epoch in range(1, num_epochs + 1):
