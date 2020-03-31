@@ -97,9 +97,9 @@ def enlightened_missing_target_predictor(config,
             print('Predicting for validation data...')
             labels, predictions = predicting(model, device, valid_loader)
             predictions = np.around(predictions)
-            print('Validation:', 'Acc, AUC, f1, matthews_corrcoef',
+            print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
-                  metrics.auc(labels, predictions),
+                  metrics.roc_auc_score(labels, predictions),
                   metrics.f1_score(labels, predictions),
                   metrics.matthews_corrcoef(labels, predictions))
 
@@ -112,7 +112,7 @@ def enlightened_missing_target_predictor(config,
                 G, P = predicting(model, device, test_loader)
                 ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
                 P = np.around(P)
-                metrics_func_list = [metrics.accuracy_score, metrics.auc, metrics.f1_score, metrics.matthews_corrcoef]
+                metrics_func_list = [metrics.accuracy_score, metrics.roc_auc_score, metrics.f1_score, metrics.matthews_corrcoef]
                 metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
                 ret += metrics_list
 
@@ -121,7 +121,7 @@ def enlightened_missing_target_predictor(config,
                     f.write(','.join(map(str, ret)))
                 best_test_loss = ret[1]
                 best_test_ci = ret[-1]
-                print('Test:', 'Acc, AUC, f1, matthews_corrcoef',
+                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics_list)
                 print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
                       best_test_ci, model_st)
