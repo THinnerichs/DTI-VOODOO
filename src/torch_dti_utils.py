@@ -153,7 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        loss = nn.CrossEntropyLoss()(output.round(), data.y.view(-1).to(device))
+        loss = nn.BCELoss()(output.round(), data.y.view(-1).to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:

@@ -36,6 +36,9 @@ def enlightened_missing_target_predictor(config,
     # dataset is present in dimension (num_drugs * num_proteins)
     print("Finished.")
 
+    # get full protein num
+    config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
+
     # generate indices for proteins
     kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
     X = np.zeros((dataset.num_proteins,1))
