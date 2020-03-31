@@ -153,7 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        loss = nn.BCELoss()(output, data.y.view(-1, 1).float().to(device))
+        loss = nn.BCELoss()(output.round().int(), data.y.view(-1).to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
@@ -173,8 +173,8 @@ def predicting(model, device, loader):
             data = data.to(device)
             output = model(data)
             total_preds = torch.cat((total_preds, output.cpu()), 0)
-            total_labels = torch.cat((total_labels, data.y.view(-1, 1).cpu()), 0)
-    return total_labels.numpy().flatten(),total_preds.numpy().flatten()
+            total_labels = torch.cat((total_labels, data.y.view(-1, 1).float().cpu()), 0)
+    return total_labels.round().numpy().flatten(),total_preds.numpy().flatten()
 
 
 def rmse(y,f):
