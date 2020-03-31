@@ -140,7 +140,7 @@ def enlightened_missing_target_predictor(config,
 if __name__ == '__main__':
     # Add parser arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--num_proteins", type=int, default=1000)
+    parser.add_argument("--num_proteins", type=int, default=-1)
 
     parser.add_argument("--num_epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=64)
