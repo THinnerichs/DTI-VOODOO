@@ -153,7 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        loss = nn.BCELoss()(output.round().int(), data.y.view(-1).to(device))
+        loss = nn.BCELoss()(output, data.y.view(-1).float().to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
