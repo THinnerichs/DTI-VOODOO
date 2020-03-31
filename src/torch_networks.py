@@ -76,5 +76,5 @@ class SimpleConvGCN(torch.nn.Module):
         DDI_x = self.fc2(DDI_x)
         DDI_x = F.relu(DDI_x)
         DDI_x = self.fc3(DDI_x)
-        # DDI_x = torch.sigmoid(DDI_x)
+        DDI_x = torch.sigmoid(DDI_x)
         return DDI_x

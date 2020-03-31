@@ -1,4 +1,6 @@
 import numpy as np
+from math import sqrt
+from scipy import stats
 
 import torch
 import torch.nn as nn
@@ -151,8 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
         optimizer.zero_grad()
         output = model(data)
-        # print('output.size()', output.size(), data.y.view(-1, 1).size())
-        loss = nn.MSELoss()(output, data.y.view(-1, 1).float().to(device))
+        loss = nn.CrossEntropyLoss()(output.round(), data.y.view(-1, 1).to(device))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
@@ -176,6 +177,40 @@ def predicting(model, device, loader):
     return total_labels.numpy().flatten(),total_preds.numpy().flatten()
 
 
+def rmse(y,f):
+    rmse = sqrt(((y - f)**2).mean(axis=0))
+    return rmse
+def mse(y,f):
+    mse = ((y - f)**2).mean(axis=0)
+    return mse
+def pearson(y,f):
+    rp = np.corrcoef(y, f)[0,1]
+    return rp
+def spearman(y,f):
+    rs = stats.spearmanr(y, f)[0]
+    return rs
+def ci(y,f):
+    ind = np.argsort(y)
+    y = y[ind]
+    f = f[ind]
+    i = len(y)-1
+    j = i-1
+    z = 0.0
+    S = 0.0
+    while i > 0:
+        while j >= 0:
+            if y[i] > y[j]:
+                z = z+1
+                u = f[i] - f[j]
+                if u > 0:
+                    S = S + 1
+                elif u == 0:
+                    S = S + 0.5
+            j = j - 1
+        i = i - 1
+        j = i-1
+    ci = S/z
+    return ci
 '''
 def eval_acc(model, loader, device):
     model.eval()
