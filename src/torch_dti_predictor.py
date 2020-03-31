@@ -118,7 +118,7 @@ def enlightened_missing_target_predictor(config,
 
                 # write results to results file
                 with open(results_file_name, 'w') as f:
-                    f.write(','.join(map(str, ret)))
+                    f.write(','.join(map(str, [fold]+ret)))
                 best_test_loss = ret[1]
                 best_test_ci = ret[-1]
                 print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
@@ -130,8 +130,6 @@ def enlightened_missing_target_predictor(config,
                       best_test_ci, model_st)
 
         print('Done.')
-        raise Exception
-
 
     loss, acc = np.array(val_losses), np.array(accs)
     print("Acc mean:", acc.mean())
