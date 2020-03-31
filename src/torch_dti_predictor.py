@@ -59,8 +59,8 @@ def enlightened_missing_target_predictor(config,
         test_indices = help_matrix[:, test_protein_indices].flatten()
         print(train_indices.shape, test_indices.shape)
 
-        train_dataset = dataset[train_indices]
-        test_dataset = dataset[test_indices]
+        train_dataset = dataset.get(train_indices)
+        test_dataset = dataset.get(test_indices)
 
         train_size = int(0.8 * len(train_dataset))
         valid_size = len(train_dataset) - train_size

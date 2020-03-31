@@ -31,7 +31,7 @@ class FullNetworkDataset(Dataset):
     """
 
     def __init__(self, num_proteins=None, transform=None, pre_transform=None):
-        # super(FullNetworkDataset, self).__init__(root, transform, pre_transform)
+        super(FullNetworkDataset, self).__init__(root='../data/torch_raw/')
 
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -127,6 +127,9 @@ class FullNetworkDataset(Dataset):
             data_list.append(full_PPI_graph)
 
         return data_list
+
+    # def __getitem__(self, item):
+
 
     def __len__(self):
         return self.num_proteins * self.num_drugs

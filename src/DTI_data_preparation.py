@@ -243,30 +243,6 @@ def test():
     ppi_graph = PPI_utils.get_PPI_graph()
     print(len(set(dti_graph.nodes()) & set(ppi_graph.nodes())))
 
-def sumyyah_request():
-    filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
-    dti_graph = nx.Graph()
-
-    drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
-
-    print("Parsing human drug-protein-links data ...")
-    with open(file=filename, mode='r') as f:
-        f.readline()
-        for line in f:
-            split_line = line.split('\t')
-            drug = split_line[0].replace('s', 'm')
-            target = split_line[1]
-            score = int(split_line[-1])
-
-            if not drug in drug_set:
-                continue
-
-            dti_graph.add_node(drug)
-            dti_graph.add_node(target)
-            dti_graph.add_edge(drug, target, score=score)
-
-    print("Finished.\n")
-
 
 if __name__ == '__main__':
     write_human_DTI_graph()
