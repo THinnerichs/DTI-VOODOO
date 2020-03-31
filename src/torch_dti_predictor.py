@@ -10,8 +10,7 @@ from torch_dti_utils import *
 from torch_networks import *
 
 import torch
-import torch.nn.functional as F
-from torch.nn import Linear
+import torch.nn as nn
 import torch_geometric.data as data
 
 import argparse
@@ -30,8 +29,7 @@ def enlightened_missing_target_predictor(config,
 
     # activate device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('cpu')
-    # torch.set_num_threads(64)
+    num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 
     print("Loading data ...")
     dataset = FullNetworkDataset(num_proteins=config.num_proteins)
@@ -75,8 +73,9 @@ def enlightened_missing_target_predictor(config,
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_prots=dataset.num_proteins,
-                              num_features=dataset.num_PPI_features).to(device)
+                              num_features=dataset.num_PPI_features)
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+        model = nn.DataParallel(model, device_ids=list(range(num_gpus)))
 
         # storing best results
         best_loss = math.inf
@@ -85,8 +84,8 @@ def enlightened_missing_target_predictor(config,
         best_test_ci = 0
 
         model_st = 'transductive_simple_node_feature'
-        model_file_name = 'models/'+model_st+'_'+str(config.num_proteins)+'_model.model'
-        results_file_name = 'results/'+model_st+'_'+str(config.num_proteins)+'_model.model'
+        model_file_name = '../models/'+model_st+'_'+str(config.num_proteins)+'_model.model'
+        results_file_name = '../results/'+model_st+'_'+str(config.num_proteins)+'_model.model'
 
         for epoch in range(1, config.num_epochs + 1):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
