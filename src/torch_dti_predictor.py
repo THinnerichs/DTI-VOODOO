@@ -28,13 +28,8 @@ def enlightened_missing_target_predictor(config,
 
 
     # activate device
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
-    print('device', device)
-    print('num_gpus', num_gpus)
-    print(torch.cuda.is_available())
-
-    raise Exception
 
     print("Loading data ...")
     dataset = FullNetworkDataset(num_proteins=config.num_proteins)
