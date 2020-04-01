@@ -126,14 +126,9 @@ class FullNetworkDataset(Dataset):
 
         return data_list
 
-    # def __getitem__(self, item):
-
-
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
-    def num_nodes(self):
-        return self.num_proteins
 
 '''
 def train(model, optimizer, loader, device):
@@ -158,6 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
 
         print(type(data))
         for i in data:
+            print(type(i))
             print(i.num_nodes)
 
             raise Exception
