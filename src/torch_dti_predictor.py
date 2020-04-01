@@ -79,7 +79,7 @@ def enlightened_missing_target_predictor(config,
                               num_features=dataset.num_PPI_features)
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
         model = nn.DataParallel(model, device_ids=list(range(num_gpus)))
-        model.to(f'cuda:{model.device_ids[0]}')
+        model.to(f'cuda:{model.device_ids[0]}')model.to(f'cuda:{model.device_ids[0]}')
 
 
         # storing best results
