@@ -62,9 +62,15 @@ def enlightened_missing_target_predictor(config,
         train_dataset = dataset.get(train_indices)
         test_dataset = dataset.get(test_indices)
 
+        print('type 1:', type(train_dataset[0]))
+        print('type 1:', type(train_dataset))
         train_size = int(0.8 * len(train_dataset))
         valid_size = len(train_dataset) - train_size
         train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
+
+        print('type 2:', type(train_dataset[0]))
+        print('type 2:', type(train_dataset))
+
 
         # build DataLoaders
         train_loader = data.DataLoader(train_dataset, config.batch_size, shuffle=True)

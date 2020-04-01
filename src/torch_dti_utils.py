@@ -151,6 +151,15 @@ def train(model, device, train_loader, optimizer, epoch):
     for batch_idx, data in enumerate(train_loader):
         # data = data.to(device)
 
+
+        for ele in data:
+            print(ele)
+            print(type(ele))
+            for el2 in ele:
+                print('el2', el2)
+            print(ele.keys())
+        raise Exception
+
         optimizer.zero_grad()
         output = model(data)
         loss = nn.BCELoss()(output, data.y.view(-1).float().to(output.device))
