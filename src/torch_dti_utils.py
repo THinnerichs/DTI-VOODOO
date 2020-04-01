@@ -157,8 +157,10 @@ def train(model, device, train_loader, optimizer, epoch):
         data = data.to(device)
 
         print(type(data))
-        print(data.num_nodes)
-        raise Exception
+        for i in data:
+            print(data.num_nodes)
+
+            raise Exception
 
         optimizer.zero_grad()
         output = model(data)
