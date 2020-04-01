@@ -64,17 +64,14 @@ def enlightened_missing_target_predictor(config,
 
         print('type 1:', type(train_dataset[0]))
         print('type 1:', type(train_dataset))
-        train_size = int(0.8 * len(train_dataset))
-        valid_size = len(train_dataset) - train_size
-        train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
-
-        print('type 2:', type(train_dataset[0]))
-        print('type 2:', type(train_dataset))
+        # train_size = int(0.8 * len(train_dataset))
+        # valid_size = len(train_dataset) - train_size
+        # train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
 
 
         # build DataLoaders
         train_loader = data.DataLoader(train_dataset, config.batch_size, shuffle=True)
-        valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
+        # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
         test_loader = data.DataLoader(test_dataset, config.batch_size, shuffle=False)
 
         # if torch.cuda.is_available():
