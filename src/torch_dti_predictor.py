@@ -28,7 +28,7 @@ def enlightened_missing_target_predictor(config,
 
 
     # activate device
-    device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 
     print("Loading data ...")
@@ -76,11 +76,13 @@ def enlightened_missing_target_predictor(config,
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_prots=dataset.num_proteins,
-                              num_features=dataset.num_PPI_features)
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-        model = nn.DataParallel(model, device_ids=list(range(num_gpus)))
-        model.to(f'cuda:{model.device_ids[0]}')
+                              num_features=dataset.num_PPI_features).to(device)
+        model = nn.DataParallel(model,
+                                # device_ids=list(range(num_gpus))
+                                ).to(device)
+        # model.to(f'cuda:{model.device_ids[0]}')
 
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
         # storing best results
         best_loss = math.inf
