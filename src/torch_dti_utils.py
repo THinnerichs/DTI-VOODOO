@@ -31,7 +31,7 @@ class FullNetworkDataset(Dataset):
     """
 
     def __init__(self, num_proteins=None, transform=None, pre_transform=None):
-        super(FullNetworkDataset, self).__init__(root='../data/torch_raw/')
+        # super(FullNetworkDataset, self).__init__(root='../data/torch_raw/')
 
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -73,7 +73,6 @@ class FullNetworkDataset(Dataset):
         self.num_drugs = len(self.drug_list)
         print("Finished.\n")
 
-    '''
     @property
     def raw_file_names(self):
         print("raw_file_names")
@@ -83,7 +82,6 @@ class FullNetworkDataset(Dataset):
     def processed_file_names(self):
         print("processed_file_names")
         return ['../pytorch_data/PPI_network.dataset']
-    '''
 
     def transform(self, data):
         return data
