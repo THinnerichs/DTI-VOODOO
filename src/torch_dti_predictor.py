@@ -31,21 +31,22 @@ def enlightened_missing_target_predictor(config,
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 
-    print("Loading data ...")
-    dataset = FullNetworkDataset(num_proteins=config.num_proteins)
-    # dataset is present in dimension (num_drugs * num_proteins)
-    print("Finished.")
-
     # get full protein num
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
 
+    print("Loading data ...")
+    network_data = DTINetworkData(num_proteins=config.num_proteins)
+    # dataset is present in dimension (num_drugs * num_proteins)
+
+    print("Finished.")
+
     # generate indices for proteins
     kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
-    X = np.zeros((dataset.num_proteins,1))
+    X = np.zeros((config.num_proteins,1))
 
     # build for help matrix for indices
-    help_matrix = np.arange(dataset.num_drugs * dataset.num_proteins)
-    help_matrix = help_matrix.reshape((dataset.num_drugs, dataset.num_proteins))
+    help_matrix = np.arange(network_data.num_drugs * network_data.num_proteins)
+    help_matrix = help_matrix.reshape((network_data.num_drugs, network_data.num_proteins))
 
     val_losses, accs, durations = [], [], []
     fold = 0
@@ -53,17 +54,14 @@ def enlightened_missing_target_predictor(config,
         fold += 1
         print("Fold:", fold)
 
-
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
         test_indices = help_matrix[:, test_protein_indices].flatten()
         print(train_indices.shape, test_indices.shape)
 
-        train_dataset = dataset.get(train_indices)
-        test_dataset = dataset.get(test_indices)
+        train_dataset = DTIGraphDataset(network_data.get(train_indices))
+        test_dataset = DTIGraphDataset(network_data.get(test_indices))
 
-        print('type 1:', type(train_dataset[0]))
-        print('type 1:', type(train_dataset))
         # train_size = int(0.8 * len(train_dataset))
         # valid_size = len(train_dataset) - train_size
         # train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
@@ -77,9 +75,9 @@ def enlightened_missing_target_predictor(config,
         # if torch.cuda.is_available():
             # torch.cuda.synchronize(device=device)
 
-        model = SimpleConvGCN(num_drugs=dataset.num_drugs,
-                              num_prots=dataset.num_proteins,
-                              num_features=dataset.num_PPI_features)#.to(device)
+        model = SimpleConvGCN(num_drugs=network_data.num_drugs,
+                              num_prots=network_data.num_proteins,
+                              num_features=network_data.num_PPI_features)#.to(device)
         model = nn.DataParallel(model,
                                 # device_ids=list(range(num_gpus))
                                 ).to(device)

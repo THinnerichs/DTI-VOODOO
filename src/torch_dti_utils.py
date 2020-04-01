@@ -14,7 +14,7 @@ import DTI_data_preparation
 
 
 
-class FullNetworkDataset(Dataset):
+class DTINetworkData():
     """
     Args:
         root (string): Root directory where the dataset should be saved.
@@ -73,19 +73,6 @@ class FullNetworkDataset(Dataset):
         self.num_drugs = len(self.drug_list)
         print("Finished.\n")
 
-    @property
-    def raw_file_names(self):
-        print("raw_file_names")
-        return []
-
-    @property
-    def processed_file_names(self):
-        print("processed_file_names")
-        return ['../pytorch_data/PPI_network.dataset']
-
-    def transform(self, data):
-        return data
-
     def set_graph_train_mask(self, indizes):
         self.full_PPI_graph_Data.train_idx = torch.tensor(indizes, dtype=torch.long)
 
@@ -130,6 +117,17 @@ class FullNetworkDataset(Dataset):
         return self.num_proteins * self.num_drugs
 
 
+class DTIGraphDataset(Dataset):
+    def __init__(self, data_list):
+        super(DTIGraphDataset, self).__init__('/data/torch_raw/')
+        self.data, self.slices = self.collate(data_list)
+
+    def _download(self):
+        pass
+
+    def _process(self):
+        pass
+
 '''
 def train(model, optimizer, loader, device):
     model.train()
@@ -150,15 +148,6 @@ def train(model, device, train_loader, optimizer, epoch):
     model.train()
     for batch_idx, data in enumerate(train_loader):
         # data = data.to(device)
-
-
-        for ele in data:
-            print(ele)
-            print(type(ele))
-            for el2 in ele:
-                print('el2', el2)
-            print(ele.keys())
-        raise Exception
 
         optimizer.zero_grad()
         output = model(data)
