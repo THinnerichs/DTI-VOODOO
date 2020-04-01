@@ -132,6 +132,9 @@ class FullNetworkDataset(Dataset):
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
+    def num_nodes(self):
+        return self.num_proteins
+
 '''
 def train(model, optimizer, loader, device):
     model.train()
@@ -152,6 +155,11 @@ def train(model, device, train_loader, optimizer, epoch):
     model.train()
     for batch_idx, data in enumerate(train_loader):
         data = data.to(device)
+
+        print(type(data))
+        print(data.num_nodes)
+        raise Exception
+
         optimizer.zero_grad()
         output = model(data)
         loss = nn.BCELoss()(output, data.y.view(-1).float().to(output.device))
