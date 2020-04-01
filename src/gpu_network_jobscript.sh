@@ -17,4 +17,5 @@ conda activate ~/.conda/envs/dti/
 module load cuda/10.0.130
 
 
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 python3 torch_dti_predictor.py --num_proteins -1 --num_epochs=50 --batch_size=512 --num_folds 5
