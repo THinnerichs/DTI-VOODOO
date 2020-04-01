@@ -28,7 +28,7 @@ def enlightened_missing_target_predictor(config,
 
 
     # activate device
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 
     print("Loading data ...")
