@@ -153,6 +153,7 @@ def train(model, device, train_loader, optimizer, epoch):
 
         print(type(data))
         for i in data:
+            print(i)
             print(type(i))
             print(i.num_nodes)
 
