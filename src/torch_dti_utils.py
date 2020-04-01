@@ -149,15 +149,7 @@ def train(model, device, train_loader, optimizer, epoch):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     model.train()
     for batch_idx, data in enumerate(train_loader):
-        data = data.to(device)
-
-        print(type(data))
-        for i in data:
-            print(i)
-            print(type(i))
-            print(i.num_nodes)
-
-            raise Exception
+        # data = data.to(device)
 
         optimizer.zero_grad()
         output = model(data)
