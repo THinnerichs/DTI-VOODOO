@@ -10,7 +10,7 @@ from torch_dti_utils import *
 from torch_networks import *
 
 import torch
-import torch.nn as nn
+import torch_geometric.nn as nn
 import torch_geometric.data as data
 
 import argparse
@@ -76,7 +76,7 @@ def enlightened_missing_target_predictor(config,
 
         model = SimpleConvGCN(num_drugs=dataset.num_drugs,
                               num_prots=dataset.num_proteins,
-                              num_features=dataset.num_PPI_features).to(device)
+                              num_features=dataset.num_PPI_features)#.to(device)
         model = nn.DataParallel(model,
                                 # device_ids=list(range(num_gpus))
                                 ).to(device)
