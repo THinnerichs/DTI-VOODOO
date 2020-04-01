@@ -6,7 +6,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from torch_geometric.data import Dataset, Data
+from torch_geometric.data import Dataset, Data, InMemoryDataset
+
 
 from tqdm import tqdm
 
@@ -117,7 +118,7 @@ class DTINetworkData():
         return self.num_proteins * self.num_drugs
 
 
-class DTIGraphDataset(Dataset):
+class DTIGraphDataset(InMemoryDataset):
     def __init__(self, data_list):
         super(DTIGraphDataset, self).__init__('/data/torch_raw/')
         self.data, self.slices = self.collate(data_list)
