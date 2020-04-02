@@ -160,6 +160,13 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         optimizer.zero_grad()
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
+
+        print(weight_dict)
+        print([graph_data.y for graph_data in data][:4])
+        print([weight_dict[graph_data.y] for graph_data in data][:4])
+
+
+
         weight_vec = torch.Tensor([weight_dict[graph_data.y] for graph_data in data]).float().to(output.device)
         loss = nn.BCELoss(weight=weight_vec)(output, y.view(-1, 1))
         loss.backward()
