@@ -62,6 +62,12 @@ def enlightened_missing_target_predictor(config,
         train_dataset = network_data.get(train_indices)
         test_dataset = network_data.get(test_indices)
 
+        print(type(train_dataset[0]))
+
+        train_dataset = DTIGraphDataset(train_dataset)
+        test_dataset = DTIGraphDataset(test_dataset)
+
+
         # train_size = int(0.8 * len(train_dataset))
         # valid_size = len(train_dataset) - train_size
         # train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])

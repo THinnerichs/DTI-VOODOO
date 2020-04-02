@@ -118,10 +118,17 @@ class DTINetworkData():
         return self.num_proteins * self.num_drugs
 
 
-class DTIGraphDataset(InMemoryDataset):
+class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
         super(DTIGraphDataset, self).__init__('/data/torch_raw/')
-        self.data, self.slices = self.collate(data_list)
+        # self.data, self.slices = self.collate(data_list)
+        self.data_list = data_list
+
+    def get(self, idx):
+        return self.data_list[idx]
+
+    def __len__(self):
+        return len(self.data_list)
 
     def _download(self):
         pass
