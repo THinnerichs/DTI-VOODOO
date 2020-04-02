@@ -177,10 +177,11 @@ def predicting(model, device, loader):
     print('Make prediction for {} samples...'.format(len(loader.dataset)))
     with torch.no_grad():
         for data in loader:
-            data = data.to(device)
+            # data = data.to(device)
             output = model(data)
             total_preds = torch.cat((total_preds, output.cpu()), 0)
-            total_labels = torch.cat((total_labels, data.y.view(-1, 1).float().cpu()), 0)
+            y = torch.Tensor([graph_data.y for graph_data in data])
+            total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
     return total_labels.round().numpy().flatten(),total_preds.numpy().flatten()
 
 
