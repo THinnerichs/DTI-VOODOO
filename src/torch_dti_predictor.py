@@ -10,6 +10,7 @@ from torch_dti_utils import *
 from torch_networks import *
 
 import torch
+from torch.utils.data import DataLoader
 import torch_geometric.nn as nn
 import torch_geometric.data as data
 
@@ -74,7 +75,8 @@ def enlightened_missing_target_predictor(config,
 
 
         # build DataLoaders
-        train_loader = data.DataLoader(train_dataset, config.batch_size, shuffle=True)
+
+        train_loader = DataLoader(train_dataset, config.batch_size, shuffle=True)
         # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
         valid_loader = None
         test_loader = data.DataLoader(test_dataset, config.batch_size, shuffle=False)
