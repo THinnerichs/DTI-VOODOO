@@ -86,7 +86,7 @@ def enlightened_missing_target_predictor(config,
         model = SimpleConvGCN(num_drugs=network_data.num_drugs,
                               num_prots=network_data.num_proteins,
                               num_features=network_data.num_PPI_features)#.to(device)
-        model = nn.DataParallel(model,
+        model = torch.nn.DataParallel(model,
                                 # device_ids=list(range(num_gpus))
                                 ).to(device)
         # model.to(f'cuda:{model.device_ids[0]}')
