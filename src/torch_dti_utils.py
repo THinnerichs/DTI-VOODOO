@@ -159,7 +159,7 @@ def train(model, device, train_loader, optimizer, epoch):
 
         optimizer.zero_grad()
         output = model(data)
-        y = torch.cat([data.y for data in data]).to(output.device)
+        y = torch.cat([graph_data.y for graph_data in data]).to(output.device)
         loss = nn.BCELoss()(output, y)
         loss.backward()
         optimizer.step()
