@@ -161,7 +161,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
-        weight_vec = torch.ones([len(data)]) * weight_dict[1]
+        weight_vec = torch.ones([1]) * weight_dict[1]
 
         print('Shapes:', weight_vec.size(), y.size(), output.size())
 
