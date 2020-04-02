@@ -67,6 +67,11 @@ def enlightened_missing_target_predictor(config,
         train_dataset = DTIGraphDataset(train_dataset)
         test_dataset = DTIGraphDataset(test_dataset)
 
+        # Calculate weights
+        len_to_sum_ratio = len(train_indices)/network_data.y_dti_data[train_indices].sum()
+        weight_dict = {0: 1.,
+                       1: len_to_sum_ratio}
+
 
         # train_size = int(0.8 * len(train_dataset))
         # valid_size = len(train_dataset) - train_size
@@ -98,7 +103,7 @@ def enlightened_missing_target_predictor(config,
         results_file_name = '../results/'+model_st+'_'+str(config.num_proteins)+'_model.model'
 
         for epoch in range(1, config.num_epochs + 1):
-            train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
+            train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
 
             print('Predicting for validation data...')
             labels, predictions = predicting(model, device, test_loader)

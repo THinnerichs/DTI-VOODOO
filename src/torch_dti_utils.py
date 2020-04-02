@@ -101,7 +101,7 @@ class DTINetworkData():
             protein_mask[protein_index] = 1
             protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
-            y = torch.Tensor([self.y_dti_data[drug_index, protein_index]])
+            y = int([self.y_dti_data[drug_index, protein_index]])
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
 
@@ -151,7 +151,7 @@ def train(model, optimizer, loader, device):
     return total_loss / len(loader.dataset)
 '''
 
-def train(model, device, train_loader, optimizer, epoch):
+def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     model.train()
     for batch_idx, data in enumerate(train_loader):
@@ -159,8 +159,9 @@ def train(model, device, train_loader, optimizer, epoch):
 
         optimizer.zero_grad()
         output = model(data)
-        y = torch.Tensor([graph_data.y for graph_data in data]).to(output.device)
-        loss = nn.BCELoss()(output, y.view(-1, 1))
+        y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
+        weight_vec = torch.Tensor([weight_dict[graph_data.y] for graph_data in data])
+        loss = nn.BCELoss(weight=weight_vec)(output, y.view(-1, 1))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
