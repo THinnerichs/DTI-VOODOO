@@ -68,7 +68,7 @@ def enlightened_missing_target_predictor(config,
         test_dataset = DTIGraphDataset(test_dataset)
 
         # Calculate weights
-        len_to_sum_ratio = len(train_indices)/network_data.y_dti_data[train_indices].sum()
+        len_to_sum_ratio = len(train_indices)/network_data.y_dti_data.flatten()[train_indices].sum()
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
