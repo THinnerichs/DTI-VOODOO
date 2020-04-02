@@ -101,7 +101,7 @@ class DTINetworkData():
             protein_mask[protein_index] = 1
             protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
-            y = int([self.y_dti_data[drug_index, protein_index]])
+            y = int(self.y_dti_data[drug_index, protein_index])
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
 
