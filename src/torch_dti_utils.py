@@ -108,7 +108,7 @@ class DTINetworkData():
             full_PPI_graph = Data(x=self.feature_matrix, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
             full_PPI_graph.protein_mask = protein_mask
-            full_PPI_graph.__num_nodes__ = self.num_proteins
+            # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
 

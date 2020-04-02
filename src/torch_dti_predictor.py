@@ -75,10 +75,10 @@ def enlightened_missing_target_predictor(config,
 
         # build DataLoaders
 
-        train_loader = data.DataLoader(train_dataset, config.batch_size, shuffle=True)
+        train_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=True)
         # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
         valid_loader = None
-        test_loader = data.DataLoader(test_dataset, config.batch_size, shuffle=False)
+        test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
         # if torch.cuda.is_available():
             # torch.cuda.synchronize(device=device)
@@ -86,7 +86,7 @@ def enlightened_missing_target_predictor(config,
         model = SimpleConvGCN(num_drugs=network_data.num_drugs,
                               num_prots=network_data.num_proteins,
                               num_features=network_data.num_PPI_features)#.to(device)
-        model = torch.nn.DataParallel(model,
+        model = nn.DataParallel(model,
                                 # device_ids=list(range(num_gpus))
                                 ).to(device)
         # model.to(f'cuda:{model.device_ids[0]}')
