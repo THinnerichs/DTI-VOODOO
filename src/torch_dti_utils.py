@@ -160,7 +160,7 @@ def train(model, device, train_loader, optimizer, epoch):
         optimizer.zero_grad()
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).to(output.device)
-        loss = nn.BCELoss()(output, y)
+        loss = nn.BCELoss()(output, y.view(-1, 1))
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:

@@ -100,9 +100,8 @@ def enlightened_missing_target_predictor(config,
         for epoch in range(1, config.num_epochs + 1):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch)
 
-            # print('{:02d}/{:03d}: Val Loss: {:.4f}, Test Accuracy: {:.3f}'.format(fold, epoch, val_loss, test_acc))
             print('Predicting for validation data...')
-            labels, predictions = predicting(model, device, valid_loader)
+            labels, predictions = predicting(model, device, test_loader)
             predictions = np.around(predictions)
             print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
