@@ -162,6 +162,9 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
         weight_vec = torch.ones([len(data)]) * weight_dict[1]
+
+        print('Shapes:', weight_vec.size(), y.size(), output.size())
+
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
         loss.backward()
         optimizer.step()
