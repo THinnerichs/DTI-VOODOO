@@ -155,15 +155,11 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     model.train()
     for batch_idx, data in enumerate(train_loader):
-        # data = data.to(device)
-
         optimizer.zero_grad()
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
         weight_vec = torch.ones([1]) * weight_dict[1]
-
-        print('Shapes:', weight_vec.size(), y.size(), output.size())
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
         loss.backward()

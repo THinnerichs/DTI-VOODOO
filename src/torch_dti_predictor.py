@@ -127,7 +127,7 @@ def enlightened_missing_target_predictor(config,
 
                 # write results to results file
                 with open(results_file_name, 'w') as f:
-                    f.write(','.join(map(str, [fold]+ret)))
+                    f.write('SimpleGCN: ' + str(config.num_proteins) + ','.join(map(str, [fold]+ret)))
                 best_test_loss = ret[1]
                 best_test_ci = ret[-1]
                 print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
