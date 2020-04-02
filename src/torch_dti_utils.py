@@ -66,8 +66,8 @@ class DTINetworkData():
         print("Loading DTI links ...")
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
         y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
-        self.y_dti_data = np.transpose(y_dti_data)
-        print(self.y_dti_data.shape)
+        self.y_dti_data = torch.Tensor(np.transpose(y_dti_data))
+        print(self.y_dti_data.size())
 
         # calculate dimensions of network
         self.num_proteins = len(PPI_graph.nodes())
@@ -101,7 +101,7 @@ class DTINetworkData():
             protein_mask[protein_index] = 1
             protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
 
-            y = int(self.y_dti_data[drug_index, protein_index])
+            y = self.y_dti_data[drug_index, protein_index]
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
 
