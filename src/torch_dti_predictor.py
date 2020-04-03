@@ -19,14 +19,10 @@ import dti_utils
 
 
 
-
 def transductive_missing_target_predictor(config,
                                           plot=False,
                                           embedding_layer_sizes=[32, 64],
                                           embedding_method='SimpleGCN'):
-
-
-
 
     # activate device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -43,7 +39,7 @@ def transductive_missing_target_predictor(config,
 
     # generate indices for proteins
     kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
-    X = np.zeros((config.num_proteins,1))
+    X = np.zeros((network_data.num_proteins,1))
 
     # build for help matrix for indices
     help_matrix = np.arange(network_data.num_drugs * network_data.num_proteins)

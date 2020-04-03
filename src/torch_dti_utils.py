@@ -13,11 +13,6 @@ from tqdm import tqdm
 import DTI_data_preparation
 
 
-
-
-
-
-
 class DTINetworkData():
     """
     Args:
