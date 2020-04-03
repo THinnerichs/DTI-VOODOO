@@ -183,7 +183,7 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
-    return total_labels.round().numpy().flatten(), np.array(total_preds.numpy(), np.int).flatten()
+    return total_labels.round().numpy().flatten(),total_preds.numpy().flatten()
 
 
 def rmse(y,f):
