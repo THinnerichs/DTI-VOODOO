@@ -16,13 +16,10 @@ import torch_geometric.data as data
 import argparse
 
 
-def enlightened_missing_target_predictor(config,
-                                         # results_filename='../results/torched_results_log',
-                                         # num_epochs=3,
-                                         # batch_size=512,
-                                         plot=False,
-                                         embedding_layer_sizes=[32, 64],
-                                         embedding_method='gcn'):
+def transductive_missing_target_predictor(config,
+                                          plot=False,
+                                          embedding_layer_sizes=[32, 64],
+                                          embedding_method='gcn'):
 
 
 
@@ -98,7 +95,7 @@ def enlightened_missing_target_predictor(config,
 
         model_st = 'transductive_simple_node_feature'
         model_file_name = '../models/'+model_st+'_'+str(config.num_proteins)+'_model.model'
-        results_file_name = '../results/'+model_st+'_'+str(config.num_proteins)+'_model.model'
+        results_file_name = '../results/'+model_st+'_'+str(config.num_proteins)+'_model_results'
 
         for epoch in range(1, config.num_epochs + 1):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
@@ -106,6 +103,11 @@ def enlightened_missing_target_predictor(config,
             print('Predicting for validation data...')
             labels, predictions = predicting(model, device, test_loader)
             predictions = np.around(predictions)
+
+            print('labels:', labels, predictions)
+            print(type(labels), type(predictions))
+            print(labels.shape, predictions.shape)
+
             print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
                   metrics.roc_auc_score(labels, predictions),
@@ -159,5 +161,5 @@ if __name__ == '__main__':
 
 
     # Run classifier
-    enlightened_missing_target_predictor(config)
+    transductive_missing_target_predictor(config)
 
