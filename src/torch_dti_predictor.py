@@ -85,8 +85,7 @@ def transductive_missing_target_predictor(config,
         model = SimpleConvGCN(num_drugs=network_data.num_drugs,
                               num_prots=network_data.num_proteins,
                               num_features=network_data.num_PPI_features)
-        model = nn.DataParallel(model,
-                                ).to(device)
+        model = nn.DataParallel(model).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
