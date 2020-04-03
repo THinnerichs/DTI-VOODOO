@@ -1,25 +1,27 @@
-import numpy as np
-import networkx as nx
 from tqdm import tqdm
-import math
+import argparse
 
+import networkx as nx
+import numpy as np
+import math
 from sklearn.model_selection import KFold
 from sklearn import metrics
-
-from torch_dti_utils import *
-from torch_networks import *
 
 import torch
 import torch_geometric.nn as nn
 import torch_geometric.data as data
 
-import argparse
+
+from torch_dti_utils import *
+from torch_networks import *
+import dti_utils
+
 
 
 def transductive_missing_target_predictor(config,
                                           plot=False,
                                           embedding_layer_sizes=[32, 64],
-                                          embedding_method='gcn'):
+                                          embedding_method='SimpleGCN'):
 
 
 
@@ -46,6 +48,7 @@ def transductive_missing_target_predictor(config,
     help_matrix = help_matrix.reshape((network_data.num_drugs, network_data.num_proteins))
 
     val_losses, accs, durations = [], [], []
+    results = []
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
         fold += 1
@@ -95,8 +98,8 @@ def transductive_missing_target_predictor(config,
 
         model_st = 'transductive_simple_node_feature'
         model_file_name = '../models/'+model_st+'_'+str(config.num_proteins)+'_model.model'
-        results_file_name = '../results/'+model_st+'_'+str(config.num_proteins)+'_model_results'
 
+        ret = None
         for epoch in range(1, config.num_epochs + 1):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
 
@@ -104,14 +107,10 @@ def transductive_missing_target_predictor(config,
             labels, predictions = predicting(model, device, test_loader)
             predictions = np.around(predictions)
 
-            print('labels:', labels, predictions)
-            print(type(labels), type(predictions))
-            print(labels.shape, predictions.shape)
-
             print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
-                  metrics.roc_auc_score(labels, predictions),
-                  metrics.f1_score(labels, predictions),
+                  dti_utils.dti_auroc(labels, predictions),
+                  dti_utils.dti_f1_score(labels, predictions),
                   metrics.matthews_corrcoef(labels, predictions))
 
             val = mse(labels, predictions)
@@ -123,13 +122,11 @@ def transductive_missing_target_predictor(config,
                 G, P = predicting(model, device, test_loader)
                 ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
                 P = np.around(P)
-                metrics_func_list = [metrics.accuracy_score, metrics.roc_auc_score, metrics.f1_score, metrics.matthews_corrcoef]
+                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score, metrics.matthews_corrcoef]
                 metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
                 ret += metrics_list
 
                 # write results to results file
-                with open(results_file_name, 'w') as f:
-                    f.write('SimpleGCN: ' + str(config.num_proteins) + ','.join(map(str, [fold]+ret)))
                 best_test_loss = ret[1]
                 best_test_ci = ret[-1]
                 print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
@@ -139,11 +136,20 @@ def transductive_missing_target_predictor(config,
             else:
                 print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:', best_test_loss,
                       best_test_ci, model_st)
+        results.append(ret)
 
-        print('Done.')
+    results_file_name = '../results/' + embedding_method + '_' + str(config.num_proteins) + '_model_results'
 
-    loss, acc = np.array(val_losses), np.array(accs)
-    print("Acc mean:", acc.mean())
+    results = np.array(results)
+    results = [results[:, i].mean() for i in range(results.shape[1])]
+
+    print('Overall Results:')
+    print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt')
+    print(embedding_method+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+
+    with open(results_file_name, 'a') as f:
+        print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt', file=f)
+        print(embedding_method+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
 
     print("Done.")
 

@@ -1,21 +1,26 @@
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics import roc_auc_score, accuracy_score
+import sklearn.metrics as metrics
 import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
 
 import math
 
 
-def dti_auroc_fix(y_true, y_pred):
-    if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
-        return accuracy_score(y_true, y_pred.round(), normalize=False)
-    return roc_auc_score(y_true, y_pred)
-
 def dti_auroc(y_true, y_pred):
-    return tf.py_func(dti_auroc_fix, (y_true, y_pred), tf.double)
+    if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
+        return 0.5
+    return metrics.roc_auc_score(y_true, y_pred)
 
 def dti_f1_score(y_true, y_pred):
+    if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
+        return 0.
+    return metrics.f1_score(y_true, y_pred)
+
+def tf_dti_auroc(y_true, y_pred):
+    return tf.py_func(dti_auroc_fix, (y_true, y_pred), tf.double)
+
+def tf_dti_f1_score(y_true, y_pred):
     def recall(y_true, y_pred):
         """Recall metric.
 

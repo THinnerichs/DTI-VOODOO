@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 import numpy as np
 from math import sqrt
 from scipy import stats
@@ -7,9 +9,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from torch_geometric.data import Dataset, Data, InMemoryDataset
-
-
-from tqdm import tqdm
 
 import DTI_data_preparation
 
