@@ -8,7 +8,6 @@ import torch.nn.functional as F
 
 from torch_geometric.data import Dataset, Data, InMemoryDataset
 
-
 from tqdm import tqdm
 
 import DTI_data_preparation
