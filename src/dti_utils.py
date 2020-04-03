@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import sklearn.metrics as metrics
-import tensorflow.keras.backend as K
+# import tensorflow.keras.backend as K
 import matplotlib.pyplot as plt
 
 import math
@@ -17,6 +17,7 @@ def dti_f1_score(y_true, y_pred):
         return 0.
     return metrics.f1_score(y_true, y_pred)
 
+'''
 def tf_dti_auroc(y_true, y_pred):
     return tf.py_func(dti_auroc_fix, (y_true, y_pred), tf.double)
 
@@ -64,3 +65,4 @@ def plot_history(history):
         plt.show()
 
 
+'''
