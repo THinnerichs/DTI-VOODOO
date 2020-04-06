@@ -118,9 +118,9 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
 
         PPI_out = self.conv2(PPI_out, PPI_edge_index)
         PPI_out = F.relu(PPI_out)
+        PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
         PPI_out = nn.global_add_pool(PPI_out, PPI_batch)
 
-        PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
 
         PPI_out = self.pooling(PPI_out)
 
