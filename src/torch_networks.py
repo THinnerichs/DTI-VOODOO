@@ -115,14 +115,11 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         PPI_out = F.relu(PPI_out)
         # PPI_out = F.dropout(PPI_out, training=self.training)
         out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
-
         PPI_out = self.conv2(PPI_out, PPI_edge_index)
+        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
+
         PPI_out = F.relu(PPI_out)
-        print('shape', PPI_out.size())
-        # PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
-        print('shape', PPI_out.size())
-        PPI_out = nn.global_add_pool(PPI_out, PPI_batch)
-        print('shape', PPI_out.size())
+        PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
 
