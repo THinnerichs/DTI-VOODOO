@@ -101,3 +101,9 @@ if __name__ == '__main__':
 
     submit_gpu_job(epochs=30, batch_size=32)
     submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128)
+    submit_gpu_job(num_proteins=1000, epochs=30, batch_size=512)
+
+    submit_gpu_job(epochs=30, batch_size=32, arch='TopKSimpleGCN')
+    submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='TopKSimpleGCN')
+    submit_gpu_job(num_proteins=1000, epochs=30, batch_size=512, arch='TopKSimpleGCN')
+
