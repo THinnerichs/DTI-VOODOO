@@ -88,7 +88,7 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname)
         preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
     preface_script += "--num_folds 5 "
 
-    filename = '../SLURM_jobs/'+jobname+'_jobscript.sh'
+    filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
         f.write(preface_script)
     subprocess.call("sbatch " + filename, shell=True)
