@@ -80,9 +80,11 @@ def transductive_missing_target_predictor(config,
         valid_loader = None
         test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
-        model = SimpleConvGCN(num_drugs=network_data.num_drugs,
-                              num_prots=network_data.num_proteins,
-                              num_features=network_data.num_PPI_features)
+        model = None
+        if embedding_method=='SimpleGCN':
+            model = SimpleConvGCN(num_drugs=network_data.num_drugs,
+                                  num_prots=network_data.num_proteins,
+                                  num_features=network_data.num_PPI_features)
         model = nn.DataParallel(model).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -150,11 +152,19 @@ def transductive_missing_target_predictor(config,
 
     print("Done.")
 
+def inductive_missing_target_predictor(config,
+                                       ):
+    pass
+
+
 
 if __name__ == '__main__':
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
+    parser.add_argument("--arch", type=str, default='SimpleGCN')
+    parser.add_argument("--node_features", type=str, default='simple')
+
 
     parser.add_argument("--num_epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=64)

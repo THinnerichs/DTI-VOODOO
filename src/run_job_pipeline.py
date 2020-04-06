@@ -49,11 +49,55 @@ def cancel_jobs():
                     subprocess.call("scancel " + ele, shell=True)
                     break
 
+
 def submit_jobscript_n_times(n):
     for _ in range(n):
         subprocess.call("sbatch jobscript.sh", shell=True)
 
+
+def submit_gpu_job(num_proteins=-1,
+                   epochs=None,
+                   batch_size=None,
+                   arch='SimpleGCN',
+                   node_features='simple'):
+    jobname = arch+'_'+node_features
+    preface_script = '''#!/bin/bash
+#SBATCH -N 1
+#SBATCH --partition=batch
+#SBATCH -J {jobname}
+#SBATCH -o jobscript_outputs/{jobname}.%J.out
+#SBATCH -e jobscript_outputs/{jobname}.%J.err
+#SBATCH --time=3-00:00:00
+#SBATCH --gres=gpu:v100:4
+#SBATCH --mem=300G
+#SBATCH --constraint=[gpu]
+
+#run the application:
+module load anaconda3/4.4.0
+source /home/hinnertr/.bashrc
+conda activate ~/.conda/envs/dti/
+
+module load cuda/10.0.130
+
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+python3 torch_dti_predictor.py '''.format(jobname=jobname)
+    preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
+    if epochs:
+        preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
+    if batch_size:
+        preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
+    preface_script += "--num_folds 5 "
+
+    filename = '../SLURM_jobs/'+jobname+'_jobscript.sh'
+    with open(file=filename, mode='w') as f:
+        f.write(preface_script)
+    subprocess.call("sbatch " + filename, shell=True)
+
+
 if __name__ == '__main__':
     # run_jobs(parts=150, amount=2254)
     # cancel_jobs()
-    submit_jobscript_n_times(50)
+    # submit_jobscript_n_times(50)
+
+    submit_gpu_job(epochs=30, batch_size=32)
+    submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128)

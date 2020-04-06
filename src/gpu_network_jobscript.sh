@@ -4,7 +4,7 @@
 #SBATCH -J GCNNet
 #SBATCH -o jobscript_outputs/GCNNet.%J.out
 #SBATCH -e jobscript_outputs/GCNNet.%J.err
-#SBATCH --time=1-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --gres=gpu:v100:4
 #SBATCH --mem=300G
 #SBATCH --constraint=[gpu]

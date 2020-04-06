@@ -78,3 +78,28 @@ class SimpleConvGCN(torch.nn.Module):
         DDI_x = self.fc3(DDI_x)
         # DDI_x = torch.sigmoid(DDI_x)
         return DDI_x
+
+class TopKPoolingSimpleGCN(torch.nn.Module):
+    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
+        super(SimpleConvGCN, self).__init__()
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
+
+        # DDI feature layers
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
+        self.fc2 = torch.nn.Linear(64,16)
+        self.fc3 = torch.nn.Linear(16,1)
+
+        # mask feature
+
+        # GCN layers
+        self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
+        self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
+        self.pooling = torch_geometric.nn.TopKPooling()
+        self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
+        self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
+
+        self.relu = torch.nn.ReLU()
+        self.dropout = torch.nn.Dropout(dropout)
+
