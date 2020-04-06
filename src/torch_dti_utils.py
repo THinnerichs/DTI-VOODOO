@@ -13,7 +13,7 @@ from tqdm import tqdm
 import DTI_data_preparation
 
 
-class DTINetworkData():
+class SimpleDTINetworkData():
     """
     Args:
         root (string): Root directory where the dataset should be saved.

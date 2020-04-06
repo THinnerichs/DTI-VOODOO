@@ -1,7 +1,9 @@
 import numpy as np
 import networkx as nx
-from tqdm import tqdm
 import math
+
+import sys
+from tqdm import tqdm
 
 from sklearn.model_selection import KFold
 from sklearn import metrics
@@ -21,8 +23,7 @@ import dti_utils
 
 def transductive_missing_target_predictor(config,
                                           plot=False,
-                                          embedding_layer_sizes=[32, 64],
-                                          embedding_method='SimpleGCN'):
+                                          embedding_layer_sizes=[32, 64]):
 
     # activate device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,7 +33,13 @@ def transductive_missing_target_predictor(config,
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
 
     print("Loading data ...")
-    network_data = DTINetworkData(num_proteins=config.num_proteins)
+    network_data = None
+    if config.node_features == 'simple':
+        network_data = SimpleDTINetworkData(num_proteins=config.num_proteins)
+    else:
+        print("No valid node feature option selected.")
+        sys.stdout.flush()
+        raise ValueError
     # dataset is present in dimension (num_drugs * num_proteins)
 
     print("Finished.")
@@ -45,7 +52,6 @@ def transductive_missing_target_predictor(config,
     help_matrix = np.arange(network_data.num_drugs * network_data.num_proteins)
     help_matrix = help_matrix.reshape((network_data.num_drugs, network_data.num_proteins))
 
-    val_losses, accs, durations = [], [], []
     results = []
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
@@ -81,10 +87,18 @@ def transductive_missing_target_predictor(config,
         test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
         model = None
-        if embedding_method=='SimpleGCN':
+        if config.arch=='SimpleGCN':
             model = SimpleConvGCN(num_drugs=network_data.num_drugs,
                                   num_prots=network_data.num_proteins,
                                   num_features=network_data.num_PPI_features)
+        elif config.arch=='TopKSimpleGCN':
+            model = TopKPoolingSimpleGCN(num_drugs=network_data.num_drugs,
+                                         num_prots=network_data.num_proteins,
+                                         num_features=network_data.num_PPI_features)
+        else:
+            print("No valid architecture selected.")
+            sys.stdout.flush()
+            raise ValueError
         model = nn.DataParallel(model).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -96,7 +110,9 @@ def transductive_missing_target_predictor(config,
         best_test_ci = 0
 
         model_st = 'transductive_simple_node_feature'
-        model_file_name = '../models/'+model_st+'_'+str(config.num_proteins)+'_model.model'
+        model_file_name = '../models/'+model_st+'_'+config.node_features + '_'+ str(config.num_proteins)+'_fold_'+str(fold)+'_model.model'
+
+        sys.stdout.flush()
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
@@ -135,22 +151,24 @@ def transductive_missing_target_predictor(config,
             else:
                 print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:', best_test_loss,
                       best_test_ci, model_st)
+            sys.stdout.flush()
         results.append(ret)
 
-    results_file_name = '../results/' + embedding_method + '_' + str(config.num_proteins) + '_model_results'
+    results_file_name = '../results/' + config.arch + '_' + config.node_features + '_' + str(config.num_proteins) + '_model_results'
 
     results = np.array(results)
-    results = [results[:, i].mean() for i in range(results.shape[1])]
+    results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
 
     print('Overall Results:')
     print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt')
-    print(embedding_method+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+    print(config.arch+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
 
     with open(results_file_name, 'a') as f:
         print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt', file=f)
-        print(embedding_method+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
+        print(config.arch+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
 
     print("Done.")
+    sys.stdout.flush()
 
 def inductive_missing_target_predictor(config,
                                        ):
