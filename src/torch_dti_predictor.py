@@ -1,9 +1,11 @@
+import sys
+from tqdm import tqdm
+
+
 import numpy as np
 import networkx as nx
 import math
 
-import sys
-from tqdm import tqdm
 
 from sklearn.model_selection import KFold
 from sklearn import metrics
