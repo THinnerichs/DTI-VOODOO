@@ -147,6 +147,8 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
 class LargeTopKGCN(torch.nn.Module):
     def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
         super(LargeTopKGCN, self).__init__()
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
 
         self.conv1 = nn.GraphConv(num_features, 128)
         self.pool1 = nn.TopKPooling(128, ratio=0.8)
