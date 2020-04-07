@@ -134,7 +134,7 @@ def transductive_missing_target_predictor(config,
 
             G, P = predicting(model, device, test_loader)
             predictions = np.around(predictions)
-            val = cross_entropy(labels, predictions)
+            val = metrics.log_loss(labels, predictions)
             if val < best_loss:
                 best_loss = val
                 best_epoch = epoch + 1
