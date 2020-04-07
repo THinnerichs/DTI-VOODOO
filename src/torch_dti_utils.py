@@ -180,7 +180,7 @@ def predicting(model, device, loader):
     with torch.no_grad():
         for data in loader:
             # data = data.to(device)
-            output = model(data)
+            output = model(data).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
