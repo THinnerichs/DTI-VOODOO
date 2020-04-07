@@ -96,8 +96,8 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         # GCN layers
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
-        self.pooling1 = torch_geometric.nn.TopKPooling(num_features)
-        self.pooling2 = torch_geometric.nn.TopKPooling(num_features)
+        self.pooling1 = torch_geometric.nn.TopKPooling(num_features, min_score=None)
+        self.pooling2 = torch_geometric.nn.TopKPooling(num_features*2, min_score=None)
         self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
         self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
 
@@ -152,11 +152,11 @@ class ResTopKGCN(torch.nn.Module):
         self.num_prots = num_prots
 
         self.conv1 = nn.GraphConv(num_features, 128)
-        self.pool1 = nn.TopKPooling(128)
+        self.pool1 = nn.TopKPooling(128, min_score=None)
         self.conv2 = nn.GraphConv(128, 128)
-        self.pool2 = nn.TopKPooling(128)
+        self.pool2 = nn.TopKPooling(128, min_score=None)
         self.conv3 = nn.GraphConv(128, 128)
-        self.pool3 = nn.TopKPooling(128)
+        self.pool3 = nn.TopKPooling(128, min_score=None)
 
         self.lin1 = torch.nn.Linear(256 + self.num_drugs, 128)
         self.lin2 = torch.nn.Linear(128, 64)
