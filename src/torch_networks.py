@@ -145,7 +145,7 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         # DDI_x = torch.sigmoid(DDI_x)
         return DDI_x
 
-class LargeTopKGCN(torch.nn.Module):
+class ResTopKGCN(torch.nn.Module):
     def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
         super(LargeTopKGCN, self).__init__()
         self.num_drugs = num_drugs
@@ -174,8 +174,11 @@ class LargeTopKGCN(torch.nn.Module):
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
 
+        print('size check')
         x = F.relu(self.conv1(x, edge_index))
+        print(x.size())
         x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
+        print(x.size())
         x = x.view((batch_size, self.num_prots, x.shape[-1]))
         PPI_x = torch.bmm(protein_mask, x)
         x = PPI_x.view((batch_size, -1))
