@@ -177,24 +177,22 @@ class ResTopKGCN(torch.nn.Module):
         print('size check')
         x = F.relu(self.conv1(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x = x.view((batch_size, self.num_prots, x.shape[-1]))
-        x = torch.bmm(protein_mask, x)
         x1 = x.view((batch_size, -1))
         # x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
 
         x = F.relu(self.conv2(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x = x.view((batch_size, self.num_prots, x.shape[-1]))
-        x = torch.bmm(protein_mask, x)
         x2 = x.view((batch_size, -1))
 
         x = F.relu(self.conv3(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x = x.view((batch_size, self.num_prots, x.shape[-1]))
-        x = torch.bmm(protein_mask, x)
         x3 = x.view((batch_size, -1))
 
         x = x1 + x2 + x3
+
+
+        x = x.view((batch_size, self.num_prots, x.shape[-1]))
+        x = torch.bmm(protein_mask, x)
 
         x = F.relu(self.lin1(x))
         x = F.dropout(x, p=0.5, training=self.training)
