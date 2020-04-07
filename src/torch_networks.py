@@ -23,9 +23,9 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # GCN layers
         if conv_method == 'GCNConv':
-            self.conv1 = nn.GCNConv(num_features, num_features, cached=True)
-            self.conv2 = nn.GCNConv(num_features, num_features, cached=True)
-            self.conv3 = nn.GCNConv(num_features, num_features*2, cached=True)
+            self.conv1 = nn.GCNConv(num_features, num_features, cached=False)
+            self.conv2 = nn.GCNConv(num_features, num_features, cached=False)
+            self.conv3 = nn.GCNConv(num_features, num_features*2, cached=False)
         elif conv_method == 'ChebConv':
             self.conv1 = nn.ChebConv(num_features, num_features, 3)
             self.conv2 = nn.ChebConv(num_features, num_features, 3)
@@ -118,7 +118,7 @@ class TemplateSimpleNet(torch.nn.Module):
         return DDI_x
 
 class TopKPoolingSimpleGCN(torch.nn.Module):
-    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
+    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, dropout=0.2):
         super(TopKPoolingSimpleGCN, self).__init__()
 
         self.num_drugs = num_drugs
@@ -191,18 +191,10 @@ class ResTemplateNet(torch.nn.Module):
 
         self.out_channels = out_channels
 
-        if conv_method=='ResGCNConv':
-            self.conv1 = nn.GraphConv(num_features, out_channels)
-            self.conv2 = nn.GraphConv(out_channels, out_channels)
-            self.conv3 = nn.GraphConv(out_channels, out_channels)
-        elif conv_method == 'ResChebConv':
-            self.conv1 = nn.ChebConv(num_features, out_channels)
-            self.conv2 = nn.ChebConv(out_channels, out_channels)
-            self.conv3 = nn.ChebConv(out_channels, out_channels)
         if conv_method == 'ResGCNConv':
-            self.conv1 = nn.GCNConv(num_features, out_channels, cached=True)
-            self.conv2 = nn.GCNConv(out_channels, out_channels, cached=True)
-            self.conv3 = nn.GCNConv(out_channels, out_channels, cached=True)
+            self.conv1 = nn.GCNConv(num_features, out_channels, cached=False)
+            self.conv2 = nn.GCNConv(out_channels, out_channels, cached=False)
+            self.conv3 = nn.GCNConv(out_channels, out_channels, cached=False)
         elif conv_method == 'ResChebConv':
             self.conv1 = nn.ChebConv(num_features, out_channels, 3)
             self.conv2 = nn.ChebConv(out_channels, out_channels, 3)

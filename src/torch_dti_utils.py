@@ -1,5 +1,5 @@
 import numpy as np
-from math import sqrt
+from math import sqrt, log2
 from scipy import stats
 
 import torch
@@ -225,6 +225,8 @@ def ci(y,f):
         j = i-1
     ci = S/z
     return ci
+def cross_entropy(p,q):
+    return -sum([p[i] * log2(q[i]) for i in range(len(p))])
 '''
 def eval_acc(model, loader, device):
     model.eval()

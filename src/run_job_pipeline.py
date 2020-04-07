@@ -107,3 +107,5 @@ if __name__ == '__main__':
     # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='TopKSimpleGCN')
     submit_gpu_job(num_proteins=1000, epochs=50, batch_size=1024, arch='TopKSimpleGCN')
 
+    for arch in ['GCNConv', ]
+
