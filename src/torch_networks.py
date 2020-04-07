@@ -259,6 +259,8 @@ class LargeTopKGCN(torch.nn.Module):
 
 
 
-class SAGEConv
+class SAGEConv(torch.nn.Module):
+    def __init__(self):
+        pass
 
 
