@@ -93,7 +93,7 @@ class SimpleDTINetworkData():
 
         # for index in tqdm(indices):
         for index in indices:
-            if (index+1)%int(indices/10) == 0:
+            if (index+1)%int(len(indices)/10) == 0:
                 print('Finished {} percent.'.format(str(int(index/indices*100))), end='\r')
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
