@@ -241,9 +241,10 @@ class ResTemplateNet(torch.nn.Module):
             raise ValueError
 
 
-        self.lin1 = torch.nn.Linear(out_channels + self.num_drugs, out_channels)
-        self.lin2 = torch.nn.Linear(out_channels, 64)
-        self.lin3 = torch.nn.Linear(64, 1)
+        self.lin1 = torch.nn.Linear(out_channels + self.num_drugs, 256)
+        self.lin2 = torch.nn.Linear(128, 64)
+        self.lin3 = torch.nn.Linear(64, 16)
+        self.lin4 = torch.nn.Linear(64, 1)
 
 
     def forward(self, data):
@@ -281,9 +282,10 @@ class ResTemplateNet(torch.nn.Module):
         x = torch.cat((x, DDI_feature), 1)
 
         x = F.relu(self.lin1(x))
-        x = F.dropout(x, p=0.5, training=self.training)
+        # x = F.dropout(x, p=0.5, training=self.training)
         x = F.relu(self.lin2(x))
-        x = self.lin3(x)
+        x = F.relu(self.lin3(x))
+        x = self.lin4(x)
 
         return x
 
