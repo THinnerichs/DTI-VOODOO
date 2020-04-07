@@ -152,7 +152,7 @@ class ResTopKGCN(torch.nn.Module):
         self.num_prots = num_prots
 
         self.conv1 = nn.GraphConv(num_features, 128)
-        self.pool1 = nn.TopKPooling(128, min_score=None)
+        self.pool1 = nn.TopKPooling(128, ratio=1.0)
         self.conv2 = nn.GraphConv(128, 128)
         self.pool2 = nn.TopKPooling(128, min_score=None)
         self.conv3 = nn.GraphConv(128, 128)
