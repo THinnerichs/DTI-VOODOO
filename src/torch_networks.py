@@ -191,8 +191,9 @@ class ResTopKGCN(torch.nn.Module):
         x = x1 + x2 + x3
 
 
-        x = x.view((batch_size, self.num_prots, x.shape[-1]))
+        x = x.view((batch_size, self.num_prots, 128))
         x = torch.bmm(protein_mask, x)
+        x = torch.cat((x, DDI_feature), 1)
 
         x = F.relu(self.lin1(x))
         x = F.dropout(x, p=0.5, training=self.training)
