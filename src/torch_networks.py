@@ -201,49 +201,6 @@ class LargeTopKGCN(torch.nn.Module):
 
         return x
 
-    def forward(self, PPI_data_object):
-        DDI_feature = PPI_data_object.DDI_features
-        protein_mask = PPI_data_object.protein_mask
-        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
-
-        batch_size = DDI_feature.size(0)
-
-        # PPI graph network
-        PPI_out = self.conv1(PPI_x, PPI_edge_index)
-        PPI_out = F.relu(PPI_out)
-        # PPI_out = F.dropout(PPI_out, training=self.training)
-        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
-        PPI_out = self.conv2(PPI_out, PPI_edge_index)
-        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
-
-        PPI_out = F.relu(PPI_out)
-        PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
-
-        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
-
-        # multiply for flattening
-        PPI_out = torch.bmm(protein_mask, PPI_out)
-        PPI_out = PPI_out.view((batch_size, -1))
-
-        # flatten
-        PPI_out = self.fc_g1(PPI_out)
-        PPI_out = self.relu(PPI_out)
-        PPI_out = self.dropout(PPI_out)
-        PPI_out = self.fc_g2(PPI_out)
-        PPI_out = self.dropout(PPI_out)
-
-        # DDI feature network
-        DDI_x = torch.cat((PPI_out, DDI_feature), 1)
-        DDI_x = self.fc1(DDI_x)
-        DDI_x = F.relu(DDI_x)
-        DDI_x = self.fc2(DDI_x)
-        DDI_x = F.relu(DDI_x)
-        DDI_x = self.fc3(DDI_x)
-        # DDI_x = torch.sigmoid(DDI_x)
-        return DDI_x
-
-
-
 class SAGEConv(torch.nn.Module):
     def __init__(self):
         pass
