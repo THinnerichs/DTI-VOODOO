@@ -58,7 +58,8 @@ def submit_jobscript_n_times(n):
 def submit_gpu_job(num_proteins=-1,
                    epochs=None,
                    batch_size=None,
-                   arch='SimpleGCN',
+                   arch='GCNConv',
+                   days=2,
                    node_features='simple'):
     jobname = arch+'_'+node_features
     preface_script = '''#!/bin/bash
@@ -67,7 +68,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -J {jobname}
 #SBATCH -o jobscript_outputs/{jobname}.%J.out
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
-#SBATCH --time=2-00:00:00
+#SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:4
 #SBATCH --mem=300G
 #SBATCH --constraint=[gpu]
@@ -80,7 +81,7 @@ conda activate ~/.conda/envs/dti/
 module load cuda/10.0.130
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3
-python3 torch_dti_predictor.py '''.format(jobname=jobname)
+python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days))
     preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
     if epochs:
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
@@ -99,13 +100,17 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # submit_gpu_job(epochs=30, batch_size=32)
-    # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128)
-    submit_gpu_job(num_proteins=1000, epochs=30, batch_size=1024)
-
     # submit_gpu_job(epochs=30, batch_size=32, arch='TopKSimpleGCN')
     # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='TopKSimpleGCN')
     submit_gpu_job(num_proteins=1000, epochs=50, batch_size=1024, arch='TopKSimpleGCN')
 
-    for arch in ['GCNConv', ]
+    for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
+
+        submit_gpu_job(epochs=30, batch_size=32, days=3, arch=arch)
+        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch=arch)
+        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=1024, arch=arch)
+
+        submit_gpu_job(epochs=30, batch_size=32, days=3, arch='Res'+arch)
+        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='Res'+arch)
+        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=1024, arch='Res'+arch)
 
