@@ -126,6 +126,7 @@ def transductive_missing_target_predictor(config,
             labels, predictions = predicting(model, device, test_loader)
             predictions = np.around(predictions)
             print('labels', labels, 'predictions', predictions)
+            print(labels.min(), labels.max(), predictions.min(), predictions.max())
             print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
                   dti_utils.dti_auroc(labels, predictions),
