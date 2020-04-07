@@ -54,6 +54,8 @@ def transductive_missing_target_predictor(config,
     help_matrix = np.arange(network_data.num_drugs * network_data.num_proteins)
     help_matrix = help_matrix.reshape((network_data.num_drugs, network_data.num_proteins))
 
+    print('Model:', config.arch)
+
     results = []
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
@@ -123,7 +125,7 @@ def transductive_missing_target_predictor(config,
             print('Predicting for validation data...')
             labels, predictions = predicting(model, device, test_loader)
             predictions = np.around(predictions)
-
+            print('labels', labels, 'predictions', predictions)
             print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                   metrics.accuracy_score(labels, predictions),
                   dti_utils.dti_auroc(labels, predictions),

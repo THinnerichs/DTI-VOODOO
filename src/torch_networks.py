@@ -144,4 +144,121 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         # DDI_x = torch.sigmoid(DDI_x)
         return DDI_x
 
+class LargeTopKGCN(torch.nn.Module):
+    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
+        super(LargeTopKGCN, self).__init__()
+
+        self.conv1 = nn.GraphConv(num_features, 128)
+        self.pool1 = nn.TopKPooling(128, ratio=0.8)
+        self.conv2 = nn.GraphConv(128, 128)
+        self.pool2 = nn.TopKPooling(128, ratio=0.8)
+        self.conv3 = nn.GraphConv(128, 128)
+        self.pool3 = nn.TopKPooling(128, ratio=0.8)
+
+        self.lin1 = torch.nn.Linear(256 + self.num_drugs, 128)
+        self.lin2 = torch.nn.Linear(128, 64)
+        self.lin3 = torch.nn.Linear(64, 1)
+
+
+    def forward(self, data):
+        DDI_feature = data.DDI_features
+        protein_mask = data.protein_mask
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+        gmp = torch_geometric.nn.global_mean_pool
+        gap = torch_geometric.nn.global_add_pool
+
+        x = F.relu(self.conv1(x, edge_index))
+        x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
+        x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+        print('size', x1.size())
+
+        x = F.relu(self.conv2(x, edge_index))
+        x, edge_index, _, batch, _, _ = self.pool2(x, edge_index, None, batch)
+        x2 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+
+        x = F.relu(self.conv3(x, edge_index))
+        x, edge_index, _, batch, _, _ = self.pool3(x, edge_index, None, batch)
+        x3 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+
+        x = x1 + x2 + x3
+
+        x = F.relu(self.lin1(x))
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = F.relu(self.lin2(x))
+        x = F.log_softmax(self.lin3(x), dim=-1)
+
+        return x
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
+
+        # DDI feature layers
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
+        self.fc2 = torch.nn.Linear(64,16)
+        self.fc3 = torch.nn.Linear(16,1)
+
+        # mask feature
+
+        # GCN layers
+        self.conv1 = torch_geometric.nn.GCNConv(num_features, 128, cached=False)
+        self.conv2 = torch_geometric.nn.GCNConv(128, 128, cached=False)
+        self.conv3 = torch_geometric.nn.GCNConv(128, 128, cached=False)
+        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
+        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
+        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
+        self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
+        self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
+
+        self.relu = torch.nn.ReLU()
+        self.dropout = torch.nn.Dropout(dropout)
+        
+        
+        self.pooling = torch_geometric.nn.TopKPooling(num_features)
+
+
+    def forward(self, PPI_data_object):
+        DDI_feature = PPI_data_object.DDI_features
+        protein_mask = PPI_data_object.protein_mask
+        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
+
+        batch_size = DDI_feature.size(0)
+
+        # PPI graph network
+        PPI_out = self.conv1(PPI_x, PPI_edge_index)
+        PPI_out = F.relu(PPI_out)
+        # PPI_out = F.dropout(PPI_out, training=self.training)
+        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
+        PPI_out = self.conv2(PPI_out, PPI_edge_index)
+        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
+
+        PPI_out = F.relu(PPI_out)
+        PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
+
+        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
+
+        # multiply for flattening
+        PPI_out = torch.bmm(protein_mask, PPI_out)
+        PPI_out = PPI_out.view((batch_size, -1))
+
+        # flatten
+        PPI_out = self.fc_g1(PPI_out)
+        PPI_out = self.relu(PPI_out)
+        PPI_out = self.dropout(PPI_out)
+        PPI_out = self.fc_g2(PPI_out)
+        PPI_out = self.dropout(PPI_out)
+
+        # DDI feature network
+        DDI_x = torch.cat((PPI_out, DDI_feature), 1)
+        DDI_x = self.fc1(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc2(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc3(DDI_x)
+        # DDI_x = torch.sigmoid(DDI_x)
+        return DDI_x
+
+
+
+class SAGEConv
+
 

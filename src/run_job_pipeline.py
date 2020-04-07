@@ -67,7 +67,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -J {jobname}
 #SBATCH -o jobscript_outputs/{jobname}.%J.out
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
-#SBATCH --time=3-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --gres=gpu:v100:4
 #SBATCH --mem=300G
 #SBATCH --constraint=[gpu]
