@@ -169,7 +169,7 @@ class ResTopKGCN(torch.nn.Module):
         x, edge_index, batch = data.x, data.edge_index, data.batch
         batch_size = DDI_feature.size(0)
 
-        gmp = torch_geometric.nn.global_mean_pool
+        gmp = torch_geometric.nn.global_max_pool
         gap = torch_geometric.nn.global_add_pool
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
@@ -177,16 +177,18 @@ class ResTopKGCN(torch.nn.Module):
         print('size check')
         x = F.relu(self.conv1(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x1 = x.view((batch_size, -1))
-        # x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+        # x = x.view((batch_size, -1))
+        x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
 
         x = F.relu(self.conv2(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x2 = x.view((batch_size, -1))
+        # x2 = x.view((batch_size, -1))
+        x2 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
 
         x = F.relu(self.conv3(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        x3 = x.view((batch_size, -1))
+        # x3 = x.view((batch_size, -1))
+        x3 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
 
         x = x1 + x2 + x3
 
@@ -205,8 +207,81 @@ class ResTopKGCN(torch.nn.Module):
         return x
 
 class ChebConvNet(torch.nn.Module):
-    def __init__(self):
-        pass
+    def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=256, embedding_layers_sizes=[32, 64],
+                 dropout=0.2):
+        super(ChebConvNet, self).__init__()
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
+
+        # DDI feature layers
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 128)
+        self.fc2 = torch.nn.Linear(128, 32)
+        self.fc3 = torch.nn.Linear(32, 8)
+        self.fc4 = torch.nn.Linear(8, 1)
+
+        # mask feature
+
+        # GCN layers
+        self.conv1 = torch_geometric.nn.ChebConv(num_features, num_features, cached=False)
+        self.conv2 = torch_geometric.nn.ChebConv(num_features, num_features * 2, cached=False)
+        self.fc_g1 = torch.nn.Linear(num_features * 2, 1028)
+        self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
+
+        self.relu = torch.nn.ReLU()
+        self.dropout = torch.nn.Dropout(dropout)
+
+        # self.conv1.weight = torch.nn.Parameter(self.conv1.weight.byte())
+
+        # print(self.conv1.weight)
+        # print(type(self.conv1.weight))
+
+    def forward(self, PPI_data_object):
+        DDI_feature = PPI_data_object.DDI_features
+        protein_mask = PPI_data_object.protein_mask
+        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
+
+        batch_size = DDI_feature.size(0)
+
+        # print(DDI_feature.shape)
+        # print('protein_mask.size()', protein_mask.size())
+
+        # PPI graph network
+        PPI_x = self.conv1(PPI_x, PPI_edge_index)
+        PPI_x = F.relu(PPI_x)
+        # PPI_x = F.dropout(PPI_x, training=self.training)
+        PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        PPI_x = F.relu(PPI_x)
+
+        PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
+
+        PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch.view((batch_size, -1)))
+
+        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
+
+        # multiply for flattening
+        PPI_x = torch.bmm(protein_mask, PPI_x)
+        PPI_x = PPI_x.view((batch_size, -1))
+
+        # flatten
+        PPI_x = self.fc_g1(PPI_x)
+        PPI_x = self.relu(PPI_x)
+        PPI_x = self.dropout(PPI_x)
+        PPI_x = self.fc_g2(PPI_x)
+        PPI_x = self.dropout(PPI_x)
+
+        # DDI feature network
+        DDI_x = torch.cat((PPI_x, DDI_feature), 1)
+        DDI_x = self.fc1(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc2(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc3(DDI_x)
+        DDI_x = F.relu(DDI_x)
+        DDI_x = self.fc4(DDI_x)
+        # DDI_x = torch.sigmoid(DDI_x)
+        return DDI_x
+
 
 class SAGEConvNet(torch.nn.Module):
     def __init__(self):
