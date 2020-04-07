@@ -163,7 +163,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
-        weight_vec = torch.ones([1]) * weight_dict[1]
+        weight_vec = torch.ones([1]) * weight_dict[1] *2
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
         loss.backward()
@@ -174,6 +174,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
                                                                            len(train_loader.dataset),
                                                                            100. * batch_idx / len(train_loader),
                                                                            loss.item()))
+            sys.stdout.flush()
 
 def predicting(model, device, loader):
     model.eval()

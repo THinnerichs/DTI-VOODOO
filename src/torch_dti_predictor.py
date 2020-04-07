@@ -91,19 +91,23 @@ def transductive_missing_target_predictor(config,
         test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
         model = None
-        if config.arch=='SimpleGCN':
-            model = SimpleConvGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
-        elif config.arch=='TopKSimpleGCN':
-            model = TopKPoolingSimpleGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
-        elif config.arch=='ResTopKGCN':
-            model = ResTopKGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
+        if 'Res' not in config.arch:
+            model = TemplateSimpleNet(num_drugs=network_data.num_drugs,
+                                      num_prots=network_data.num_proteins,
+                                      num_features=network_data.num_PPI_features,
+                                      conv_method=config.arch)
+        elif 'Res' in config.arch:
+            model = ResTemplateNet(num_drugs=network_data.num_drugs,
+                                   num_prots=network_data.num_proteins,
+                                   num_features=network_data.num_PPI_features,
+                                   conv_method=config.arch)
         else:
             print("No valid architecture selected.")
             sys.stdout.flush()
             raise ValueError
         model = nn.DataParallel(model).to(device)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
         # storing best results
         best_loss = math.inf
@@ -190,6 +194,7 @@ if __name__ == '__main__':
     parser.add_argument("--num_epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_folds", type=int, default=5)
+    parser.add_argument("--lr", type=float, default=0.001)
 
     config = parser.parse_args()
 
