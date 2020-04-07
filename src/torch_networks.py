@@ -152,13 +152,13 @@ class ResTopKGCN(torch.nn.Module):
         self.num_prots = num_prots
 
         self.conv1 = nn.GraphConv(num_features, 128)
-        self.pool1 = nn.TopKPooling(128, ratio=1.0)
+        # self.pool1 = nn.TopKPooling(128, ratio=1.0)
         self.conv2 = nn.GraphConv(128, 128)
-        self.pool2 = nn.TopKPooling(128, min_score=None)
+        # self.pool2 = nn.TopKPooling(128, min_score=None)
         self.conv3 = nn.GraphConv(128, 128)
-        self.pool3 = nn.TopKPooling(128, min_score=None)
+        # self.pool3 = nn.TopKPooling(128, min_score=None)
 
-        self.lin1 = torch.nn.Linear(256 + self.num_drugs, 128)
+        self.lin1 = torch.nn.Linear(128 + self.num_drugs, 128)
         self.lin2 = torch.nn.Linear(128, 64)
         self.lin3 = torch.nn.Linear(64, 1)
 
@@ -176,32 +176,30 @@ class ResTopKGCN(torch.nn.Module):
 
         print('size check')
         x = F.relu(self.conv1(x, edge_index))
-        print(x.size())
-        x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
-        print(x.size())
+        # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
         x = x.view((batch_size, self.num_prots, x.shape[-1]))
-        PPI_x = torch.bmm(protein_mask, x)
-        x = PPI_x.view((batch_size, -1))
-        print(x.size())
-        x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
-        print('size', x1.size())
+        x = torch.bmm(protein_mask, x)
+        x1 = x.view((batch_size, -1))
+        # x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
 
-        raise Exception
+        x = F.relu(self.conv1(x, edge_index))
+        # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
+        x = x.view((batch_size, self.num_prots, x.shape[-1]))
+        x = torch.bmm(protein_mask, x)
+        x2 = x.view((batch_size, -1))
 
-        x = F.relu(self.conv2(x, edge_index))
-        x, edge_index, _, batch, _, _ = self.pool2(x, edge_index, None, batch)
-        x2 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
-
-        x = F.relu(self.conv3(x, edge_index))
-        x, edge_index, _, batch, _, _ = self.pool3(x, edge_index, None, batch)
-        x3 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+        x = F.relu(self.conv1(x, edge_index))
+        # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
+        x = x.view((batch_size, self.num_prots, x.shape[-1]))
+        x = torch.bmm(protein_mask, x)
+        x3 = x.view((batch_size, -1))
 
         x = x1 + x2 + x3
 
         x = F.relu(self.lin1(x))
         x = F.dropout(x, p=0.5, training=self.training)
         x = F.relu(self.lin2(x))
-        x = F.log_softmax(self.lin3(x), dim=-1)
+        x = self.lin3(x)
 
         return x
 
