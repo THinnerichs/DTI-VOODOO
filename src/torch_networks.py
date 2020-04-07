@@ -147,7 +147,7 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
 
 class ResTopKGCN(torch.nn.Module):
     def __init__(self, num_drugs, num_prots, num_features, GCN_num_outchannels=32, embedding_layers_sizes = [32, 64], dropout=0.2):
-        super(LargeTopKGCN, self).__init__()
+        super(ResTopKGCN, self).__init__()
         self.num_drugs = num_drugs
         self.num_prots = num_prots
 
