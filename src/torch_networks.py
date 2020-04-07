@@ -176,6 +176,7 @@ class ResTopKGCN(torch.nn.Module):
 
         print('size check')
         x = F.relu(self.conv1(x, edge_index))
+        print(x.size())
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
         # x = x.view((batch_size, -1))
         x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
@@ -189,6 +190,8 @@ class ResTopKGCN(torch.nn.Module):
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
         # x3 = x.view((batch_size, -1))
         x3 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
+
+        print(x1.size(), x2.size(), x3.size())
 
         x = x1 + x2 + x3
 
