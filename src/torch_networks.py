@@ -56,7 +56,9 @@ class SimpleConvGCN(torch.nn.Module):
 
         print('size check')
         print(PPI_x.size())
+        test = PPI_x.clone()
         PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch.view((batch_size, -1)))
+        print((PPI_x - test).max())
         print(PPI_x.size())
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
@@ -99,8 +101,8 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         # GCN layers
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
-        self.pooling1 = torch_geometric.nn.TopKPooling(num_features, min_score=None)
-        self.pooling2 = torch_geometric.nn.TopKPooling(num_features*2, min_score=None)
+        self.pooling1 = torch_geometric.nn.TopKPooling(num_features)
+        self.pooling2 = torch_geometric.nn.TopKPooling(num_features*2)
         self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
         self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
 
