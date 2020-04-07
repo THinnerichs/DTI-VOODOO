@@ -194,7 +194,7 @@ class ResTopKGCN(torch.nn.Module):
         x = x.view((batch_size, self.num_prots, 128))
         x = torch.bmm(protein_mask, x)
         x = x.view((batch_size, -1))
-        
+
         x = torch.cat((x, DDI_feature), 1)
 
         x = F.relu(self.lin1(x))
@@ -204,8 +204,11 @@ class ResTopKGCN(torch.nn.Module):
 
         return x
 
-class SAGEConv(torch.nn.Module):
+class ChebConvNet(torch.nn.Module):
     def __init__(self):
         pass
 
+class SAGEConvNet(torch.nn.Module):
+    def __init__(self):
+        pass
 
