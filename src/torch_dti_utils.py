@@ -158,7 +158,6 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     sys.stdout.flush()
     model.train()
     for batch_idx, data in enumerate(train_loader):
-        print('Batch_nr:', batch_idx)
         optimizer.zero_grad()
         output = model(data)
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
