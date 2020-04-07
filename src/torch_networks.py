@@ -54,7 +54,10 @@ class SimpleConvGCN(torch.nn.Module):
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
 
+        print('size check')
+        print(PPI_x.size())
         PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch.view((batch_size, -1)))
+        print(PPI_x.size())
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
 
