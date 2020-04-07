@@ -164,13 +164,25 @@ class LargeTopKGCN(torch.nn.Module):
         DDI_feature = data.DDI_features
         protein_mask = data.protein_mask
         x, edge_index, batch = data.x, data.edge_index, data.batch
+        batch_size = DDI_feature.size(0)
+
         gmp = torch_geometric.nn.global_mean_pool
         gap = torch_geometric.nn.global_add_pool
 
+        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
+
+        # multiply for flattening
+
         x = F.relu(self.conv1(x, edge_index))
         x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
+        x = x.view((batch_size, self.num_prots, x.shape[-1]))
+        PPI_x = torch.bmm(protein_mask, x)
+        x = PPI_x.view((batch_size, -1))
+        print(x1.size())
         x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
         print('size', x1.size())
+
+        raise Exception
 
         x = F.relu(self.conv2(x, edge_index))
         x, edge_index, _, batch, _, _ = self.pool2(x, edge_index, None, batch)
@@ -188,33 +200,6 @@ class LargeTopKGCN(torch.nn.Module):
         x = F.log_softmax(self.lin3(x), dim=-1)
 
         return x
-
-        self.num_drugs = num_drugs
-        self.num_prots = num_prots
-
-        # DDI feature layers
-        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
-        self.fc2 = torch.nn.Linear(64,16)
-        self.fc3 = torch.nn.Linear(16,1)
-
-        # mask feature
-
-        # GCN layers
-        self.conv1 = torch_geometric.nn.GCNConv(num_features, 128, cached=False)
-        self.conv2 = torch_geometric.nn.GCNConv(128, 128, cached=False)
-        self.conv3 = torch_geometric.nn.GCNConv(128, 128, cached=False)
-        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
-        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
-        self.pooling = torch_geometric.nn.TopKPooling(128, ratio=0.8)
-        self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
-        self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
-
-        self.relu = torch.nn.ReLU()
-        self.dropout = torch.nn.Dropout(dropout)
-        
-        
-        self.pooling = torch_geometric.nn.TopKPooling(num_features)
-
 
     def forward(self, PPI_data_object):
         DDI_feature = PPI_data_object.DDI_features

@@ -92,13 +92,11 @@ def transductive_missing_target_predictor(config,
 
         model = None
         if config.arch=='SimpleGCN':
-            model = SimpleConvGCN(num_drugs=network_data.num_drugs,
-                                  num_prots=network_data.num_proteins,
-                                  num_features=network_data.num_PPI_features)
+            model = SimpleConvGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
         elif config.arch=='TopKSimpleGCN':
-            model = TopKPoolingSimpleGCN(num_drugs=network_data.num_drugs,
-                                         num_prots=network_data.num_proteins,
-                                         num_features=network_data.num_PPI_features)
+            model = TopKPoolingSimpleGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
+        elif config.arch=='LargeTopKGCN':
+            model = LargeTopKGCN(num_drugs=network_data.num_drugs, num_prots=network_data.num_proteins, num_features=network_data.num_PPI_features)
         else:
             print("No valid architecture selected.")
             sys.stdout.flush()
