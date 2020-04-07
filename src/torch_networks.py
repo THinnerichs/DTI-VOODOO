@@ -96,7 +96,8 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         # GCN layers
         self.conv1 = torch_geometric.nn.GCNConv(num_features, num_features, cached=False)
         self.conv2 = torch_geometric.nn.GCNConv(num_features, num_features*2, cached=False)
-        self.pooling = torch_geometric.nn.TopKPooling(num_features)
+        self.pooling1 = torch_geometric.nn.TopKPooling(num_features)
+        self.pooling2 = torch_geometric.nn.TopKPooling(num_features)
         self.fc_g1 = torch.nn.Linear(num_features*2, 1028)
         self.fc_g2 = torch.nn.Linear(1028, GCN_num_outchannels)
 
@@ -114,9 +115,9 @@ class TopKPoolingSimpleGCN(torch.nn.Module):
         PPI_out = self.conv1(PPI_x, PPI_edge_index)
         PPI_out = F.relu(PPI_out)
         # PPI_out = F.dropout(PPI_out, training=self.training)
-        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
+        out, edge_index, _, batch, _, _ = self.pooling1(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
         PPI_out = self.conv2(PPI_out, PPI_edge_index)
-        out, edge_index, _, batch, _, _ = self.pooling(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
+        out, edge_index, _, batch, _, _ = self.pooling2(PPI_out, PPI_edge_index, None, PPI_batch, attn=PPI_x)
 
         PPI_out = F.relu(PPI_out)
         PPI_out = PPI_out.view((batch_size, self.num_prots, PPI_out.shape[-1]))
@@ -151,11 +152,11 @@ class LargeTopKGCN(torch.nn.Module):
         self.num_prots = num_prots
 
         self.conv1 = nn.GraphConv(num_features, 128)
-        self.pool1 = nn.TopKPooling(128, ratio=0.8)
+        self.pool1 = nn.TopKPooling(128)
         self.conv2 = nn.GraphConv(128, 128)
-        self.pool2 = nn.TopKPooling(128, ratio=0.8)
+        self.pool2 = nn.TopKPooling(128)
         self.conv3 = nn.GraphConv(128, 128)
-        self.pool3 = nn.TopKPooling(128, ratio=0.8)
+        self.pool3 = nn.TopKPooling(128)
 
         self.lin1 = torch.nn.Linear(256 + self.num_drugs, 128)
         self.lin2 = torch.nn.Linear(128, 64)
@@ -173,14 +174,12 @@ class LargeTopKGCN(torch.nn.Module):
 
         protein_mask = protein_mask.view((batch_size, 1, -1)).float()
 
-        # multiply for flattening
-
         x = F.relu(self.conv1(x, edge_index))
         x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
         x = x.view((batch_size, self.num_prots, x.shape[-1]))
         PPI_x = torch.bmm(protein_mask, x)
         x = PPI_x.view((batch_size, -1))
-        print(x1.size())
+        print(x.size())
         x1 = torch.cat([gmp(x, batch), gap(x, batch)], dim=1)
         print('size', x1.size())
 
