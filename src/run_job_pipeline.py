@@ -111,10 +111,10 @@ if __name__ == '__main__':
     for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
 
         submit_gpu_job(epochs=30, batch_size=64, days=3, arch=arch, num_gpus=8)
-        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch=arch)
-        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=1024, arch=arch)
+        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
+        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
         submit_gpu_job(epochs=30, batch_size=64, days=3, arch='Res'+arch, num_gpus=8)
-        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='Res'+arch)
-        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=1024, arch='Res'+arch)
+        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
+        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
 
