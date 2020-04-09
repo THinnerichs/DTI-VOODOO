@@ -54,13 +54,14 @@ def encode_drugs(drug_list,
         trfm.eval()
 
         x_split = [split(sm) for sm in [drug_SMILES_dict[drug] for drug in drug_list]]
-        print(len(x_split), type(x_split))
         xid, xseg = get_array(x_split)
-        print(xid, type(xid))
         X = trfm.encode(torch.t(xid))
-        print(X)
 
-        print('Size:', X.size())
+        print('Size:', X.shape)
+
+        return X
+
+
 
 if __name__=='__main__':
     drug_list = DTI_data_preparation.get_drug_list()
