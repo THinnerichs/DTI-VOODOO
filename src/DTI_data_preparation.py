@@ -231,6 +231,23 @@ def get_PPI_DTI_graph_intersection():
 
     return ppi_graph.subgraph(protein_set)
 
+def write_truncated_drug_to_SMILES_dict():
+    drug_list = get_drug_list()
+    drug_to_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
+
+    print("Writing truncated drug to SMILES dict...")
+    return_dict = {drug: drug_to_SMILES_dict[drug] for drug in drug_list}
+
+    filename = "../data/STITCH_data/truncated_drug_to_SMILES_dict"
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(return_dict, f, pickle.HIGHEST_PROTOCOL)
+
+    print("Done.")
+
+def get_truncated_drug_to_SMILES_dict():
+    filename = "../data/STITCH_data/truncated_drug_to_SMILES_dict"
+    with open(file=filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
 
 def test():
     # print("DTI", len(get_human_proteins()))
@@ -245,16 +262,19 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph()
+    # write_human_DTI_graph()
 
-    dti_graph = get_human_DTI_graph()
-    print("Nodes", len(dti_graph.nodes()))
-    print("Edges", len(dti_graph.edges()))
+    # dti_graph = get_human_DTI_graph()
+    # print("Nodes", len(dti_graph.nodes()))
+    # print("Edges", len(dti_graph.edges()))
+
+    write_truncated_drug_to_SMILES_dict()
+    get_truncated_drug_to_SMILES_dict()
 
 
     # test()
 
-    write_human_protein_list()
+    # write_human_protein_list()
 
     # print(get_annotated_PPI_graph())
 
