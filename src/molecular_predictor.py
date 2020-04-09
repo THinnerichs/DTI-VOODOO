@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from smiles_transformer.pretrain_trfm import TrfmSeq2seq
-from smiles_transformer.pretrain_rnn import RNNSeq2Seq
+# from smiles_transformer.pretrain_rnn import RNNSeq2Seq
 from smiles_transformer.build_vocab import WordVocab
 from smiles_transformer.utils import split
 
@@ -49,7 +49,7 @@ def encode_drugs(drug_list,
         return torch.tensor(x_id), torch.tensor(x_seg)
 
     if mode=='trfm':
-        trfm = TrfmSeq2seq(len(vocab), 256, len(vocab), 3)
+        trfm = TrfmSeq2seq(len(vocab), 256, len(vocab), 4)
         trfm.load_state_dict(torch.load(pretrained_model_dir+'trfm.pkl'))
         trfm.eval()
 
