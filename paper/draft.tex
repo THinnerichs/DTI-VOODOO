@@ -1,0 +1,166 @@
+\documentclass[]{article}
+\usepackage[left=3cm,right=3cm,top=1.5cm,bottom=2cm,includeheadfoot]{geometry} 
+\usepackage{babel}
+\usepackage{hyperref}
+\usepackage{mwe}
+\usepackage[markcase=noupper
+]{scrlayer-scrpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\KOMAoptions{
+	headsepline = true
+}
+\ihead{Tilman Hinnerichs}
+\ohead{Combining bottom-up and top-down approaches}
+\cfoot*{\pagemark}
+%opening
+\title{ECCB paper: Combining bottom-up and top-down approaches for drug-target-interaction prediction}
+\author{Tilman Hinnerichs\\
+\href{mailto:tilman@hinnerichs.com}{tilman@hinnerichs.com}}
+\date{}
+\pagestyle{headings}
+
+% Build subsubsubsection
+\usepackage{titlesec}
+
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+
+\titleformat{\subsubsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{5}{\z@}%
+	{3.25ex \@plus1ex \@minus.2ex}%
+	{-1em}%
+	{\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{6}{\parindent}%
+	{3.25ex \@plus1ex \@minus .2ex}%
+	{-1em}%
+	{\normalfont\normalsize\bfseries}}
+\def\toclevel@subsubsubsection{4}
+\def\toclevel@paragraph{5}
+\def\toclevel@paragraph{6}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+\def\l@paragraph{\@dottedtocline{5}{10em}{5em}}
+\def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
+\makeatother
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+%\usepackage{fancyhdr}
+
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+
+% Algorithm
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{amsmath}
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{document}
+	
+	\title{ \normalsize \textsc{MPI: MiS}
+		\\ [0.5cm]
+		\HRule{0.5pt} \\
+		\LARGE \textbf{\uppercase{Combining bottom-up and top-down approaches for drug-target-interaction prediction}}
+		\HRule{0.5pt} \\ [0.5cm]
+		\normalsize }
+
+\maketitle
+
+
+\section{Recent work}
+	\begin{itemize}
+		\item Write about how to find suitable representations for both drugs and proteins
+		\item Recent papers (see survey paper from briefings in Bioinformatics) $\rightarrow$ use either bottom up or top down
+		\item best bottom up and top down results come from which papers?
+		\item What are problems of recent approaches?
+		\begin{itemize}
+			\item Lack ability to generalize (bottom-up) or are unable to spot small differences (top-down)
+			\item only top down or bottom-up
+			\item not making use of interaction networks
+		\end{itemize}
+		\item They all do split over drugs and not over proteins $\rightarrow$ why is that bad? How can that be omitted? What consequences does that have for new drug-target pairs? 
+		\begin{itemize}
+			\item its feasible to engineer sophisticated representations for drugs, but not really for the proteins, both in bottom-up and in top-down approaches
+			\item Thus, we will focus on building proper representations for the proteins
+		\end{itemize}
+		\item Additionally, PPI-graphs have been used in recent works to do \dots, but have found no application in dti prediction. This also applies for DDI-graphs With more and more uprising Graph Learning approaches, we can learn more sophisticated representations and test more complicated hypothesis.
+		
+	\end{itemize}
+
+\section{How to combine mutual exclusive approaches}
+\subsection{Problem description}
+	\begin{itemize}
+		\item What is dti prediction? $\rightarrow$ problem description
+		\item Emphasize the importance of ability to generalize
+		\item Issues with data in general $\rightarrow$ Open vs. closed world assumption. (To specific? Can we address this issue?)
+		\item 
+	\end{itemize}
+\subsection{Issues to be solved}
+	\begin{itemize}
+		\item We are testing two hypothesis at the same time:
+			\begin{itemize}
+				\item Can we use PPI and DDI graphs to learn a protein representation that generalizes better?
+				\item Can the built filter increase the performance of that very method? (Find better formulation)
+			\end{itemize}
+	\end{itemize}
+\subsection{Role of interaction networks}
+\subsubsection{DDI}
+	\begin{itemize}
+		\item What are DDI networks? What are they able to tell?
+		\item Why are they important?
+		\item Where do they come from? $\rightarrow$ Boyce et al., Maybe repeat some ideas from their paper
+	\end{itemize}
+\subsubsection{PPI}
+	\begin{itemize}
+		\item What are PPI networks? What can they tell? What does a link in the graph mean? Why would that be important to our problem? (Role of pathways)
+		\item Recent work on PPIs? Add some ideas from them.
+		\item What are we actually trying to find? (Regions within PPI network that are of interest for drug, \textbf{OR} patterns in the PPI graph that are of interest for the drug)
+	\end{itemize}
+\subsection{Finding node features for the PPI graph}
+\subsubsection{Encoding of number of neighbours}
+	\begin{itemize}
+		\item Encode number of neighbours in node features $\rightarrow$ Many neighbours $\implies$ well studied and possibly many targets
+	\end{itemize}
+\subsubsection{How to build a drug specific filter (optional)}
+	\begin{itemize}
+		\item STITCH got 390.000 chemicals, 3.6 million proteins from over 2000 organisms
+		\item for each drug find a motif in the target amino acid squences and query against all proteins and use the results as features for the prediction
+		\item Why do need those filters? Why should they work (Discuss with Robert)? How do they help our prediction? 
+		\item write down algorithm that is used: alignment $\rightarrow$ HMM $\rightarrow$ query
+	\end{itemize}
+\subsection{Features for drugs}
+	Similarity scores over MedDRA data. 
+	\begin{itemize}
+		\item Why can they be useful? How did we obtain them?
+	\end{itemize}
+
+\section{Models}
+	Transductive vs inductive models
+	\begin{itemize}
+		\item When is what kind of model better for the model? For which one of the two hypothesis? (transductive for patterns and inductive for regions of interest)
+		\item What architectures are used? (Plain convolution for patterns and Attention based fo regions)
+		\item Maybe some images of model structure
+	\end{itemize}
+
+\section{Experiments}
+None yet
+
+\section{Discussion}
+
+\section{Future Work}
+
+
+
+
+\end{document}

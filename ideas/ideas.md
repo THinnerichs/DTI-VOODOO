@@ -1,21 +1,36 @@
 ## TODO
 
+1. Maybe check for some other chemical features for nodes for PPI graph 
+2. Check some better fitting data for drugs -> e.g. SMILES and learn from them
+3. Add best filter feature to node features
+4. Add upsampling to data handling
+5. Write draft for paper -> Put all ideas in there ask Robert for more
+6. Check performance of filters -> Copy approach from dti\_predictor.py
+
+
+Questions for Robert:
+- inductive vs. transductive: what exactly?
+- weakness of filters
+- What could be node features fitting better for bottom up approach?
+- Compare against results of other approaches on what dataset? Which ones got dataset? Union sufficient? 
+  - HAVE LOOK AT SOTA PAPERS!!!!
+- Maybe use better features for drugs?
+
+ 
+
+
+---------------------------------------------------
+
 1. Perform hmm\_search pipeline and extract features
 2. Build dummy features and get torch network to run
 3. put in real features
 
-- actually do some literature search!!!
-
 ---------------------------------------------------
-- read Roberts Hypothesis testing paper for title and outline
-
 - Get other method to run on my dataset (literature!!)
   - Have to get SMILES and stuff too -> meh
   - How can this be made proof? Model is tweaked on this dataset while foreign methods are not
 
-- read PREDICT paper
 ----------------------------------------------------
-
 - extract predictions from search results
 
 - update targets based on new alignments
@@ -55,8 +70,6 @@ Work until now:
   - used DTIs accurate? currently just taking all with score aboth 700 (just captures cooccurence)
   - used PPIs accurate? Currently taking all of them
 
-  - Deadline? Icsb is in June
-
 
 ## Ideas for presentation
 
@@ -88,10 +101,9 @@ This [link](https://www.ebi.ac.uk/Tools/msa/)
 
 ## Questions
 
-
-
 - What is the actual hypothesis? 
 - What could be some meat to add here?
+
 ## Databases
 
 - CTD

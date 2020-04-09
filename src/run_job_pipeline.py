@@ -73,6 +73,8 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH --gres=gpu:v100:{num_gpus}
 #SBATCH --mem-per-gpu=60G
 #SBATCH --constraint=[gpu]
+#SBATCH --sockets-per-node=1
+#SBATCH --gpus-per-socket={num_gpus}
 #SBATCH --cpus-per-gpu=6
 
 #run the application:
@@ -83,7 +85,7 @@ conda activate ~/.conda/envs/dti/
 module load cuda/10.0.130
 
 export CUDA_VISIBLE_DEVICES={vis_dev}
-python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus), vis_dev=str(list(range(num_gpus)))[1:-1])
+python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus), vis_dev=str(list(range(num_gpus)))[1:-1].replace(' ', ''))
     preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
     if epochs:
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
