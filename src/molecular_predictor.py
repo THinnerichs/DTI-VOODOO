@@ -28,9 +28,9 @@ def encode_drugs(drug_list,
     vocab = WordVocab.load_vocab(pretrained_model_dir + 'vocab.pkl')
 
     def get_inputs(sm):
-        seq_len = 220
+        seq_len = 614
         sm = sm.split()
-        if len(sm) > 218:
+        if len(sm) > 612:
             print('SMILES is too long ({:d})'.format(len(sm)))
             sm = sm[:109] + sm[-109:]
         ids = [vocab.stoi.get(token, unk_index) for token in sm]
