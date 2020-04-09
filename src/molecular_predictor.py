@@ -14,7 +14,7 @@ import DDI_utils
 
 def encode_drugs(drug_list,
                  mode='trfm'):
-    drug_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
+    drug_SMILES_dict = DTI_data_preparation.get_truncated_drug_to_SMILES_dict()
 
     pretrained_model_dir = '../models/drug_representation/'
     vocab = WordVocab.load_vocab(pretrained_model_dir + 'vocab.pkl')
