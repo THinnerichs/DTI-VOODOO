@@ -9,13 +9,17 @@
 
 
 Questions for Robert:
-- inductive vs. transductive: what exactly?
-- weakness of filters
-- What could be node features fitting better for bottom up approach?
-- Compare against results of other approaches on what dataset? Which ones got dataset? Union sufficient? 
-  - HAVE LOOK AT SOTA PAPERS!!!!
-- Maybe use better features for drugs?
+- Models
+  - node classification vs graph classification
+  - inductive vs. transductive: what exactly?
+  - discuss models in detail
+  - weakness of filters
 
+- Data
+  - What could be node features fitting better for bottom up approach?
+  - Compare against results of other approaches on what dataset? Which ones got dataset? Union sufficient? 
+    - HAVE LOOK AT SOTA PAPERS!!!!
+  - Maybe use better features for drugs?
  
 
 

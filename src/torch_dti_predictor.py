@@ -160,6 +160,9 @@ def transductive_missing_target_predictor(config,
             sys.stdout.flush()
         results.append(ret)
 
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+
     results_file_name = '../results/' + config.arch + '_' + config.node_features + '_' + str(config.num_proteins) + '_model_results'
 
     results = np.array(results)
