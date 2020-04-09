@@ -12,8 +12,8 @@ import DTI_data_preparation
 import DDI_utils
 
 
-def encode_drugs(drug_list,
-                 mode='trfm'):
+def write_encoded_drugs(drug_list,
+                        mode='trfm'):
 
     drug_SMILES_dict = DTI_data_preparation.get_truncated_drug_to_SMILES_dict()
 
@@ -28,9 +28,9 @@ def encode_drugs(drug_list,
     vocab = WordVocab.load_vocab(pretrained_model_dir + 'vocab.pkl')
 
     def get_inputs(sm):
-        seq_len = 614
+        seq_len = 614 # formerly 220
         sm = sm.split()
-        if len(sm) > 612:
+        if len(sm) > 612: #formerly 218
             print('SMILES is too long ({:d})'.format(len(sm)))
             sm = sm[:109] + sm[-109:]
         ids = [vocab.stoi.get(token, unk_index) for token in sm]
@@ -48,6 +48,7 @@ def encode_drugs(drug_list,
             x_seg.append(b)
         return torch.tensor(x_id), torch.tensor(x_seg)
 
+    out_filename = '../models/drug_representation/'+mode+'.npy'
     if mode=='trfm':
         trfm = TrfmSeq2seq(len(vocab), 256, len(vocab), 4)
         trfm.load_state_dict(torch.load(pretrained_model_dir+'trfm.pkl'))
@@ -59,7 +60,7 @@ def encode_drugs(drug_list,
 
         print('Trfm size:', X.shape)
 
-        return X
+        np.save(out_filename, X)
     elif mode=='rnn':
         rnn = RNNSeq2Seq(len(vocab), 256, len(vocab), 3)
         rnn.load_state_dict(torch.load(pretrained_model_dir+'seq2seq.pkl'))
@@ -71,8 +72,7 @@ def encode_drugs(drug_list,
 
         print('RNN size:', X.shape)
 
-        return X
-
+        np.save(out_filename, X)
     else:
         print("No valid mode selected for drug to SMILES encoding.")
         raise ValueError
@@ -84,5 +84,5 @@ def encode_drugs(drug_list,
 if __name__=='__main__':
     drug_list = DTI_data_preparation.get_drug_list()
 
-    encode_drugs(drug_list, mode='trfm')
-    encode_drugs(drug_list, mode='rnn')
+    write_encoded_drugs(drug_list, mode='trfm')
+    write_encoded_drugs(drug_list, mode='rnn')
