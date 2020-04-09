@@ -156,6 +156,24 @@ def get_merged_DDI_graph():
 
     return merged_graph
 
+def write_drug_to_SMILES_dict():
+    filename = '../data/STITCH_data/chemicals.v5.0.tsv'
+
+    drug_to_smiles_dict = {}
+    with open(file=filename, mode='r') as f:
+        # skip header
+        f.readline()
+
+        for line in f:
+            drug_id, _, _, drug_smiles_enc = line.strip().split('\t')
+            print(drug_id, drug_smiles_enc)
+            drug_to_smiles_dict[drug_id] = drug_smiles_enc.strip()
+
+    with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='wb') as f:
+        pickle.dump(drug_to_smiles_dict, f, pickle.HIGHEST_PROTOCOL)
+
+
+
 def evaluate_dicts_and_graph():
 
     '''
@@ -200,6 +218,7 @@ def evaluate_dicts_and_graph():
 
 
 
+
 if __name__ == '__main__':
     # write_SITCH_db_Pubchem_mapping_dict()
     # get_STITCH_db_Pubchem_mapping_dict()
@@ -209,10 +228,12 @@ if __name__ == '__main__':
     # write_DDI_drugbank_graph()
     # print(len(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
 
-    evaluate_dicts_and_graph()
+    # evaluate_dicts_and_graph()
 
     # get_DDI_drugbank_graph()
 
     # print(get_merged_DDI_graph().nodes())
+
+    write_drug_to_SMILES_dict()
 
     pass

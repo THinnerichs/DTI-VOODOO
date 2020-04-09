@@ -1,11 +1,13 @@
 ## TODO
 
-1. Maybe check for some other chemical features for nodes for PPI graph 
-2. Check some better fitting data for drugs -> e.g. SMILES and learn from them
-3. Add best filter feature to node features
-4. Add upsampling to data handling
-5. Write draft for paper -> Put all ideas in there ask Robert for more
-6. Check performance of filters -> Copy approach from dti\_predictor.py
+1. Get SMILES for drugs
+2. Get sequences for proteins
+3. Build DeepgoPlus and unsupervised representation learning model and predictor
+
+5. Add best filter feature to node features
+6. Add upsampling to data handling
+7. Write draft for paper -> Put all ideas in there ask Robert for more
+8. Check performance of filters -> Copy approach from dti\_predictor.py
 
 
 Questions for Robert:
@@ -20,6 +22,12 @@ Questions for Robert:
   - Compare against results of other approaches on what dataset? Which ones got dataset? Union sufficient? 
     - HAVE LOOK AT SOTA PAPERS!!!!
   - Maybe use better features for drugs?
+
+- Robert talk:
+  - SMILES similarity: Molecular feature 
+  - how to train GCN for feature generation for drugs -> Unsupervised representation learning
+  - Repurpose DB, Drug repurposing hub
+  
  
 
 
