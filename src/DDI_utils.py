@@ -159,6 +159,8 @@ def get_merged_DDI_graph():
 def write_drug_to_SMILES_dict():
     filename = '../data/STITCH_data/chemicals.v5.0.tsv'
 
+    print("Writing drug to SMILES dict...")
+
     drug_to_smiles_dict = {}
     with open(file=filename, mode='r') as f:
         # skip header
@@ -166,13 +168,16 @@ def write_drug_to_SMILES_dict():
 
         for line in f:
             drug_id, _, _, drug_smiles_enc = line.strip().split('\t')
-            print(drug_id, drug_smiles_enc)
             drug_to_smiles_dict[drug_id] = drug_smiles_enc.strip()
 
     with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='wb') as f:
         pickle.dump(drug_to_smiles_dict, f, pickle.HIGHEST_PROTOCOL)
 
+    print("Done.")
 
+def get_drug_to_SMILES_dict():
+    with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='rb') as f:
+        return pickle.load(f)
 
 def evaluate_dicts_and_graph():
 
