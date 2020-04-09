@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from smiles_transformer.pretrain_trfm import TrfmSeq2seq
-# from smiles_transformer.pretrain_rnn import RNNSeq2Seq
+from smiles_transformer.pretrain_rnn import RNNSeq2Seq
 from smiles_transformer.build_vocab import WordVocab
 from smiles_transformer.utils import split
 
@@ -57,13 +57,32 @@ def encode_drugs(drug_list,
         xid, xseg = get_array(x_split)
         X = trfm.encode(torch.t(xid))
 
-        print('Size:', X.shape)
+        print('Trfm size:', X.shape)
 
         return X
+    elif mode=='rnn':
+        rnn = RNNSeq2Seq(len(vocab), 256, len(vocab), 3)
+        rnn.load_state_dict(torch.load(pretrained_model_dir+'seq2seq.pkl'))
+        rnn.eval()
+
+        x_split = [split(sm) for sm in [drug_SMILES_dict[drug] for drug in drug_list]]
+        xid, _ = get_array(x_split)
+        X = rnn.encode(torch.t(xid))
+
+        print('RNN size:', X.shape)
+
+        return X
+
+    else:
+        print("No valid mode selected for drug to SMILES encoding.")
+        raise ValueError
+
+
 
 
 
 if __name__=='__main__':
     drug_list = DTI_data_preparation.get_drug_list()
 
-    encode_drugs(drug_list)
+    encode_drugs(drug_list, mode='trfm')
+    encode_drugs(drug_list, mode='rnn')
