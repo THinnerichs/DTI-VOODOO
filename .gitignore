@@ -105,6 +105,11 @@ venv.bak/
 # vim stuff
 *.swp
 
+# Tex stuff
+*.aux
+*.out
+*.synctex.gz
+
 # Actions file
 /data/*transfer.v5.0.tsv
 /data/protein.sequences.v10.fa
