@@ -248,22 +248,16 @@ def get_protein_to_node_feature_dict():
 
 def write_protein_fasta(protein_list):
 
-    print('protein_list', protein_list[3:])
-
     input_fasta_file = '../data/STITCH_data/9606.protein.sequences.v11.0.fa'
 
     return_sequences = []  # Setup an empty list
     for record in SeqIO.parse(input_fasta_file, "fasta"):
-        if record in protein_list:
+        if record.id in protein_list:
             return_sequences.append(record)
 
     print("Found %i return sequences" % len(return_sequences))
 
     SeqIO.write(return_sequences, "../models/protein_representation/data/PPI_graph_protein_seqs.fasta", "fasta")
-
-
-
-
 
 
 if __name__ == '__main__':
