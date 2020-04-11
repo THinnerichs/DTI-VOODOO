@@ -11,9 +11,6 @@ import DTI_data_preparation
 
 
 
-def train():
-
-
 class MolecularDTIDataBuilder:
     def __init__(self, num_proteins=None, drug_mode='trfm'):
         # super(MolecularDTIData, self).__init__()
