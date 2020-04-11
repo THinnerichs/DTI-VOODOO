@@ -11,6 +11,8 @@ import threading
 import sys
 import os
 
+from Bio import SeqIO
+
 
 
 def prune_protein_protein_db(min_score=700):
@@ -244,6 +246,24 @@ def get_protein_to_node_feature_dict():
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def write_protein_fasta(protein_list):
+
+    print('protein_list', protein_list[3:])
+
+    input_fasta_file = '../data/STITCH_data/9606.protein.sequences.v11.0.fa'
+
+    return_sequences = []  # Setup an empty list
+    for record in SeqIO.parse(input_fasta_file, "fasta"):
+        if record in protein_list:
+            return_sequences.append(record)
+
+    print("Found %i return sequences" % len(return_sequences))
+
+    SeqIO.write(return_sequences, "../models/protein_representation/data/PPI_graph_protein_seqs.fasta", "fasta")
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -252,10 +272,11 @@ if __name__ == '__main__':
     # write_PPI_graph(min_score=700)
 
     # _, start = sys.argv
-    write_protein_to_subgraph_dict(cutoff=0.95)
+    # write_protein_to_subgraph_dict(cutoff=0.95)
 
-    write_protein_to_adj_mat_dict()
-    write_protein_to_node_feature_dict()
+    # write_protein_to_adj_mat_dict()
+    # write_protein_to_node_feature_dict()
+
 
     # dicki = get_protein_to_node_feature_dict()
     # print(len(dicki))

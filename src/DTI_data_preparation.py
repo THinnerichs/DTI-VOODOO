@@ -268,8 +268,11 @@ if __name__ == '__main__':
     # print("Nodes", len(dti_graph.nodes()))
     # print("Edges", len(dti_graph.edges()))
 
-    write_truncated_drug_to_SMILES_dict()
-    get_truncated_drug_to_SMILES_dict()
+    # write_truncated_drug_to_SMILES_dict()
+    # get_truncated_drug_to_SMILES_dict()
+
+    protein_list = get_human_proteins()
+    PPI_utils.write_protein_fasta(protein_list=protein_list)
 
 
     # test()
