@@ -77,7 +77,6 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
     for prot_ids, sequences in tqdm(read_fasta(in_file, chunk_size)):
         ids, data = get_data(sequences)
         preds = truncated_model.predict(data, batch_size=batch_size)
-        print('preds.shape', preds.shape)
 
         for i in range(len(prot_ids)):
             encoding_dict[prot_ids[i]] = preds[i, :]
