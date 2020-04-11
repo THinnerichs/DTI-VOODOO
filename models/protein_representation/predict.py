@@ -3,7 +3,7 @@
 import click as ck
 import numpy as np
 import pandas as pd
-import tensorflow as tf
+import pickle
 from tensorflow.keras.models import load_model, Model
 from subprocess import Popen, PIPE
 import time
@@ -77,13 +77,14 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
     for prot_ids, sequences in tqdm(read_fasta(in_file, chunk_size)):
         ids, data = get_data(sequences)
         preds = truncated_model.predict(data, batch_size=batch_size)
-
         for i in range(len(prot_ids)):
             encoding_dict[prot_ids[i]] = preds[i, :]
-            print('slice', preds[i, :].shape)
     print(len(encoding_dict.keys()))
 
     print('Done.')
+    filename = 'results/prot_to_encoding_dict'
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(encoding_dict, f, pickle.HIGHEST_PROTOCOL)
 
     return
 

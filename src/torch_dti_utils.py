@@ -95,10 +95,10 @@ class SimpleDTINetworkData():
         for i in range(len(indices)):
             if (i+1)%int(len(indices)/10) == 0:
                 print('Finished {} percent.'.format(str(int(i/len(indices)*100))), end='\r')
-            drug_index = i // self.num_proteins
-            protein_index = i % self.num_proteins
 
             index = indices[i]
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
 
             # build protein mask
             protein_mask = np.zeros(self.num_proteins)

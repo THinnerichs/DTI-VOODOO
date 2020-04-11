@@ -1,6 +1,13 @@
 import numpy as np
+import math
+
+from sklearn.model_selection import KFold
+from sklearn import metrics
 
 import torch
+import torch.utils as utils
+import torch.nn as nn
+import torch.utils.data as data
 
 from smiles_transformer.pretrain_trfm import TrfmSeq2seq
 from smiles_transformer.pretrain_rnn import RNNSeq2Seq
@@ -8,8 +15,16 @@ from smiles_transformer.build_vocab import WordVocab
 from smiles_transformer.utils import split
 
 import DTI_data_preparation
-
 import DDI_utils
+import dti_utils
+from molecular_utils import *
+
+from torch_dti_utils import *
+
+import subprocess
+import argparse
+import sys
+
 
 
 def write_encoded_drugs(drug_list,
@@ -77,12 +92,132 @@ def write_encoded_drugs(drug_list,
         print("No valid mode selected for drug to SMILES encoding.")
         raise ValueError
 
+def write_encoded_proteins(protein_list):
 
+    protein_dir = "../models/protein_representation/"
+    in_file = protein_dir+'data/PPI_graph_protein_seqs.fasta'
+    out_file = protein_dir+'results/output'
 
+    subprocess.call(protein_dir+'predict.sh {} {}'.format(in_file, out_file))
 
+def molecular_predictor(config):
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    dti_data = MolecularDTIDataBuilder(num_proteins=100)
+
+    # generate indices for proteins
+    kf = KFold(n_splits=5, random_state=42, shuffle=True)
+    X = np.zeros((dti_data.num_proteins, 1))
+
+    # build for help matrix for indices
+    help_matrix = np.arange(dti_data.num_drugs * dti_data.num_proteins)
+    help_matrix = help_matrix.reshape((dti_data.num_drugs, dti_data.num_proteins))
+
+    results = []
+    fold = 0
+    for train_protein_indices, test_protein_indices in kf.split(X):
+        fold += 1
+        print("Fold:", fold)
+
+        # build train data over whole dataset with help matrix
+        train_indices = help_matrix[:, train_protein_indices].flatten()
+        test_indices = help_matrix[:, test_protein_indices].flatten()
+        print(train_indices.shape, test_indices.shape)
+
+        train_dataset = dti_data.get(train_indices)
+        test_dataset = dti_data.get(test_indices)
+
+        train_dataset = MolecularDTIDataset(train_dataset)
+        test_dataset = MolecularDTIDataset(test_dataset)
+
+        # Calculate weights
+        len_to_sum_ratio = len(train_indices)/dti_data.y_dti_data.flatten()[train_indices].sum()
+        weight_dict = {0: 1.,
+                       1: len_to_sum_ratio}
+
+        train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
+        test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
+
+        model = MolecularPredNet().to(device)
+
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+        # storing best results
+        best_loss = math.inf
+        best_test_loss = math.inf
+        best_epoch = -1
+        best_test_ci = 0
+
+        model_st = 'molecular_predictor'
+        # model_file_name = '../models/' + model_st + '_' + config.node_features + '_' + str(
+            # config.num_proteins) + '_fold_' + str(fold) + '_model.model'
+
+        sys.stdout.flush()
+
+        ret = None
+        for epoch in range(1, config.num_epochs + 1):
+            train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
+                  weight_dict=weight_dict)
+
+            print('Predicting for validation data...')
+            labels, predictions = predicting(model, device, train_loader)
+            predictions = np.around(predictions)
+            print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                  metrics.accuracy_score(labels, predictions),
+                  dti_utils.dti_auroc(labels, predictions),
+                  dti_utils.dti_f1_score(labels, predictions),
+                  metrics.matthews_corrcoef(labels, predictions))
+
+            G, P = predicting(model, device, test_loader)
+            predictions = np.around(predictions)
+            val = metrics.log_loss(labels, predictions)
+            if val < best_loss:
+                best_loss = val
+                best_epoch = epoch + 1
+                # torch.save(model.state_dict(), model_file_name)
+                print('predicting for test data')
+                # G, P = predicting(model, device, test_loader)
+                ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
+                P = np.around(P)
+                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                     metrics.matthews_corrcoef]
+                metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
+                ret += metrics_list
+
+                # write results to results file
+                best_test_loss = ret[1]
+                best_test_ci = ret[-1]
+                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics_list)
+                print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
+                      best_test_ci, model_st)
+            else:
+                print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:',
+                      best_test_loss,
+                      best_test_ci, model_st)
+            sys.stdout.flush()
+        results.append(ret)
 
 if __name__=='__main__':
-    drug_list = DTI_data_preparation.get_drug_list()
+    # drug_list = DTI_data_preparation.get_drug_list()
 
-    write_encoded_drugs(drug_list, mode='trfm')
-    write_encoded_drugs(drug_list, mode='rnn')
+    # write_encoded_drugs(drug_list, mode='trfm')
+    # write_encoded_drugs(drug_list, mode='rnn')
+
+    # Add parser arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--num_proteins", type=int, default=-1)
+    # parser.add_argument("--arch", type=str, default='GCNConv')
+    # parser.add_argument("--node_features", type=str, default='simple')
+
+    parser.add_argument("--num_epochs", type=int, default=20)
+    parser.add_argument("--batch_size", type=int, default=256)
+    # parser.add_argument("--num_folds", type=int, default=5)
+    parser.add_argument("--lr", type=float, default=0.001)
+
+    config = parser.parse_args()
+
+    # Run classifier
+    molecular_predictor(config)
+
