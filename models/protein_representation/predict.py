@@ -9,6 +9,8 @@ import time
 from utils import Ontology
 from aminoacids import to_onehot
 
+from tqdm import tqdm
+
 MAXLEN = 2000
 
 @ck.command()
@@ -44,6 +46,7 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
             if it[0] not in mapping:
                 mapping[it[0]] = {}
             mapping[it[0]][it[1]] = float(it[2])
+    print("Building proteins ids...")
     for prot_id, sim_prots in mapping.items():
         annots = {}
         allgos = set()
@@ -69,7 +72,8 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
     start_time = time.time()
     total_seq = 0
     w = open(out_file, 'w')
-    for prot_ids, sequences in read_fasta(in_file, chunk_size):
+    print("Predicting sequences...")
+    for prot_ids, sequences in tqdm(read_fasta(in_file, chunk_size)):
         total_seq += len(prot_ids)
         deep_preds = {}
         ids, data = get_data(sequences)
