@@ -70,7 +70,7 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
     # Load CNN model
     model = load_model(model_file)
 
-    truncated_model = Model(inputs=model.inputs, outputs=model.layers[-2].outputs)
+    truncated_model = Model(inputs=model.inputs, outputs=model.layers[-2].output)
     encoding_dict = {}
     print("\nPredicting sequences...")
     print('Iterations:', sum(1 for _ in read_fasta(in_file, chunk_size)))
