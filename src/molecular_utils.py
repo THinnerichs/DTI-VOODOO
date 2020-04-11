@@ -96,6 +96,8 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     model.train()
     for batch_idx, (features, labels) in enumerate(train_loader):
         optimizer.zero_grad()
+        features = features.to(device)
+        labels = labels.to(device)
         output = model(features)
 
         weight_vec = torch.ones([1]) * weight_dict[1]
@@ -121,6 +123,6 @@ def predicting(model, device, loader):
             # data = data.to(device)
             output = model(data).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
-            total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
+            total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
     return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
 
