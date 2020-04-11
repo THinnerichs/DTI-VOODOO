@@ -3,7 +3,8 @@
 import click as ck
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import load_model
+import tensorflow as tf
+from tensorflow.keras.models import load_model, Model
 from subprocess import Popen, PIPE
 import time
 from utils import Ontology
@@ -69,11 +70,30 @@ def main(in_file, out_file, go_file, model_file, terms_file, annotations_file,
     # Load CNN model
     model = load_model(model_file)
 
+    truncated_model = Model(inputs=model.inputs, outputs=model.layers[-2].outputs)
+    encoding_dict = {}
+    print("\nPredicting sequences...")
+    print('Iterations:', sum(1 for _ in read_fasta(in_file, chunk_size)))
+    for prot_ids, sequences in tqdm(read_fasta(in_file, chunk_size)):
+        ids, data = get_data(sequences)
+        preds = truncated_model.predict(data, batch_size=batch_size)
+        print('preds.shape', preds.shape)
+
+        for i in range(len(prot_ids)):
+            encoding_dict[prot_ids[i]] = preds[i, :]
+            print('slice', preds[i, :].shape)
+    print(len(encoding_dict.keys()))
+
+    print('Done.')
+
+    return
+
+
+
+
     start_time = time.time()
     total_seq = 0
     w = open(out_file, 'w')
-    print("\nPredicting sequences...")
-    print('Iterations:', sum(1 for _ in read_fasta(in_file, chunk_size)))
     for prot_ids, sequences in tqdm(read_fasta(in_file, chunk_size)):
         total_seq += len(prot_ids)
         deep_preds = {}
