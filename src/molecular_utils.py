@@ -8,6 +8,8 @@ import torch.utils.data as data
 
 import DTI_data_preparation
 
+import sys
+
 
 
 
@@ -16,7 +18,9 @@ class MolecularDTIDataBuilder:
         # super(MolecularDTIData, self).__init__()
         print('Loading data.')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        print(len(self.drug_list), ' drugs present.')
         self.protein_list = np.array(DTI_data_preparation.get_human_proteins())[:num_proteins]
+        print(len(self.protein_list), ' proteins present.')
 
         # build drug features
         drug_filename = '../models/drug_representation/' + drug_mode + '.npy'
@@ -85,4 +89,38 @@ class MolecularPredNet(nn.Module):
         x = self.sigmoid(self.fc2(x))
 
         return x
+
+def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
+    print('Training on {} samples...'.format(len(train_loader.dataset)))
+    sys.stdout.flush()
+    model.train()
+    for batch_idx, (features, labels) in enumerate(train_loader):
+        optimizer.zero_grad()
+        output = model(features)
+
+        weight_vec = torch.ones([1]) * weight_dict[1]
+
+        loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
+        loss.backward()
+        optimizer.step()
+        if batch_idx % 10 == 0:
+            print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
+                                                                           batch_idx * output.size(0),
+                                                                           len(train_loader.dataset),
+                                                                           100. * batch_idx / len(train_loader),
+                                                                           loss.item()))
+            sys.stdout.flush()
+
+def predicting(model, device, loader):
+    model.eval()
+    total_preds = torch.Tensor()
+    total_labels = torch.Tensor()
+    print('Make prediction for {} samples...'.format(len(loader.dataset)))
+    with torch.no_grad():
+        for features, labels in loader:
+            # data = data.to(device)
+            output = model(data).sigmoid()
+            total_preds = torch.cat((total_preds, output.cpu()), 0)
+            total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
+    return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
 

@@ -19,7 +19,7 @@ import DDI_utils
 import dti_utils
 from molecular_utils import *
 
-from torch_dti_utils import *
+import torch_dti_utils
 
 import subprocess
 import argparse
