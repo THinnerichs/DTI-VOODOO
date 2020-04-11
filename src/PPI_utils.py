@@ -255,7 +255,7 @@ def write_protein_fasta(protein_list):
         if record.id in protein_list:
             return_sequences.append(record)
 
-    print("Found %i return sequences" % len(return_sequences))
+    print("Found {} PPI protein sequences of {}".format(len(return_sequences), len(protein_list)))
 
     SeqIO.write(return_sequences, "../models/protein_representation/data/PPI_graph_protein_seqs.fasta", "fasta")
 
