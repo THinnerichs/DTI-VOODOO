@@ -97,7 +97,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     for batch_idx, (features, labels) in enumerate(train_loader):
         optimizer.zero_grad()
         features = features.to(device)
-        labels = labels.to(device)
+        labels = labels.float().to(device)
         output = model(features)
 
         weight_vec = torch.ones([1]) * weight_dict[1]
