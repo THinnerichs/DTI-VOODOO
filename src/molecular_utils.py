@@ -73,7 +73,6 @@ class MolecularDTIDataset(data.Dataset):
         return len(self.data)
 
 
-
 class MolecularPredNet(nn.Module):
     def __init__(self):
         super(MolecularPredNet, self).__init__()
@@ -89,6 +88,7 @@ class MolecularPredNet(nn.Module):
         x = self.sigmoid(self.fc2(x))
 
         return x
+
 
 def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
@@ -120,8 +120,8 @@ def predicting(model, device, loader):
     print('Make prediction for {} samples...'.format(len(loader.dataset)))
     with torch.no_grad():
         for features, labels in loader:
-            # data = data.to(device)
-            output = model(data).sigmoid()
+            features = features.to(device)
+            output = model(features).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
     return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
