@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J
+#SBATCH -J drug_encoding
 #SBATCH -o jobscript_outputs/drug_encoding.%J.out
 #SBATCH -e jobscript_outputs/drug_encoding.%J.err
 #SBATCH --time=0-06:00:00
