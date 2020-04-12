@@ -19,7 +19,7 @@ import DDI_utils
 import dti_utils
 from molecular_utils import *
 
-import torch_dti_utils
+from torch_dti_utils import rmse, mse, pearson, spearman, ci
 
 import subprocess
 import argparse
@@ -92,7 +92,7 @@ def write_encoded_drugs(drug_list,
         print("No valid mode selected for drug to SMILES encoding.")
         raise ValueError
 
-def write_encoded_proteins(protein_list):
+def write_encoded_proteins():
 
     protein_dir = "../models/protein_representation/"
     in_file = protein_dir+'data/PPI_graph_protein_seqs.fasta'
@@ -199,11 +199,30 @@ def molecular_predictor(config):
             sys.stdout.flush()
         results.append(ret)
 
-if __name__=='__main__':
-    # drug_list = DTI_data_preparation.get_drug_list()
+    results = np.array(results)
+    results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
 
-    # write_encoded_drugs(drug_list, mode='trfm')
-    # write_encoded_drugs(drug_list, mode='rnn')
+    results_file_name = '../results/molecular_model' + '_' + str(config.num_proteins) + '_model_results'
+
+    print('Overall Results:')
+    print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt')
+    print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+
+    with open(results_file_name, 'a') as f:
+        print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt', file=f)
+        print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
+
+    print("Done.")
+    sys.stdout.flush()
+
+
+if __name__=='__main__':
+    drug_list = DTI_data_preparation.get_drug_list()
+
+    write_encoded_drugs(drug_list, mode='trfm')
+    write_encoded_drugs(drug_list, mode='rnn')
+
+    write_encoded_proteins()
 
     # Add parser arguments
     parser = argparse.ArgumentParser()
@@ -212,7 +231,7 @@ if __name__=='__main__':
     # parser.add_argument("--node_features", type=str, default='simple')
 
     parser.add_argument("--num_epochs", type=int, default=20)
-    parser.add_argument("--batch_size", type=int, default=256)
+    parser.add_argument("--batch_size", type=int, default=1024)
     # parser.add_argument("--num_folds", type=int, default=5)
     parser.add_argument("--lr", type=float, default=0.001)
 
@@ -220,4 +239,3 @@ if __name__=='__main__':
 
     # Run classifier
     molecular_predictor(config)
-
