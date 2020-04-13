@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
-#SBATCH -J GCNNet
-#SBATCH -o jobscript_outputs/GCNNet.%J.out
-#SBATCH -e jobscript_outputs/GCNNet.%J.err
+#SBATCH -J MolPred
+#SBATCH -o jobscript_outputs/MolPred.%J.out
+#SBATCH -e jobscript_outputs/MolPred.%J.err
 #SBATCH --time=1-00:00:00
 #SBATCH --gres=gpu:v100:4
 #SBATCH --mem=320G
