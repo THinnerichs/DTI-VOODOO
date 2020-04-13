@@ -142,7 +142,8 @@ def molecular_predictor(config):
         train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
         test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
 
-        model = MolecularPredNet().to(device)
+        model = MolecularPredNet()
+        model = nn.DataParallel(model).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -160,8 +161,9 @@ def molecular_predictor(config):
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
+            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
                   weight_dict=weight_dict)
+            print('Train Loss:', loss)
 
             if epoch%10 == 0:
                 print('Predicting for validation data...')
@@ -203,6 +205,7 @@ def molecular_predictor(config):
                           best_test_loss,
                           best_test_ci, model_st)
             sys.stdout.flush()
+        
         results.append(ret)
 
     results = np.array(results)

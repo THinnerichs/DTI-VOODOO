@@ -95,6 +95,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
     model.train()
+    return_loss = 0
     for batch_idx, (features, labels) in enumerate(train_loader):
         optimizer.zero_grad()
         features = features.to(device)
@@ -104,6 +105,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         weight_vec = torch.ones([1]) * weight_dict[1]
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
+        return_loss += loss
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
@@ -113,6 +115,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
                                                                            100. * batch_idx / len(train_loader),
                                                                            loss.item()))
             sys.stdout.flush()
+        return return_loss
 
 def predicting(model, device, loader):
     model.eval()

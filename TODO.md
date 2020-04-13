@@ -3,4 +3,5 @@
 1. Train model 
 2. Run overall model with updated node features for PPI graph 
 3. Get data as said from Robert
+4. Run updated model on data
 
