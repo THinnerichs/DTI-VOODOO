@@ -175,11 +175,8 @@ def molecular_predictor(config):
 
                 G, P = predicting(model, device, test_loader)
                 predictions = np.around(predictions)
-                val = metrics.log_loss(labels, predictions)
-                print(labels.sum(), predictions.sum(), predictions.shape)
-                print(labels.max(), labels.min())
-                print(predictions.max(), predictions.min())
-                print(val, best_loss)
+                val = metrics.log_loss(labels, predictions, eps=0.000001)
+                print('predictions: max/min', predictions.max(), predictions.min())
                 if val < best_loss:
                     best_loss = val
                     best_epoch = epoch + 1
