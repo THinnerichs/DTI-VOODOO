@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.utils.data as data
 
 import DTI_data_preparation
+from dti_utils import dti_auroc
 
 import sys
 
@@ -106,11 +107,12 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
-            print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
-                                                                           batch_idx * output.size(0),
-                                                                           len(train_loader.dataset),
-                                                                           100. * batch_idx / len(train_loader),
-                                                                           loss.item()))
+            print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}, AUROC:{:.6f}'.format(epoch,
+                                                                                        batch_idx * output.size(0),
+                                                                                        len(train_loader.dataset),
+                                                                                        100. * batch_idx / len(train_loader),
+                                                                                        loss.item(),
+                                                                                        dti_auroc(np.array(labels), np.array(output))))
             sys.stdout.flush()
 
 def predicting(model, device, loader):

@@ -6,8 +6,10 @@
 #SBATCH -e jobscript_outputs/GCNNet.%J.err
 #SBATCH --time=3-00:00:00
 #SBATCH --gres=gpu:v100:4
-#SBATCH --mem=300G
+#SBATCH --mem=330G
 #SBATCH --constraint=[gpu]
+#SBATCH --sockets-per-node=1
+#SBATCH --gpus-per-socket=4
 
 #run the application:
 module load anaconda3/4.4.0

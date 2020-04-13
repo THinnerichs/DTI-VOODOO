@@ -106,7 +106,7 @@ def molecular_predictor(config):
 
     if config.num_proteins <= 0:
         config.num_proteins = None
-        
+
     dti_data = MolecularDTIDataBuilder(num_proteins=config.num_proteins)
 
     # generate indices for proteins
