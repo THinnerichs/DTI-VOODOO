@@ -9,7 +9,7 @@
 #SBATCH --mem=320G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
-#SBATCH --gpus-per-socket=4
+# SBATCH --gpus-per-socket=4
 
 #run the application:
 module load anaconda3/4.4.0
