@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:v100:4
 #SBATCH --mem=320G
 #SBATCH --constraint=[gpu]
-#SBATCH --sockets-per-node=1
+# SBATCH --sockets-per-node=1
 #SBATCH --gpus-per-socket=4
 
 #run the application:
