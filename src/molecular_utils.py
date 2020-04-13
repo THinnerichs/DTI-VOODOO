@@ -121,10 +121,10 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
                                                                            100. * batch_idx / len(train_loader),
                                                                            loss.item()))
             sys.stdout.flush()
-        return return_loss
+    return return_loss
 
 def predicting(model, device, loader):
-    model.eval()
+model.eval()
     total_preds = torch.Tensor()
     total_labels = torch.Tensor()
     print('Make prediction for {} samples...'.format(len(loader.dataset)))

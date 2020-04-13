@@ -145,7 +145,7 @@ def molecular_predictor(config):
         model = MolecularPredNet()
         model = nn.DataParallel(model).to(device)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+        optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
 
         # storing best results
         best_loss = math.inf
