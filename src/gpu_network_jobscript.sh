@@ -4,9 +4,9 @@
 #SBATCH -J GCNNet
 #SBATCH -o jobscript_outputs/GCNNet.%J.out
 #SBATCH -e jobscript_outputs/GCNNet.%J.err
-#SBATCH --time=3-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --gres=gpu:v100:4
-#SBATCH --mem=330G
+#SBATCH --mem=320G
 #SBATCH --constraint=[gpu]
 #SBATCH --sockets-per-node=1
 #SBATCH --gpus-per-socket=4
@@ -19,5 +19,7 @@ conda activate ~/.conda/envs/dti/
 module load cuda/10.0.130
 
 
-export CUDA_VISIBLE_DEVICES=0,1,2,3
-python3 torch_dti_predictor.py --num_proteins -1 --num_epochs=50 --batch_size=32 --num_folds 5
+# export CUDA_VISIBLE_DEVICES=0,1,2,3
+# python3 torch_dti_predictor.py --num_proteins -1 --num_epochs=50 --batch_size=32 --num_folds 5
+
+python3 molecular_predictor.py --batch_size 131072 --num_epochs 50 --lr 0.001

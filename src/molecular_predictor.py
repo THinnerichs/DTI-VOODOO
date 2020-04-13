@@ -204,6 +204,9 @@ def molecular_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
+        model_filename = '../models/molecular_predictor/mol_pred_model_fold_'+str(fold)+'.model'
+        torch.save(model.state_dict(), model_filename)
+
         results.append(ret)
 
     results = np.array(results)
@@ -216,8 +219,8 @@ def molecular_predictor(config):
     print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
 
     with open(results_file_name, 'a') as f:
-        print('Model\tacc\tauroc\tf1\tmatt', file=f)
-        print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
+        print('Model\tacc\tauroc\tf1\tmatt', file=f, end='\n')
+        print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
 
     print("Done.")
     sys.stdout.flush()
