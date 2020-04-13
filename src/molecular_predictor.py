@@ -177,6 +177,8 @@ def molecular_predictor(config):
                 predictions = np.around(predictions)
                 val = metrics.log_loss(labels, predictions)
                 print(labels.sum(), predictions.sum(), predictions.shape)
+                print(labels.max(), labels.min())
+                print(predictions.max(), predictions.min())
                 print(val, best_loss)
                 if val < best_loss:
                     best_loss = val
