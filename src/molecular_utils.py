@@ -124,7 +124,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     return return_loss
 
 def predicting(model, device, loader):
-model.eval()
+    model.eval()
     total_preds = torch.Tensor()
     total_labels = torch.Tensor()
     print('Make prediction for {} samples...'.format(len(loader.dataset)))
