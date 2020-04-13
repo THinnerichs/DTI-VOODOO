@@ -167,42 +167,33 @@ def molecular_predictor(config):
 
             if epoch%10 == 0:
                 print('Predicting for validation data...')
-                labels, predictions = predicting(model, device, train_loader)
-                print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                      metrics.accuracy_score(labels, predictions),
-                      dti_utils.dti_auroc(labels, predictions),
-                      dti_utils.dti_f1_score(labels, predictions),
-                      metrics.matthews_corrcoef(labels, predictions))
+                train_labels, train_predictions = predicting(model, device, train_loader)
+                print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics.accuracy_score(train_labels, train_predictions),
+                      dti_utils.dti_auroc(train_labels, train_predictions),
+                      dti_utils.dti_f1_score(train_labels, train_predictions),
+                      metrics.matthews_corrcoef(train_labels, train_predictions))
 
-                G, P = predicting(model, device, test_loader)
-                predictions = np.around(predictions)
-                val = metrics.log_loss(labels, predictions, eps=0.000001)
-                print('predictions: max/min', predictions.max(), predictions.min())
-                if val < best_loss:
-                    best_loss = val
-                    best_epoch = epoch + 1
-                    # torch.save(model.state_dict(), model_file_name)
-                    print('predicting for test data')
-                    # G, P = predicting(model, device, test_loader)
-                    # ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
-                    ret = []
-                    P = np.around(P)
-                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
-                                         metrics.matthews_corrcoef]
-                    metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
-                    ret += metrics_list
+                test_labels, test_predictions = predicting(model, device, test_loader)
+                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics.accuracy_score(test_labels, train_predictions),
+                      dti_utils.dti_auroc(train_labels, train_predictions),
+                      dti_utils.dti_f1_score(train_labels, train_predictions),
+                      metrics.matthews_corrcoef(train_labels, train_predictions))
 
-                    # write results to results file
-                    best_test_loss = ret[1]
-                    best_test_ci = ret[-1]
-                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                          metrics_list)
+                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                     metrics.matthews_corrcoef]
+                ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
+
+                test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+                if test_loss < best_loss:
+                    best_loss = test_loss
+                    best_epoch = epoch
+
                     print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
                           best_test_ci, model_st)
                 else:
-                    print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:',
-                          best_test_loss,
-                          best_test_ci, model_st)
+                    print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
             sys.stdout.flush()
 
         overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
@@ -213,9 +204,6 @@ def molecular_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
-
-
-
         results.append(ret)
 
     results = np.array(results)
@@ -224,11 +212,11 @@ def molecular_predictor(config):
     results_file_name = '../results/molecular_model' + '_' + str(config.num_proteins) + '_model_results'
 
     print('Overall Results:')
-    print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt')
+    print('Model\tacc\tauroc\tf1\tmatt')
     print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
 
     with open(results_file_name, 'a') as f:
-        print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt', file=f)
+        print('Model\tacc\tauroc\tf1\tmatt', file=f)
         print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
 
     print("Done.")
