@@ -176,6 +176,7 @@ def molecular_predictor(config):
                 G, P = predicting(model, device, test_loader)
                 predictions = np.around(predictions)
                 val = metrics.log_loss(labels, predictions)
+                print(labels.sum(), predictions.sum())
                 print(val, best_loss)
                 if val < best_loss:
                     best_loss = val
