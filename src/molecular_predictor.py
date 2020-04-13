@@ -175,7 +175,7 @@ def molecular_predictor(config):
             G, P = predicting(model, device, test_loader)
             predictions = np.around(predictions)
             val = metrics.log_loss(labels, predictions)
-            if val < best_loss:
+            if val < best_loss and epoch%10 ==0:
                 best_loss = val
                 best_epoch = epoch + 1
                 # torch.save(model.state_dict(), model_file_name)
