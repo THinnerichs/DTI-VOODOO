@@ -104,7 +104,10 @@ def molecular_predictor(config):
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    dti_data = MolecularDTIDataBuilder(num_proteins=100)
+    if config.num_proteins <= 0:
+        config.num_proteins = None
+        
+    dti_data = MolecularDTIDataBuilder(num_proteins=config.num_proteins)
 
     # generate indices for proteins
     kf = KFold(n_splits=5, random_state=42, shuffle=True)
