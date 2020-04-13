@@ -163,42 +163,43 @@ def molecular_predictor(config):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
                   weight_dict=weight_dict)
 
-            print('Predicting for validation data...')
-            labels, predictions = predicting(model, device, train_loader)
-            predictions = np.around(predictions)
-            print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                  metrics.accuracy_score(labels, predictions),
-                  dti_utils.dti_auroc(labels, predictions),
-                  dti_utils.dti_f1_score(labels, predictions),
-                  metrics.matthews_corrcoef(labels, predictions))
+            if epoch%10 == 0:
+                print('Predicting for validation data...')
+                labels, predictions = predicting(model, device, train_loader)
+                predictions = np.around(predictions)
+                print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics.accuracy_score(labels, predictions),
+                      dti_utils.dti_auroc(labels, predictions),
+                      dti_utils.dti_f1_score(labels, predictions),
+                      metrics.matthews_corrcoef(labels, predictions))
 
-            G, P = predicting(model, device, test_loader)
-            predictions = np.around(predictions)
-            val = metrics.log_loss(labels, predictions)
-            if val < best_loss and epoch%10 ==0:
-                best_loss = val
-                best_epoch = epoch + 1
-                # torch.save(model.state_dict(), model_file_name)
-                print('predicting for test data')
-                # G, P = predicting(model, device, test_loader)
-                ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
-                P = np.around(P)
-                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
-                                     metrics.matthews_corrcoef]
-                metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
-                ret += metrics_list
+                G, P = predicting(model, device, test_loader)
+                predictions = np.around(predictions)
+                val = metrics.log_loss(labels, predictions)
+                if val < best_loss:
+                    best_loss = val
+                    best_epoch = epoch + 1
+                    # torch.save(model.state_dict(), model_file_name)
+                    print('predicting for test data')
+                    # G, P = predicting(model, device, test_loader)
+                    ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
+                    P = np.around(P)
+                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                         metrics.matthews_corrcoef]
+                    metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
+                    ret += metrics_list
 
-                # write results to results file
-                best_test_loss = ret[1]
-                best_test_ci = ret[-1]
-                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                      metrics_list)
-                print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
-                      best_test_ci, model_st)
-            else:
-                print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:',
-                      best_test_loss,
-                      best_test_ci, model_st)
+                    # write results to results file
+                    best_test_loss = ret[1]
+                    best_test_ci = ret[-1]
+                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                          metrics_list)
+                    print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
+                          best_test_ci, model_st)
+                else:
+                    print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:',
+                          best_test_loss,
+                          best_test_ci, model_st)
             sys.stdout.flush()
         results.append(ret)
 
