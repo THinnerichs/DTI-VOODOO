@@ -85,7 +85,8 @@ class MolecularPredNet(nn.Module):
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
-        x = self.sigmoid(self.fc2(x))
+        x = self.fc2(x)
+        # x = self.sigmoid(x)
 
         return x
 
@@ -124,8 +125,6 @@ def predicting(model, device, loader):
             output = model(features).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
-            if batch_idx%10 == 0:
-                print("Batch idx")
 
     return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
 
