@@ -11,9 +11,9 @@
 #SBATCH --cpus-per-task=24
 
 #run the application:
-module load anaconda3/4.4.0
+module load cuda/10.0.130
 # module load hmmer/3.2.1
-source /home/${USER}/.bashrc
+source /home/hinnertr/.bashrc
 # module load gcc/6.4.0
 conda activate ~/.conda/envs/dti/
 
