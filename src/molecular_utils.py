@@ -112,7 +112,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
                                                                                         len(train_loader.dataset),
                                                                                         100. * batch_idx / len(train_loader),
                                                                                         loss.item(),
-                                                                                        dti_auroc(np.array(labels), np.array(output))))
+                                                                                        dti_auroc(np.array(labels.cpu()), np.array(output.cpu()))))
             sys.stdout.flush()
 
 def predicting(model, device, loader):
