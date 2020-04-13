@@ -119,10 +119,13 @@ def predicting(model, device, loader):
     total_labels = torch.Tensor()
     print('Make prediction for {} samples...'.format(len(loader.dataset)))
     with torch.no_grad():
-        for features, labels in loader:
+        for batch_idx, (features, labels) in enumerate(loader):
             features = features.to(device)
             output = model(features).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
+            if batch_idx%10 == 0:
+                print("Batch idx")
+
     return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
 

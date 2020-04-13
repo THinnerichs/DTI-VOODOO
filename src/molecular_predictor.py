@@ -163,7 +163,7 @@ def molecular_predictor(config):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
                   weight_dict=weight_dict)
 
-            if epoch%10 == 0:
+            if epoch%1 == 0:
                 print('Predicting for validation data...')
                 labels, predictions = predicting(model, device, train_loader)
                 predictions = np.around(predictions)
@@ -182,7 +182,8 @@ def molecular_predictor(config):
                     # torch.save(model.state_dict(), model_file_name)
                     print('predicting for test data')
                     # G, P = predicting(model, device, test_loader)
-                    ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
+                    # ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
+                    ret = []
                     P = np.around(P)
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
