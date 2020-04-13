@@ -168,7 +168,6 @@ def molecular_predictor(config):
             if epoch%10 == 0:
                 print('Predicting for validation data...')
                 labels, predictions = predicting(model, device, train_loader)
-                predictions = np.around(predictions)
                 print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(labels, predictions),
                       dti_utils.dti_auroc(labels, predictions),
@@ -205,7 +204,18 @@ def molecular_predictor(config):
                           best_test_loss,
                           best_test_ci, model_st)
             sys.stdout.flush()
-        
+
+        overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
+        overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
+
+        labels, predictions = predicting(model, device, overall_loader)
+        filename = '../models/molecular_predictor/pred_fold_'+str(fold)
+        with open(file=filename+'.pkl', mode='wb') as f:
+            pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
+
+
+
+
         results.append(ret)
 
     results = np.array(results)
