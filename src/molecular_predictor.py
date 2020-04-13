@@ -163,7 +163,7 @@ def molecular_predictor(config):
             train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
                   weight_dict=weight_dict)
 
-            if epoch%10 == 0:
+            if epoch%1 == 0:
                 print('Predicting for validation data...')
                 labels, predictions = predicting(model, device, train_loader)
                 predictions = np.around(predictions)
@@ -176,6 +176,7 @@ def molecular_predictor(config):
                 G, P = predicting(model, device, test_loader)
                 predictions = np.around(predictions)
                 val = metrics.log_loss(labels, predictions)
+                print(val, best_loss)
                 if val < best_loss:
                     best_loss = val
                     best_epoch = epoch + 1
