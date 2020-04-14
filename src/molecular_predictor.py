@@ -165,7 +165,7 @@ def molecular_predictor(config):
                   weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if epoch%10 == 0:
+            if False and epoch%10 == 0:
                 print('Predicting for validation data...')
                 train_labels, train_predictions = predicting(model, device, train_loader)
                 print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
@@ -204,7 +204,7 @@ def molecular_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
-        model_filename = '../models/molecular_predictor/mol_pred_model_fold_'+str(fold)+'.model'
+        model_filename = '../models/molecular_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)
 
         results.append(ret)
@@ -212,7 +212,7 @@ def molecular_predictor(config):
     results = np.array(results)
     results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
 
-    results_file_name = '../results/molecular_model' + '_' + str(config.num_proteins) + '_model_results'
+    results_file_name = '../results/molecular_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
 
     print('Overall Results:')
     print('Model\tacc\tauroc\tf1\tmatt')
@@ -244,6 +244,8 @@ if __name__=='__main__':
     parser.add_argument("--batch_size", type=int, default=1024)
     # parser.add_argument("--num_folds", type=int, default=5)
     parser.add_argument("--lr", type=float, default=0.001)
+
+    parser.add_argument("--model_id", type=str, default='')
 
     config = parser.parse_args()
 
