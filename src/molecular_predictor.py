@@ -428,9 +428,9 @@ def XGBoost_molecular_predictor(config):
         sys.stdout.flush()
 
         overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
-        overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
+        overall_data = np.array([x.numpy() for x,y in overall_dataset])
 
-        labels, predictions = predicting(model, device, overall_loader)
+        predictions = np.around(model.predict())
         filename = '../models/molecular_xgboost_predictor/pred_fold_'+str(fold)
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
