@@ -302,7 +302,53 @@ def get_drug_drughub_to_STRING_mapping():
 
 def write_protein_drughub_to_STRING_mapping():
     filename = '../data/STRING_data/human.name_2_string.tsv'
+    mapping_dict = {}
     with open(file=filename, mode='r') as f:
+        # skip header
+        f.readline()
+        for line in f:
+            _, dh_id, STRING_id = line.split('\t')
+            mapping_dict[dh_id] = STRING_id
+
+    dict_filename = '../data/drug_repurposing_hub/protein_drughub_to_STRING_mapping'
+    with open(file=dict_filename+'.pkl', mode='wb') as f:
+        pickle.dump(mapping_dict, f, pickle.HIGHEST_PROTOCOL)
+
+def get_protein_drughub_to_STRING_mapping():
+    dict_filename = '../data/drug_repurposing_hub/protein_drughub_to_STRING_mapping'
+    with open(file=dict_filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
+
+def write_drughub_dti_graph():
+    drughub_filename = '../data/drug_repurposing_hub/repurposing_drugs_20200324.txt'
+    drug_to_STRING_dict = get_drug_drughub_to_STRING_mapping()
+    protein_to_STRING_dict = get_protein_drughub_to_STRING_mapping()
+
+    drughub_dti_graph = nx.Graph()
+    with open(file=drughub_filename, mode='r') as f:
+        # Skip header
+        for i in range(10):
+            f.readline()
+        for line in f:
+            split_line = line.split('\t')
+            drug, targets = split_line[0], split_line[3]
+            drug = drug_to_STRING_dict.get()
+
+            for target in targets.strip().split('|'):
+                target
+                drughub_dti_graph.add_edge(drug, target)
+
+
+
+
+
+
+def get_drughub_drug_list():
+    return list(get_drug_drughub_to_STRING_mapping().values())
+
+def get_drughub_protein_list():
+    pass
+
 
 
 
@@ -321,6 +367,7 @@ if __name__ == '__main__':
     # dicki = get_protein_to_node_feature_dict()
     # print(len(dicki))
 
-    write_drug_drughub_to_STRING_mapping()
+    # write_drug_drughub_to_STRING_mapping()
+    write_protein_drughub_to_STRING_mapping()
 
     pass
