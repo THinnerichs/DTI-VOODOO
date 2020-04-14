@@ -372,4 +372,5 @@ if __name__=='__main__':
     config = parser.parse_args()
 
     # Run classifier
-    molecular_predictor(config)
+    # molecular_predictor(config)
+    drug_split_molecular_predictor(config)
