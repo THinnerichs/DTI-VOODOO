@@ -269,7 +269,7 @@ def write_drug_drughub_to_STRING_mapping():
         for i in range(10):
             f.readline()
         for line in f:
-            drug_id = line.split('\t')
+            drug_id = line.split('\t')[0]
             drug_id_list.append(drug_id)
     print(len(drug_id_list), 'drugs found in drughub')
 
@@ -324,7 +324,11 @@ def write_drughub_dti_graph():
     drug_to_STRING_dict = get_drug_drughub_to_STRING_mapping()
     protein_to_STRING_dict = get_protein_drughub_to_STRING_mapping()
 
+    print(len(drug_to_STRING_dict.keys()), 'drugs from drughub present.')
+    print(len(protein_to_STRING_dict.keys()), 'proteins from drughub present.')
+
     drughub_dti_graph = nx.Graph()
+    skipped_drugs = 0
     with open(file=drughub_filename, mode='r') as f:
         # Skip header
         for i in range(10):
@@ -332,11 +336,21 @@ def write_drughub_dti_graph():
         for line in f:
             split_line = line.split('\t')
             drug, targets = split_line[0], split_line[3]
-            drug = drug_to_STRING_dict.get()
-
+            drug = drug_to_STRING_dict.get(drug)
+            if drug == None:
+                skipped_drugs += 1
+                continue
             for target in targets.strip().split('|'):
-                target
+                target = protein_to_STRING_dict.get(target)
+                if target == None:
+                    continue
                 drughub_dti_graph.add_edge(drug, target)
+
+    print(skipped_drugs, 'drugs not present in mapping and skipped.')
+
+    graph_filename = '../data/drug_repurposing_hub/drughub_dti_graph'
+    with open(file=graph_filename, mode='wb') as f:
+        pickle.dump(drughub_dti_graph, f, pickle.HIGHEST_PROTOCOL)
 
 
 
@@ -367,7 +381,7 @@ if __name__ == '__main__':
     # dicki = get_protein_to_node_feature_dict()
     # print(len(dicki))
 
-    # write_drug_drughub_to_STRING_mapping()
-    write_protein_drughub_to_STRING_mapping()
+    write_drug_drughub_to_STRING_mapping()
+    # write_protein_drughub_to_STRING_mapping()
 
     pass
