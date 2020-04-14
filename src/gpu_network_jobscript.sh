@@ -22,4 +22,4 @@ module load cuda/10.0.130
 # export CUDA_VISIBLE_DEVICES=0,1,2,3
 # python3 torch_dti_predictor.py --num_proteins -1 --num_epochs=50 --batch_size=32 --num_folds 5
 
-python3 molecular_predictor.py --batch_size 131072 --num_epochs 50 --lr 0.001
+python3 molecular_predictor.py --batch_size 32384 --num_epochs 50 --lr 0.001
