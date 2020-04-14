@@ -73,8 +73,51 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH --gres=gpu:v100:{num_gpus}
 #SBATCH --mem-per-gpu=60G
 #SBATCH --constraint=[gpu]
-#SBATCH --sockets-per-node=1
-#SBATCH --gpus-per-socket={num_gpus}
+# SBATCH --sockets-per-node=1
+# SBATCH --gpus-per-socket={num_gpus}
+#SBATCH --cpus-per-gpu=6
+
+#run the application:
+module load anaconda3/4.4.0
+source /home/hinnertr/.bashrc
+conda activate ~/.conda/envs/dti/
+
+module load cuda/10.0.130
+
+export CUDA_VISIBLE_DEVICES={vis_dev}
+python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus), vis_dev=str(list(range(num_gpus)))[1:-1].replace(' ', ''))
+    preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
+    if epochs:
+        preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
+    if batch_size:
+        preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
+    preface_script += "--num_folds 5 "
+
+    filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
+    with open(file=filename, mode='w') as f:
+        f.write(preface_script)
+    subprocess.call("sbatch " + filename, shell=True)
+
+
+def submit_mol_pred_gpu_job(num_proteins=-1,
+                           epochs=None,
+                           batch_size=None,
+                           model='protein',
+                           days=1,
+                           num_gpus=4):
+    jobname = arch+'_'+node_features
+    preface_script = '''#!/bin/bash
+#SBATCH -N 1
+#SBATCH --partition=batch
+#SBATCH -J {jobname}
+#SBATCH -o jobscript_outputs/{jobname}.%J.out
+#SBATCH -e jobscript_outputs/{jobname}.%J.err
+#SBATCH --time={days}-00:00:00
+#SBATCH --gres=gpu:v100:{num_gpus}
+#SBATCH --mem-per-gpu=60G
+#SBATCH --constraint=[gpu]
+# SBATCH --sockets-per-node=1
+# SBATCH --gpus-per-socket={num_gpus}
 #SBATCH --cpus-per-gpu=6
 
 #run the application:

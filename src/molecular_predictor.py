@@ -4,10 +4,8 @@ import math
 from sklearn.model_selection import KFold
 from sklearn import metrics
 
-import torch
-import torch.utils as utils
-import torch.nn as nn
-import torch.utils.data as data
+from xgboost import XGBClassifier
+
 
 from smiles_transformer.pretrain_trfm import TrfmSeq2seq
 from smiles_transformer.pretrain_rnn import RNNSeq2Seq
@@ -24,6 +22,7 @@ from torch_dti_utils import rmse, mse, pearson, spearman, ci
 import subprocess
 import argparse
 import sys
+from tqdm import tqdm
 
 
 
@@ -347,6 +346,116 @@ def drug_split_molecular_predictor(config):
     print("Done.")
     sys.stdout.flush()
 
+def XGBoost_molecular_predictor(config):
+    model_st = 'molecular_XGBoost_predictor'
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    if config.num_proteins <= 0:
+        config.num_proteins = None
+
+    dti_data = MolecularDTIDataBuilder(num_proteins=config.num_proteins)
+
+    # generate indices for proteins
+    kf = KFold(n_splits=5, random_state=42, shuffle=True)
+    X = np.zeros((dti_data.num_proteins, 1))
+
+    # build for help matrix for indices
+    help_matrix = np.arange(dti_data.num_drugs * dti_data.num_proteins)
+    help_matrix = help_matrix.reshape((dti_data.num_drugs, dti_data.num_proteins))
+
+    results = []
+    fold = 0
+    for train_protein_indices, test_protein_indices in kf.split(X):
+        fold += 1
+        print("Fold:", fold)
+
+        # build train data over whole dataset with help matrix
+        train_indices = help_matrix[:, train_protein_indices].flatten()
+        test_indices = help_matrix[:, test_protein_indices].flatten()
+        print(train_indices.shape, test_indices.shape)
+
+        train_dataset = dti_data.get(train_indices)
+        test_dataset = dti_data.get(test_indices)
+
+        print("Building train data...")
+        X_train = []
+        Y_train = []
+        for x,y in tqdm(train_dataset):
+            X_train.append(x.numpy())
+            Y_train.append(y)
+        X_train = np.array(X_train)
+        Y_train = np.array(Y_train)
+        print("Building test data...")
+        X_test = []
+        Y_test = []
+        for x,y in tqdm(test_dataset):
+            X_test.append(x.numpy())
+            Y_test.append(y)
+        X_test = np.array(X_test)
+        Y_test = np.array(Y_test)
+
+        # Calculate weights
+        positives = dti_data.y_dti_data.flatten()[train_indices].sum()
+        len_to_sum_ratio = (len(train_indices)-positives)/positives # negatives/positives
+        weight_dict = {0: 1.,
+                       1: len_to_sum_ratio}
+
+        model = XGBClassifier(scale_pos_weight=len_to_sum_ratio,
+                              max_depth=4,
+                              n_jobs=40,
+                              tree_method='gpu_hist')
+        model.fit(X_train, Y_train)
+        y_pred = np.around(model.predict(X_test))
+        print(metrics.roc_auc_score(Y_test, y_pred))
+
+        sys.stdout.flush()
+
+        ret = None
+        test_labels = Y_test
+        test_predictions = y_pred
+
+        print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+              metrics.accuracy_score(test_labels, test_predictions),
+              dti_utils.dti_auroc(test_labels, test_predictions),
+              dti_utils.dti_f1_score(test_labels, test_predictions),
+              metrics.matthews_corrcoef(test_labels, test_predictions))
+
+        metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                             metrics.matthews_corrcoef]
+        ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
+
+        test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+        sys.stdout.flush()
+
+        overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
+        overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
+
+        labels, predictions = predicting(model, device, overall_loader)
+        filename = '../models/molecular_predictor/pred_fold_'+str(fold)
+        with open(file=filename+'.pkl', mode='wb') as f:
+            pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
+
+        model_filename = '../models/molecular_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
+        torch.save(model.state_dict(), model_filename)
+
+        results.append(ret)
+
+    results = np.array(results)
+    results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
+
+    results_file_name = '../results/molecular_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
+
+    print('Overall Results:')
+    print('Model\tacc\tauroc\tf1\tmatt')
+    print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+
+    with open(results_file_name, 'a') as f:
+        print('Model\tacc\tauroc\tf1\tmatt', file=f, end='\n')
+        print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
+
+    print("Done.")
+
 
 if __name__=='__main__':
     drug_list = DTI_data_preparation.get_drug_list()
@@ -368,9 +477,18 @@ if __name__=='__main__':
     parser.add_argument("--lr", type=float, default=0.001)
 
     parser.add_argument("--model_id", type=str, default='')
+    parser.add_argument("--model", type=str, default='protein')
 
     config = parser.parse_args()
 
     # Run classifier
-    # molecular_predictor(config)
-    drug_split_molecular_predictor(config)
+    if config.model == 'protein':
+        molecular_predictor(config)
+    elif config.model == 'drug':
+        drug_split_molecular_predictor(config)
+    elif config.model == 'xgboost':
+        XGBoost_molecular_predictor(config)
+    else:
+        print("No valid model selected.")
+        raise ValueError
+
