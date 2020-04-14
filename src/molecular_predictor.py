@@ -101,6 +101,7 @@ def write_encoded_proteins():
     subprocess.call(protein_dir+'predict.sh {} {}'.format(in_file, out_file))
 
 def molecular_predictor(config):
+    model_st = 'molecular_predictor'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -153,7 +154,6 @@ def molecular_predictor(config):
         best_epoch = -1
         best_test_ci = 0
 
-        model_st = 'molecular_predictor'
         # model_file_name = '../models/' + model_st + '_' + config.node_features + '_' + str(
             # config.num_proteins) + '_fold_' + str(fold) + '_model.model'
 
@@ -216,11 +216,133 @@ def molecular_predictor(config):
 
     print('Overall Results:')
     print('Model\tacc\tauroc\tf1\tmatt')
-    print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+    print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
 
     with open(results_file_name, 'a') as f:
         print('Model\tacc\tauroc\tf1\tmatt', file=f, end='\n')
-        print(config.arch + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
+        print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
+
+    print("Done.")
+    sys.stdout.flush()
+
+def drug_split_molecular_predictor(config):
+    model_st = 'molecular_drug_split_predictor'
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    dti_data = MolecularDTIDataBuilder(num_proteins=None)
+
+    # generate indices for proteins
+    kf = KFold(n_splits=5, random_state=42, shuffle=True)
+    X = np.zeros((dti_data.num_drugs, 1))
+
+    # build for help matrix for indices
+    help_matrix = np.arange(dti_data.num_drugs * dti_data.num_proteins)
+    help_matrix = help_matrix.reshape((dti_data.num_drugs, dti_data.num_proteins))
+
+    results = []
+    fold = 0
+    for train_drug_indices, test_drug_indices in kf.split(X):
+        fold += 1
+        print("Fold:", fold)
+
+        # build train data over whole dataset with help matrix
+        train_indices = help_matrix[train_drug_indices, :].flatten()
+        test_indices = help_matrix[test_drug_indices, :].flatten()
+        print(train_indices.shape, test_indices.shape)
+
+        train_dataset = dti_data.get(train_indices)
+        test_dataset = dti_data.get(test_indices)
+
+        train_dataset = MolecularDTIDataset(train_dataset)
+        test_dataset = MolecularDTIDataset(test_dataset)
+
+        # Calculate weights
+        len_to_sum_ratio = len(train_indices)/dti_data.y_dti_data.flatten()[train_indices].sum()
+        weight_dict = {0: 1.,
+                       1: len_to_sum_ratio}
+
+        train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
+        test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
+
+        model = MolecularPredNet()
+        model = nn.DataParallel(model).to(device)
+
+        optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
+
+        # storing best results
+        best_loss = math.inf
+        best_test_loss = math.inf
+        best_epoch = -1
+        best_test_ci = 0
+
+        # model_file_name = '../models/' + model_st + '_' + config.node_features + '_' + str(
+            # config.num_proteins) + '_fold_' + str(fold) + '_model.model'
+
+        sys.stdout.flush()
+
+        ret = None
+        for epoch in range(1, config.num_epochs + 1):
+            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
+                  weight_dict=weight_dict)
+            print('Train Loss:', loss)
+
+            if epoch%10 == 0:
+                print('Predicting for validation data...')
+                train_labels, train_predictions = predicting(model, device, train_loader)
+                print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics.accuracy_score(train_labels, train_predictions),
+                      dti_utils.dti_auroc(train_labels, train_predictions),
+                      dti_utils.dti_f1_score(train_labels, train_predictions),
+                      metrics.matthews_corrcoef(train_labels, train_predictions))
+
+                test_labels, test_predictions = predicting(model, device, test_loader)
+                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                      metrics.accuracy_score(test_labels, test_predictions),
+                      dti_utils.dti_auroc(test_labels, test_predictions),
+                      dti_utils.dti_f1_score(test_labels, test_predictions),
+                      metrics.matthews_corrcoef(test_labels, test_predictions))
+
+                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                     metrics.matthews_corrcoef]
+                ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
+
+                test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+                if test_loss < best_loss:
+                    best_loss = test_loss
+                    best_epoch = epoch
+
+                    print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
+                          best_test_ci, model_st)
+                else:
+                    print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
+            sys.stdout.flush()
+
+        overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
+        overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
+
+        labels, predictions = predicting(model, device, overall_loader)
+        filename = '../models/molecular_drug_split_predictor/pred_fold_'+str(fold)
+        with open(file=filename+'.pkl', mode='wb') as f:
+            pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
+
+        model_filename = '../models/molecular_drug_split_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
+        torch.save(model.state_dict(), model_filename)
+
+        results.append(ret)
+
+    results = np.array(results)
+    results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
+
+    results_file_name = '../results/molecular_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
+
+    print('Overall Results:')
+    print('Model\tacc\tauroc\tf1\tmatt')
+    print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
+
+    with open(results_file_name, 'a') as f:
+        print('Model\tacc\tauroc\tf1\tmatt', file=f, end='\n')
+        print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
 
     print("Done.")
     sys.stdout.flush()
