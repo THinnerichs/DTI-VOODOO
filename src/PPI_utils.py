@@ -275,6 +275,7 @@ def write_drug_drughub_to_STRING_mapping():
     alias_dict = {}
     print('Reading STITCH chemical aliases...')
     filename = '../data/STITCH_data/chemical.aliases.v5.0.tsv'
+    counter = 0
     with open(file=filename, mode='r') as f:
         f.readline()
         for line in f:
@@ -284,6 +285,9 @@ def write_drug_drughub_to_STRING_mapping():
                 alias_dict[drug_id_list[pos]] = mono_id
             except:
                 pass
+            counter += 1
+            if counter % 1000000 == 0:
+                print('counter', counter)
 
     dict_filename = '../data/drug_repurposing_hub/drug_drughub_to_STRING_mapping'
     with open(file=dict_filename+'.pkl', mode='wb') as f:
