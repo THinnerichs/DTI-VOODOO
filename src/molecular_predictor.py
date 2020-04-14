@@ -196,10 +196,12 @@ def molecular_predictor(config):
             sys.stdout.flush()
 
         print('Build overall data...')
+        sys.stdout.flush()
         train_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
         train_dataset = data.DataLoader(train_dataset, batch_size=config.batch_size)
 
         print('Predicting...')
+        sys.stdout.flush()
         labels, predictions = predicting(model, device, train_dataset)
         filename = '../models/molecular_predictor/pred_fold_'+str(fold)
         with open(file=filename+'.pkl', mode='wb') as f:

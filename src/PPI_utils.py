@@ -295,6 +295,16 @@ def write_drug_drughub_to_STRING_mapping():
     with open(file=dict_filename+'.pkl', mode='wb') as f:
         pickle.dump(alias_dict, f, pickle.HIGHEST_PROTOCOL)
 
+def get_drug_drughub_to_STRING_mapping():
+    dict_filename = '../data/drug_repurposing_hub/drug_drughub_to_STRING_mapping'
+    with open(file=dict_filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
+
+def write_protein_drughub_to_STRING_mapping():
+    filename = '../data/STRING_data/human.name_2_string.tsv'
+    with open(file=filename, mode='r') as f:
+
+
 
 if __name__ == '__main__':
     # prune_protein_protein_db(min_score=700)
