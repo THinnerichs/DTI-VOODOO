@@ -287,8 +287,7 @@ def write_drug_drughub_to_STRING_mapping():
 
     dict_filename = '../data/drug_repurposing_hub/drug_drughub_to_STRING_mapping'
     with open(file=dict_filename+'.pkl', mode='wb') as f:
-
-
+        pickle.dump(alias_dict, f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
@@ -305,5 +304,7 @@ if __name__ == '__main__':
 
     # dicki = get_protein_to_node_feature_dict()
     # print(len(dicki))
+
+    write_drug_drughub_to_STRING_mapping()
 
     pass
