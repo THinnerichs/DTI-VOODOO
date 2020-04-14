@@ -352,10 +352,10 @@ def write_drughub_dti_graph():
     with open(file=graph_filename, mode='wb') as f:
         pickle.dump(drughub_dti_graph, f, pickle.HIGHEST_PROTOCOL)
 
-
-
-
-
+def get_drughub_dti_graph():
+    graph_filename = '../data/drug_repurposing_hub/drughub_dti_graph'
+    with open(file=graph_filename, mode='rb') as f:
+        return pickle.load(f)
 
 def get_drughub_drug_list():
     return list(get_drug_drughub_to_STRING_mapping().values())
@@ -383,5 +383,7 @@ if __name__ == '__main__':
 
     write_drug_drughub_to_STRING_mapping()
     # write_protein_drughub_to_STRING_mapping()
+
+    write_drughub_dti_graph()
 
     pass

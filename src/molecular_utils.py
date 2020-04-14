@@ -9,6 +9,7 @@ import torch.utils.data as data
 import DTI_data_preparation
 
 import sys
+from tqdm import tqdm
 
 
 
@@ -47,7 +48,7 @@ class MolecularDTIDataBuilder:
 
     def get(self, indices):
         return_list = []
-        for index in indices:
+        for index in tqdm(indices):
             drug_index = index // self.num_proteins
             protein_index = index % self.num_proteins
 
