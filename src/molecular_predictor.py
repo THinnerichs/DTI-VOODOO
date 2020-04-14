@@ -347,7 +347,7 @@ def drug_split_molecular_predictor(config):
     sys.stdout.flush()
 
 def XGBoost_molecular_predictor(config):
-    model_st = 'molecular_XGBoost_predictor'
+    model_st = 'molecular_xgboost_predictor'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -407,11 +407,9 @@ def XGBoost_molecular_predictor(config):
                               tree_method='gpu_hist')
         model.fit(X_train, Y_train)
         y_pred = np.around(model.predict(X_test))
-        print(metrics.roc_auc_score(Y_test, y_pred))
 
         sys.stdout.flush()
 
-        ret = None
         test_labels = Y_test
         test_predictions = y_pred
 
@@ -426,25 +424,26 @@ def XGBoost_molecular_predictor(config):
         ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
 
         test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+        print(test_loss)
         sys.stdout.flush()
 
         overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
         overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
 
         labels, predictions = predicting(model, device, overall_loader)
-        filename = '../models/molecular_predictor/pred_fold_'+str(fold)
+        filename = '../models/molecular_xgboost_predictor/pred_fold_'+str(fold)
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
-        model_filename = '../models/molecular_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
-        torch.save(model.state_dict(), model_filename)
+        # model_filename = '../models/molecular_xgboost_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
+        # torch.save(model.state_dict(), model_filename)
 
         results.append(ret)
 
     results = np.array(results)
     results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
 
-    results_file_name = '../results/molecular_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
+    results_file_name = '../results/molecular_xgboost_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
 
     print('Overall Results:')
     print('Model\tacc\tauroc\tf1\tmatt')
