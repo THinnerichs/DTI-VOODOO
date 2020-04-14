@@ -271,6 +271,7 @@ def write_drug_drughub_to_STRING_mapping():
         for line in f:
             drug_id = line.split('\t')
             drug_id_list.append(drug_id)
+    print(len(drug_id_list), 'drugs found in drughub')
 
     alias_dict = {}
     print('Reading STITCH chemical aliases...')
@@ -287,7 +288,8 @@ def write_drug_drughub_to_STRING_mapping():
                 pass
             counter += 1
             if counter % 1000000 == 0:
-                print('counter', counter)
+                print('counter', counter, len(alias_dict.keys()))
+
 
     dict_filename = '../data/drug_repurposing_hub/drug_drughub_to_STRING_mapping'
     with open(file=dict_filename+'.pkl', mode='wb') as f:
