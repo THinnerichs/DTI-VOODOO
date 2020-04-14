@@ -259,6 +259,37 @@ def write_protein_fasta(protein_list):
 
     SeqIO.write(return_sequences, "../models/protein_representation/data/PPI_graph_protein_seqs.fasta", "fasta")
 
+def write_drug_drughub_to_STRING_mapping():
+    drughub_filename = '../data/drug_repurposing_hub/repurposing_drugs_20200324.txt'
+
+    print('Reading drughub drugs...')
+    drug_id_list = []
+    with open(file=drughub_filename, mode='r') as f:
+        # skip header
+        for i in range(10):
+            f.readline()
+        for line in f:
+            drug_id = line.split('\t')
+            drug_id_list.append(drug_id)
+
+    alias_dict = {}
+    print('Reading STITCH chemical aliases...')
+    filename = '../data/STITCH_data/chemical.aliases.v5.0.tsv'
+    with open(file=filename, mode='r') as f:
+        f.readline()
+        for line in f:
+            mono_id, _, alias, _ = line.strip().split('\t')
+            try:
+                pos = drug_id_list.index(alias)
+                alias_dict[drug_id_list[pos]] = mono_id
+            except:
+                pass
+
+    dict_filename = '../data/drug_repurposing_hub/drug_drughub_to_STRING_mapping'
+    with open(file=dict_filename+'.pkl', mode='wb') as f:
+
+
+
 
 if __name__ == '__main__':
     # prune_protein_protein_db(min_score=700)

@@ -195,10 +195,12 @@ def molecular_predictor(config):
                     print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
             sys.stdout.flush()
 
-        overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
-        overall_loader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
+        print('Build overall data...')
+        train_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
+        train_dataset = data.DataLoader(train_dataset, batch_size=config.batch_size)
 
-        labels, predictions = predicting(model, device, overall_loader)
+        print('Predicting...')
+        labels, predictions = predicting(model, device, train_dataset)
         filename = '../models/molecular_predictor/pred_fold_'+str(fold)
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
