@@ -75,12 +75,6 @@ class SimpleDTINetworkData():
         self.num_drugs = len(self.drug_list)
         print("Finished.\n")
 
-    def set_graph_train_mask(self, indizes):
-        self.full_PPI_graph_Data.train_idx = torch.tensor(indizes, dtype=torch.long)
-
-    def set_graph_test_mask(self, indizes):
-        self.full_PPI_graph_Data.test_idx = torch.tensor(indizes, dtype=torch.long)
-
     def get_protein_to_index_dict(self):
         return self.protein_to_index_dict
 
@@ -159,6 +153,9 @@ class MolPredDTINetworkData():
             self.mol_predictions = pickle.load(f).reshape((self.num_drugs, -1))
         self.num_PPI_features = 1
 
+        print("Loading semsim results...")
+        self.semsim_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
+
         # DDI data
         print("Loading DDI features ...")
         self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
@@ -172,18 +169,14 @@ class MolPredDTINetworkData():
         print(self.y_dti_data.shape)
         print("Finished.\n")
 
-
     def get_protein_to_index_dict(self):
         return self.protein_to_index_dict
-
 
     def get_protein_list(self):
         return self.protein_list
 
-
     def get_drug_list(self):
         return self.drug_list
-
 
     def get(self, indices):
         data_list = []
@@ -205,18 +198,19 @@ class MolPredDTINetworkData():
             y = int(self.y_dti_data[drug_index, protein_index])
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
+            semsim_features = torch.tensor(self.semsim_matrix[drug_index, :], dtype=torch.float).view(1, self.num_drugs)
 
             feature_array = torch.tensor(self.mol_predictions[drug_index, :self.num_proteins], dtype=torch.float).round().view(-1, 1)
             # print('feature array', feature_array.size())
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
             full_PPI_graph.protein_mask = protein_mask
+            full_PPI_graph.semsim_features = semsim_features
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
 
         return data_list
-
 
     def __len__(self):
         return self.num_proteins * self.num_drugs
@@ -295,19 +289,19 @@ def predicting(model, device, loader):
     return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
 
 
-def rmse(y,f):
+def rmse(y, f):
     rmse = sqrt(((y - f)**2).mean(axis=0))
     return rmse
-def mse(y,f):
+def mse(y, f):
     mse = ((y - f)**2).mean(axis=0)
     return mse
-def pearson(y,f):
+def pearson(y, f):
     rp = np.corrcoef(y, f)[0,1]
     return rp
-def spearman(y,f):
+def spearman(y, f):
     rs = stats.spearmanr(y, f)[0]
     return rs
-def ci(y,f):
+def ci(y, f):
     ind = np.argsort(y)
     y = y[ind]
     f = f[ind]

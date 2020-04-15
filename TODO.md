@@ -24,5 +24,5 @@ Also write down failed approach?
 2.1. Drugs
 2.2. Proteins
 
-2. Build MolP 
+3. Build MolPred over that split
 
