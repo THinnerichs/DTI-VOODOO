@@ -309,7 +309,7 @@ def write_protein_drughub_to_STRING_mapping():
         f.readline()
         for line in f:
             _, dh_id, STRING_id = line.split('\t')
-            mapping_dict[dh_id] = STRING_id
+            mapping_dict[dh_id] = STRING_id.strip()
 
     print('protein entries', list(mapping_dict.items())[:10])
     dict_filename = '../data/drug_repurposing_hub/protein_drughub_to_STRING_mapping'
