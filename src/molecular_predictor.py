@@ -211,6 +211,8 @@ def molecular_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
+        gc.collect()
+
         model_filename = '../models/molecular_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)
         print("Done.")

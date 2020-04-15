@@ -361,7 +361,7 @@ def get_drughub_drug_list():
     return list(get_drug_drughub_to_STRING_mapping().values())
 
 def get_drughub_protein_list():
-    pass
+    dti_graph =
 
 
 
@@ -381,8 +381,8 @@ if __name__ == '__main__':
     # dicki = get_protein_to_node_feature_dict()
     # print(len(dicki))
 
-    write_drug_drughub_to_STRING_mapping()
-    # write_protein_drughub_to_STRING_mapping()
+    # write_drug_drughub_to_STRING_mapping()
+    write_protein_drughub_to_STRING_mapping()
 
     write_drughub_dti_graph()
 
