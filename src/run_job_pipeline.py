@@ -104,8 +104,9 @@ def submit_mol_pred_gpu_job(num_proteins=-1,
                            batch_size=None,
                            model='protein',
                            days=1,
-                           num_gpus=4):
-    jobname = arch+'_'+node_features
+                           num_gpus=4,
+                            fold=-1):
+    jobname = 'Mol_Pred'
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
@@ -127,14 +128,13 @@ conda activate ~/.conda/envs/dti/
 
 module load cuda/10.0.130
 
-export CUDA_VISIBLE_DEVICES={vis_dev}
-python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus), vis_dev=str(list(range(num_gpus)))[1:-1].replace(' ', ''))
+python3 molecular_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus))
     preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
     if epochs:
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
     if batch_size:
         preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
-    preface_script += "--num_folds 5 "
+    preface_script += "--fold {fold}".format(fold=str(fold))
 
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
@@ -150,9 +150,12 @@ if __name__ == '__main__':
     # submit_gpu_job(epochs=30, batch_size=32, arch='TopKSimpleGCN')
     # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='TopKSimpleGCN')
     # submit_gpu_job(num_proteins=1000, epochs=50, batch_size=1024, arch='TopKSimpleGCN')
-    cancel_jobs()
+    # cancel_jobs()
 
+    for fold in range(1,6):
+        submit_mol_pred_gpu_job(epochs=30, batch_size=131072, fold=fold)
 
+    '''
     for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
 
         submit_gpu_job(epochs=30, batch_size=64, days=3, arch=arch, num_gpus=8)
@@ -162,4 +165,5 @@ if __name__ == '__main__':
         submit_gpu_job(epochs=30, batch_size=64, days=3, arch='Res'+arch, num_gpus=8)
         submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
         submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
+    '''
 

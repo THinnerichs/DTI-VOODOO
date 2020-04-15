@@ -123,6 +123,8 @@ def molecular_predictor(config):
     for train_protein_indices, test_protein_indices in kf.split(X):
         fold += 1
         print("Fold:", fold)
+        if config.fold != -1 and config.fold != fold:
+            continue
         gc.collect()
 
         # build train data over whole dataset with help matrix
@@ -166,35 +168,37 @@ def molecular_predictor(config):
                   weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if False and epoch%10 == 0:
+            if epoch%config.num_epochs == 0:
                 print('Predicting for validation data...')
-                train_labels, train_predictions = predicting(model, device, train_loader)
-                print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                      metrics.accuracy_score(train_labels, train_predictions),
-                      dti_utils.dti_auroc(train_labels, train_predictions),
-                      dti_utils.dti_f1_score(train_labels, train_predictions),
-                      metrics.matthews_corrcoef(train_labels, train_predictions))
+                file='../results/mol_pred_results_' + str(config.num_epochs)+'_epochs'
+                with open(file=file, mode='a') as f:
+                    train_labels, train_predictions = predicting(model, device, train_loader)
+                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                          metrics.accuracy_score(train_labels, train_predictions),
+                          dti_utils.dti_auroc(train_labels, train_predictions),
+                          dti_utils.dti_f1_score(train_labels, train_predictions),
+                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
-                test_labels, test_predictions = predicting(model, device, test_loader)
-                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                      metrics.accuracy_score(test_labels, test_predictions),
-                      dti_utils.dti_auroc(test_labels, test_predictions),
-                      dti_utils.dti_f1_score(test_labels, test_predictions),
-                      metrics.matthews_corrcoef(test_labels, test_predictions))
+                    test_labels, test_predictions = predicting(model, device, test_loader)
+                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                          metrics.accuracy_score(test_labels, test_predictions),
+                          dti_utils.dti_auroc(test_labels, test_predictions),
+                          dti_utils.dti_f1_score(test_labels, test_predictions),
+                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
 
-                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
-                                     metrics.matthews_corrcoef]
-                ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
+                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                         metrics.matthews_corrcoef]
+                    ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
 
-                test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
-                if test_loss < best_loss:
-                    best_loss = test_loss
-                    best_epoch = epoch
+                    test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+                    if test_loss < best_loss:
+                        best_loss = test_loss
+                        best_epoch = epoch
 
-                    print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
-                          best_test_ci, model_st)
-                else:
-                    print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
+                        print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
+                              best_test_ci, model_st)
+                    else:
+                        print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
             sys.stdout.flush()
 
         print('Build overall data...')
@@ -489,6 +493,7 @@ if __name__=='__main__':
 
     parser.add_argument("--model_id", type=str, default='')
     parser.add_argument("--model", type=str, default='protein')
+    parser.add_argument("--fold", type=int, default=-1)
 
     config = parser.parse_args()
 
