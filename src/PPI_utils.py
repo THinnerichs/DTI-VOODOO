@@ -340,8 +340,6 @@ def write_drughub_dti_graph():
         for line in f:
             split_line = line.split('\t')
             drug, targets = split_line[0], split_line[3]
-            print('drug', drug, targets)
-            raise Exception
             drug = drug_to_STRING_dict.get(drug)
             if drug == None:
                 skipped_drugs += 1

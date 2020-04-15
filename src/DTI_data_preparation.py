@@ -295,8 +295,11 @@ if __name__ == '__main__':
 
     drug_intersect = set(drug_list) & set(drughub_drug_list)
     print(len(drug_intersect))
+    print(drug_intersect[:10])
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     print(len(protein_intersect))
+    print(protein_intersect[:10])
+
 
 
     pass
