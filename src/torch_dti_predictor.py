@@ -32,26 +32,20 @@ def transductive_missing_target_predictor(config,
 
     # get full protein num
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
+    num_proteins = config.num_proteins if config.num_proteins else 11574
+    num_drugs = 641
 
-    print("Loading data ...")
-    network_data = None
-    if config.node_features == 'simple':
-        network_data = SimpleDTINetworkData(num_proteins=config.num_proteins)
-    else:
-        print("No valid node feature option selected.")
-        sys.stdout.flush()
-        raise ValueError
     # dataset is present in dimension (num_drugs * num_proteins)
 
     print("Finished.")
 
     # generate indices for proteins
     kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
-    X = np.zeros((network_data.num_proteins,1))
+    X = np.zeros((num_proteins,1))
 
     # build for help matrix for indices
-    help_matrix = np.arange(network_data.num_drugs * network_data.num_proteins)
-    help_matrix = help_matrix.reshape((network_data.num_drugs, network_data.num_proteins))
+    help_matrix = np.arange(num_drugs * num_proteins)
+    help_matrix = help_matrix.reshape((num_drugs, num_proteins))
 
     print('Model:', config.arch)
 
@@ -59,7 +53,12 @@ def transductive_missing_target_predictor(config,
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
         fold += 1
+        if config.fold != -1 and fold != config.fold:
+            continue
         print("Fold:", fold)
+
+        print("Loading data ...")
+        network_data = MolPredDTINetworkData(config=config)
 
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
@@ -73,7 +72,8 @@ def transductive_missing_target_predictor(config,
         test_dataset = DTIGraphDataset(test_dataset)
 
         # Calculate weights
-        len_to_sum_ratio = len(train_indices)/network_data.y_dti_data.flatten()[train_indices].sum()
+        positives = network_data.y_dti_data.flatten()[train_indices].sum()
+        len_to_sum_ratio = (len(train_indices)-positives)/positives
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
@@ -86,7 +86,6 @@ def transductive_missing_target_predictor(config,
         # build DataLoaders
         train_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=True)
         # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
-        valid_loader = None
         test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
         model = None
@@ -115,72 +114,71 @@ def transductive_missing_target_predictor(config,
         best_test_ci = 0
 
         model_st = 'transductive_simple_node_feature'
-        model_file_name = '../models/'+model_st+'_'+config.node_features + '_'+ str(config.num_proteins)+'_fold_'+str(fold)+'_model.model'
+        # model_file_name = '../models/'+model_st+'_'+config.node_features + '_'+ str(config.num_proteins)+'_fold_'+str(fold)+'_model.model'
 
         sys.stdout.flush()
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
+            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
+            print('Train loss:', loss)
 
-            print('Predicting for validation data...')
-            labels, predictions = predicting(model, device, train_loader)
-            predictions = np.around(predictions)
-            print('Validation:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                  metrics.accuracy_score(labels, predictions),
-                  dti_utils.dti_auroc(labels, predictions),
-                  dti_utils.dti_f1_score(labels, predictions),
-                  metrics.matthews_corrcoef(labels, predictions))
+            if epoch%config.num_epochs == 0:
+                print('Predicting for validation data...')
+                file='../results/full_interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(config.num_epochs)+'_epochs'
+                with open(file=file, mode='a') as f:
+                    train_labels, train_predictions = predicting(model, device, train_loader)
+                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                          metrics.accuracy_score(train_labels, train_predictions),
+                          dti_utils.dti_auroc(train_labels, train_predictions),
+                          dti_utils.dti_f1_score(train_labels, train_predictions),
+                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
-            G, P = predicting(model, device, test_loader)
-            predictions = np.around(predictions)
-            val = metrics.log_loss(labels, predictions)
-            if val < best_loss:
-                best_loss = val
-                best_epoch = epoch + 1
-                torch.save(model.state_dict(), model_file_name)
-                print('predicting for test data')
-                # G, P = predicting(model, device, test_loader)
-                ret = [rmse(G, P), mse(G, P), pearson(G, P), spearman(G, P), ci(G, P)]
-                P = np.around(P)
-                metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score, metrics.matthews_corrcoef]
-                metrics_list = [list_fun(G, P) for list_fun in metrics_func_list]
-                ret += metrics_list
+                    test_labels, test_predictions = predicting(model, device, test_loader)
+                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                          metrics.accuracy_score(test_labels, test_predictions),
+                          dti_utils.dti_auroc(test_labels, test_predictions),
+                          dti_utils.dti_f1_score(test_labels, test_predictions),
+                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
 
-                # write results to results file
-                best_test_loss = ret[1]
-                best_test_ci = ret[-1]
-                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                      metrics_list)
-                print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
-                      best_test_ci, model_st)
-            else:
-                print(ret[1], 'No improvement since epoch ', best_epoch, '; best_test_mse,best_test_ci:', best_test_loss,
-                      best_test_ci, model_st)
+                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                                         metrics.matthews_corrcoef]
+                    ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
+
+                    test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
+                    if test_loss < best_loss:
+                        best_loss = test_loss
+                        best_epoch = epoch
+
+                        print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
+                              best_test_ci, model_st)
+                    else:
+                        print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
+
             sys.stdout.flush()
         results.append(ret)
 
         if torch.cuda.is_available():
             torch.cuda.synchronize()
 
+    return
     results_file_name = '../results/' + config.arch + '_' + config.node_features + '_' + str(config.num_proteins) + '_model_results'
 
     results = np.array(results)
     results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
 
     print('Overall Results:')
-    print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt')
+    print('Model\tacc\tauroc\tf1\tmatt')
     print(config.arch+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
 
     with open(results_file_name, 'a') as f:
-        print('Model\trmse\tmse\tpearson\tspearman\tacc\tauroc\tf1\tmatt', file=f)
+        print('Model\tacc\tauroc\tf1\tmatt', file=f)
         print(config.arch+'\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f)
 
     print("Done.")
     sys.stdout.flush()
 
-def inductive_missing_target_predictor(config,
-                                       ):
+def inductive_missing_target_predictor(config):
     pass
 
 
@@ -197,6 +195,8 @@ if __name__ == '__main__':
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_folds", type=int, default=5)
     parser.add_argument("--lr", type=float, default=0.001)
+
+    parser.add_argument("--fold", type=int, default=-1)
 
     config = parser.parse_args()
 

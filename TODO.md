@@ -1,10 +1,12 @@
 ## TODO
 
--- 1. Run Gradient boost on molecular data
 2. Build overall model with updated node features for PPI graph 
+2.1. input fold mechanism for data -> molecular predictor
+2.2. Build fold mechanism for run
 3. Run overall model with updated node features for PPI graph 
 4. Get data as said from Robert
 5. Run updated model on data
+5.1. Run best model from 2.1. on that very data
 6. Run inductive model graph
 
 
@@ -12,11 +14,8 @@
 
 
 1.1. Find DTI paper which uses drughub
-1.2. Build drughub drug id to STITCH id dict
-1.3. Build drughub protein id to STRING id dict
-1.4. Find intersection of drughub and my data
-1.4.1. Drugs
-1.4.2. Proteins
 1.5. Build DTIs according to DTI paper 
+
+Also write down failed approach?
 
 

@@ -10,6 +10,7 @@ from torch_geometric.data import Dataset, Data, InMemoryDataset
 
 from tqdm import tqdm
 import sys
+import pickle
 
 import DTI_data_preparation
 
@@ -121,6 +122,103 @@ class SimpleDTINetworkData():
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
+class MolPredDTINetworkData():
+    def __init__(self, config):
+
+        if config.num_proteins == -1 or config.num_proteins == 11574:
+            config.num_proteins = None
+
+        print("Loading data ...")
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        print(len(self.drug_list), "drugs present")
+        self.protein_list = np.array(DTI_data_preparation.get_human_proteins())[:config.num_proteins]
+        print(len(self.protein_list), "proteins present\n")
+
+        # PPI data
+        print("Loading PPI graph ...")
+        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        PPI_graph = PPI_graph.subgraph(self.protein_list)
+
+        # calculate dimensions of network
+        self.num_proteins = len(PPI_graph.nodes())
+        self.num_drugs = len(self.drug_list)
+
+        print("Building index dict ...")
+        self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
+        print("Building edge list ...")
+        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                              for node1, node2 in list(PPI_graph.edges())]
+        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                               for node2, node1 in list(PPI_graph.edges())]
+        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
+                                      dtype=torch.long)
+        print("Building feature matrix ...")
+        filename = '../models/molecular_predictor/pred_fold_' + str(config.fold)
+        with open(file=filename, mode='rb') as f:
+            self.mol_predictions = pickle.load(f).reshape((self.num_drugs, -1))
+        self.num_PPI_features = 1
+
+        # DDI data
+        print("Loading DDI features ...")
+        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
+        print(self.DDI_features.shape)
+
+        # DTI data
+        print("Loading DTI links ...")
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
+        y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
+        self.y_dti_data = np.transpose(y_dti_data)
+        print(self.y_dti_data.shape)
+        print("Finished.\n")
+
+
+    def get_protein_to_index_dict(self):
+        return self.protein_to_index_dict
+
+
+    def get_protein_list(self):
+        return self.protein_list
+
+
+    def get_drug_list(self):
+        return self.drug_list
+
+
+    def get(self, indices):
+        data_list = []
+
+        # for index in tqdm(indices):
+        for i in range(len(indices)):
+            if (i + 1) % int(len(indices) / 10) == 0:
+                print('Finished {} percent.'.format(str(int(i / len(indices) * 100))), end='\r')
+
+            index = indices[i]
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
+
+            # build protein mask
+            protein_mask = np.zeros(self.num_proteins)
+            protein_mask[protein_index] = 1
+            protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
+
+            y = int(self.y_dti_data[drug_index, protein_index])
+
+            DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
+
+            feature_array = torch.tensor(self.mol_predictions[drug_index, :self.num_proteins], dtype=torch.float).round()
+            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
+            full_PPI_graph.DDI_features = DDI_features
+            full_PPI_graph.protein_mask = protein_mask
+            # full_PPI_graph.__num_nodes__ = self.num_proteins
+
+            data_list.append(full_PPI_graph)
+
+        return data_list
+
+
+    def __len__(self):
+        return self.num_proteins * self.num_drugs
+
 
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
@@ -159,6 +257,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
     model.train()
+    return_loss = 0
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
         output = model(data)
@@ -167,6 +266,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         weight_vec = torch.ones([1]) * weight_dict[1] *4
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
+        return_loss += loss
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
@@ -176,6 +276,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
                                                                            100. * batch_idx / len(train_loader),
                                                                            loss.item()))
             sys.stdout.flush()
+    return return_loss
 
 def predicting(model, device, loader):
     model.eval()
@@ -189,7 +290,7 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
-    return total_labels.round().numpy().flatten(),np.array(total_preds.numpy(), np.int).flatten()
+    return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
 
 
 def rmse(y,f):

@@ -139,7 +139,8 @@ def molecular_predictor(config):
         test_dataset = MolecularDTIDataset(test_dataset)
 
         # Calculate weights
-        len_to_sum_ratio = len(train_indices)/dti_data.y_dti_data.flatten()[train_indices].sum()
+        positives = dti_data.y_dti_data.flatten()[train_indices].sum()
+        len_to_sum_ratio = (len(train_indices) - positives) / positives
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
@@ -275,7 +276,8 @@ def drug_split_molecular_predictor(config):
         test_dataset = MolecularDTIDataset(test_dataset)
 
         # Calculate weights
-        len_to_sum_ratio = len(train_indices)/dti_data.y_dti_data.flatten()[train_indices].sum()
+        positives = network_data.y_dti_data.flatten()[train_indices].sum()
+        len_to_sum_ratio = (len(train_indices) - positives) / positives
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
