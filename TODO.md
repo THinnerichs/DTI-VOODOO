@@ -19,3 +19,10 @@
 Also write down failed approach?
 
 
+1. Build drug to index mathod
+2. Get Indices for drughub STRING intersect
+2.1. Drugs
+2.2. Proteins
+
+2. Build MolP 
+

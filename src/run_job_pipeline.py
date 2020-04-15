@@ -61,7 +61,8 @@ def submit_gpu_job(num_proteins=-1,
                    arch='GCNConv',
                    days=2,
                    num_gpus=4,
-                   node_features='simple'):
+                   node_features='MolPred',
+                   fold=-1):
     jobname = arch+'_'+node_features
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
@@ -71,7 +72,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
 #SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
-#SBATCH --mem-per-gpu=60G
+#SBATCH --mem=300G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
 # SBATCH --gpus-per-socket={num_gpus}
@@ -91,7 +92,9 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_g
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
     if batch_size:
         preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
-    preface_script += "--num_folds 5 "
+
+    preface_script += "--fold {fold} ".format(fold=str(fold))
+    preface_script += "--arch {arch} ".format(arch=arch)
 
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
@@ -148,23 +151,16 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # submit_gpu_job(epochs=30, batch_size=32, arch='TopKSimpleGCN')
-    # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=128, arch='TopKSimpleGCN')
-    # submit_gpu_job(num_proteins=1000, epochs=50, batch_size=1024, arch='TopKSimpleGCN')
     # cancel_jobs()
+    # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
+    for arch in ['GCNConv','SAGEConv', 'GATConv']:
+        for fold in range(1, 6):
 
-    for fold in range(1,6):
-        submit_mol_pred_gpu_job(epochs=60, batch_size=131072, fold=fold, model='drug')
+            submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch)
+            # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
+            # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
-    '''
-    for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
-
-        submit_gpu_job(epochs=30, batch_size=64, days=3, arch=arch, num_gpus=8)
-        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
-        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
-
-        submit_gpu_job(epochs=30, batch_size=64, days=3, arch='Res'+arch, num_gpus=8)
-        submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
-        submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
-    '''
+            submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch)
+            # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
+            # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
 
