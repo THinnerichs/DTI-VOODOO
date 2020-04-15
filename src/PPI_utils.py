@@ -361,7 +361,7 @@ def get_drughub_drug_list():
     return list(get_drug_drughub_to_STRING_mapping().values())
 
 def get_drughub_protein_list():
-    dti_graph =
+    dti_graph = None
 
 
 
