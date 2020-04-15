@@ -156,7 +156,7 @@ if __name__ == '__main__':
     for arch in ['GCNConv','SAGEConv', 'GATConv']:
         for fold in range(1, 6):
 
-            submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch)
+            # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 

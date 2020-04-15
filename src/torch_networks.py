@@ -170,7 +170,7 @@ class ResTemplateNet(torch.nn.Module):
         self.lin1 = torch.nn.Linear(out_channels + self.num_drugs, 256)
         self.lin2 = torch.nn.Linear(256, 64)
         self.lin3 = torch.nn.Linear(64, 16)
-        self.lin4 = torch.nn.Linear(64, 1)
+        self.lin4 = torch.nn.Linear(16, 1)
 
 
     def forward(self, data):
