@@ -249,6 +249,27 @@ def get_truncated_drug_to_SMILES_dict():
     with open(file=filename + '.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def get_drughub_STRING_drug_intersection():
+    drug_list = get_drug_list()
+
+    print('Fetching drughub data...')
+    drughub_drug_list = PPI_utils.get_drughub_drug_list()
+
+    drug_intersect = set(drug_list) & set(drughub_drug_list)
+
+    return list(drug_intersect)
+
+def get_drughub_STRING_protein_intersection():
+    protein_list = get_human_proteins()
+
+    print('Fetching drughub data...')
+    drughub_protein_list = PPI_utils.get_drughub_protein_list()
+
+    protein_intersect = set(protein_list) & set(drughub_protein_list)
+
+    return list(protein_intersect)
+
+
 def test():
     # print("DTI", len(get_human_proteins()))
     # print("PPI", len(PPI_utils.get_human_protein_list()))
@@ -294,12 +315,7 @@ if __name__ == '__main__':
     print(len(drughub_drug_list), len(drughub_protein_list))
 
     drug_intersect = set(drug_list) & set(drughub_drug_list)
-    print(len(drug_intersect))
-    print(list(drug_intersect)[:10])
     protein_intersect = set(protein_list) & set(drughub_protein_list)
-    print(len(protein_intersect))
-    print(protein_list[:10])
-    print(drughub_protein_list[:10])
 
 
 

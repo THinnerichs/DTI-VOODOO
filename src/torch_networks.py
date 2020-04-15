@@ -22,39 +22,39 @@ class TemplateSimpleNet(torch.nn.Module):
         # mask feature
 
         # GCN layers
-        if conv_method == 'GCNConv':
+        if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(num_features, num_features*8, cached=False)
             self.conv2 = nn.GCNConv(num_features*8, num_features*64, cached=False)
             self.conv3 = nn.GCNConv(num_features*64, num_features*256, cached=False)
-        elif conv_method == 'ChebConv':
+        elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
             self.conv2 = nn.ChebConv(num_features*8, num_features*64, 3)
             self.conv3 = nn.ChebConv(num_features*64, num_features*256, 3)
-        elif conv_method == 'SAGEConv':
+        elif 'SAGEConv' in conv_method:
             self.conv1 = nn.SAGEConv(num_features, num_features*8)
             self.conv2 = nn.SAGEConv(num_features*8, num_features*64)
             self.conv3 = nn.SAGEConv(num_features*64, num_features*256)
-        elif conv_method == 'GraphConv':
+        elif 'GraphConv' in conv_method:
             self.conv1 = nn.GraphConv(num_features, num_features*8)
             self.conv2 = nn.GraphConv(num_features*8, num_features*64)
             self.conv3 = nn.GraphConv(num_features*64, num_features*256)
-        elif conv_method == 'GATConv':
+        elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(num_features, num_features*8, heads=5)
             self.conv2 = nn.GATConv(num_features*8, num_features*64, heads=5)
             self.conv3 = nn.GATConv(num_features*64, num_features*256, heads=5)
-        elif conv_method == 'TAGConv':
+        elif 'TAGConv' in conv_method:
             self.conv1 = nn.TAGConv(num_features, num_features*8)
             self.conv2 = nn.TAGConv(num_features*8, num_features*64)
             self.conv3 = nn.TAGConv(num_features*64, num_features*256)
-        elif conv_method == 'ARMAConv':
+        elif 'ARMAConv' in conv_method:
             self.conv1 = nn.ARMAConv(num_features, num_features*8)
             self.conv2 = nn.ARMAConv(num_features*8, num_features*64)
             self.conv3 = nn.ARMAConv(num_features*64, num_features*256)
-        elif conv_method == 'SGConv':
+        elif 'SGConv' in conv_method:
             self.conv1 = nn.SGConv(num_features, num_features*8)
             self.conv2 = nn.SGConv(num_features*8, num_features*64)
             self.conv3 = nn.SGConv(num_features*64, num_features*256)
-        elif conv_method == 'FeaStConv':
+        elif 'FeaStConv' in conv_method:
             self.conv1 = nn.FeaStConv(num_features, num_features*8, heads=5)
             self.conv2 = nn.FeaStConv(num_features*8, num_features*64, heads=5)
             self.conv3 = nn.FeaStConv(num_features*64, num_features*256, heads=5)
@@ -125,39 +125,39 @@ class ResTemplateNet(torch.nn.Module):
 
         self.out_channels = out_channels
 
-        if conv_method == 'ResGCNConv':
+        if 'ResGCNConv' in conv_method:
             self.conv1 = nn.GCNConv(num_features, out_channels, cached=False)
             self.conv2 = nn.GCNConv(out_channels, out_channels, cached=False)
             self.conv3 = nn.GCNConv(out_channels, out_channels, cached=False)
-        elif conv_method == 'ResChebConv':
+        elif 'ResChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, out_channels, 3)
             self.conv2 = nn.ChebConv(out_channels, out_channels, 3)
             self.conv3 = nn.ChebConv(out_channels, out_channels, 3)
-        elif conv_method == 'ResSAGEConv':
+        elif 'ResSAGEConv' in conv_method:
             self.conv1 = nn.SAGEConv(num_features, out_channels)
             self.conv2 = nn.SAGEConv(out_channels, out_channels)
             self.conv3 = nn.SAGEConv(out_channels, out_channels)
-        elif conv_method == 'ResGraphConv':
+        elif 'ResGraphConv' in conv_method:
             self.conv1 = nn.GraphConv(num_features, out_channels)
             self.conv2 = nn.GraphConv(out_channels, out_channels)
             self.conv3 = nn.GraphConv(out_channels, out_channels)
-        elif conv_method == 'ResGATConv':
+        elif 'ResGATConv' in conv_method:
             self.conv1 = nn.GATConv(num_features, out_channels, heads=5)
             self.conv2 = nn.GATConv(out_channels, out_channels, heads=5)
             self.conv3 = nn.GATConv(out_channels, out_channels, heads=5)
-        elif conv_method == 'ResTAGConv':
+        elif 'ResTAGConv' in conv_method:
             self.conv1 = nn.TAGConv(num_features, out_channels)
             self.conv2 = nn.TAGConv(out_channels, out_channels)
             self.conv3 = nn.TAGConv(out_channels, out_channels)
-        elif conv_method == 'ResARMAConv':
+        elif 'ResARMAConv' in conv_method:
             self.conv1 = nn.ARMAConv(num_features, out_channels)
             self.conv2 = nn.ARMAConv(out_channels, out_channels)
             self.conv3 = nn.ARMAConv(out_channels, out_channels)
-        elif conv_method == 'ResSGConv':
+        elif 'ResSGConv' in conv_method:
             self.conv1 = nn.SGConv(num_features, out_channels)
             self.conv2 = nn.SGConv(out_channels, out_channels)
             self.conv3 = nn.SGConv(out_channels, out_channels)
-        elif conv_method == 'ResFeaStConv':
+        elif 'ResFeaStConv' in conv_method:
             self.conv1 = nn.FeaStConv(num_features, out_channels, heads=5)
             self.conv2 = nn.FeaStConv(out_channels, out_channels, heads=5)
             self.conv3 = nn.FeaStConv(out_channels, out_channels, heads=5)

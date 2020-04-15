@@ -23,6 +23,6 @@ Also write down failed approach?
 2. Get Indices for drughub STRING intersect
 2.1. Drugs
 2.2. Proteins
-
 3. Build MolPred over that split
+4. Build network with semsim as well
 

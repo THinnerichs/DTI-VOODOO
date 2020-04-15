@@ -62,7 +62,8 @@ def submit_gpu_job(num_proteins=-1,
                    days=2,
                    num_gpus=4,
                    node_features='MolPred',
-                   fold=-1):
+                   fold=-1,
+                   mode='standard'):
     jobname = arch+'_'+node_features
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
@@ -95,6 +96,7 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_g
 
     preface_script += "--fold {fold} ".format(fold=str(fold))
     preface_script += "--arch {arch} ".format(arch=arch)
+    preface_script += "--mode {mode} ".format(mode=mode)
 
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
@@ -154,13 +156,17 @@ if __name__ == '__main__':
     # cancel_jobs()
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
     for arch in ['GCNConv','SAGEConv', 'GATConv']:
-        for fold in range(1, 3):
+        submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='protein_drughub')
+        submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug_drughub')
 
-            submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch)
+        for fold in range(1, 3):
+            submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug')
+
+            # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
-            submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch)
+            # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
 
