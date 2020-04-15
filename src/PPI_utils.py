@@ -311,7 +311,6 @@ def write_protein_drughub_to_STRING_mapping():
             _, dh_id, STRING_id = line.split('\t')
             mapping_dict[dh_id] = STRING_id.strip()
 
-    print('protein entries', list(mapping_dict.items())[:10])
     dict_filename = '../data/drug_repurposing_hub/protein_drughub_to_STRING_mapping'
     with open(file=dict_filename+'.pkl', mode='wb') as f:
         pickle.dump(mapping_dict, f, pickle.HIGHEST_PROTOCOL)
@@ -328,8 +327,6 @@ def write_drughub_dti_graph():
 
     print(len(drug_to_STRING_dict.keys()), 'drugs from drughub present.')
     print(len(protein_to_STRING_dict.keys()), 'proteins from drughub present.')
-
-    print(list(drug_to_STRING_dict.items())[:10])
 
     drughub_dti_graph = nx.Graph()
     skipped_drugs = 0

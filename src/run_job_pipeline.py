@@ -100,11 +100,11 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_g
 
 
 def submit_mol_pred_gpu_job(num_proteins=-1,
-                           epochs=None,
-                           batch_size=None,
-                           model='protein',
-                           days=1,
-                           num_gpus=4,
+                            epochs=None,
+                            batch_size=None,
+                            model='protein',
+                            days=1,
+                            num_gpus=4,
                             fold=-1):
     jobname = 'Mol_Pred'
     preface_script = '''#!/bin/bash
@@ -134,7 +134,8 @@ python3 molecular_predictor.py '''.format(jobname=jobname, days=str(days), num_g
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
     if batch_size:
         preface_script += "--batch_size={batch_size} ".format(batch_size=str(batch_size))
-    preface_script += "--fold {fold}".format(fold=str(fold))
+    preface_script += "--fold {fold} ".format(fold=str(fold))
+    preface_script += "--model {model} ".format(model=model)
 
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
@@ -153,7 +154,7 @@ if __name__ == '__main__':
     # cancel_jobs()
 
     for fold in range(1,6):
-        submit_mol_pred_gpu_job(epochs=60, batch_size=131072, fold=fold)
+        submit_mol_pred_gpu_job(epochs=60, batch_size=131072, fold=fold, model=drug)
 
     '''
     for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
