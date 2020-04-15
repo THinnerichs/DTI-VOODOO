@@ -367,7 +367,14 @@ def get_drughub_drug_list():
     return list(get_drug_drughub_to_STRING_mapping().values())
 
 def get_drughub_protein_list():
-    dti_graph = None
+    dti_graph = get_drughub_dti_graph()
+
+    protein_list = []
+    for node in dti_graph.nodes():
+        if 'CID' in node:
+            protein_list.append(node)
+
+    return protein_list
 
 
 

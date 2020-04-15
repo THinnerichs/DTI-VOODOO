@@ -153,7 +153,7 @@ if __name__ == '__main__':
     # cancel_jobs()
 
     for fold in range(1,6):
-        submit_mol_pred_gpu_job(epochs=30, batch_size=131072, fold=fold)
+        submit_mol_pred_gpu_job(epochs=60, batch_size=131072, fold=fold)
 
     '''
     for arch in ['GCNConv', 'ChebConv', 'SAGEConv', 'GraphConv', 'GATConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
