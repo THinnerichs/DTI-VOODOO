@@ -37,8 +37,6 @@ def transductive_missing_target_predictor(config,
 
     # dataset is present in dimension (num_drugs * num_proteins)
 
-    print("Finished.")
-
     # generate indices for proteins
     kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
     X = np.zeros((num_proteins,1))
@@ -57,7 +55,6 @@ def transductive_missing_target_predictor(config,
             continue
         print("Fold:", fold)
 
-        print("Loading data ...")
         network_data = MolPredDTINetworkData(config=config)
 
         # build train data over whole dataset with help matrix

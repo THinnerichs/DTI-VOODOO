@@ -154,7 +154,7 @@ class MolPredDTINetworkData():
                                       dtype=torch.long)
         print("Building feature matrix ...")
         filename = '../models/molecular_predictor/pred_fold_' + str(config.fold)
-        with open(file=filename, mode='rb') as f:
+        with open(file=filename'.pkl', mode='rb') as f:
             self.mol_predictions = pickle.load(f).reshape((self.num_drugs, -1))
         self.num_PPI_features = 1
 
