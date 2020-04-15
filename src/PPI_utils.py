@@ -369,7 +369,7 @@ def get_drughub_protein_list():
 
     protein_list = []
     for node in dti_graph.nodes():
-        if 'CID' in node:
+        if 'CID' not in node:
             protein_list.append(node)
 
     return protein_list
