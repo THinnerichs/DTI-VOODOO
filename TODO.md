@@ -19,7 +19,4 @@
 1.4.2. Proteins
 1.5. Build DTIs according to DTI paper 
 
-run write drughub dti graph
-build get drughub protein list
-
 

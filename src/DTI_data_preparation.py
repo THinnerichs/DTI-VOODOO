@@ -268,7 +268,7 @@ if __name__ == '__main__':
     # print("Nodes", len(dti_graph.nodes()))
     # print("Edges", len(dti_graph.edges()))
 
-    write_truncated_drug_to_SMILES_dict()
+    # write_truncated_drug_to_SMILES_dict()
     # get_truncated_drug_to_SMILES_dict()
 
     # protein_list = get_human_proteins()
@@ -282,4 +282,21 @@ if __name__ == '__main__':
     # print(get_annotated_PPI_graph())
 
     # write_drug_to_HMM_filtered_targets_dict()
+
+
+    drug_list = get_drug_list()
+    protein_list = get_human_proteins()
+    print(len(drug_list), len(protein_list))
+
+    print('Fetching drughub data...')
+    drughub_drug_list = PPI_utils.get_drughub_drug_list()
+    drughub_protein_list = PPI_utils.get_drughub_protein_list()
+    print(len(drughub_drug_list), len(drughub_protein_list))
+
+    drug_intersect = set(drug_list) & set(drughub_drug_list)
+    print(len(drug_intersect))
+    protein_intersect = set(protein_list) & set(drughub_protein_list)
+    print(len(protein_intersect))
+
+
     pass
