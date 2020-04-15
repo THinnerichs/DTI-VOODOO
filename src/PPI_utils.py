@@ -329,6 +329,8 @@ def write_drughub_dti_graph():
     print(len(drug_to_STRING_dict.keys()), 'drugs from drughub present.')
     print(len(protein_to_STRING_dict.keys()), 'proteins from drughub present.')
 
+    print(list(drug_to_STRING_dict.items())[:10])
+
     drughub_dti_graph = nx.Graph()
     skipped_drugs = 0
     with open(file=drughub_filename, mode='r') as f:
