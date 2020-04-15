@@ -55,6 +55,7 @@ class SimpleDTINetworkData():
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         print("Building feature matrix ...")
         self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list), dtype=torch.float)
+        print("feature_matrix.size()", self.feature_matrix.size())
         self.num_PPI_features = self.feature_matrix.shape[1]
 
         # DDI data
@@ -205,8 +206,8 @@ class MolPredDTINetworkData():
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
 
-            feature_array = torch.tensor(self.mol_predictions[drug_index, :self.num_proteins], dtype=torch.float).round()
-            print('feature array', feature_array.size())
+            feature_array = torch.tensor(self.mol_predictions[drug_index, :self.num_proteins], dtype=torch.float).round().view(-1, 1)
+            # print('feature array', feature_array.size())
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
             full_PPI_graph.protein_mask = protein_mask
