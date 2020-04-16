@@ -153,7 +153,7 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # cancel_jobs()
+    cancel_jobs()
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
     for arch in ['GCNConv','SAGEConv', 'GATConv']:
         submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='protein_drughub')
