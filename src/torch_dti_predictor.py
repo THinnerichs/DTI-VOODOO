@@ -317,7 +317,7 @@ def test_predictor_on_drughub_protein_data(config):
     protein_list = DTI_data_preparation.get_human_proteins()
 
     drughub_drugs = PPI_utils.get_drughub_drug_list()
-    drughub_proteins = PPI_utils.get_drughub_protein_list()
+    drughub_proteins = set(PPI_utils.get_drughub_protein_list()) & set(protein_list)
 
     test_protein_indices = np.array(sorted([protein_list.index(protein) for protein in drughub_proteins]))
     train_protein_indices = np.array([i for i in range(len(protein_list)) if i not in test_protein_indices])
@@ -452,7 +452,7 @@ def test_predictor_on_drughub_drug_data(config):
     protein_list = DTI_data_preparation.get_human_proteins()
 
     drughub_drugs = PPI_utils.get_drughub_drug_list()
-    drughub_proteins = PPI_utils.get_drughub_protein_list()
+    drughub_proteins = set(PPI_utils.get_drughub_protein_list()) & set(protein_list)
 
     test_protein_indices = np.array(sorted([protein_list.index(protein) for protein in drughub_proteins]))
     train_protein_indices = np.array([i for i in range(len(protein_list)) if i not in test_protein_indices])
