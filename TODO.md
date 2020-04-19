@@ -19,10 +19,8 @@
 Also write down failed approach?
 
 
-1. Build drug to index mathod
-2. Get Indices for drughub STRING intersect
-2.1. Drugs
-2.2. Proteins
+1. Get semsim data from Ashraf
+2. Adjust network accordingly
 3. Build MolPred over that split
 4. Build network with semsim as well
 
