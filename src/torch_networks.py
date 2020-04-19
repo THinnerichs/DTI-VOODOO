@@ -23,48 +23,48 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # GCN layers
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, num_features*8, cached=False)
-            self.conv2 = nn.GCNConv(num_features*8, num_features*64, cached=False)
-            self.conv3 = nn.GCNConv(num_features*64, num_features*256, cached=False)
+            self.conv1 = nn.GCNConv(num_features, num_features*4, cached=False)
+            self.conv2 = nn.GCNConv(num_features*4, num_features*16, cached=False)
+            self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
         elif 'ChebConv' in conv_method:
-            self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
-            self.conv2 = nn.ChebConv(num_features*8, num_features*64, 3)
-            self.conv3 = nn.ChebConv(num_features*64, num_features*256, 3)
+            self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
+            self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
+            self.conv3 = nn.ChebConv(num_features*16, num_features*128, 3)
         elif 'SAGEConv' in conv_method:
             self.conv1 = nn.SAGEConv(num_features, num_features*8)
-            self.conv2 = nn.SAGEConv(num_features*8, num_features*64)
-            self.conv3 = nn.SAGEConv(num_features*64, num_features*256)
+            self.conv2 = nn.SAGEConv(num_features*4, num_features*64)
+            self.conv3 = nn.SAGEConv(num_features*16, num_features*128)
         elif 'GraphConv' in conv_method:
             self.conv1 = nn.GraphConv(num_features, num_features*8)
-            self.conv2 = nn.GraphConv(num_features*8, num_features*64)
-            self.conv3 = nn.GraphConv(num_features*64, num_features*256)
+            self.conv2 = nn.GraphConv(num_features*4, num_features*64)
+            self.conv3 = nn.GraphConv(num_features*16, num_features*128)
         elif 'GATConv' in conv_method:
-            self.conv1 = nn.GATConv(num_features, num_features*8, heads=5)
-            self.conv2 = nn.GATConv(num_features*8, num_features*64, heads=5)
-            self.conv3 = nn.GATConv(num_features*64, num_features*256, heads=5)
+            self.conv1 = nn.GATConv(num_features, num_features*4, heads=5)
+            self.conv2 = nn.GATConv(num_features*4, num_features*16, heads=5)
+            self.conv3 = nn.GATConv(num_features*16, num_features*128, heads=5)
         elif 'TAGConv' in conv_method:
             self.conv1 = nn.TAGConv(num_features, num_features*8)
-            self.conv2 = nn.TAGConv(num_features*8, num_features*64)
-            self.conv3 = nn.TAGConv(num_features*64, num_features*256)
+            self.conv2 = nn.TAGConv(num_features*4, num_features*64)
+            self.conv3 = nn.TAGConv(num_features*16, num_features*128)
         elif 'ARMAConv' in conv_method:
             self.conv1 = nn.ARMAConv(num_features, num_features*8)
-            self.conv2 = nn.ARMAConv(num_features*8, num_features*64)
-            self.conv3 = nn.ARMAConv(num_features*64, num_features*256)
+            self.conv2 = nn.ARMAConv(num_features*4, num_features*64)
+            self.conv3 = nn.ARMAConv(num_features*16, num_features*128)
         elif 'SGConv' in conv_method:
             self.conv1 = nn.SGConv(num_features, num_features*8)
-            self.conv2 = nn.SGConv(num_features*8, num_features*64)
-            self.conv3 = nn.SGConv(num_features*64, num_features*256)
+            self.conv2 = nn.SGConv(num_features*4, num_features*64)
+            self.conv3 = nn.SGConv(num_features*16, num_features*128)
         elif 'FeaStConv' in conv_method:
-            self.conv1 = nn.FeaStConv(num_features, num_features*8, heads=5)
-            self.conv2 = nn.FeaStConv(num_features*8, num_features*64, heads=5)
-            self.conv3 = nn.FeaStConv(num_features*64, num_features*256, heads=5)
+            self.conv1 = nn.FeaStConv(num_features, num_features*4, heads=5)
+            self.conv2 = nn.FeaStConv(num_features*4, num_features*16, heads=5)
+            self.conv3 = nn.FeaStConv(num_features*16, num_features*128, heads=5)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
             raise ValueError
 
 
-        self.fc_g1 = torch.nn.Linear(num_features*256, 512)
+        self.fc_g1 = torch.nn.Linear(num_features*128, 512)
         self.fc_g2 = torch.nn.Linear(512, GCN_num_outchannels)
 
         self.relu = torch.nn.ReLU()
@@ -118,7 +118,7 @@ class TemplateSimpleNet(torch.nn.Module):
         return DDI_x
 
 class ResTemplateNet(torch.nn.Module):
-    def __init__(self, num_drugs, num_prots, num_features, conv_method, out_channels=128, dropout=0.2):
+    def __init__(self, num_drugs, num_prots, num_features, conv_method, out_channels=64, dropout=0.2):
         super(ResTemplateNet, self).__init__()
         self.num_drugs = num_drugs
         self.num_prots = num_prots
