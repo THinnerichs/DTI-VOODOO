@@ -64,7 +64,7 @@ def submit_gpu_job(num_proteins=-1,
                    node_features='MolPred',
                    fold=-1,
                    mode='standard'):
-    jobname = arch+'_'+node_features
+    jobname = arch+'_'+node_features+'_'+mode
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
 #SBATCH --partition=batch
@@ -73,7 +73,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
 #SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
-#SBATCH --mem=300G
+#SBATCH --mem=600G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
 # SBATCH --gpus-per-socket={num_gpus}
