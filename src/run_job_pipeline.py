@@ -73,7 +73,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
 #SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
-#SBATCH --mem=700G
+#SBATCH --mem=500G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
 # SBATCH --gpus-per-socket={num_gpus}
