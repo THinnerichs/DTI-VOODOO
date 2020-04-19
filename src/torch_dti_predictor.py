@@ -121,7 +121,7 @@ def transductive_missing_target_predictor(config,
             loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
             print('Train loss:', loss)
 
-            if epoch%10 == 0:
+            if epoch%2 == 0:
                 print('Predicting for validation data...')
                 file='../results/full_interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(epoch)+'_epochs'
                 with open(file=file, mode='a') as f:
@@ -269,7 +269,7 @@ def transductive_missing_drug_predictor(config,
                          weight_dict=weight_dict)
             print('Train loss:', loss)
 
-            if epoch % 10 == 0:
+            if epoch % 2 == 0:
                 print('Predicting for validation data...')
                 file = '../results/full_interactions_drug_split_results_' + config.arch + '_' + str(num_proteins) + '_prots_' + str(epoch) + '_epochs'
                 with open(file=file, mode='a') as f:
@@ -412,7 +412,7 @@ def test_predictor_on_drughub_protein_data(config):
                      weight_dict=weight_dict)
         print('Train loss:', loss)
 
-        if epoch % 10 == 0:
+        if epoch % 2 == 0:
             print('Predicting for validation data...')
             file = '../results/drughub_protein_split_' + config.arch + '_prots_' + str(epoch) + '_epochs'
             with open(file=file, mode='a') as f:
@@ -548,7 +548,7 @@ def test_predictor_on_drughub_drug_data(config):
                      weight_dict=weight_dict)
         print('Train loss:', loss)
 
-        if epoch % 10 == 0:
+        if epoch % 2 == 0:
             print('Predicting for validation data...')
             file = '../results/drughub_drug_split_' + config.arch + '_prots_' + str(epoch) + '_epochs'
             with open(file=file, mode='a') as f:

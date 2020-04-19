@@ -73,7 +73,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
 #SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
-#SBATCH --mem=600G
+#SBATCH --mem=700G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
 # SBATCH --gpus-per-socket={num_gpus}
@@ -156,17 +156,17 @@ if __name__ == '__main__':
     cancel_jobs()
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
     for arch in ['GCNConv','SAGEConv', 'GATConv']:
-        submit_gpu_job(epochs=30, batch_size=80, days=2, arch=arch, mode='protein_drughub')
-        submit_gpu_job(epochs=30, batch_size=80, days=2, arch=arch, mode='drug_drughub')
+        # submit_gpu_job(epochs=6, batch_size=80, days=2, arch=arch, mode='protein_drughub')
+        # submit_gpu_job(epochs=6, batch_size=80, days=2, arch=arch, mode='drug_drughub')
 
-        for fold in range(1, 3):
+        for fold in range(1, 2):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold)
 
-            submit_gpu_job(epochs=30, batch_size=80, days=2, arch=arch, fold=fold)
+            submit_gpu_job(epochs=6, batch_size=160, days=2, arch=arch, fold=fold, num_gpus=8)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
-            submit_gpu_job(epochs=30, batch_size=80, days=2, arch='Res'+arch, fold=fold)
+            submit_gpu_job(epochs=6, batch_size=160, days=2, arch='Res'+arch, fold=fold, num_gpus=8)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
 
