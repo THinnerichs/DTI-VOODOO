@@ -1,152 +1,118 @@
-\begin{thebibliography}{17}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+\begin{thebibliography}{}
 
-\bibitem[Ackerman et~al.(2019)Ackerman, Alcorn, Hase, and
+\bibitem[Ackerman {\em et~al.}(2019)Ackerman, Alcorn, Hase, and
   Shoemaker]{Ackerman2019}
-Emily~E. Ackerman, John~F. Alcorn, Takeshi Hase, and Jason~E. Shoemaker.
+Ackerman, E.~E., Alcorn, J.~F., Hase, T., and Shoemaker, J.~E. (2019).
 \newblock A dual controllability analysis of influenza virus-host
   protein-protein interaction networks for antiviral drug target discovery.
-\newblock \emph{{BMC} Bioinformatics}, 20\penalty0 (1), June 2019.
-\newblock \doi{10.1186/s12859-019-2917-z}.
-\newblock URL \url{https://doi.org/10.1186/s12859-019-2917-z}.
+\newblock {\em {BMC} Bioinformatics\/}, {\bf 20}(1).
 
-\bibitem[Ayvaz et~al.(2015)Ayvaz, Horn, Hassanzadeh, Zhu, Stan, Tatonetti,
-  Vilar, Brochhausen, Samwald, Rastegar-Mojarad, Dumontier, and
+\bibitem[Ayvaz {\em et~al.}(2015)Ayvaz, Horn, Hassanzadeh, Zhu, Stan,
+  Tatonetti, Vilar, Brochhausen, Samwald, Rastegar-Mojarad, Dumontier, and
   Boyce]{Boyce2015}
-Serkan Ayvaz, John Horn, Oktie Hassanzadeh, Qian Zhu, Johann Stan, Nicholas~P.
-  Tatonetti, Santiago Vilar, Mathias Brochhausen, Matthias Samwald, Majid
-  Rastegar-Mojarad, Michel Dumontier, and Richard~D. Boyce.
+Ayvaz, S., Horn, J., Hassanzadeh, O., Zhu, Q., Stan, J., Tatonetti, N.~P.,
+  Vilar, S., Brochhausen, M., Samwald, M., Rastegar-Mojarad, M., Dumontier, M.,
+  and Boyce, R.~D. (2015).
 \newblock Toward a complete dataset of drug{\textendash}drug interaction
   information from publicly available sources.
-\newblock \emph{Journal of Biomedical Informatics}, 55:\penalty0 206--217, June
-  2015.
-\newblock \doi{10.1016/j.jbi.2015.04.006}.
-\newblock URL \url{https://doi.org/10.1016/j.jbi.2015.04.006}.
+\newblock {\em Journal of Biomedical Informatics\/}, {\bf 55}, 206--217.
 
-\bibitem[Bianchi et~al.(2019)Bianchi, Grattarola, Alippi, and Livi]{ARMAConv}
-Filippo~Maria Bianchi, Daniele Grattarola, Cesare Alippi, and Lorenzo Livi.
+\bibitem[Bianchi {\em et~al.}(2019)Bianchi, Grattarola, Alippi, and
+  Livi]{ARMAConv}
+Bianchi, F.~M., Grattarola, D., Alippi, C., and Livi, L. (2019).
 \newblock Graph neural networks with convolutional arma filters.
-\newblock 2019.
 
-\bibitem[Defferrard et~al.(2016)Defferrard, Bresson, and
+\bibitem[Defferrard {\em et~al.}(2016)Defferrard, Bresson, and
   Vandergheynst]{ChebConv}
-Michaël Defferrard, Xavier Bresson, and Pierre Vandergheynst.
+Defferrard, M., Bresson, X., and Vandergheynst, P. (2016).
 \newblock Convolutional neural networks on graphs with fast localized spectral
   filtering.
-\newblock 2016.
 
-\bibitem[Hamilton et~al.(2017)Hamilton, Ying, and Leskovec]{SAGEConv}
-William~L. Hamilton, Rex Ying, and Jure Leskovec.
+\bibitem[Hamilton {\em et~al.}(2017)Hamilton, Ying, and Leskovec]{SAGEConv}
+Hamilton, W.~L., Ying, R., and Leskovec, J. (2017).
 \newblock Inductive representation learning on large graphs.
-\newblock 2017.
 
-\bibitem[Honda et~al.(2019)Honda, Shi, and Ueda]{SmilesTransformer}
-Shion Honda, Shoi Shi, and Hiroki~R. Ueda.
+\bibitem[Honda {\em et~al.}(2019)Honda, Shi, and Ueda]{SmilesTransformer}
+Honda, S., Shi, S., and Ueda, H.~R. (2019).
 \newblock Smiles transformer: Pre-trained molecular fingerprint for low data
-  drug discovery, 2019.
+  drug discovery.
 
-\bibitem[Kipf and Welling(2016)]{GCNConv}
-Thomas~N. Kipf and Max Welling.
+\bibitem[Kipf and Welling(2016)Kipf and Welling]{GCNConv}
+Kipf, T.~N. and Welling, M. (2016).
 \newblock Semi-supervised classification with graph convolutional networks.
-\newblock 2016.
 
-\bibitem[Klicpera et~al.(2018)Klicpera, Bojchevski, and Günnemann]{APPNPConv}
-Johannes Klicpera, Aleksandar Bojchevski, and Stephan Günnemann.
+\bibitem[Klicpera {\em et~al.}(2018)Klicpera, Bojchevski, and
+  Günnemann]{APPNPConv}
+Klicpera, J., Bojchevski, A., and Günnemann, S. (2018).
 \newblock Predict then propagate: Graph neural networks meet personalized
   pagerank.
-\newblock 2018.
 
-\bibitem[Kuhn et~al.(2015)Kuhn, Letunic, Jensen, and Bork]{SIDER}
-Michael Kuhn, Ivica Letunic, Lars~Juhl Jensen, and Peer Bork.
+\bibitem[Kuhn {\em et~al.}(2015)Kuhn, Letunic, Jensen, and Bork]{SIDER}
+Kuhn, M., Letunic, I., Jensen, L.~J., and Bork, P. (2015).
 \newblock The {SIDER} database of drugs and side effects.
-\newblock \emph{Nucleic Acids Research}, 44\penalty0 (D1):\penalty0
-  D1075--D1079, October 2015.
-\newblock \doi{10.1093/nar/gkv1075}.
-\newblock URL \url{https://doi.org/10.1093/nar/gkv1075}.
+\newblock {\em Nucleic Acids Research\/}, {\bf 44}(D1), D1075--D1079.
 
-\bibitem[Kulmanov and Hoehndorf(2019)]{DeepGoPlus}
-Maxat Kulmanov and Robert Hoehndorf.
+\bibitem[Kulmanov and Hoehndorf(2019)Kulmanov and Hoehndorf]{DeepGoPlus}
+Kulmanov, M. and Hoehndorf, R. (2019).
 \newblock {DeepGOPlus}: improved protein function prediction from sequence.
-\newblock \emph{Bioinformatics}, July 2019.
-\newblock \doi{10.1093/bioinformatics/btz595}.
-\newblock URL \url{https://doi.org/10.1093/bioinformatics/btz595}.
+\newblock {\em Bioinformatics\/}.
 
-\bibitem[Mozzicato(2009)]{MedDRA}
-Patricia Mozzicato.
+\bibitem[Mozzicato(2009)Mozzicato]{MedDRA}
+Mozzicato, P. (2009).
 \newblock {MedDRA}.
-\newblock \emph{Pharmaceutical Medicine}, 23\penalty0 (2):\penalty0 65--75,
-  April 2009.
-\newblock \doi{10.1007/bf03256752}.
-\newblock URL \url{https://doi.org/10.1007/bf03256752}.
+\newblock {\em Pharmaceutical Medicine\/}, {\bf 23}(2), 65--75.
 
-\bibitem[Scheife et~al.(2015)Scheife, Hines, Boyce, Chung, Momper, Sommer,
-  Abernethy, Horn, Sklar, Wong, Jones, Brown, Grizzle, Comes, Wilkins, Borst,
-  Wittie, and Malone]{Scheife2015}
-Richard~T. Scheife, Lisa~E. Hines, Richard~D. Boyce, Sophie~P. Chung,
-  Jeremiah~D. Momper, Christine~D. Sommer, Darrell~R. Abernethy, John~R. Horn,
-  Stephen~J. Sklar, Samantha~K. Wong, Gretchen Jones, Mary~L. Brown, Amy~J.
-  Grizzle, Susan Comes, Tricia~Lee Wilkins, Clarissa Borst, Michael~A. Wittie,
-  and Daniel~C. Malone.
+\bibitem[Resnik(1995)Resnik]{Resnik1995}
+Resnik, P. (1995).
+\newblock Using information content to evaluate semantic similarity in a
+  taxonomy.
+
+\bibitem[Scheife {\em et~al.}(2015)Scheife, Hines, Boyce, Chung, Momper,
+  Sommer, Abernethy, Horn, Sklar, Wong, Jones, Brown, Grizzle, Comes, Wilkins,
+  Borst, Wittie, and Malone]{Scheife2015}
+Scheife, R.~T., Hines, L.~E., Boyce, R.~D., Chung, S.~P., Momper, J.~D.,
+  Sommer, C.~D., Abernethy, D.~R., Horn, J.~R., Sklar, S.~J., Wong, S.~K.,
+  Jones, G., Brown, M.~L., Grizzle, A.~J., Comes, S., Wilkins, T.~L., Borst,
+  C., Wittie, M.~A., and Malone, D.~C. (2015).
 \newblock Consensus recommendations for systematic evaluation of
   drug{\textendash}drug interaction evidence for clinical decision support.
-\newblock \emph{Drug Safety}, 38\penalty0 (2):\penalty0 197--206, January 2015.
-\newblock \doi{10.1007/s40264-014-0262-8}.
-\newblock URL \url{https://doi.org/10.1007/s40264-014-0262-8}.
+\newblock {\em Drug Safety\/}, {\bf 38}(2), 197--206.
 
-\bibitem[Szklarczyk et~al.(2014)Szklarczyk, Franceschini, Wyder, Forslund,
-  Heller, Huerta-Cepas, Simonovic, Roth, Santos, Tsafou, Kuhn, Bork, Jensen,
-  and von Mering]{STRINGv10}
-Damian Szklarczyk, Andrea Franceschini, Stefan Wyder, Kristoffer Forslund,
-  Davide Heller, Jaime Huerta-Cepas, Milan Simonovic, Alexander Roth, Alberto
-  Santos, Kalliopi~P. Tsafou, Michael Kuhn, Peer Bork, Lars~J. Jensen, and
-  Christian von Mering.
+\bibitem[Szklarczyk {\em et~al.}(2014)Szklarczyk, Franceschini, Wyder,
+  Forslund, Heller, Huerta-Cepas, Simonovic, Roth, Santos, Tsafou, Kuhn, Bork,
+  Jensen, and von Mering]{STRINGv10}
+Szklarczyk, D., Franceschini, A., Wyder, S., Forslund, K., Heller, D.,
+  Huerta-Cepas, J., Simonovic, M., Roth, A., Santos, A., Tsafou, K.~P., Kuhn,
+  M., Bork, P., Jensen, L.~J., and von Mering, C. (2014).
 \newblock {STRING} v10: protein{\textendash}protein interaction networks,
   integrated over the tree of life.
-\newblock \emph{Nucleic Acids Research}, 43\penalty0 (D1):\penalty0 D447--D452,
-  October 2014.
-\newblock \doi{10.1093/nar/gku1003}.
-\newblock URL \url{https://doi.org/10.1093/nar/gku1003}.
+\newblock {\em Nucleic Acids Research\/}, {\bf 43}(D1), D447--D452.
 
-\bibitem[Szklarczyk et~al.(2015)Szklarczyk, Santos, von Mering, Jensen, Bork,
-  and Kuhn]{STITCHv5}
-Damian Szklarczyk, Alberto Santos, Christian von Mering, Lars~Juhl Jensen, Peer
-  Bork, and Michael Kuhn.
+\bibitem[Szklarczyk {\em et~al.}(2015)Szklarczyk, Santos, von Mering, Jensen,
+  Bork, and Kuhn]{STITCHv5}
+Szklarczyk, D., Santos, A., von Mering, C., Jensen, L.~J., Bork, P., and Kuhn,
+  M. (2015).
 \newblock {STITCH} 5: augmenting protein{\textendash}chemical interaction
   networks with tissue and affinity data.
-\newblock \emph{Nucleic Acids Research}, 44\penalty0 (D1):\penalty0 D380--D384,
-  November 2015.
-\newblock \doi{10.1093/nar/gkv1277}.
-\newblock URL \url{https://doi.org/10.1093/nar/gkv1277}.
+\newblock {\em Nucleic Acids Research\/}, {\bf 44}(D1), D380--D384.
 
-\bibitem[Vazquez et~al.(2003)Vazquez, Flammini, Maritan, and
+\bibitem[Vazquez {\em et~al.}(2003)Vazquez, Flammini, Maritan, and
   Vespignani]{Vazquez2003}
-Alexei Vazquez, Alessandro Flammini, Amos Maritan, and Alessandro Vespignani.
+Vazquez, A., Flammini, A., Maritan, A., and Vespignani, A. (2003).
 \newblock Global protein function prediction from protein-protein interaction
   networks.
-\newblock \emph{Nature Biotechnology}, 21\penalty0 (6):\penalty0 697--700, May
-  2003.
-\newblock \doi{10.1038/nbt825}.
-\newblock URL \url{https://doi.org/10.1038/nbt825}.
+\newblock {\em Nature Biotechnology\/}, {\bf 21}(6), 697--700.
 
-\bibitem[Veličković et~al.(2017)Veličković, Cucurull, Casanova, Romero,
-  Liò, and Bengio]{GATConv}
-Petar Veličković, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro
-  Liò, and Yoshua Bengio.
+\bibitem[Veličković {\em et~al.}(2017)Veličković, Cucurull, Casanova,
+  Romero, Liò, and Bengio]{GATConv}
+Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., and Bengio,
+  Y. (2017).
 \newblock Graph attention networks.
-\newblock 2017.
 
-\bibitem[Wang and Kurgan(2018)]{Survey2018}
-Chen Wang and Lukasz Kurgan.
+\bibitem[Wang and Kurgan(2018)Wang and Kurgan]{Survey2018}
+Wang, C. and Kurgan, L. (2018).
 \newblock {Review and comparative assessment of similarity-based methods for
   prediction of drug–protein interactions in the druggable human proteome}.
-\newblock \emph{Briefings in Bioinformatics}, 20\penalty0 (6):\penalty0
-  2066--2087, 08 2018.
-\newblock ISSN 1477-4054.
-\newblock \doi{10.1093/bib/bby069}.
-\newblock URL \url{https://doi.org/10.1093/bib/bby069}.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 20}(6), 2066--2087.
 
 \end{thebibliography}

@@ -1,53 +1,54 @@
 This is BibTeX, Version 0.99d (TeX Live 2019/Arch Linux)
 Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
-The style file: plainnat.bst
+The style file: natbib.bst.bst
 Database file #1: citations.bib
 Warning--empty journal in ARMAConv
 Warning--empty journal in ChebConv
 Warning--empty journal in SAGEConv
 Warning--empty journal in GCNConv
 Warning--empty journal in APPNPConv
+Warning--empty journal in Resnik1995
 Warning--empty journal in GATConv
-You've used 17 entries,
-            2773 wiz_defined-function locations,
-            721 strings with 9321 characters,
-and the built_in function-call counts, 10141 in all, are:
-= -- 855
-> -- 868
-< -- 4
-+ -- 290
-- -- 273
-* -- 977
-:= -- 1647
-add.period$ -- 71
-call.type$ -- 17
-change.case$ -- 142
-chr.to.int$ -- 17
-cite$ -- 40
-duplicate$ -- 340
-empty$ -- 614
-format.name$ -- 296
-if$ -- 2021
+You've used 18 entries,
+            2378 wiz_defined-function locations,
+            639 strings with 8097 characters,
+and the built_in function-call counts, 9257 in all, are:
+= -- 786
+> -- 722
+< -- 5
++ -- 222
+- -- 218
+* -- 920
+:= -- 1697
+add.period$ -- 69
+call.type$ -- 18
+change.case$ -- 111
+chr.to.int$ -- 18
+cite$ -- 25
+duplicate$ -- 328
+empty$ -- 510
+format.name$ -- 242
+if$ -- 1755
 int.to.chr$ -- 1
-int.to.str$ -- 1
-missing$ -- 16
-newline$ -- 113
-num.names$ -- 68
-pop$ -- 262
+int.to.str$ -- 0
+missing$ -- 17
+newline$ -- 85
+num.names$ -- 72
+pop$ -- 140
 preamble$ -- 1
-purify$ -- 125
+purify$ -- 111
 quote$ -- 0
-skip$ -- 294
+skip$ -- 222
 stack$ -- 0
-substring$ -- 254
-swap$ -- 21
+substring$ -- 463
+swap$ -- 50
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 187
-warning$ -- 6
-while$ -- 66
+type$ -- 162
+warning$ -- 7
+while$ -- 69
 width$ -- 0
-write$ -- 254
-(There were 6 warnings)
+write$ -- 211
+(There were 7 warnings)
