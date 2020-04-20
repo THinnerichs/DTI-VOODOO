@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: plainnat.bst
+Database file #1: citations.bib
+Warning--empty journal in ARMAConv
+Warning--empty journal in ChebConv
+Warning--empty journal in SAGEConv
+Warning--empty journal in GCNConv
+Warning--empty journal in APPNPConv
+Warning--empty journal in GATConv
+You've used 11 entries,
+            2773 wiz_defined-function locations,
+            672 strings with 7817 characters,
+and the built_in function-call counts, 6517 in all, are:
+= -- 535
+> -- 582
+< -- 2
++ -- 194
+- -- 183
+* -- 623
+:= -- 1068
+add.period$ -- 44
+call.type$ -- 11
+change.case$ -- 94
+chr.to.int$ -- 11
+cite$ -- 28
+duplicate$ -- 222
+empty$ -- 382
+format.name$ -- 198
+if$ -- 1291
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 11
+newline$ -- 74
+num.names$ -- 44
+pop$ -- 179
+preamble$ -- 1
+purify$ -- 83
+quote$ -- 0
+skip$ -- 194
+stack$ -- 0
+substring$ -- 124
+swap$ -- 10
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 121
+warning$ -- 6
+while$ -- 40
+width$ -- 0
+write$ -- 160
+(There were 6 warnings)

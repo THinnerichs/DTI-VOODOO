@@ -1,0 +1,99 @@
+\begin{thebibliography}{11}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ackerman et~al.(2019)Ackerman, Alcorn, Hase, and
+  Shoemaker]{Ackerman2019}
+Emily~E. Ackerman, John~F. Alcorn, Takeshi Hase, and Jason~E. Shoemaker.
+\newblock A dual controllability analysis of influenza virus-host
+  protein-protein interaction networks for antiviral drug target discovery.
+\newblock \emph{{BMC} Bioinformatics}, 20\penalty0 (1), June 2019.
+\newblock \doi{10.1186/s12859-019-2917-z}.
+\newblock URL \url{https://doi.org/10.1186/s12859-019-2917-z}.
+
+\bibitem[Ayvaz et~al.(2015)Ayvaz, Horn, Hassanzadeh, Zhu, Stan, Tatonetti,
+  Vilar, Brochhausen, Samwald, Rastegar-Mojarad, Dumontier, and
+  Boyce]{Boyce2015}
+Serkan Ayvaz, John Horn, Oktie Hassanzadeh, Qian Zhu, Johann Stan, Nicholas~P.
+  Tatonetti, Santiago Vilar, Mathias Brochhausen, Matthias Samwald, Majid
+  Rastegar-Mojarad, Michel Dumontier, and Richard~D. Boyce.
+\newblock Toward a complete dataset of drug{\textendash}drug interaction
+  information from publicly available sources.
+\newblock \emph{Journal of Biomedical Informatics}, 55:\penalty0 206--217, June
+  2015.
+\newblock \doi{10.1016/j.jbi.2015.04.006}.
+\newblock URL \url{https://doi.org/10.1016/j.jbi.2015.04.006}.
+
+\bibitem[Bianchi et~al.(2019)Bianchi, Grattarola, Alippi, and Livi]{ARMAConv}
+Filippo~Maria Bianchi, Daniele Grattarola, Cesare Alippi, and Lorenzo Livi.
+\newblock Graph neural networks with convolutional arma filters.
+\newblock 2019.
+
+\bibitem[Defferrard et~al.(2016)Defferrard, Bresson, and
+  Vandergheynst]{ChebConv}
+Michaël Defferrard, Xavier Bresson, and Pierre Vandergheynst.
+\newblock Convolutional neural networks on graphs with fast localized spectral
+  filtering.
+\newblock 2016.
+
+\bibitem[Hamilton et~al.(2017)Hamilton, Ying, and Leskovec]{SAGEConv}
+William~L. Hamilton, Rex Ying, and Jure Leskovec.
+\newblock Inductive representation learning on large graphs.
+\newblock 2017.
+
+\bibitem[Kipf and Welling(2016)]{GCNConv}
+Thomas~N. Kipf and Max Welling.
+\newblock Semi-supervised classification with graph convolutional networks.
+\newblock 2016.
+
+\bibitem[Klicpera et~al.(2018)Klicpera, Bojchevski, and Günnemann]{APPNPConv}
+Johannes Klicpera, Aleksandar Bojchevski, and Stephan Günnemann.
+\newblock Predict then propagate: Graph neural networks meet personalized
+  pagerank.
+\newblock 2018.
+
+\bibitem[Scheife et~al.(2015)Scheife, Hines, Boyce, Chung, Momper, Sommer,
+  Abernethy, Horn, Sklar, Wong, Jones, Brown, Grizzle, Comes, Wilkins, Borst,
+  Wittie, and Malone]{Scheife2015}
+Richard~T. Scheife, Lisa~E. Hines, Richard~D. Boyce, Sophie~P. Chung,
+  Jeremiah~D. Momper, Christine~D. Sommer, Darrell~R. Abernethy, John~R. Horn,
+  Stephen~J. Sklar, Samantha~K. Wong, Gretchen Jones, Mary~L. Brown, Amy~J.
+  Grizzle, Susan Comes, Tricia~Lee Wilkins, Clarissa Borst, Michael~A. Wittie,
+  and Daniel~C. Malone.
+\newblock Consensus recommendations for systematic evaluation of
+  drug{\textendash}drug interaction evidence for clinical decision support.
+\newblock \emph{Drug Safety}, 38\penalty0 (2):\penalty0 197--206, January 2015.
+\newblock \doi{10.1007/s40264-014-0262-8}.
+\newblock URL \url{https://doi.org/10.1007/s40264-014-0262-8}.
+
+\bibitem[Vazquez et~al.(2003)Vazquez, Flammini, Maritan, and
+  Vespignani]{Vazquez2003}
+Alexei Vazquez, Alessandro Flammini, Amos Maritan, and Alessandro Vespignani.
+\newblock Global protein function prediction from protein-protein interaction
+  networks.
+\newblock \emph{Nature Biotechnology}, 21\penalty0 (6):\penalty0 697--700, May
+  2003.
+\newblock \doi{10.1038/nbt825}.
+\newblock URL \url{https://doi.org/10.1038/nbt825}.
+
+\bibitem[Veličković et~al.(2017)Veličković, Cucurull, Casanova, Romero,
+  Liò, and Bengio]{GATConv}
+Petar Veličković, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro
+  Liò, and Yoshua Bengio.
+\newblock Graph attention networks.
+\newblock 2017.
+
+\bibitem[Wang and Kurgan(2018)]{Survey2018}
+Chen Wang and Lukasz Kurgan.
+\newblock {Review and comparative assessment of similarity-based methods for
+  prediction of drug–protein interactions in the druggable human proteome}.
+\newblock \emph{Briefings in Bioinformatics}, 20\penalty0 (6):\penalty0
+  2066--2087, 08 2018.
+\newblock ISSN 1477-4054.
+\newblock \doi{10.1093/bib/bby069}.
+\newblock URL \url{https://doi.org/10.1093/bib/bby069}.
+
+\end{thebibliography}
