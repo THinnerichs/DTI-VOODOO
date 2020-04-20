@@ -54,7 +54,8 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 %\enlargethispage{12pt}
 
 \section{Approach}
-As shown, recent work lacks the ability to combine both top-down and bottom-up approaches for their predictions, however performing quite well on their datasets. When building the train-test split over compound-protein pairs, there are the following options:
+\subsection{Choosing appropriate train-test splits}
+As shown, recent work lacks the ability to combine both top-down and bottom-up approaches for their predictions, however performing quite well on their datasets. Drug-target interaction prediction is the task to accurately predict whether for a given drug and a given protein there is a biological interaction within humans. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
 \begin{enumerate}
 	\item Build split over drugs
 	\item Build split over drug-target pairs
@@ -63,19 +64,32 @@ As shown, recent work lacks the ability to combine both top-down and bottom-up a
 In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse. \\
 The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.\\
 As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
-Thus, building splitting over proteins is the most challenging of the three options.   
+Thus, building splitting over proteins is the most challenging of the three options. \\
+
+\subsection{Tested hypotheses}
 
 In this work we are testing the following hypotheses:
 \begin{enumerate}
-	\item Can we build a best performing model that outperforms state of the art approaches, combining top-down and bottom-up approaches?
+	\item Can we build a model that outperforms state of the art approaches, combining top-down and bottom-up approaches?
 	\item Are interaction networks sufficient to improve the performance of simple molecular predictors?
 \end{enumerate}
-We will test the first hypothesis by building a model that takes both top-down and bottom-up features into account. For a 
+We will test the first hypothesis by building a model that takes both top-down and bottom-up features into account. Thus, we propose a novel approach to combine those mutual exclusive attempts, through the usage of interaction networks, similarity and molecular features. Additionally, we test the latter by building a simple molecular DTI predictor and enhance it under usage of the interaction networks.\\
 
-\section{Approach}
-
+For the bottom-up approach we build a that only relies only on molecular features, which we will discuss in more detail in the following methods chapter. For the combination of both approaches we now attach the predictions to the protein-protein interaction graph as node features for future graph learning steps. In this graph we tried to find both patterns and regions for each drug that could be of interest through application of different graph convolutional layers, which in return represent the feature for each protein. Representing the drug we take the drug-drug interaction graph and the semantic similarity over side effects which we will explain in the following paragraphs.
 
 \section{Methods}
+\subsection{Data}
+The data for the different parts of this model were obtained from different sources. Starting with the protein-protein interactions, we fetched 11.574 proteins with over 170.000 links from STRING (\cite{STRINGv10}). As STRING provides statistical scores for each association, we filtered them as advised by a threshold of 700. For the drug-drug interaction we retrieved the drugs from \cite{Boyce2015}. Side effects were obtained from MedDRA database (\cite{MedDRA}) that hierarchically orders side effects. Links between drugs and side effects were fetched from \textit{SIDER} (\cite{SIDER}) side effects database. The intersection between these sources yielded 641 common drugs for usage in our data. For the drug-target interactions themselves, we fetched 
+137.000 links from STITCH database (\cite{STITCHv5}). We provide links and methods to and for the necessary data in the provided Github repository.\\
+
+\subsection{Models}
+The used model consists of two separate models, that help to fuse together the two methods:
+\begin{enumerate}
+	\item The molecular predictor
+	\item The interaction network based predictor
+\end{enumerate}
+We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from SMILES transformer (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (TABLE) with few fully connected. \\
+The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair the nodes of the PPI graph now hold bottom-up features for 
 
 
 

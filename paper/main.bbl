@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{17}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -44,6 +44,11 @@ William~L. Hamilton, Rex Ying, and Jure Leskovec.
 \newblock Inductive representation learning on large graphs.
 \newblock 2017.
 
+\bibitem[Honda et~al.(2019)Honda, Shi, and Ueda]{SmilesTransformer}
+Shion Honda, Shoi Shi, and Hiroki~R. Ueda.
+\newblock Smiles transformer: Pre-trained molecular fingerprint for low data
+  drug discovery, 2019.
+
 \bibitem[Kipf and Welling(2016)]{GCNConv}
 Thomas~N. Kipf and Max Welling.
 \newblock Semi-supervised classification with graph convolutional networks.
@@ -54,6 +59,29 @@ Johannes Klicpera, Aleksandar Bojchevski, and Stephan Günnemann.
 \newblock Predict then propagate: Graph neural networks meet personalized
   pagerank.
 \newblock 2018.
+
+\bibitem[Kuhn et~al.(2015)Kuhn, Letunic, Jensen, and Bork]{SIDER}
+Michael Kuhn, Ivica Letunic, Lars~Juhl Jensen, and Peer Bork.
+\newblock The {SIDER} database of drugs and side effects.
+\newblock \emph{Nucleic Acids Research}, 44\penalty0 (D1):\penalty0
+  D1075--D1079, October 2015.
+\newblock \doi{10.1093/nar/gkv1075}.
+\newblock URL \url{https://doi.org/10.1093/nar/gkv1075}.
+
+\bibitem[Kulmanov and Hoehndorf(2019)]{DeepGoPlus}
+Maxat Kulmanov and Robert Hoehndorf.
+\newblock {DeepGOPlus}: improved protein function prediction from sequence.
+\newblock \emph{Bioinformatics}, July 2019.
+\newblock \doi{10.1093/bioinformatics/btz595}.
+\newblock URL \url{https://doi.org/10.1093/bioinformatics/btz595}.
+
+\bibitem[Mozzicato(2009)]{MedDRA}
+Patricia Mozzicato.
+\newblock {MedDRA}.
+\newblock \emph{Pharmaceutical Medicine}, 23\penalty0 (2):\penalty0 65--75,
+  April 2009.
+\newblock \doi{10.1007/bf03256752}.
+\newblock URL \url{https://doi.org/10.1007/bf03256752}.
 
 \bibitem[Scheife et~al.(2015)Scheife, Hines, Boyce, Chung, Momper, Sommer,
   Abernethy, Horn, Sklar, Wong, Jones, Brown, Grizzle, Comes, Wilkins, Borst,
@@ -68,6 +96,31 @@ Richard~T. Scheife, Lisa~E. Hines, Richard~D. Boyce, Sophie~P. Chung,
 \newblock \emph{Drug Safety}, 38\penalty0 (2):\penalty0 197--206, January 2015.
 \newblock \doi{10.1007/s40264-014-0262-8}.
 \newblock URL \url{https://doi.org/10.1007/s40264-014-0262-8}.
+
+\bibitem[Szklarczyk et~al.(2014)Szklarczyk, Franceschini, Wyder, Forslund,
+  Heller, Huerta-Cepas, Simonovic, Roth, Santos, Tsafou, Kuhn, Bork, Jensen,
+  and von Mering]{STRINGv10}
+Damian Szklarczyk, Andrea Franceschini, Stefan Wyder, Kristoffer Forslund,
+  Davide Heller, Jaime Huerta-Cepas, Milan Simonovic, Alexander Roth, Alberto
+  Santos, Kalliopi~P. Tsafou, Michael Kuhn, Peer Bork, Lars~J. Jensen, and
+  Christian von Mering.
+\newblock {STRING} v10: protein{\textendash}protein interaction networks,
+  integrated over the tree of life.
+\newblock \emph{Nucleic Acids Research}, 43\penalty0 (D1):\penalty0 D447--D452,
+  October 2014.
+\newblock \doi{10.1093/nar/gku1003}.
+\newblock URL \url{https://doi.org/10.1093/nar/gku1003}.
+
+\bibitem[Szklarczyk et~al.(2015)Szklarczyk, Santos, von Mering, Jensen, Bork,
+  and Kuhn]{STITCHv5}
+Damian Szklarczyk, Alberto Santos, Christian von Mering, Lars~Juhl Jensen, Peer
+  Bork, and Michael Kuhn.
+\newblock {STITCH} 5: augmenting protein{\textendash}chemical interaction
+  networks with tissue and affinity data.
+\newblock \emph{Nucleic Acids Research}, 44\penalty0 (D1):\penalty0 D380--D384,
+  November 2015.
+\newblock \doi{10.1093/nar/gkv1277}.
+\newblock URL \url{https://doi.org/10.1093/nar/gkv1277}.
 
 \bibitem[Vazquez et~al.(2003)Vazquez, Flammini, Maritan, and
   Vespignani]{Vazquez2003}
