@@ -9,6 +9,7 @@ import math
 
 from sklearn.model_selection import KFold
 from sklearn import metrics
+from imblearn.under_sampling import RandomUnderSampler
 
 from torch_dti_utils import *
 from torch_networks import *
@@ -60,6 +61,7 @@ def transductive_missing_target_predictor(config,
         print("Fold:", fold)
 
         network_data = MolPredDTINetworkData(config=config)
+        rus = RandomUnderSampler(sampling_strategy=0.1, random_state=42)
 
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
@@ -67,6 +69,14 @@ def transductive_missing_target_predictor(config,
         print(train_indices.shape, test_indices.shape)
 
         train_dataset = network_data.get(train_indices)
+        train_labels = np.array([graph_data.y for graph_data in train_dataset])
+        print('train_labels', train_labels.shape)
+        train_dataset = rus.fit_resample(train_dataset, train_labels)
+        print('dataset', len(train_dataset), type(train_dataset))
+
+        raise Exception
+
+
         test_dataset = network_data.get(test_indices)
 
         train_dataset = DTIGraphDataset(train_dataset)
