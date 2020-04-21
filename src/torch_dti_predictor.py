@@ -34,6 +34,8 @@ def transductive_missing_target_predictor(config,
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
 
+    np.random.seed(42)
+
     # get full protein num
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
     num_proteins = config.num_proteins if config.num_proteins else 11574
@@ -66,22 +68,13 @@ def transductive_missing_target_predictor(config,
         test_indices = help_matrix[:, test_protein_indices].flatten()
         print(train_indices.shape, test_indices.shape)
 
-        print('train_indices.shape', train_indices.shape)
-
         train_labels = network_data.get_labels(train_indices)
         zipped_label_ind_array = list(zip(train_indices, train_labels))
         negative_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 0])
         train_indices = np.random.choice(negative_label_indices, int(config.neg_sample_ratio * len(negative_label_indices)))
+        print(train_indices.shape, test_indices.shape)
 
-
-        print('train_indices.shape', train_indices.shape)
         train_dataset = network_data.get(train_indices)
-
-        print('dataset', len(train_dataset), type(train_dataset))
-
-        raise Exception
-
-
         test_dataset = network_data.get(test_indices)
 
         train_dataset = DTIGraphDataset(train_dataset)
@@ -93,11 +86,9 @@ def transductive_missing_target_predictor(config,
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
-
         # train_size = int(0.8 * len(train_dataset))
         # valid_size = len(train_dataset) - train_size
         # train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
-
 
         # build DataLoaders
         train_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=True)
