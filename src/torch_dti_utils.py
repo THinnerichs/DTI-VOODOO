@@ -215,6 +215,24 @@ class MolPredDTINetworkData():
     def __len__(self):
         return self.num_proteins * self.num_drugs
 
+    def get_labels(self, indices):
+        data_list = []
+
+        # for index in tqdm(indices):
+        for i in range(len(indices)):
+            if (i + 1) % int(len(indices) / 10) == 0:
+                print('Finished {} percent of labels.'.format(str(int(i / len(indices) * 100))), end='\r')
+
+            index = indices[i]
+
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
+            y = int(self.y_dti_data[drug_index, protein_index])
+            data_list.append(y)
+
+        return np.array(data_list)
+
+
 
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
