@@ -73,7 +73,7 @@ def transductive_missing_target_predictor(config,
         positive_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 1])
         negative_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 0])
         train_indices = np.random.choice(negative_label_indices, int(config.neg_sample_ratio * len(negative_label_indices)))
-        train_indices = np.concatenate(train_indices, positive_label_indices)
+        train_indices = np.concatenate((train_indices, positive_label_indices), axis=0)
 
         print(train_indices.shape, test_indices.shape)
 
