@@ -63,6 +63,8 @@ def submit_gpu_job(num_proteins=-1,
                    num_gpus=4,
                    node_features='MolPred',
                    fold=-1,
+                   mem=300,
+                   neg_sample_ratio=1.0,
                    mode='standard'):
     jobname = arch+'_'+node_features+'_'+mode
     preface_script = '''#!/bin/bash
@@ -73,7 +75,7 @@ def submit_gpu_job(num_proteins=-1,
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
 #SBATCH --time={days}-00:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
-#SBATCH --mem=500G
+#SBATCH --mem={mem}G
 #SBATCH --constraint=[gpu]
 # SBATCH --sockets-per-node=1
 # SBATCH --gpus-per-socket={num_gpus}
@@ -87,7 +89,11 @@ conda activate ~/.conda/envs/dti/
 module load cuda/10.0.130
 
 export CUDA_VISIBLE_DEVICES={vis_dev}
-python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus), vis_dev=str(list(range(num_gpus)))[1:-1].replace(' ', ''))
+python3 torch_dti_predictor.py '''.format(jobname=jobname,
+                                          days=str(days),
+                                          num_gpus=str(num_gpus),
+                                          vis_dev=str(list(range(num_gpus)))[1:-1].replace(' ', ''),
+                                          mem=str(mem))
     preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
     if epochs:
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
@@ -97,6 +103,7 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname, days=str(days), num_g
     preface_script += "--fold {fold} ".format(fold=str(fold))
     preface_script += "--arch {arch} ".format(arch=arch)
     preface_script += "--mode {mode} ".format(mode=mode)
+    preface_script += "--neg_sample_ratio {neg_sample_ratio} ".format(neg_sample_ratio=str(neg_sample_ratio))
 
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
@@ -153,7 +160,7 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # cancel_jobs()
+    cancel_jobs()
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
     for arch in ['GCNConv','SAGEConv', 'GATConv']:
         # submit_gpu_job(epochs=6, batch_size=80, days=2, arch=arch, mode='protein_drughub')
@@ -162,11 +169,13 @@ if __name__ == '__main__':
         for fold in range(1, 3):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold)
 
-            submit_gpu_job(epochs=10, batch_size=8, days=2, arch=arch, fold=fold, num_gpus=4)
+            submit_gpu_job(epochs=20, batch_size=80, mem=180, days=2, arch=arch, fold=fold, num_gpus=2, neg_sample_ratio=0.05)
+            submit_gpu_job(epochs=20, batch_size=160, mem=360, days=2, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
-            submit_gpu_job(epochs=10, batch_size=8, days=2, arch='Res'+arch, fold=fold, num_gpus=4)
+            submit_gpu_job(epochs=20, batch_size=80, mem=180, days=2, arch='Res'+arch, fold=fold, num_gpus=2, neg_sample_ratio=0.05)
+            submit_gpu_job(epochs=20, batch_size=160, mem=360, days=2, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
 
