@@ -77,9 +77,9 @@ def transductive_missing_target_predictor(config,
 
         print(train_indices.shape, test_indices.shape)
 
-        print('Fechting train data...\n')
+        print('Fetching train data...\n')
         train_dataset = network_data.get(train_indices)
-        print('Fechting test data...\n')
+        print('Fetching test data...\n')
         test_dataset = network_data.get(test_indices)
 
         train_dataset = DTIGraphDataset(train_dataset)
@@ -227,6 +227,17 @@ def transductive_missing_drug_predictor(config,
         test_indices = help_matrix[test_drug_indices, :].flatten()
         print(train_indices.shape, test_indices.shape)
 
+
+        train_labels = network_data.get_labels(train_indices)
+        zipped_label_ind_array = list(zip(train_indices, train_labels))
+        positive_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 1])
+        negative_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 0])
+        train_indices = np.random.choice(negative_label_indices, int(config.neg_sample_ratio * len(negative_label_indices)))
+        train_indices = np.concatenate((train_indices, positive_label_indices), axis=0)
+
+        print(train_indices.shape, test_indices.shape)
+
+
         train_dataset = network_data.get(train_indices)
         test_dataset = network_data.get(test_indices)
 
@@ -367,6 +378,15 @@ def test_predictor_on_drughub_protein_data(config):
     # build train data over whole dataset with help matrix
     train_indices = help_matrix[:, train_protein_indices].flatten()
     test_indices = help_matrix[:, test_protein_indices][test_drug_indices, :].flatten()
+    print(train_indices.shape, test_indices.shape)
+
+    train_labels = network_data.get_labels(train_indices)
+    zipped_label_ind_array = list(zip(train_indices, train_labels))
+    positive_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 1])
+    negative_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 0])
+    train_indices = np.random.choice(negative_label_indices, int(config.neg_sample_ratio * len(negative_label_indices)))
+    train_indices = np.concatenate((train_indices, positive_label_indices), axis=0)
+
     print(train_indices.shape, test_indices.shape)
 
     train_dataset = network_data.get(train_indices)

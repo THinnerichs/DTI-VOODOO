@@ -21,4 +21,20 @@ Build follwing networks
 2.1. Drugs and 
 2.2. Proteins with downsampling!
 3. molecular features instead of DDIs
+4.  
 
+Options:
+- Molecular feature vs DDI vs DDI + semsim
+- ResNet vs Stacked
+- GCN vs GAT vs SAGE
+- Protein vs drug split
+
+- results on Drughub
+  - proteins
+  - drugs
+
+Draw images for Networks
+- PPI & DDI & Side effects data
+- Molecular predictor
+- Graph networks
+- Images for splits
