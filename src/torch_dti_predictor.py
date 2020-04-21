@@ -70,11 +70,16 @@ def transductive_missing_target_predictor(config,
 
         train_labels = network_data.get_labels(train_indices)
         zipped_label_ind_array = list(zip(train_indices, train_labels))
+        positive_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 1])
         negative_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 0])
         train_indices = np.random.choice(negative_label_indices, int(config.neg_sample_ratio * len(negative_label_indices)))
+        train_indices = np.concatenate(train_indices, positive_label_indices)
+
         print(train_indices.shape, test_indices.shape)
 
+        print('Fechting train data...\n')
         train_dataset = network_data.get(train_indices)
+        print('Fechting test data...\n')
         test_dataset = network_data.get(test_indices)
 
         train_dataset = DTIGraphDataset(train_dataset)
