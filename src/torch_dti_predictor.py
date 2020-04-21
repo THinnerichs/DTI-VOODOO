@@ -87,7 +87,7 @@ def transductive_missing_target_predictor(config,
 
         # Calculate weights
         positives = network_data.y_dti_data.flatten()[train_indices].sum()
-        len_to_sum_ratio = (len(train_indices)-positives)/positives
+        len_to_sum_ratio = (len(train_indices)-positives)/positives #Get negatives/positives ratio
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
 
@@ -131,6 +131,7 @@ def transductive_missing_target_predictor(config,
         for epoch in range(1, config.num_epochs + 1):
             loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
             print('Train loss:', loss)
+            sys.stdout.flush()
 
             if epoch%10 == 0:
                 print('Predicting for validation data...')

@@ -1,11 +1,5 @@
 ## TODO
 
-2. Build overall model with updated node features for PPI graph 
-2.1. input fold mechanism for data -> molecular predictor
-2.2. Build fold mechanism for run
-3. Run overall model with updated node features for PPI graph 
-4. Get data as said from Robert
-5. Run updated model on data
 5.1. Run best model from 2.1. on that very data
 6. Run inductive model graph
 
@@ -18,7 +12,13 @@
 
 Also write down failed approach?
 
-2. Adjust network accordingly
 3. Build MolPred over that split
 4. Build network with semsim as well
+
+Build follwing networks
+1. Drug split
+2. drughub data test
+2.1. Drugs and 
+2.2. Proteins with downsampling!
+3. molecular features instead of DDIs
 
