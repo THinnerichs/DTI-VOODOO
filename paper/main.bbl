@@ -28,6 +28,12 @@ Defferrard, M., Bresson, X., and Vandergheynst, P. (2016).
 \newblock Convolutional neural networks on graphs with fast localized spectral
   filtering.
 
+\bibitem[Fey and Lenssen(2019)Fey and Lenssen]{PytorchGeometric}
+Fey, M. and Lenssen, J.~E. (2019).
+\newblock Fast graph representation learning with {PyTorch Geometric}.
+\newblock In {\em ICLR Workshop on Representation Learning on Graphs and
+  Manifolds\/}.
+
 \bibitem[Hamilton {\em et~al.}(2017)Hamilton, Ying, and Leskovec]{SAGEConv}
 Hamilton, W.~L., Ying, R., and Leskovec, J. (2017).
 \newblock Inductive representation learning on large graphs.
@@ -61,6 +67,19 @@ Kulmanov, M. and Hoehndorf, R. (2019).
 Mozzicato, P. (2009).
 \newblock {MedDRA}.
 \newblock {\em Pharmaceutical Medicine\/}, {\bf 23}(2), 65--75.
+
+\bibitem[Paszke {\em et~al.}(2019)Paszke, Gross, Massa, Lerer, Bradbury,
+  Chanan, Killeen, Lin, Gimelshein, Antiga, Desmaison, Kopf, Yang, DeVito,
+  Raison, Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala]{Pytorch}
+Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., Killeen,
+  T., Lin, Z., Gimelshein, N., Antiga, L., Desmaison, A., Kopf, A., Yang, E.,
+  DeVito, Z., Raison, M., Tejani, A., Chilamkurthy, S., Steiner, B., Fang, L.,
+  Bai, J., and Chintala, S. (2019).
+\newblock Pytorch: An imperative style, high-performance deep learning library.
+\newblock In H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d\textquotesingle
+  Alch\'{e}-Buc, E.~Fox, and R.~Garnett, editors, {\em Advances in Neural
+  Information Processing Systems 32\/}, pages 8024--8035. Curran Associates,
+  Inc.
 
 \bibitem[Resnik(1995)Resnik]{Resnik1995}
 Resnik, P. (1995).
@@ -108,6 +127,10 @@ Vazquez, A., Flammini, A., Maritan, A., and Vespignani, A. (2003).
 Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., and Bengio,
   Y. (2017).
 \newblock Graph attention networks.
+
+\bibitem[Verma {\em et~al.}(2017)Verma, Boyer, and Verbeek]{FeaStConv}
+Verma, N., Boyer, E., and Verbeek, J. (2017).
+\newblock Feastnet: Feature-steered graph convolutions for 3d shape analysis.
 
 \bibitem[Wang and Kurgan(2018)Wang and Kurgan]{Survey2018}
 Wang, C. and Kurgan, L. (2018).
