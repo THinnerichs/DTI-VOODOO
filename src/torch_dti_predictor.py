@@ -110,7 +110,8 @@ def transductive_missing_target_predictor(config,
             model = ResTemplateNet(num_drugs=network_data.num_drugs,
                                    num_prots=network_data.num_proteins,
                                    num_features=network_data.num_PPI_features,
-                                   conv_method=config.arch)
+                                   conv_method=config.arch,
+                                   out_channels=64)
 
         model = nn.DataParallel(model).to(device)
 
@@ -138,14 +139,14 @@ def transductive_missing_target_predictor(config,
                 file='../results/full_interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(epoch)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -292,19 +293,19 @@ def transductive_missing_drug_predictor(config,
                          weight_dict=weight_dict)
             print('Train loss:', loss)
 
-            if epoch % 2 == 0:
+            if epoch % 10 == 0:
                 print('Predicting for validation data...')
                 file = '../results/full_interactions_drug_split_results_' + config.arch + '_' + str(num_proteins) + '_prots_' + str(epoch) + '_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -444,19 +445,19 @@ def test_predictor_on_drughub_protein_data(config):
                      weight_dict=weight_dict)
         print('Train loss:', loss)
 
-        if epoch % 2 == 0:
+        if epoch % 10 == 0:
             print('Predicting for validation data...')
             file = '../results/drughub_protein_split_' + config.arch + '_prots_' + str(epoch) + '_epochs'
             with open(file=file, mode='a') as f:
                 train_labels, train_predictions = predicting(model, device, train_loader)
-                print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(train_labels, train_predictions),
                       dti_utils.dti_auroc(train_labels, train_predictions),
                       dti_utils.dti_f1_score(train_labels, train_predictions),
                       metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                 test_labels, test_predictions = predicting(model, device, test_loader)
-                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(test_labels, test_predictions),
                       dti_utils.dti_auroc(test_labels, test_predictions),
                       dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -580,19 +581,19 @@ def test_predictor_on_drughub_drug_data(config):
                      weight_dict=weight_dict)
         print('Train loss:', loss)
 
-        if epoch % 2 == 0:
+        if epoch % 10 == 0:
             print('Predicting for validation data...')
             file = '../results/drughub_drug_split_' + config.arch + '_prots_' + str(epoch) + '_epochs'
             with open(file=file, mode='a') as f:
                 train_labels, train_predictions = predicting(model, device, train_loader)
-                print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(train_labels, train_predictions),
                       dti_utils.dti_auroc(train_labels, train_predictions),
                       dti_utils.dti_f1_score(train_labels, train_predictions),
                       metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                 test_labels, test_predictions = predicting(model, device, test_loader)
-                print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(test_labels, test_predictions),
                       dti_utils.dti_auroc(test_labels, test_predictions),
                       dti_utils.dti_f1_score(test_labels, test_predictions),

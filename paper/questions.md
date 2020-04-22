@@ -9,6 +9,8 @@
   - Models
   - Splits?
   - PPI-DDI-SideEffect-DTI network?
+- build model for each drug to actually find regions? -> Pattern vs region hypothesis
+
 
 ## Issues
 - bibliography style was given like this, but does not look like standard Bioinformatics paper
