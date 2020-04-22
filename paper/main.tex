@@ -13,7 +13,7 @@
 
 \subtitle{Subject Section}
 
-\title[short Title]{Combining Bottom-up and top-down approaches for drug-target-interaction prediction}
+\title[short Title]{Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -88,13 +88,25 @@ The used model consists of two separate models, that help to fuse together the t
 	\item The molecular predictor
 	\item The interaction network based predictor
 \end{enumerate}
-We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from SMILES transformer (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (TABLE) with few fully connected. \\
-The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair, the nodes of the PPI graph now hold bottom-up features, which can now be processed by the graph algorithms. \\
+We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from SMILES transformer (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (see Figure~\ref{fig:01}) with few fully connected. \\
+The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair, the nodes of the PPI graph now hold bottom-up features, which can now be processed by the graph learning algorithms. \\
 The PPI graph is processed by different graph convolutional layers, that may underline the importance of either patterns or regions within the graph, to obtain a feature vector for the wanted node. In contrast to learning over whole graphs we perform node classification within the graph. \\
 The drug-drug interaction features are retrieved by choosing the corresponding row in the adjacency matrix of the graph, thus leading to quite simple features. \\
 For the semantic similarity feature, that once again represents a top-down attribute, we artificially link each drug to its corresponding side effects in the MedDRA hierarchy. Concerning this hierarchy, drug-drug similarity is computed by the Resnik similarity (\cite{Resnik1995}). For the given compound we take the corresponding row of this symmetric similarity matrix. \\
 
-Thereby, we concatenate these three features together and funnel them into another deep neural network. 
+Thereby, we concatenate these three features together and funnel them into another deep neural network as depicted in figure \ref{fig:02}.  
+
+\begin{figure}[!tpb]%figure1
+	
+	\centerline{\includegraphics[width=0.5\textwidth]{figures/MolecularPredictor.png}}
+	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:01}
+\end{figure}
+
+\begin{figure}[!tpb]%figure2
+
+\centerline{\includegraphics[width=0.5\textwidth]{figures/InteractionNetwork.png}}
+\caption{Deep neural network that predicts based on drug-drug interaction features and semantic similarity features over side effects for drugs, and graph convolution over protein-protein interaction networks for proteins. Protein and drug features are represented by blue and red, respectively.}\label{fig:02}
+\end{figure}
 
 \section{Discussion}
 
