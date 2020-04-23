@@ -51,6 +51,7 @@ def cancel_jobs():
                     if ele in 'ChebConv' or ele in 'GraphConv' or ele in 'TAGConv' or ele in 'ARMAConv' or ele in 'SGConv' or ele in 'FeaStConv' or\
                         ele in  'ResChebConv' or ele in 'ResGraphConv' or ele in 'ResTAGConv' or ele in 'ResARMAConv' or ele in 'ResSGConv' or ele in 'ResFeaStConv':
                         cancel = True
+                        break
             if cancel:
                 print(job_num)
                 subprocess.call("scancel " + job_num, shell=True)
