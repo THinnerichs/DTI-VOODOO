@@ -37,7 +37,7 @@ conda activate ~/.conda/envs/dti/
         subprocess.call("sbatch "+filename, shell=True)
 
 
-def cancel_jobs():
+def cancel_certain_jobs():
     subprocess.call("squeue | grep 'hinnertr' > cancellist", shell=True)
     filename = "cancellist"
     with open(file=filename, mode='r') as f:
@@ -57,6 +57,21 @@ def cancel_jobs():
             if cancel:
                 print(job_num)
                 subprocess.call("scancel " + job_num, shell=True)
+
+def cancel_jobs():
+    subprocess.call("squeue | grep 'hinnertr' > cancellist", shell=True)
+    filename = "cancellist"
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            split_line = line.split(' ')
+            job_num = None
+            cancel = False
+            first = True
+            for ele in split_line:
+                if ele != '':
+                    print(job_num)
+                    subprocess.call("scancel " + ele, shell=True)
+                    break
 
 
 def submit_jobscript_n_times(n):
