@@ -633,6 +633,7 @@ if __name__ == '__main__':
     parser.add_argument("--fold", type=int, default=-1)
 
     parser.add_argument("--mode", type=str, default='standard')
+    parser.add_argument("--drug_mode", type=str, default='standard')
 
     config = parser.parse_args()
 

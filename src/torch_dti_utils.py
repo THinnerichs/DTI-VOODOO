@@ -119,9 +119,11 @@ class SimpleDTINetworkData():
 
 class MolPredDTINetworkData():
     def __init__(self, config):
+        self.config = config
 
         if config.num_proteins == -1 or config.num_proteins == 11574:
             config.num_proteins = None
+
 
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -153,8 +155,11 @@ class MolPredDTINetworkData():
             self.mol_predictions = pickle.load(f).reshape((self.num_drugs, -1))
         self.num_PPI_features = 1
 
-        # print("Loading semsim results...")
-        # self.semsim_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
+        if config.drug_mode == 'semsim' or self.config.drug_mode == 'all':
+            print("Loading semsim results...")
+            self.semsim_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
+
+
 
         # DDI data
         print("Loading DDI features ...")
@@ -198,14 +203,17 @@ class MolPredDTINetworkData():
             y = int(self.y_dti_data[drug_index, protein_index])
 
             DDI_features = torch.tensor(self.DDI_features[:, drug_index], dtype=torch.float).view(1, self.num_drugs)
-            # semsim_features = torch.tensor(self.semsim_matrix[drug_index, :], dtype=torch.float).view(1, self.num_drugs)
+            semsim_features = None
+            if self.config.drug_mode == 'semsim' or self.config.drug_mode == 'all':
+                semsim_features = torch.tensor(self.semsim_matrix[drug_index, :], dtype=torch.float).view(1, self.num_drugs)
+
 
             feature_array = torch.tensor(self.mol_predictions[drug_index, :self.num_proteins], dtype=torch.float).round().view(-1, 1)
-            # print('feature array', feature_array.size())
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.DDI_features = DDI_features
             full_PPI_graph.protein_mask = protein_mask
-            # full_PPI_graph.semsim_features = semsim_features
+            if self.config.drug_mode == 'semsim' or self.config.drug_mode == 'all':
+                full_PPI_graph.semsim_features = semsim_features
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
