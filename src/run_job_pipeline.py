@@ -43,11 +43,17 @@ def cancel_jobs():
     with open(file=filename, mode='r') as f:
         for line in f:
             split_line = line.split(' ')
+            job_num = None
+            cancel = False
             for ele in split_line:
                 if ele!='':
-                    print(ele)
-                    subprocess.call("scancel " + ele, shell=True)
-                    break
+                    job_num = ele
+                    if ele in 'ChebConv' or ele in 'GraphConv' or ele in 'TAGConv' or ele in 'ARMAConv' or ele in 'SGConv' or ele in 'FeaStConv' or\
+                        ele in  'ResChebConv' or ele in 'ResGraphConv' or ele in 'ResTAGConv' or ele in 'ResARMAConv' or ele in 'ResSGConv' or ele in 'ResFeaStConv':
+                        cancel = True
+            if cancel:
+                print(job_num)
+                subprocess.call("scancel " + job_num, shell=True)
 
 
 def submit_jobscript_n_times(n):
@@ -160,10 +166,12 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # cancel_jobs()
+    cancel_jobs()
+
+    '''
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
-    # for arch in ['GCNConv','SAGEConv', 'GATConv']:
-    for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
+    for arch in ['GCNConv','SAGEConv', 'GATConv']:
+    # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
         # submit_gpu_job(epochs=30, batch_size=80, mem=180, days=2, arch=arch, mode='protein_drughub', num_gpus=2, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=30, batch_size=80, mem=180, days=2, arch='Res'+arch, mode='protein_drughub', num_gpus=2, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=30, batch_size=80, mem=180, days=2, arch=arch, mode='drug_drughub', num_gpus=2, neg_sample_ratio=0.05)
@@ -182,4 +190,4 @@ if __name__ == '__main__':
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
-
+    '''

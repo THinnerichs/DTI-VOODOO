@@ -18,12 +18,17 @@ Options:
 - Model for drug ? For each protein?
 
 
-
-
-
 Draw images for Networks
 - PPI & DDI & Side effects data
 - Molecular predictor
 - Graph networks
 - Images for splits
 
+Robert talk:
+  - search bioinformatics for drug repuposing
+  - 10 years ago side effect similarity paper in Science  (0.7 AUC)
+  - locality in PPI network coincides with phenotypes
+    - See paper in Skype
+
+  - function phenotypes
+  1. 
