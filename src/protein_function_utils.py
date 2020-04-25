@@ -18,7 +18,7 @@ class ProteinFunctionDTIDataBuilder:
         print('Loading protein function data...')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print(len(self.drug_list), ' drugs present.')
-        self.protein_list = np.array(DTI_data_preparation.get_human_proteins())[:num_proteins]
+        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:num_proteins]
         print(len(self.protein_list), ' proteins present.')
 
         self.num_drugs = len(self.drug_list)
