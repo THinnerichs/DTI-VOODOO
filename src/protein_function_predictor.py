@@ -126,7 +126,7 @@ def protein_function_predictor(config):
         print('Predicting...')
         sys.stdout.flush()
         labels, predictions = predicting(model, device, overall_dataloader)
-        filename = '../models/molecular_predictor/pred_fold_'+str(fold)
+        filename = '../models/protein_function_predictor/pred_fold_'+str(fold)
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
