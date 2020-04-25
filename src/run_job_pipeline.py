@@ -224,7 +224,7 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # cancel_jobs()
+    cancel_jobs()
 
     for fold in range(1,5):
         submit_protfunc_pred_job(epochs=30,
