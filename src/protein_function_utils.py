@@ -45,8 +45,6 @@ class ProteinFunctionDTIDataBuilder:
         print('Done.\n')
 
     def build_protein_embeddings(self):
-        protein_list = DTI_data_preparation.get_human_proteins()
-
         DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
 
         uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
@@ -73,7 +71,7 @@ class ProteinFunctionDTIDataBuilder:
         uberon_embeddings = []
         GO_embeddings = []
         phenotype_embeddings = []
-        for protein in protein_list:
+        for protein in self.protein_list:
             # organism, protein_id = protein.strip().split('.')
             protein_id = protein
 
