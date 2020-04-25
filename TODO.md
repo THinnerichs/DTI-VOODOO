@@ -32,3 +32,5 @@ Robert talk:
 
   - function phenotypes
   1. 
+
+  11518 prots in intersec (use PPI embeddings)
