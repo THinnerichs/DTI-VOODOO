@@ -374,6 +374,8 @@ def get_drughub_protein_list():
 
 
 
+
+
 if __name__ == '__main__':
     # prune_protein_protein_db(min_score=700)
 
