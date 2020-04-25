@@ -227,7 +227,7 @@ if __name__ == '__main__':
     # cancel_jobs()
 
     for fold in range(1,6):
-        submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1, model='drug')
+        submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1)
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
     '''
     for arch in ['GCNConv','SAGEConv', 'GATConv']:

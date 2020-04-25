@@ -132,7 +132,7 @@ def protein_function_predictor(config):
 
         gc.collect()
 
-        model_filename = '../models/protein_function_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
+        model_filename = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)
         print("Done.")
         sys.stdout.flush()
@@ -275,7 +275,7 @@ def drug_split_protein_function_predictor(config):
 
         gc.collect()
 
-        model_filename = '../models/protein_function_predictor/mol_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
+        model_filename = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)
         print("Done.")
         sys.stdout.flush()
