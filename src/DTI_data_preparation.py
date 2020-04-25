@@ -56,7 +56,7 @@ def write_human_protein_list():
 
     print("Gathering proteins ...")
     protein_list = []
-    for node in human_DTI_graph.nodes():
+    for node in tqdm(human_DTI_graph.nodes()):
         if not node.startswith('CID') and \
                 node in list(protein_node_feature_dict.keys()) and \
                 node in list(protein_adj_mat_dict.keys()):
@@ -75,6 +75,7 @@ def get_human_proteins():
         return pickle.load(f)
 
 def write_human_prot_func_protein_list():
+    print('Loading standard proteins...')
     human_DTI_graph = get_human_DTI_graph()
     protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
     protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
@@ -85,13 +86,14 @@ def write_human_prot_func_protein_list():
     phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
 
     # load model keys sets
+    print('Loading models...')
     uberon_model = set(gensim.models.Word2Vec.load(uberon_model_filename).wv.vocab.keys())
     GO_model = set(gensim.models.Word2Vec.load(GO_model_filename).wv.vocab.keys())
     phenotype_model = set(gensim.models.Word2Vec.load(phenotype_model_filename).wv.vocab.keys())
 
     print("Gathering proteins ...")
     protein_list = []
-    for node in human_DTI_graph.nodes():
+    for node in tqdm(human_DTI_graph.nodes()):
         if not node.startswith('CID') and \
                 node in list(protein_node_feature_dict.keys()) and \
                 node in list(protein_adj_mat_dict.keys()) and \
