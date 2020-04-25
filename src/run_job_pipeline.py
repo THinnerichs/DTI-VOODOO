@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
     cancel_jobs()
 
-    for fold in range(1,5):
+    for fold in range(1,6):
         submit_protfunc_pred_job(epochs=30,
                                  batch_size=131072,
                                  fold=fold,
