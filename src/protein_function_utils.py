@@ -44,20 +44,21 @@ class ProteinFunctionDTIDataBuilder:
 
         print('Done.\n')
 
-    def build_protein_embeddings(self, include_ppi=False):
+    def build_protein_embeddings(self):
         protein_list = DTI_data_preparation.get_human_proteins()
 
         DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
-        uberon_model_filename = GO_model_filename = phenotype_model_filename = None
 
-        if include_ppi:
-            uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
-            GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
-            phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
+        uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
+        GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
+        phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
+
+        '''
         else:
             uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_embedding'
             GO_model_filename = DL2vec_path_prefix + 'go_intersection_embedding'
             phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_embedding'
+        '''
 
         # load models
         uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
@@ -73,7 +74,8 @@ class ProteinFunctionDTIDataBuilder:
         GO_embeddings = []
         phenotype_embeddings = []
         for protein in protein_list:
-            organism, protein_id = protein.strip().split('.')
+            # organism, protein_id = protein.strip().split('.')
+            protein_id = protein
 
             uberon_embeddings.append(uberon_model[protein_id])
             GO_embeddings.append(GO_model[protein_id])

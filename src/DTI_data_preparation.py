@@ -1,5 +1,6 @@
 import numpy as np
 import networkx as nx
+import gensim
 
 import pickle
 
@@ -70,6 +71,42 @@ def write_human_protein_list():
 
 def get_human_proteins():
     filename = "../data/human_protein_list"
+    with open(file=filename+'.pkl', mode='rb') as f:
+        return pickle.load(f)
+
+def write_human_prot_func_protein_list():
+    human_DTI_graph = get_human_DTI_graph()
+    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
+    protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
+
+    DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
+    uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
+    GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
+    phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
+
+    # load model keys sets
+    uberon_model = set(gensim.models.Word2Vec.load(uberon_model_filename).wv.vocab.keys())
+    GO_model = set(gensim.models.Word2Vec.load(GO_model_filename).wv.vocab.keys())
+    phenotype_model = set(gensim.models.Word2Vec.load(phenotype_model_filename).wv.vocab.keys())
+
+    print("Gathering proteins ...")
+    protein_list = []
+    for node in human_DTI_graph.nodes():
+        if not node.startswith('CID') and \
+                node in list(protein_node_feature_dict.keys()) and \
+                node in list(protein_adj_mat_dict.keys()) and \
+                node in uberon_model and node in GO_model and node in phenotype_model:
+            protein_list.append(node)
+    print("Finished.\n")
+
+    # return sorted(PPI_utils.get_human_protein_list())
+
+    filename = "../data/human_prot_func_protein_list"
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(sorted(protein_list), f, pickle.HIGHEST_PROTOCOL)
+
+def get_human_prot_func_proteins():
+    filename = "../data/human_prot_func_protein_list"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
@@ -305,6 +342,7 @@ if __name__ == '__main__':
     # write_drug_to_HMM_filtered_targets_dict()
 
 
+    '''
     drug_list = get_drug_list()
     protein_list = get_human_proteins()
     print(len(drug_list), len(protein_list))
@@ -316,7 +354,9 @@ if __name__ == '__main__':
 
     drug_intersect = set(drug_list) & set(drughub_drug_list)
     protein_intersect = set(protein_list) & set(drughub_protein_list)
+    '''
 
-
+    write_human_prot_func_protein_list()
+    dicki = get_human_prot_func_proteins()
 
     pass
