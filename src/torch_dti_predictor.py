@@ -416,7 +416,8 @@ def test_predictor_on_drughub_protein_data(config):
 
     model = None
     if 'Res' not in config.arch:
-        model = TemplateSimpleNet(num_drugs=network_data.num_drugs,
+        model = TemplateSimpleNet(config,
+                                  num_drugs=network_data.num_drugs,
                                   num_prots=network_data.num_proteins,
                                   num_features=network_data.num_PPI_features,
                                   conv_method=config.arch)

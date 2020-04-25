@@ -17,7 +17,7 @@ from tqdm import tqdm
 class MolecularDTIDataBuilder:
     def __init__(self, num_proteins=None, drug_mode='trfm'):
         # super(MolecularDTIData, self).__init__()
-        print('Loading data.')
+        print('Loading data...')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print(len(self.drug_list), ' drugs present.')
         self.protein_list = np.array(DTI_data_preparation.get_human_proteins())[:num_proteins]
