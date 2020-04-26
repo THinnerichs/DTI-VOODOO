@@ -76,7 +76,10 @@ class TemplateSimpleNet(torch.nn.Module):
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
-        batch_size = protein_mask.size(0)
+        batch_size = self.config.batch_size
+
+        print('protein_mask.size', protein_mask.size())
+        print('batch size', batch_size)
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
@@ -107,8 +110,8 @@ class TemplateSimpleNet(torch.nn.Module):
         PPI_x = self.dropout(PPI_x)
 
         # DDI feature network
-        DDI_x = torch.cat((PPI_x, DDI_feature), 1)
-        DDI_x = self.fc1(DDI_x)
+        # DDI_x = torch.cat((PPI_x, DDI_feature), 1)
+        DDI_x = self.fc1(PPI_x)
         DDI_x = F.relu(DDI_x)
         DDI_x = self.fc2(DDI_x)
         DDI_x = F.relu(DDI_x)
@@ -119,8 +122,10 @@ class TemplateSimpleNet(torch.nn.Module):
         return DDI_x
 
 class ResTemplateNet(torch.nn.Module):
-    def __init__(self, num_drugs, num_prots, num_features, conv_method, out_channels=64, dropout=0.2):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, out_channels=64, dropout=0.2):
         super(ResTemplateNet, self).__init__()
+        self.config = config
+
         self.num_drugs = num_drugs
         self.num_prots = num_prots
 
@@ -178,7 +183,7 @@ class ResTemplateNet(torch.nn.Module):
         # DDI_feature = data.DDI_features
         protein_mask = data.protein_mask
         x, edge_index, batch = data.x, data.edge_index, data.batch
-        batch_size = protein.size(0)
+        batch_size = self.config.batch_size
 
         gmp = torch_geometric.nn.global_max_pool
         gap = torch_geometric.nn.global_add_pool
@@ -206,7 +211,7 @@ class ResTemplateNet(torch.nn.Module):
         x = torch.bmm(protein_mask, x)
         x = x.view((batch_size, -1))
 
-        x = torch.cat((x, DDI_feature), 1)
+        # x = torch.cat((x, DDI_feature), 1)
 
         x = F.relu(self.lin1(x))
         # x = F.dropout(x, p=0.5, training=self.training)
