@@ -83,12 +83,16 @@ class TemplateSimpleNet(torch.nn.Module):
         # print('protein_mask.size()', protein_mask.size())
 
         # PPI graph network
+        print('PPI_x.size', PPI_x.size())
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
+        print('PPI_x.size', PPI_x.size())
         # PPI_x = F.dropout(PPI_x, training=self.training)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
+        print('PPI_x.size', PPI_x.size())
         PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
+        print('PPI_x.size', PPI_x.size())
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
 
