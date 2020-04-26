@@ -79,10 +79,12 @@ def transductive_missing_target_predictor(config,
 
         print(train_indices.shape, test_indices.shape)
 
-        print('Fetching train data...\n')
+        print('Fetching train data...')
         train_dataset = network_data.get(train_indices)
-        print('Fetching test data...\n')
+        print('Done.')
+        print('Fetching test data...')
         test_dataset = network_data.get(test_indices)
+        print('Done.')
 
         train_dataset = DTIGraphDataset(train_dataset)
         test_dataset = DTIGraphDataset(test_dataset)

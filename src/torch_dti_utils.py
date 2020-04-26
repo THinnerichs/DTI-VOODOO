@@ -313,6 +313,9 @@ class ProtFuncDTINetworkData:
 
             y = int(self.y_dti_data[drug_index, protein_index])
 
+            print('feature_mat', self.feature_matrix[drug_index, protein_index, :].shape)
+
+            raise Exception
             feature_array = torch.tensor(self.feature_matrix[drug_index, protein_index, :], dtype=torch.float).round().view(-1, 1)
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.protein_mask = protein_mask
