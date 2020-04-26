@@ -72,11 +72,11 @@ class TemplateSimpleNet(torch.nn.Module):
         self.dropout = torch.nn.Dropout(dropout)
 
     def forward(self, PPI_data_object):
-        DDI_feature = PPI_data_object.DDI_features
+        # DDI_feature = PPI_data_object.DDI_features
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
-        batch_size = DDI_feature.size(0)
+        batch_size = protein_mask.size(0)
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
@@ -175,10 +175,10 @@ class ResTemplateNet(torch.nn.Module):
 
 
     def forward(self, data):
-        DDI_feature = data.DDI_features
+        # DDI_feature = data.DDI_features
         protein_mask = data.protein_mask
         x, edge_index, batch = data.x, data.edge_index, data.batch
-        batch_size = DDI_feature.size(0)
+        batch_size = protein.size(0)
 
         gmp = torch_geometric.nn.global_max_pool
         gap = torch_geometric.nn.global_add_pool
