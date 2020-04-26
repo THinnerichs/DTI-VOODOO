@@ -173,6 +173,9 @@ def transductive_missing_target_predictor(config,
                     else:
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
 
+                    model_filename = '../models/PPI_network_' + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
+                    torch.save(model.state_dict(), model_filename)
+
             sys.stdout.flush()
         results.append(ret)
 

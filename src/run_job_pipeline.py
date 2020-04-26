@@ -226,28 +226,27 @@ if __name__ == '__main__':
 
     # cancel_jobs()
 
-    for fold in range(1,6):
-        submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1)
-    # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
-    '''
-    for arch in ['GCNConv','SAGEConv', 'GATConv']:
-    # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
-        submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
-        submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
-        submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
-        submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
+    # for fold in range(1,6):
+        # submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1)
 
-        for fold in range(3, 6):
+    # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv'
+    for arch in ['GCNConv','GATConv']:
+    # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
+        # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
+        # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
+        # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
+        # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
+
+        for fold in range(1, 5):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
 
-            submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.05)
+            submit_gpu_job(epochs=20, batch_size=180, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
 
-            submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.05)
+            submit_gpu_job(epochs=20, batch_size=180, mem=360, days=1, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
-    '''
