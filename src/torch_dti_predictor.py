@@ -38,7 +38,7 @@ def transductive_missing_target_predictor(config,
 
     # get full protein num
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
-    num_proteins = config.num_proteins if config.num_proteins else 11574
+    num_proteins = config.num_proteins if config.num_proteins else 11518 # 11518
     num_drugs = 641
 
     # dataset is present in dimension (num_drugs * num_proteins)
@@ -53,6 +53,7 @@ def transductive_missing_target_predictor(config,
 
     print('Model:', config.arch)
 
+
     results = []
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
@@ -61,7 +62,8 @@ def transductive_missing_target_predictor(config,
             continue
         print("Fold:", fold)
 
-        network_data = MolPredDTINetworkData(config=config)
+        config.train_prots = train_protein_indices
+        network_data = ProtFuncDTINetworkData(config=config)
 
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
@@ -102,12 +104,13 @@ def transductive_missing_target_predictor(config,
 
         model = None
         if 'Res' not in config.arch:
-            model = TemplateSimpleNet(num_drugs=network_data.num_drugs,
+            model = TemplateSimpleNet(config,
+                                      num_drugs=0,
                                       num_prots=network_data.num_proteins,
                                       num_features=network_data.num_PPI_features,
                                       conv_method=config.arch)
         elif 'Res' in config.arch:
-            model = ResTemplateNet(num_drugs=network_data.num_drugs,
+            model = ResTemplateNet(num_drugs=0,
                                    num_prots=network_data.num_proteins,
                                    num_features=network_data.num_PPI_features,
                                    conv_method=config.arch,
@@ -171,6 +174,9 @@ def transductive_missing_target_predictor(config,
 
         if torch.cuda.is_available():
             torch.cuda.synchronize()
+
+        model_filename = '../models/PPI_network_' + config.arch + '_model_fold_' + str(fold) + '.model'
+        torch.save(model.state_dict(), model_filename)
 
     return
     results_file_name = '../results/' + config.arch + '_' + config.node_features + '_' + str(config.num_proteins) + '_model_results'
@@ -381,6 +387,7 @@ def test_predictor_on_drughub_protein_data(config):
     test_indices = help_matrix[:, test_protein_indices][test_drug_indices, :].flatten()
     print(train_indices.shape, test_indices.shape)
 
+    # undersample negative samples
     train_labels = network_data.get_labels(train_indices)
     zipped_label_ind_array = list(zip(train_indices, train_labels))
     positive_label_indices = np.array([index for index, label in zipped_label_ind_array if label == 1])
@@ -614,8 +621,6 @@ def test_predictor_on_drughub_drug_data(config):
 
 def inductive_missing_target_predictor(config):
     pass
-
-
 
 if __name__ == '__main__':
     # Add parser arguments

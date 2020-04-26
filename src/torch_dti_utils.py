@@ -159,8 +159,6 @@ class MolPredDTINetworkData():
             print("Loading semsim results...")
             self.semsim_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
 
-
-
         # DDI data
         print("Loading DDI features ...")
         self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
@@ -240,6 +238,109 @@ class MolPredDTINetworkData():
 
         return np.array(data_list)
 
+class ProtFuncDTINetworkData:
+    def __init__(self, config):
+        self.config = config
+
+        print("Loading data ...")
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        print(len(self.drug_list), "drugs present")
+        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
+        print(len(self.protein_list), "proteins present\n")
+
+        # PPI data
+        print("Loading PPI graph ...")
+        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        PPI_graph = PPI_graph.subgraph(self.protein_list)
+
+        # calculate dimensions of network
+        self.num_proteins = len(PPI_graph.nodes())
+        self.num_drugs = len(self.drug_list)
+
+        print("Building index dict ...")
+        self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
+        print("Building edge list ...")
+        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                              for node1, node2 in list(PPI_graph.edges())]
+        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                               for node2, node1 in list(PPI_graph.edges())]
+        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
+                                      dtype=torch.long)
+        self.num_PPI_features = 1
+
+        # DDI data
+        print("Loading DDI features ...")
+        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
+        print(self.DDI_features.shape)
+
+        # DTI data
+        print("Loading DTI links ...")
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
+        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
+        print(self.y_dti_data.shape)
+
+        print("Building feature matrix ...")
+        self.train_prots = config.train_prots
+        self.train_mask = np.zeros(self.num_proteins)
+        self.train_mask[self.train_prots] = 1
+        # self.test_prots = config.test_prots
+
+        self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins, self.num_proteins))
+        for protein_index in tqdm(range(len(self.protein_list))):
+            drug_indices = np.arange(self.num_drugs)[y_dti_data[:,protein_index]==1]
+            for drug_index in drug_indices:
+                self.feature_matrix[drug_index, protein_index, :] += self.train_mask * self.y_dti_data[drug_index, :]
+        # normalize self to 1?
+
+        print("Finished.\n")
+
+    def get(self, indices):
+        data_list = []
+
+        # for index in tqdm(indices):
+        for i in range(len(indices)):
+            if (i + 1) % int(len(indices) / 10) == 0:
+                print('Finished {} percent.'.format(str(int(i / len(indices) * 100))), end='\r')
+
+            index = indices[i]
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
+
+            # build protein mask
+            protein_mask = np.zeros(self.num_proteins)
+            protein_mask[protein_index] = 1
+            protein_mask = torch.tensor(protein_mask, dtype=torch.bool)
+
+            y = int(self.y_dti_data[drug_index, protein_index])
+
+            feature_array = torch.tensor(self.feature_matrix[drug_index, protein_index, :], dtype=torch.float).round().view(-1, 1)
+            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
+            full_PPI_graph.protein_mask = protein_mask
+            # full_PPI_graph.__num_nodes__ = self.num_proteins
+
+            data_list.append(full_PPI_graph)
+
+        return data_list
+
+    def __len__(self):
+        return self.num_proteins * self.num_drugs
+
+    def get_labels(self, indices):
+        data_list = []
+
+        # for index in tqdm(indices):
+        for i in range(len(indices)):
+            if (i + 1) % int(len(indices) / 10) == 0:
+                print('Finished {} percent of labels.'.format(str(int(i / len(indices) * 100))), end='\r')
+
+            index = indices[i]
+
+            drug_index = index // self.num_proteins
+            protein_index = index % self.num_proteins
+            y = int(self.y_dti_data[drug_index, protein_index])
+            data_list.append(y)
+
+        return np.array(data_list)
 
 
 class DTIGraphDataset(Dataset):
