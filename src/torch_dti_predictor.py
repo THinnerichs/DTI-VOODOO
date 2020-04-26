@@ -33,6 +33,7 @@ def transductive_missing_target_predictor(config,
     # activate device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
+    config.num_gpus = num_gpus
 
     np.random.seed(42)
 

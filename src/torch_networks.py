@@ -9,7 +9,7 @@ import torch_geometric.nn as nn
 class TemplateSimpleNet(torch.nn.Module):
     def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=128, dropout=0.2):
         super(TemplateSimpleNet, self).__init__()
-        self.batch_size = config.batch_size
+        self.batch_size = config.batch_size / config.batch_size
 
         self.num_drugs = num_drugs
         self.num_prots = num_prots
@@ -76,29 +76,26 @@ class TemplateSimpleNet(torch.nn.Module):
         protein_mask = PPI_data_object.protein_mask
         PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
 
-        batch_size = self.batch_size
+        protein_mask = protein_mask.view((-1, 1, self.num_prots)).float()
+
+        batch_size = protein_mask.size(0)
 
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
 
         # PPI graph network
-        print('PPI_x.size', PPI_x.size())
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
-        print('PPI_x.size', PPI_x.size())
         # PPI_x = F.dropout(PPI_x, training=self.training)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
-        print('PPI_x.size', PPI_x.size())
         PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
-        print('PPI_x.size', PPI_x.size())
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
 
         # PPI_x = torch_geometric.nn.global_max_pool(PPI_x, PPI_batch.view((batch_size, -1)))
 
-        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
 
         # multiply for flattening
         PPI_x = torch.bmm(protein_mask, PPI_x)
@@ -185,12 +182,12 @@ class ResTemplateNet(torch.nn.Module):
         # DDI_feature = data.DDI_features
         protein_mask = data.protein_mask
         x, edge_index, batch = data.x, data.edge_index, data.batch
-        batch_size = self.batch_size
 
         gmp = torch_geometric.nn.global_max_pool
         gap = torch_geometric.nn.global_add_pool
 
-        protein_mask = protein_mask.view((batch_size, 1, -1)).float()
+        protein_mask = protein_mask.view((-1, 1, self.num_prots)).float()
+        batch_size = protein_mask.size(0)
 
         x = F.relu(self.conv1(x, edge_index))
         # x, edge_index, _, batch, _, _ = self.pool1(x, edge_index, None, batch)
