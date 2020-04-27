@@ -13,6 +13,8 @@ import sys
 import pickle
 
 import DTI_data_preparation
+from protein_function_utils import ProteinFunctionDTIDataBuilder
+
 
 
 class SimpleDTINetworkData():
@@ -285,7 +287,6 @@ class ProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
-        print('feature mat debug')
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins, self.num_proteins))
         for protein_index in tqdm(range(len(self.protein_list))):
             drug_indices = np.arange(self.num_drugs)[self.y_dti_data[:,protein_index]==1]
@@ -293,10 +294,20 @@ class ProtFuncDTINetworkData:
                 self.feature_matrix[drug_index, protein_index, :] += self.train_mask * self.y_dti_data[drug_index, :]
         # normalize self to 1?
 
+
+        if not config.pretrain:
+            print('Building protfunc data...')
+            self.ProtFuncDataBuilder = ProteinFunctionDTIDataBuilder(num_proteins=config.num_proteins)
+
         print("Finished.\n")
 
     def get(self, indices):
         data_list = []
+
+        protfunc_data = None
+        if not self.config.pretrain:
+            print('Loading protfunc data...')
+            protfunc_data = self.ProtFuncDataBuilder.get(indices)
 
         # for index in tqdm(indices):
         for i in range(len(indices)):
@@ -317,6 +328,9 @@ class ProtFuncDTINetworkData:
             feature_array = torch.tensor(self.feature_matrix[drug_index, protein_index, :], dtype=torch.float).round().view(-1, 1)
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.protein_mask = protein_mask
+            if not self.config.pretrain:
+                full_PPI_graph.protfunc_data = protfunc_data[i][0]
+
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)

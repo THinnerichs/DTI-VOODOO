@@ -5,20 +5,20 @@ import torch.nn.functional as F
 import torch_geometric
 import torch_geometric.nn as nn
 
+from protein_function_utils import ProteinFunctionPredNet
+
 
 class TemplateSimpleNet(torch.nn.Module):
     def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=128, dropout=0.2):
         super(TemplateSimpleNet, self).__init__()
-        self.batch_size = config.batch_size / config.batch_size
 
         self.num_drugs = num_drugs
         self.num_prots = num_prots
 
         # DDI feature layers
         self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 256)
-        self.fc2 = torch.nn.Linear(256,64)
-        self.fc3 = torch.nn.Linear(64,16)
-        self.fc4 = torch.nn.Linear(16,1)
+        self.fc2 = torch.nn.Linear(256,128)
+        self.fc3 = torch.nn.Linear(128,1)
 
         # mask feature
 
@@ -102,26 +102,22 @@ class TemplateSimpleNet(torch.nn.Module):
         PPI_x = PPI_x.view((batch_size, -1))
 
         # flatten
-        PPI_x = self.fc_g1(PPI_x)
-        PPI_x = self.relu(PPI_x)
-        PPI_x = self.dropout(PPI_x)
-        PPI_x = self.fc_g2(PPI_x)
-        PPI_x = self.dropout(PPI_x)
+
+        x = self.relu(self.fc_g1(PPI_x))
+        x_1 = self.relu(self.fc_g2(x) + PPI_x)
+
+        # x = self.relu(self.fc1(x_1))
+        # x_2 = self.relu(self.fc2(x) + x_1)
+        x = self.fc3(x_1)
+
 
         # DDI feature network
         # DDI_x = torch.cat((PPI_x, DDI_feature), 1)
-        DDI_x = self.fc1(PPI_x)
-        DDI_x = F.relu(DDI_x)
-        DDI_x = self.fc2(DDI_x)
-        DDI_x = F.relu(DDI_x)
-        DDI_x = self.fc3(DDI_x)
-        DDI_x = F.relu(DDI_x)
-        DDI_x = self.fc4(DDI_x)
         # DDI_x = torch.sigmoid(DDI_x)
-        return DDI_x
+        return x
 
 class ResTemplateNet(torch.nn.Module):
-    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, out_channels=64, dropout=0.2):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, out_channels=128, dropout=0.2):
         super(ResTemplateNet, self).__init__()
         self.batch_size = config.batch_size
 
@@ -219,4 +215,67 @@ class ResTemplateNet(torch.nn.Module):
         x = self.lin4(x)
 
         return x
+
+class CombinedProtFuncInteractionNetwork(torch.nn.Module):
+    def __init__(self, config, epoch):
+        super(CombinedProtFuncInteractionNetwork, self).__init__()
+
+        self.config = config
+
+        # initialize models
+        if 'Res' in config.arch:
+            self.interaction_model = ResTemplateNet(config,
+                                                    num_drugs=0,
+                                                    num_prots=config.num_proteins,
+                                                    num_features=1,
+                                                    conv_method=config.arch,
+                                                    out_channels=64)
+        else:
+            self.interaction_model = TemplateSimpleNet(config,
+                                                       num_drugs=0,
+                                                       num_prots=config.num_proteins,
+                                                       num_features=1,
+                                                       conv_method=config.arch)
+
+        self.protfunc_model = ProteinFunctionPredNet()
+
+        print('Loading interaction model...')
+        state_dict_path = '../models/PPI_network_' + config.arch + '_' + str(epoch) + '_epochs_model_fold_' + str(config.fold) + '.model'
+        self.interaction_model.load_state_dict(torch.load(state_dict_path))
+
+        print('Loading protfunc model...')
+        state_dict_path = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(config.fold)+'.model'
+        self.protfunc_model.load_state_dict(torch.load(state_dict_path))
+        print('Done.')
+
+        self.fc1 = torch.nn.Linear(2,1)
+
+    def set_train(self):
+        self.protfunc_model.train()
+        self.interaction_model.train()
+
+    def set_eval(self):
+        self.protfunc_model.eval()
+        self.interaction_model.eval()
+
+    def forward(self, data):
+        protein_mask = data.protein_mask
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+
+        protein_mask = protein_mask.view((-1, 1, self.num_prots)).float()
+        batch_size = protein_mask.size(0)
+
+        inter_x = self.interaction_model(data)
+        protfunc_x = self.protfunc_model(data.protfunc_data)
+
+        x = torch.cat((inter_x, protfunc_x), 0)
+        x = self.fc1(x)
+        return x
+
+
+
+
+
+
+
 
