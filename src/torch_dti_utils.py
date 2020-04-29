@@ -290,7 +290,7 @@ class ProtFuncDTINetworkData:
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins, self.num_proteins))
         for protein_index in tqdm(range(len(self.protein_list))):
             for drug_index in range(len(self.drug_list)):
-                drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index]==1]
+                drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :]==1]
                 for drug_interactor in drug_interactors:
                     self.feature_matrix[drug_index, protein_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
 
