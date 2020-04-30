@@ -31,6 +31,14 @@ Robert talk:
     - See paper in Skype
 
   - function phenotypes
-  1. 
 
-  11518 prots in intersec (use PPI embeddings)
+- What is usage of/hypothesis for 
+  - GO / protein functions
+  - anatomical site of expression
+  - loss of function phenotypes
+    - [link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3933875/)
+
+- permute taking each into account or not 
+
+11518 prots in intersec (use PPI embeddings)
+

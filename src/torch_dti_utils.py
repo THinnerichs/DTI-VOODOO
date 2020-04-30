@@ -287,14 +287,12 @@ class ProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
-        self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins, self.num_proteins))
-        for protein_index in tqdm(range(len(self.protein_list))):
-            for drug_index in range(len(self.drug_list)):
-                drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :]==1]
-                for drug_interactor in drug_interactors:
-                    self.feature_matrix[drug_index, protein_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
-
-
+        self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
+        for drug_index in range(self.num_drugs)
+            drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
+            return_feature = np.zeros((self.num_proteins))
+            for drug_interactor in drug_interactors:
+                self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
 
         if not config.pretrain:
             print('Building protfunc data...')
@@ -326,7 +324,7 @@ class ProtFuncDTINetworkData:
 
             y = int(self.y_dti_data[drug_index, protein_index])
 
-            feature_array = torch.tensor(self.feature_matrix[drug_index, protein_index, :], dtype=torch.float).round().view(-1, 1)
+            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
             full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
             full_PPI_graph.protein_mask = protein_mask
             if not self.config.pretrain:
