@@ -288,7 +288,7 @@ class ProtFuncDTINetworkData:
         # self.test_prots = config.test_prots
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
-        for drug_index in range(self.num_drugs)
+        for drug_index in tqdm(range(self.num_drugs)):
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
             return_feature = np.zeros((self.num_proteins))
             for drug_interactor in drug_interactors:
