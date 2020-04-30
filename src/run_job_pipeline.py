@@ -228,13 +228,13 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    cancel_jobs()
+    # cancel_jobs()
 
     # for fold in range(1,6):
         # submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1)
 
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
-    for arch in ['GCNConv']:
+    for arch in ['GATConv', 'SAGEConv']:
     # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
