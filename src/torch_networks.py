@@ -9,7 +9,7 @@ from protein_function_utils import ProteinFunctionPredNet
 
 
 class TemplateSimpleNet(torch.nn.Module):
-    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=128, dropout=0.2):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=256, dropout=0.2):
         super(TemplateSimpleNet, self).__init__()
 
         self.num_drugs = num_drugs
@@ -17,8 +17,10 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # DDI feature layers
         self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 256)
-        self.fc2 = torch.nn.Linear(256,128)
-        self.fc3 = torch.nn.Linear(128,1)
+        self.fc2 = torch.nn.Linear(256,256)
+        self.fc3 = torch.nn.Linear(256,256)
+        self.fc4 = torch.nn.Linear(256,128)
+        self.fc5 = torch.nn.Linear(128,1)
 
         # mask feature
 
@@ -106,9 +108,12 @@ class TemplateSimpleNet(torch.nn.Module):
         x = self.relu(self.fc_g1(PPI_x))
         x_1 = self.relu(self.fc_g2(x) + PPI_x)
 
-        # x = self.relu(self.fc1(x_1))
-        # x_2 = self.relu(self.fc2(x) + x_1)
-        x = self.fc3(x_1)
+        x = self.relu(self.fc1(x_1))
+        x_2 = self.relu(self.fc2(x) + x_1)
+        x = self.relu(self.fc3(x_2))
+        x_3 = self.relu(self.fc4(x) + x_2)
+
+        x = self.fc5(x_3)
 
 
         # DDI feature network
