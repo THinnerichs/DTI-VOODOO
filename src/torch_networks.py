@@ -12,7 +12,7 @@ class TemplateSimpleNet(torch.nn.Module):
     def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=128, dropout=0.2):
         super(TemplateSimpleNet, self).__init__()
 
-        self.num_drugs = num_dru4s
+        self.num_drugs = num_drugs
         self.num_prots = num_prots
 
         # DDI feature layers
