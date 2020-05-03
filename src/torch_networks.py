@@ -16,7 +16,7 @@ class TemplateSimpleNet(torch.nn.Module):
         self.num_prots = num_prots
 
         # DDI feature layers
-        self.fc1 = torch.nn.Linea4(num_drugs + GCN_num_outchannels, 128)
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 128)
         self.fc2 = torch.nn.Linear(128,128)
         self.fc3 = torch.nn.Linear(128,128)
         self.fc4 = torch.nn.Linear(128,128)
