@@ -26,9 +26,9 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, num_features*4, cached=False)
-            self.conv2 = nn.GCNConv(num_features*4, num_features*16, cached=False)
-            self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
+            self.conv1 = nn.GCNConv(num_features, num_features*8, cached=False)
+            self.conv2 = nn.GCNConv(num_features*8, num_features*128, cached=False)
+            # self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
             self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
@@ -92,7 +92,7 @@ class TemplateSimpleNet(torch.nn.Module):
         # PPI_x = F.dropout(PPI_x, training=self.training)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = F.relu(PPI_x)
-        PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
+        # PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
 
@@ -108,12 +108,12 @@ class TemplateSimpleNet(torch.nn.Module):
         x = self.relu(self.fc_g1(PPI_x))
         x_1 = self.relu(self.fc_g2(x) + PPI_x)
 
-        x = self.relu(self.fc1(x_1))
-        x_2 = self.relu(self.fc2(x) + x_1)
-        x = self.relu(self.fc3(x_2))
-        x_3 = self.relu(self.fc4(x) + x_2)
+        # x = self.relu(self.fc1(x_1))
+        # x_2 = self.relu(self.fc2(x) + x_1)
+        # x = self.relu(self.fc3(x_2))
+        # x_3 = self.relu(self.fc4(x) + x_2)
 
-        x = self.fc5(x_3)
+        x = self.fc5(x_1)
 
 
         # DDI feature network
