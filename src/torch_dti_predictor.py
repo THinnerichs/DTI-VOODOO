@@ -183,7 +183,7 @@ def transductive_missing_target_predictor(config,
                     torch.save(model.state_dict(), model_filename)
 
             if epoch%5 == 0:
-                model_filename = '../models/PPI_network_' + config.arch + '_model_fold_' + str(fold) + '.model'
+                model_filename = '../models/PPI_network_' + config.arch + '_' + str(epoch) + '_epochs_model_fold_' + str(fold) + '.model'
                 torch.save(model.state_dict(), model_filename)
 
             sys.stdout.flush()
@@ -192,8 +192,8 @@ def transductive_missing_target_predictor(config,
         if torch.cuda.is_available():
             torch.cuda.synchronize()
 
-        model_filename = '../models/PPI_network_' + config.arch + '_model_fold_' + str(fold) + '.model'
-        torch.save(model.state_dict(), model_filename)
+        # model_filename = '../models/PPI_network_' + config.arch + '_model_fold_' + str(fold) + '.model'
+        # torch.save(model.state_dict(), model_filename)
 
     return
     results_file_name = '../results/' + config.arch + '_' + config.node_features + '_' + str(config.num_proteins) + '_model_results'
