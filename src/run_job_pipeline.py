@@ -241,7 +241,7 @@ if __name__ == '__main__':
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
 
-        for fold in range(1, 3):
+        for fold in range(3, 6):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
 
