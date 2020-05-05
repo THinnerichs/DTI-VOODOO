@@ -292,6 +292,7 @@ class ProtFuncDTINetworkData:
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
             for drug_interactor in drug_interactors:
                 self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
+            self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / self.feature_matrix[drug_index, :].max()
 
         if not config.pretrain:
             print('Building protfunc data...')
