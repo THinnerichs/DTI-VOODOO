@@ -84,10 +84,10 @@ def transductive_missing_target_predictor(config,
 
         print('Fetching train data...')
         train_dataset = network_data.get(train_indices)
-        print('Done.')
+        print('\nDone.\n')
         print('Fetching test data...')
         test_dataset = network_data.get(test_indices)
-        print('Done.')
+        print('\nDone.\n')
 
         train_dataset = DTIGraphDataset(train_dataset)
         test_dataset = DTIGraphDataset(test_dataset)
@@ -179,10 +179,11 @@ def transductive_missing_target_predictor(config,
                     else:
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
 
-                    model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
-                    torch.save(model.state_dict(), model_filename)
+                    if not config.pretrain:
+                        model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
+                        torch.save(model.state_dict(), model_filename)
 
-            if epoch%5 == 0:
+            if epoch%5 == 0 and not config.pretrain:
                 model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_' + str(epoch) + '_epochs_model_fold_' + str(fold) + '.model'
                 torch.save(model.state_dict(), model_filename)
 
