@@ -265,6 +265,9 @@ class CombinedProtFuncInteractionNetwork(torch.nn.Module):
         self.protfunc_model.eval()
         self.interaction_model.eval()
 
+    def parameters(self):
+        return list(self.interaction_model.parameters()) + list(self.protfunc_model.parameters()) + list(super(CombinedProtFuncInteractionNetwork, self).parameters())
+
     def forward(self, data):
         # protein_mask = data.protein_mask
         # x, edge_index, batch = data.x, data.edge_index, data.batch
