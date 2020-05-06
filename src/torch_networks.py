@@ -248,14 +248,16 @@ class CombinedProtFuncInteractionNetwork(torch.nn.Module):
         state_dict_path = '../models/PPI_network_' + (config.model_id +'_' if config.model_id else '') + config.arch + '_' + str(epoch) + '_epochs_model_fold_' + str(config.fold) + '.model'
         print(state_dict_path)
         self.interaction_model.load_state_dict(torch.load(state_dict_path))
+        self.interaction_model.fc5 = torch.nn.Linear(128, 128)
 
         print('Loading protfunc model...')
         state_dict_path = '../models/protein_function_predictor/prot_func_pred_'+  'model_fold_'+str(config.fold)+'.model'
         print(state_dict_path)
         self.protfunc_model.load_state_dict(torch.load(state_dict_path))
+        self.protfunc_model.fc5 = torch.nn.Linear(128, 128)
         print('Done.')
 
-        self.fc1 = torch.nn.Linear(2,1)
+        self.fc1 = torch.nn.Linear(256, 1)
 
     def train(self):
         super(CombinedProtFuncInteractionNetwork, self).train()
