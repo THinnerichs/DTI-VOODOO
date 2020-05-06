@@ -293,6 +293,8 @@ class ProtFuncDTINetworkData:
             for drug_interactor in drug_interactors:
                 self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
             self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / self.feature_matrix[drug_index, :].max()
+            if self.feature_matrix[drug_index, :].max() == 0:
+                print('Loser drug:', drug_index, self.drug_list[drug_index], self.DDI_features[drug_index])
 
         if not config.pretrain:
             print('Building protfunc data...')
@@ -424,6 +426,9 @@ def predicting(model, device, loader):
         for data in loader:
             # data = data.to(device)
             output = model(data).sigmoid()
+            maximal = output.max()
+            if maximal>1:
+                print('Bumm', maximal)
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
