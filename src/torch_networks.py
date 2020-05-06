@@ -234,7 +234,7 @@ class CombinedProtFuncInteractionNetwork(torch.nn.Module):
                                                     num_prots=config.num_proteins,
                                                     num_features=1,
                                                     conv_method=config.arch,
-                                                    out_channels=64)
+                                                    out_channels=128)
         else:
             self.interaction_model = TemplateSimpleNet(config,
                                                        num_drugs=0,
@@ -255,20 +255,22 @@ class CombinedProtFuncInteractionNetwork(torch.nn.Module):
 
         self.fc1 = torch.nn.Linear(2,1)
 
-    def set_train(self):
+    def train(self):
+        super(CombinedProtFuncInteractionNetwork, self).train()
         self.protfunc_model.train()
         self.interaction_model.train()
 
-    def set_eval(self):
+    def eval(self):
+        super(CombinedProtFuncInteractionNetwork, self).eval()
         self.protfunc_model.eval()
         self.interaction_model.eval()
 
     def forward(self, data):
-        protein_mask = data.protein_mask
-        x, edge_index, batch = data.x, data.edge_index, data.batch
+        # protein_mask = data.protein_mask
+        # x, edge_index, batch = data.x, data.edge_index, data.batch
 
-        protein_mask = protein_mask.view((-1, 1, self.num_prots)).float()
-        batch_size = protein_mask.size(0)
+        # protein_mask = protein_mask.view((-1, 1, self.num_prots)).float()
+        # batch_size = protein_mask.size(0)
 
         inter_x = self.interaction_model(data)
         protfunc_x = self.protfunc_model(data.protfunc_data)
