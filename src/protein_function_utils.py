@@ -14,16 +14,16 @@ import DTI_data_preparation
 
 
 class ProteinFunctionDTIDataBuilder:
-    def __init__(self, include_uberon=True, include_GO=True, include_phenotype=True, num_proteins=None, drug_mode='trfm'):
+    def __init__(self, config, num_proteins=None, drug_mode='trfm'):
         print('Loading protein function data...')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print(len(self.drug_list), ' drugs present.')
         self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:num_proteins]
         print(len(self.protein_list), ' proteins present.')
 
-        self.include_uberon = include_uberon
-        self.include_GO = include_GO
-        self.include_phenotype = include_phenotype
+        self.include_uberon = config.include_uberon
+        self.include_GO = config.include_GO
+        self.include_phenotype = config.include_phenotype
 
         self.num_drugs = len(self.drug_list)
         self.num_proteins = len(self.protein_list)

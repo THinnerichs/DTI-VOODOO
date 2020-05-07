@@ -23,7 +23,7 @@ def protein_function_predictor(config):
     if config.num_proteins <= 0:
         config.num_proteins = None
 
-    dti_data = ProteinFunctionDTIDataBuilder(num_proteins=config.num_proteins)
+    dti_data = ProteinFunctionDTIDataBuilder(config, num_proteins=config.num_proteins)
 
     # generate indices for proteins
     kf = KFold(n_splits=5, random_state=42, shuffle=True)

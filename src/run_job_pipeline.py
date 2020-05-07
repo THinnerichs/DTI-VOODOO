@@ -236,7 +236,7 @@ if __name__ == '__main__':
     # cancel_jobs()
     # submit_jobscript_n_times(50)
 
-    # cancel_jobs()
+    cancel_jobs()
 
     for fold in range(1,6):
         boollist = [True, False]
