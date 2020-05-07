@@ -180,12 +180,15 @@ python3 molecular_predictor.py '''.format(jobname=jobname, days=str(days), num_g
     subprocess.call("sbatch " + filename, shell=True)
 
 def submit_protfunc_pred_job(num_proteins=-1,
-                            epochs=None,
-                            batch_size=None,
-                            model='protein',
-                            days=1,
-                            num_gpus=4,
-                            fold=-1):
+                             epochs=None,
+                             batch_size=None,
+                             model='protein',
+                             days=1,
+                             num_gpus=4,
+                             fold=-1,
+                             include_uberon=True,
+                             include_GO=True,
+                             include_phenotype=True):
     jobname = 'ProFunc'
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
@@ -217,6 +220,11 @@ python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days)
     preface_script += "--fold {fold} ".format(fold=str(fold))
     preface_script += "--model {model} ".format(model=model)
 
+
+    preface_script += "--include_uberon {include} ".format(include=include_uberon)
+    preface_script += "--include_GO {include} ".format(include=include_GO)
+    preface_script += "--include_phenotype {include} ".format(include=include_phenotype)
+
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
         f.write(preface_script)
@@ -230,9 +238,16 @@ if __name__ == '__main__':
 
     # cancel_jobs()
 
-    # for fold in range(1,6):
-        # submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1)
+    for fold in range(1,6):
+        boollist = [True, False]
+        for ub in boollist:
+            for GO in boollist:
+                for phenom in boollist:
+                    if not ub and not GO and not phenom:
+                        continue
+                    submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1, include_uberon=ub, include_GO=GO, include_phenotype=phenom)
 
+    '''
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
     for arch in ['GCNConv']:
     # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
@@ -254,3 +269,5 @@ if __name__ == '__main__':
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
+    '''
+

@@ -42,3 +42,10 @@ Robert talk:
 
 11518 prots in intersec (use PPI embeddings)
 
+- set real data as protein features -> for sanity check
+- set to 0 or 1 
+- remove self loops? 
+
+- Resnik Similarity drug-protein-similarity
+
+- GPUs?!

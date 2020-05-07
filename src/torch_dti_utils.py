@@ -295,10 +295,6 @@ class ProtFuncDTINetworkData:
                 self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
             self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
-        print('self.feature_matrix.max', self.feature_matrix.max())
-
-        raise Exception
-
         if not config.pretrain:
             print('Building protfunc data...')
             self.ProtFuncDataBuilder = ProteinFunctionDTIDataBuilder(num_proteins=config.num_proteins)

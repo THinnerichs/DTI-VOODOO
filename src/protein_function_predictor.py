@@ -89,14 +89,16 @@ def protein_function_predictor(config):
                 file='../results/protfunc_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.include_uberon, config.include_GO, config.include_phenotype,
+                          'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.include_uberon, config.include_GO, config.include_phenotype,
+                          'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -116,6 +118,8 @@ def protein_function_predictor(config):
                     else:
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
             sys.stdout.flush()
+
+        return
 
         print('Build overall data...')
         sys.stdout.flush()
@@ -232,14 +236,16 @@ def drug_split_protein_function_predictor(config):
                 file='../results/protfunc_drug_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.include_uberon, config.include_GO, config.include_phenotype,
+                          'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.include_uberon, config.include_GO, config.include_phenotype,
+                          'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -316,6 +322,10 @@ if __name__ == '__main__':
     parser.add_argument("--model_id", type=str, default='')
     parser.add_argument("--model", type=str, default='protein')
     parser.add_argument("--fold", type=int, default=-1)
+
+    parser.add_argument("--include_uberon", type=bool, default=True)
+    parser.add_argument("--include_GO", type=bool, default=True)
+    parser.add_argument("--include_phenotype", type=bool, default=True)
 
     config = parser.parse_args()
 

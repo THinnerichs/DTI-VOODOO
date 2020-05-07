@@ -14,12 +14,16 @@ import DTI_data_preparation
 
 
 class ProteinFunctionDTIDataBuilder:
-    def __init__(self, num_proteins=None, drug_mode='trfm'):
+    def __init__(self, include_uberon=True, include_GO=True, include_phenotype=True, num_proteins=None, drug_mode='trfm'):
         print('Loading protein function data...')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print(len(self.drug_list), ' drugs present.')
         self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:num_proteins]
         print(len(self.protein_list), ' proteins present.')
+
+        self.include_uberon = include_uberon
+        self.include_GO = include_GO
+        self.include_phenotype = include_phenotype
 
         self.num_drugs = len(self.drug_list)
         self.num_proteins = len(self.protein_list)
@@ -93,9 +97,9 @@ class ProteinFunctionDTIDataBuilder:
             drug_encoding = self.drug_encodings[drug_index, :]
 
             y = int(self.y_dti_data[drug_index, protein_index])
-            return_list.append((torch.cat([self.uberon_embeddings[protein_index],
-                                           self.GO_embeddings[protein_index],
-                                           self.phenotype_embeddings[protein_index],
+            return_list.append((torch.cat([(self.uberon_embeddings[protein_index] if self.include_uberon else torch.zeros(self.uberon_embeddings.size())),
+                                           (self.GO_embeddings[protein_index] if self.include_GO else torch.zeros(self.GO_embeddings.size())),
+                                           (self.phenotype_embeddings[protein_index] if self.include_phenotype else torch.zeros(self.phenotype_embeddings.size())),
                                            drug_encoding], 0), y))
         return return_list
 
