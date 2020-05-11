@@ -226,8 +226,6 @@ python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days)
     preface_script += ("--include_GO " if include_GO else '')
     preface_script += ("--include_phenotype " if include_phenotype else '')
 
-    print(preface_script)
-
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
         f.write(preface_script)
