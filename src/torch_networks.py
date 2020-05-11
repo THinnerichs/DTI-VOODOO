@@ -20,7 +20,7 @@ class TemplateSimpleNet(torch.nn.Module):
         self.fc2 = torch.nn.Linear(128,128)
         self.fc3 = torch.nn.Linear(128,128)
         self.fc4 = torch.nn.Linear(128,128)
-        self.fc5 = torch.nn.Linear(32,1)
+        self.fc5 = torch.nn.Linear(GCN_num_outchannels,1)
 
         # mask feature
 
@@ -30,21 +30,21 @@ class TemplateSimpleNet(torch.nn.Module):
             self.conv2 = nn.GCNConv(num_features*8, num_features*32, cached=False)
             # self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
         elif 'ChebConv' in conv_method:
-            self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
-            self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
-            self.conv3 = nn.ChebConv(num_features*16, num_features*128, 3)
+            self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
+            self.conv2 = nn.ChebConv(num_features*8, num_features*32, 3)
+            # self.conv3 = nn.ChebConv(num_features*16, num_features*128, 3)
         elif 'SAGEConv' in conv_method:
-            self.conv1 = nn.SAGEConv(num_features, num_features*4)
-            self.conv2 = nn.SAGEConv(num_features*4, num_features*16)
-            self.conv3 = nn.SAGEConv(num_features*16, num_features*128)
+            self.conv1 = nn.SAGEConv(num_features, num_features*8)
+            self.conv2 = nn.SAGEConv(num_features*8, num_features*32)
+            # self.conv3 = nn.SAGEConv(num_features*16, num_features*128)
         elif 'GraphConv' in conv_method:
             self.conv1 = nn.GraphConv(num_features, num_features*4)
             self.conv2 = nn.GraphConv(num_features*4, num_features*16)
             self.conv3 = nn.GraphConv(num_features*16, num_features*128)
         elif 'GATConv' in conv_method:
-            self.conv1 = nn.GATConv(num_features, num_features*4, heads=5)
-            self.conv2 = nn.GATConv(num_features*4, num_features*16, heads=5)
-            self.conv3 = nn.GATConv(num_features*16, num_features*128, heads=5)
+            self.conv1 = nn.GATConv(num_features, num_features*8, heads=5)
+            self.conv2 = nn.GATConv(num_features*8, num_features*32, heads=5)
+            # self.conv3 = nn.GATConv(num_features*16, num_features*128, heads=5)
         elif 'TAGConv' in conv_method:
             self.conv1 = nn.TAGConv(num_features, num_features*4)
             self.conv2 = nn.TAGConv(num_features*4, num_features*16)
