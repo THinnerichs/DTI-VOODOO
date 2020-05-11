@@ -97,9 +97,9 @@ class ProteinFunctionDTIDataBuilder:
             drug_encoding = self.drug_encodings[drug_index, :]
 
             y = int(self.y_dti_data[drug_index, protein_index])
-            return_list.append((torch.cat([(self.uberon_embeddings[protein_index] if self.include_uberon else torch.zeros(self.uberon_embeddings.size())),
-                                           (self.GO_embeddings[protein_index] if self.include_GO else torch.zeros(self.GO_embeddings.size())),
-                                           (self.phenotype_embeddings[protein_index] if self.include_phenotype else torch.zeros(self.phenotype_embeddings.size())),
+            return_list.append((torch.cat([(self.uberon_embeddings[protein_index] if self.include_uberon else torch.zeros(self.uberon_embeddings[protein_index].size())),
+                                           (self.GO_embeddings[protein_index] if self.include_GO else torch.zeros(self.GO_embeddings[protein_index].size())),
+                                           (self.phenotype_embeddings[protein_index] if self.include_phenotype else torch.zeros(self.phenotype_embeddings[protein_index].size())),
                                            drug_encoding], 0), y))
         return return_list
 
