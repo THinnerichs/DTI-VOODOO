@@ -184,6 +184,7 @@ def submit_protfunc_pred_job(num_proteins=-1,
                              batch_size=None,
                              model='protein',
                              days=1,
+                             hours=0,
                              num_gpus=4,
                              fold=-1,
                              include_uberon=True,
@@ -196,7 +197,7 @@ def submit_protfunc_pred_job(num_proteins=-1,
 #SBATCH -J {jobname}
 #SBATCH -o jobscript_outputs/{jobname}.%J.out
 #SBATCH -e jobscript_outputs/{jobname}.%J.err
-#SBATCH --time={days}-00:00:00
+#SBATCH --time={days}-{hours}:00:00
 #SBATCH --gres=gpu:v100:{num_gpus}
 #SBATCH --mem-per-gpu=60G
 #SBATCH --constraint=[gpu]
@@ -211,7 +212,7 @@ conda activate ~/.conda/envs/dti/
 
 module load cuda/10.0.130
 
-python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days), num_gpus=str(num_gpus))
+python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days), hours=str(hours), num_gpus=str(num_gpus))
     preface_script += "--num_proteins {num_prots} ".format(num_prots=str(num_proteins))
     if epochs:
         preface_script += "--num_epochs={num_epochs} ".format(num_epochs=str(epochs))
@@ -221,9 +222,9 @@ python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days)
     preface_script += "--model {model} ".format(model=model)
 
 
-    preface_script += "--include_uberon {include} ".format(include=include_uberon)
-    preface_script += "--include_GO {include} ".format(include=include_GO)
-    preface_script += "--include_phenotype {include} ".format(include=include_phenotype)
+    preface_script += ("--include_uberon " if include_uberon else '')
+    preface_script += ("--include_GO " if include_GO else '')
+    preface_script += ("--include_phenotype " if include_phenotype else '')
 
     print(preface_script)
 
@@ -247,7 +248,7 @@ if __name__ == '__main__':
                 for phenom in boollist:
                     if not ub and not GO and not phenom:
                         continue
-                    submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1, include_uberon=ub, include_GO=GO, include_phenotype=phenom)
+                    submit_protfunc_pred_job(epochs=30, batch_size=2097152, fold=fold, num_gpus=4, days=0, hours=4, include_uberon=ub, include_GO=GO, include_phenotype=phenom)
 
     '''
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
