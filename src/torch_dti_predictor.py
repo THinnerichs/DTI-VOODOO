@@ -128,8 +128,9 @@ def transductive_missing_target_predictor(config,
                                                        epoch=10)
 
         model = nn.DataParallel(model).to(device)
+        print("model total parameters", sum(p.numel() for p in model.parameters()))
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+        optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
 
         # storing best results
         best_loss = math.inf
