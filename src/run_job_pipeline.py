@@ -242,7 +242,6 @@ if __name__ == '__main__':
 
     # cancel_jobs()
 
-    '''
     for fold in range(1,6):
         boollist = [True, False]
         for ub in boollist:
@@ -251,8 +250,8 @@ if __name__ == '__main__':
                     if not ub and not GO and not phenom:
                         continue
                     submit_protfunc_pred_job(epochs=30, batch_size=131072, fold=fold, num_gpus=4, days=1, include_uberon=ub, include_GO=GO, include_phenotype=phenom)
-    '''
 
+    '''
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
     for arch in ['GCNConv']:
     # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
@@ -274,4 +273,5 @@ if __name__ == '__main__':
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch='Res'+arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch='Res'+arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch='Res'+arch)
+    '''
 
