@@ -326,9 +326,9 @@ if __name__ == '__main__':
     parser.add_argument("--model", type=str, default='protein')
     parser.add_argument("--fold", type=int, default=-1)
 
-    parser.add_argument("--include_uberon", type=bool, default=True)
-    parser.add_argument("--include_GO", type=bool, default=True)
-    parser.add_argument("--include_phenotype", type=bool, default=True)
+    parser.add_argument("--include_uberon", action='store_true')
+    parser.add_argument("--include_GO", action='store_true')
+    parser.add_argument("--include_phenotype", action='store_true')
 
     config = parser.parse_args()
 
