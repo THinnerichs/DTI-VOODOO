@@ -16,7 +16,9 @@ from protein_function_utils import *
 
 
 def protein_function_predictor(config):
-    model_st = 'prot_func_preidctor'
+    model_st = 'prot_func_predictor'
+
+    print('includes', config.include_uberon, config.include_GO, config.include_phenotype)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

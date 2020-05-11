@@ -9,7 +9,7 @@ from protein_function_utils import ProteinFunctionPredNet
 
 
 class TemplateSimpleNet(torch.nn.Module):
-    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=128, dropout=0.2):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, GCN_num_outchannels=64, dropout=0.2):
         super(TemplateSimpleNet, self).__init__()
 
         self.num_drugs = num_drugs
@@ -20,7 +20,7 @@ class TemplateSimpleNet(torch.nn.Module):
         self.fc2 = torch.nn.Linear(128,128)
         self.fc3 = torch.nn.Linear(128,128)
         self.fc4 = torch.nn.Linear(128,128)
-        self.fc5 = torch.nn.Linear(128,1)
+        self.fc5 = torch.nn.Linear(32,1)
 
         # mask feature
 
@@ -67,8 +67,8 @@ class TemplateSimpleNet(torch.nn.Module):
             raise ValueError
 
 
-        self.fc_g1 = torch.nn.Linear(num_features*128, 512)
-        self.fc_g2 = torch.nn.Linear(512, GCN_num_outchannels)
+        self.fc_g1 = torch.nn.Linear(num_features*32, 32)
+        self.fc_g2 = torch.nn.Linear(32, GCN_num_outchannels)
 
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
