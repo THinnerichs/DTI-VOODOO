@@ -227,8 +227,6 @@ python3 protein_function_predictor.py '''.format(jobname=jobname, days=str(days)
 
     print(preface_script)
 
-    return
-
     filename = '../SLURM_JOBS/'+jobname+'_jobscript.sh'
     with open(file=filename, mode='w') as f:
         f.write(preface_script)
