@@ -16,10 +16,10 @@ class TemplateSimpleNet(torch.nn.Module):
         self.num_prots = num_prots
 
         # DDI feature layers
-        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 128)
-        self.fc2 = torch.nn.Linear(128,128)
-        self.fc3 = torch.nn.Linear(128,128)
-        self.fc4 = torch.nn.Linear(128,128)
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 32)
+        self.fc2 = torch.nn.Linear(32,32)
+        self.fc3 = torch.nn.Linear(32,32)
+        self.fc4 = torch.nn.Linear(32,32)
         self.fc5 = torch.nn.Linear(GCN_num_outchannels,1)
 
         # mask feature
@@ -113,6 +113,10 @@ class TemplateSimpleNet(torch.nn.Module):
         # x = self.relu(self.fc3(x_2))
         # x_3 = self.relu(self.fc4(x) + x_2)
 
+        x = self.relu(self.fc1(PPI_x))
+        x = self.relu(self.fc2(PPI_x))
+        x = self.relu(self.fc3(PPI_x))
+        x = self.relu(self.fc4(PPI_x))
         x = self.fc5(x_1)
 
 
