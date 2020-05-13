@@ -67,8 +67,8 @@ class TemplateSimpleNet(torch.nn.Module):
             raise ValueError
 
 
-        self.fc_g1 = torch.nn.Linear(num_features*32, 32)
-        self.fc_g2 = torch.nn.Linear(32, GCN_num_outchannels)
+        self.fc_g1 = torch.nn.Linear(num_features*64, 64)
+        self.fc_g2 = torch.nn.Linear(64, GCN_num_outchannels)
 
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
