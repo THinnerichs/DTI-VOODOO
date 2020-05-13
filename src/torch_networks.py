@@ -105,7 +105,7 @@ class TemplateSimpleNet(torch.nn.Module):
         # flatten
 
         x = self.relu(self.fc_g1(PPI_x))
-        x_1 = self.relu(self.fc_g2(x) + PPI_x)
+        # x_1 = self.relu(self.fc_g2(x) + PPI_x)
 
         # x = self.relu(self.fc1(x_1))
         # x_2 = self.relu(self.fc2(x) + x_1)
