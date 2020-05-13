@@ -32,9 +32,9 @@ def write_human_DTI_graph(min_score=0):
             if not drug in drug_set:
                 continue
 
-            dti_graph.add_node(drug)
-            dti_graph.add_node(target)
             if score >= min_score:
+                dti_graph.add_node(drug)
+                dti_graph.add_node(target)
                 dti_graph.add_edge(drug, target, score=score)
 
     print("Finished.\n")
