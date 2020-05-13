@@ -309,11 +309,12 @@ class ProtFuncDTINetworkData:
 
         print("Finished.\n")
 
-        print('Tests')
-        print(self.DDI_features.sum(), self.DDI_features.sum(axis=0))
-        for drug_index in range(len(self.drug_list)):
-            dist = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]
-            print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(dist))
+        with open(file='graph_testing', mode='w') as f:
+            print('Tests')
+            print(self.DDI_features.sum(), self.DDI_features.sum(axis=0), file=f)
+            for drug_index in range(len(self.drug_list)):
+                diff = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]
+                print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(diff), file=f)
 
     def get(self, indices):
         data_list = []
