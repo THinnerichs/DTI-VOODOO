@@ -41,8 +41,11 @@ def transductive_missing_target_predictor(config,
 
     # get full protein num
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
-    num_proteins = config.num_proteins if config.num_proteins else 11499 # 11518
-    num_drugs = 568 # 641
+    num_drugs = len(np.array(DTI_data_preparation.get_drug_list()))
+    num_proteins = config.num_proteins if config.num_proteins else len(np.array(DTI_data_preparation.get_human_prot_func_proteins()))
+
+    # num_proteins = config.num_proteins if config.num_proteins else 11499 # 11518
+    # num_drugs = 568 # 641
 
     # dataset is present in dimension (num_drugs * num_proteins)
 

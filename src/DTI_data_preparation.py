@@ -326,18 +326,16 @@ def test():
 
 
 if __name__ == '__main__':
-    for score in range(0,1000,100):
-        write_human_DTI_graph(score)
+    write_human_DTI_graph(700)
 
-
-def bla():
-
-    dti_graph = get_human_DTI_graph()
-    print("Nodes", len(dti_graph.nodes()))
-    print("Edges", len(dti_graph.edges()))
+    # dti_graph = get_human_DTI_graph()
+    # print("Nodes", len(dti_graph.nodes()))
+    # print("Edges", len(dti_graph.edges()))
 
     drug_list = get_drug_list()
     print('Drugs:', len(drug_list))
+
+    write_human_protein_list()
 
 
     # write_truncated_drug_to_SMILES_dict()
@@ -349,8 +347,8 @@ def bla():
 
     # test()
 
-    write_human_protein_list()
-    print('num_proteins', len(get_human_proteins()))
+    # write_human_protein_list()
+    # print('num_proteins', len(get_human_proteins()))
 
     # print(get_annotated_PPI_graph())
 
