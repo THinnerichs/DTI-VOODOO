@@ -118,7 +118,7 @@ def transductive_missing_target_predictor(config,
                                           num_prots=network_data.num_proteins,
                                           num_features=network_data.num_PPI_features,
                                           conv_method=config.arch,
-                                          GCN_num_outchannels=32)
+                                          GCN_num_outchannels=64)
             elif 'Res' in config.arch:
                 model = ResTemplateNet(config,
                                        num_drugs=0,

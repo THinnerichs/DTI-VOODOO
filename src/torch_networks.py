@@ -16,10 +16,10 @@ class TemplateSimpleNet(torch.nn.Module):
         self.num_prots = num_prots
 
         # DDI feature layers
-        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 32)
-        self.fc2 = torch.nn.Linear(32,32)
-        self.fc3 = torch.nn.Linear(32,32)
-        self.fc4 = torch.nn.Linear(32,32)
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
+        self.fc2 = torch.nn.Linear(64,64)
+        self.fc3 = torch.nn.Linear(64,64)
+        self.fc4 = torch.nn.Linear(64,32)
         self.fc5 = torch.nn.Linear(GCN_num_outchannels,1)
 
         # mask feature
@@ -27,7 +27,7 @@ class TemplateSimpleNet(torch.nn.Module):
         # GCN laye4s
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(num_features, num_features*8, cached=False)
-            self.conv2 = nn.GCNConv(num_features*8, num_features*32, cached=False)
+            self.conv2 = nn.GCNConv(num_features*8, num_features*64, cached=False)
             # self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
