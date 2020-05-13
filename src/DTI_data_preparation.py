@@ -39,6 +39,10 @@ def write_human_DTI_graph(min_score=0):
 
     print("Finished.\n")
 
+    print('num_nodes', len(dti_graph) - len(drug_set))
+
+    return
+
     print("Writing human only DTI-graph to disk ...")
     filename = "../data/STITCH_data/human_only_DTI_graph"
     with open(file=filename+'.pkl', mode='wb') as f:
@@ -321,7 +325,11 @@ def test():
 
 
 if __name__ == '__main__':
-    # write_human_DTI_graph()
+    write_human_DTI_graph(0)
+    write_human_DTI_graph(700)
+
+
+def bla():
 
     dti_graph = get_human_DTI_graph()
     print("Nodes", len(dti_graph.nodes()))
