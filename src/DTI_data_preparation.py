@@ -326,8 +326,8 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph(0)
-    write_human_DTI_graph(700)
+    for score in range(0,1000,100)
+        write_human_DTI_graph(score)
 
 
 def bla():
