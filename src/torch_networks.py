@@ -19,8 +19,8 @@ class TemplateSimpleNet(torch.nn.Module):
         self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
         self.fc2 = torch.nn.Linear(64,64)
         self.fc3 = torch.nn.Linear(64,64)
-        self.fc4 = torch.nn.Linear(64,32)
-        self.fc5 = torch.nn.Linear(GCN_num_outchannels,1)
+        self.fc4 = torch.nn.Linear(64,64)
+        self.fc5 = torch.nn.Linear(64,1)
 
         # mask feature
 
