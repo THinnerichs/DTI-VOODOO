@@ -1,13 +1,10 @@
 ## TODO
 
 1.1. Find DTI paper which uses drughub
-1.5. Build DTIs according to DTI paper 
 
 Also write down failed approach?
 
 Options:
-- Molecular feature vs DDI vs DDI + semsim vs. All together
-- ResNet vs Stacked
 - GCN vs GAT vs SAGE vs others
 - Protein vs drug split
 
@@ -38,14 +35,10 @@ Robert talk:
   - loss of function phenotypes
     - [link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3933875/)
 
-- permute taking each into account or not 
-
-11518 prots in intersec (use PPI embeddings)
-
-- set real data as protein features -> for sanity check
-- set to 0 or 1 
 - remove self loops? 
-
 - Resnik Similarity drug-protein-similarity
 
-- GPUs?!
+- Remove self-loops from GCN
+- try without DDI identitity
+- use only boyce for DDIs
+- use semsim-weighted PPI features 

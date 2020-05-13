@@ -309,8 +309,8 @@ class ProtFuncDTINetworkData:
 
         print("Finished.\n")
 
-        with open(file='graph_testing', mode='w') as f:
-            print('Tests')
+        with open(file='graph_testing', mode='a') as f:
+            print('\nTests')
             print(self.DDI_features.sum(), self.DDI_features.sum(axis=0), file=f)
             for drug_index in range(len(self.drug_list)):
                 diff = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]

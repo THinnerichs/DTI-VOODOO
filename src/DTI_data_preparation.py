@@ -17,7 +17,8 @@ def write_human_DTI_graph(min_score=0):
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
 
-    drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
+    # drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
+    drug_set = get_drug_list()
 
     print("Parsing human drug-protein-links data ...")
     with open(file=filename, mode='r') as f:
@@ -114,7 +115,8 @@ def get_human_prot_func_proteins():
 
 def get_drug_list():
     human_DTI_graph = get_human_DTI_graph()
-    drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
 
@@ -128,7 +130,8 @@ def get_side_effect_similarity_feature_list(intersect_drug_list):
 
 def get_DDI_feature_list(intersect_drug_list):
     # intersect_drug_list = get_drug_list()
-    merged_graph = DDI_utils.get_merged_DDI_graph()
+    # merged_graph = DDI_utils.get_merged_DDI_graph()
+    merged_graph = DDI_utils.get_DDI_Boyce_graph()
 
     feature_vec_list = []
     for drug in intersect_drug_list:
@@ -322,11 +325,15 @@ def test():
 
 
 if __name__ == '__main__':
-    # write_human_DTI_graph()
+    write_human_DTI_graph()
 
-    # dti_graph = get_human_DTI_graph()
-    # print("Nodes", len(dti_graph.nodes()))
-    # print("Edges", len(dti_graph.edges()))
+    dti_graph = get_human_DTI_graph()
+    print("Nodes", len(dti_graph.nodes()))
+    print("Edges", len(dti_graph.edges()))
+
+    drug_list = get_drug_list()
+    print('Drugs:', drug_list)
+
 
     # write_truncated_drug_to_SMILES_dict()
     # get_truncated_drug_to_SMILES_dict()
@@ -358,7 +365,7 @@ if __name__ == '__main__':
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     '''
 
-    write_human_prot_func_protein_list()
-    dicki = get_human_prot_func_proteins()
+    # write_human_prot_func_protein_list()
+    # dicki = get_human_prot_func_proteins()
 
     pass
