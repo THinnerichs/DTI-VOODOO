@@ -88,7 +88,8 @@ def submit_gpu_job(num_proteins=-1,
                    neg_sample_ratio=1.0,
                    mode='standard',
                    pretrain=True,
-                   model_id=''):
+                   model_id='',
+                   lr=0.001):
     jobname = arch+'_'+node_features+'_'+mode
     preface_script = '''#!/bin/bash
 #SBATCH -N 1
@@ -125,6 +126,7 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname,
 
     preface_script += "--fold {fold} ".format(fold=str(fold))
     preface_script += "--arch {arch} ".format(arch=arch)
+    preface_script += "--lr {lr} ".format(lr=lr)
     preface_script += "--mode {mode} ".format(mode=mode)
     preface_script += "--neg_sample_ratio {neg_sample_ratio} ".format(neg_sample_ratio=str(neg_sample_ratio))
     preface_script += "--pretrain {pretrain} ".format(pretrain=pretrain)
@@ -251,18 +253,18 @@ if __name__ == '__main__':
     '''
 
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
-    for arch in ['GCNConv']:
+    for arch in ['GCNConv', 'GATConv', 'ChebConv', 'SAGEConv']:
     # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
 
-        for fold in range(1, 4):
+        for fold in range(3, 6):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
 
-            submit_gpu_job(epochs=20, batch_size=520, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.05, model_id='RobTrunc2', node_features='ProtFunc', pretrain=True)
+            submit_gpu_job(epochs=30, batch_size=1400, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1, model_id='StrongDDI', node_features='ProtFunc', pretrain=True, lr=0.002)
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
