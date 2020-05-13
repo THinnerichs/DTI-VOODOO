@@ -39,7 +39,8 @@ def write_human_DTI_graph(min_score=0):
 
     print("Finished.\n")
 
-    print('num_nodes', len(dti_graph) - len(drug_set))
+    print('num_nodes', len(dti_graph.nodes()) - len(drug_set))
+    print('num_edges', len(dti_graph.edges()))
 
     return
 
