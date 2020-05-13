@@ -23,7 +23,7 @@ def write_human_DTI_graph(min_score=0):
     print("Parsing human drug-protein-links data ...")
     with open(file=filename, mode='r') as f:
         f.readline()
-        for line in f:
+        for line in tqdm(f, total=15473940):
             split_line = line.split('\t')
             drug = split_line[0].replace('s','m')
             target = split_line[1]
@@ -332,7 +332,7 @@ if __name__ == '__main__':
     print("Edges", len(dti_graph.edges()))
 
     drug_list = get_drug_list()
-    print('Drugs:', drug_list)
+    print('Drugs:', len(drug_list))
 
 
     # write_truncated_drug_to_SMILES_dict()
