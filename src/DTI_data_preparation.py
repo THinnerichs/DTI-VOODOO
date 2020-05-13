@@ -325,7 +325,7 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph()
+    # write_human_DTI_graph()
 
     dti_graph = get_human_DTI_graph()
     print("Nodes", len(dti_graph.nodes()))
@@ -344,7 +344,7 @@ if __name__ == '__main__':
 
     # test()
 
-    # write_human_protein_list()
+    write_human_protein_list()
 
     # print(get_annotated_PPI_graph())
 
