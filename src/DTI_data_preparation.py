@@ -76,8 +76,7 @@ def get_human_proteins():
 def write_human_prot_func_protein_list():
     print('Loading standard proteins...')
     human_DTI_graph = get_human_DTI_graph()
-    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
-    protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
+    human_proteins = get_human_proteins()
 
     DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
     uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
@@ -94,8 +93,7 @@ def write_human_prot_func_protein_list():
     protein_list = []
     for node in tqdm(human_DTI_graph.nodes()):
         if not node.startswith('CID') and \
-                node in list(protein_node_feature_dict.keys()) and \
-                node in list(protein_adj_mat_dict.keys()) and \
+                node in human_proteins and \
                 node in uberon_model and node in GO_model and node in phenotype_model:
             protein_list.append(node)
     print("Finished.\n")
@@ -364,7 +362,8 @@ if __name__ == '__main__':
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     '''
 
-    # write_human_prot_func_protein_list()
-    # dicki = get_human_prot_func_proteins()
+    write_human_prot_func_protein_list()
+    dicki = get_human_prot_func_proteins()
+    print('num_proteins', len(dicki))
 
     pass
