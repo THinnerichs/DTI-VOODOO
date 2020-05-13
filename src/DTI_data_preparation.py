@@ -326,7 +326,7 @@ def test():
 
 
 if __name__ == '__main__':
-    for score in range(0,1000,100)
+    for score in range(0,1000,100):
         write_human_DTI_graph(score)
 
 
