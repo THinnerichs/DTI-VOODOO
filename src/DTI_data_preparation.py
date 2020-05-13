@@ -58,9 +58,7 @@ def write_human_protein_list():
     print("Gathering proteins ...")
     protein_list = []
     for node in tqdm(human_DTI_graph.nodes()):
-        if not node.startswith('CID') and \
-                node in list(protein_node_feature_dict.keys()) and \
-                node in list(protein_adj_mat_dict.keys()):
+        if not node.startswith('CID') and node in list(protein_node_feature_dict.keys()):
             protein_list.append(node)
     print("Finished.\n")
 
@@ -345,6 +343,7 @@ if __name__ == '__main__':
     # test()
 
     write_human_protein_list()
+    print('num_proteins', len(get_human_proteins()))
 
     # print(get_annotated_PPI_graph())
 
