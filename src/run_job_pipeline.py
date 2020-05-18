@@ -253,18 +253,19 @@ if __name__ == '__main__':
     '''
 
     # 'ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv', 'SAGEConv', 'GATConv
-    for arch in ['GCNConv', 'GATConv', 'ChebConv', 'SAGEConv']:
+    for arch in ['GCNConv']: #, 'GATConv', 'ChebConv', 'SAGEConv']:
     # for arch in ['ChebConv','GraphConv', 'TAGConv', 'ARMAConv', 'SGConv', 'FeaStConv']:
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='protein_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch=arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
         # submit_gpu_job(epochs=20, batch_size=160, mem=360, days=1, arch='Res'+arch, mode='drug_drughub', num_gpus=4, neg_sample_ratio=0.05)
 
-        for fold in range(3, 6):
+        for fold in range(3, 4):
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch=arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
 
-            submit_gpu_job(epochs=30, batch_size=1400, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1, model_id='StrongDDI', node_features='ProtFunc', pretrain=True, lr=0.002)
+            for lr in [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]:
+                submit_gpu_job(epochs=30, batch_size=1500, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1, model_id='LRTest', node_features='ProtFunc', pretrain=True, lr=lr)
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)

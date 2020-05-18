@@ -617,14 +617,14 @@ def test_predictor_on_drughub_drug_data(config):
             file = '../results/drughub_drug_split_' + config.arch + '_prots_' + str(epoch) + '_epochs'
             with open(file=file, mode='a') as f:
                 train_labels, train_predictions = predicting(model, device, train_loader)
-                print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Train:', config.lr, config.fold, config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(train_labels, train_predictions),
                       dti_utils.dti_auroc(train_labels, train_predictions),
                       dti_utils.dti_f1_score(train_labels, train_predictions),
                       metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                 test_labels, test_predictions = predicting(model, device, test_loader)
-                print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                print('Test:', config.lr, config.fold, config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                       metrics.accuracy_score(test_labels, test_predictions),
                       dti_utils.dti_auroc(test_labels, test_predictions),
                       dti_utils.dti_f1_score(test_labels, test_predictions),

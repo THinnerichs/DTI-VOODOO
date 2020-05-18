@@ -42,3 +42,11 @@ Robert talk:
 - try without DDI identitity
 - use only boyce for DDIs
 - use semsim-weighted PPI features 
+
+- Transferred vs. normal
+- take only experimental targets
+  - Take proteins from nature paper (see Skype)
+  - Take proteins and links from STITCH with appropriate score
+
+
+
