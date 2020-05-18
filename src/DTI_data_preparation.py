@@ -27,7 +27,8 @@ def write_human_DTI_graph(min_score=0):
             split_line = line.split('\t')
             drug = split_line[0].replace('s','m')
             target = split_line[1]
-            score = int(split_line[-1])
+            # score = int(split_line[-1])
+            score = int(split_line[2])
 
             if not drug in drug_set:
                 continue
@@ -41,6 +42,8 @@ def write_human_DTI_graph(min_score=0):
 
     print('num_nodes', len(dti_graph.nodes()) - len(drug_set))
     print('num_edges', len(dti_graph.edges()))
+
+    return
 
     print("Writing human only DTI-graph to disk ...")
     filename = "../data/STITCH_data/human_only_DTI_graph"
@@ -324,16 +327,18 @@ def test():
 
 
 if __name__ == '__main__':
+    write_human_DTI_graph(300)
+    write_human_DTI_graph(500)
     write_human_DTI_graph(700)
 
     # dti_graph = get_human_DTI_graph()
     # print("Nodes", len(dti_graph.nodes()))
     # print("Edges", len(dti_graph.edges()))
 
-    drug_list = get_drug_list()
-    print('Drugs:', len(drug_list))
+    # drug_list = get_drug_list()
+    # print('Drugs:', len(drug_list))
 
-    write_human_protein_list()
+    # write_human_protein_list()
 
 
     # write_truncated_drug_to_SMILES_dict()
@@ -367,8 +372,8 @@ if __name__ == '__main__':
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     '''
 
-    write_human_prot_func_protein_list()
-    dicki = get_human_prot_func_proteins()
-    print('num_proteins', len(dicki))
+    # write_human_prot_func_protein_list()
+    # dicki = get_human_prot_func_proteins()
+    # print('num_proteins', len(dicki))
 
     pass
