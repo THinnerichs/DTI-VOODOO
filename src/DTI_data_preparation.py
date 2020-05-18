@@ -28,7 +28,7 @@ def write_human_DTI_graph(min_score=0):
             drug = split_line[0].replace('s','m')
             target = split_line[1]
             # score = int(split_line[-1])
-            score = int(split_line[2]) int(split_line[3])
+            score = int(split_line[2]) + int(split_line[3])
 
             if not drug in drug_set:
                 continue
