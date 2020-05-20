@@ -274,7 +274,7 @@ class ProtFuncDTINetworkData:
         print("Loading DDI features ...")
         self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
         # add self-interactions for better performance
-        self.DDI_features += np.identity(self.num_drugs)
+        self.DDI_features[np.identity(self.num_drugs)==1] = 1
         print(self.DDI_features.shape)
 
         # DTI data
@@ -292,17 +292,17 @@ class ProtFuncDTINetworkData:
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
-        '''
         for drug_index in tqdm(range(self.num_drugs)):
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
             for drug_interactor in drug_interactors:
                 # self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
                 self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
-        '''
 
+        '''
         for drug_index in tqdm(range(self.num_drugs)):
             self.feature_matrix[drug_index, :] = self.y_dti_data[drug_index, :]
+        '''
 
         if not config.pretrain:
             print('Building protfunc data...')
