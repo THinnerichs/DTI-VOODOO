@@ -148,8 +148,8 @@ def transductive_missing_target_predictor(config,
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            # loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
-            # print('Train loss:', loss)
+            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
+            print('Train loss:', loss)
             sys.stdout.flush()
 
             if epoch%config.num_epochs == 0:
