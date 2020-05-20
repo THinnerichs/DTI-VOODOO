@@ -148,8 +148,8 @@ def transductive_missing_target_predictor(config,
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
-            print('Train loss:', loss)
+            # loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
+            # print('Train loss:', loss)
             sys.stdout.flush()
 
             if epoch%config.num_epochs == 0:
@@ -161,14 +161,14 @@ def transductive_missing_target_predictor(config,
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
-                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
+                          metrics.matthews_corrcoef(train_labels, train_predictions), ) #@TODO submit to file again
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print(config.model_id, 'Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
-                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
+                          metrics.matthews_corrcoef(test_labels, test_predictions), ) #@TODO submit to file again
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
@@ -608,8 +608,7 @@ def test_predictor_on_drughub_drug_data(config):
 
     ret = None
     for epoch in range(1, config.num_epochs + 1):
-        loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
-                     weight_dict=weight_dict)
+        loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
         print('Train loss:', loss)
 
         if epoch % 10 == 0:
