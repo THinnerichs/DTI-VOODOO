@@ -100,6 +100,7 @@ def transductive_missing_target_predictor(config,
         len_to_sum_ratio = (len(train_indices)-positives)/positives #Get negatives/positives ratio
         weight_dict = {0: 1.,
                        1: len_to_sum_ratio}
+        print('Neg/pos ratio:', len_to_sum_ratio)
 
         # train_size = int(0.8 * len(train_dataset))
         # valid_size = len(train_dataset) - train_size
