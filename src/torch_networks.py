@@ -134,12 +134,7 @@ class TemplateSimpleNet(torch.nn.Module):
         x = self.relu(self.bn_3(self.fc3(x)))
         # print('x.sum()', x.sum())
         x = self.relu(self.bn_4(self.fc4(x)))
-        print('x.sum()', x.sum())
         x = self.fc5(x)
-        print('x.sum()', x.sum())
-
-        raise Exception
-
 
         # DDI feature network
         # DDI_x = torch.cat((PPI_x, DDI_feature), 1)

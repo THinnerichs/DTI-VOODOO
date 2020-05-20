@@ -188,9 +188,11 @@ def transductive_missing_target_predictor(config,
                         model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
                         torch.save(model.state_dict(), model_filename)
 
+            '''
             if epoch%5 == 0 and not config.pretrain:
                 model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_' + str(epoch) + '_epochs_model_fold_' + str(fold) + '.model'
                 torch.save(model.state_dict(), model_filename)
+            '''
 
             sys.stdout.flush()
         results.append(ret)
