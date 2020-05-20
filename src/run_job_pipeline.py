@@ -265,7 +265,7 @@ if __name__ == '__main__':
             # submit_gpu_job(epochs=30, batch_size=32, days=2, arch='Res'+arch, mode='drug', fold=fold, num_gpus=2, neg_sample_ratio=0.05)
 
             for lr in [0.0001, 0.00001, 0.000001]:
-                submit_gpu_job(epochs=80, batch_size=1500, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1, model_id='LRTest', node_features='ProtFunc', pretrain=True, lr=lr)
+                submit_gpu_job(epochs=70, batch_size=1500, mem=360, days=1, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1, model_id='LRTest', node_features='ProtFunc', pretrain=True, lr=lr)
             # submit_gpu_job(epochs=30, batch_size=160, mem=360, days=2, arch=arch, fold=fold, num_gpus=4, neg_sample_ratio=0.1)
             # submit_gpu_job(num_proteins=4000, epochs=30, batch_size=64, arch=arch)
             # submit_gpu_job(num_proteins=1000, epochs=30, batch_size=256, arch=arch)
