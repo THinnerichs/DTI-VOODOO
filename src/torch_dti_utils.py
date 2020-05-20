@@ -417,6 +417,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
         output = model(data)
+        print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
         weight_vec = torch.ones([1]) * weight_dict[1] *4
