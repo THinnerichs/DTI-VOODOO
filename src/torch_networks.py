@@ -102,9 +102,12 @@ class TemplateSimpleNet(torch.nn.Module):
         PPI_x = torch.bmm(protein_mask, PPI_x)
         PPI_x = PPI_x.view((batch_size, -1))
 
+        print('PPI_x.sum()', PPI_x.sum())
+
         # flatten
 
         x = self.relu(self.fc_g1(PPI_x))
+        print('PPI_x.sum()', PPI_x.sum())
         # x_1 = self.relu(self.fc_g2(x) + PPI_x)
 
         # x = self.relu(self.fc1(x_1))
@@ -113,10 +116,17 @@ class TemplateSimpleNet(torch.nn.Module):
         # x_3 = self.relu(self.fc4(x) + x_2)
 
         x = self.relu(self.fc1(x))
+        print('x.sum()', x.sum())
         x = self.relu(self.fc2(x))
+        print('x.sum()', x.sum())
         x = self.relu(self.fc3(x))
+        print('x.sum()', x.sum())
         x = self.relu(self.fc4(x))
+        print('x.sum()', x.sum())
         x = self.fc5(x)
+        print('x.sum()', x.sum())
+
+        raise Exception
 
 
         # DDI feature network
