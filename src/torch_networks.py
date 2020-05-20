@@ -15,12 +15,6 @@ class TemplateSimpleNet(torch.nn.Module):
         self.num_drugs = num_drugs
         self.num_prots = num_prots
 
-        # DDI feature layers
-        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
-        self.fc2 = torch.nn.Linear(64,64)
-        self.fc3 = torch.nn.Linear(64,64)
-        self.fc4 = torch.nn.Linear(64,64)
-        self.fc5 = torch.nn.Linear(64,1)
 
         # mask feature
 
@@ -70,6 +64,23 @@ class TemplateSimpleNet(torch.nn.Module):
         self.fc_g1 = torch.nn.Linear(num_features*32, 64)
         self.fc_g2 = torch.nn.Linear(64, GCN_num_outchannels)
 
+
+
+        # DDI feature layers
+        self.fc1 = torch.nn.Linear(num_drugs + GCN_num_outchannels, 64)
+        self.fc2 = torch.nn.Linear(64, 64)
+        self.fc3 = torch.nn.Linear(64, 64)
+        self.fc4 = torch.nn.Linear(64, 64)
+        self.fc5 = torch.nn.Linear(64, 1)
+
+        # batch norm
+        self.bn_g1 = torch.nn.BatchNorm1d(64)
+        self.bn_g2 = torch.nn.BatchNorm1d(64)
+        self.bn_1 = torch.nn.BatchNorm1d(64)
+        self.bn_2 = torch.nn.BatchNorm1d(64)
+        self.bn_3 = torch.nn.BatchNorm1d(64)
+        self.bn_4 = torch.nn.BatchNorm1d(64)
+
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
@@ -88,15 +99,10 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        print('max input ', PPI_x.max())
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
-        print('max input 1', PPI_x.max())
         PPI_x = F.relu(PPI_x)
-        print('max input 2', PPI_x.max())
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
-        print('max input 3', PPI_x.max())
         PPI_x = F.relu(PPI_x)
-        print('max input 4', PPI_x.max())
         # PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
@@ -112,7 +118,7 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # flatten
 
-        x = self.relu(self.fc_g1(PPI_x))
+        x = self.relu(self.bn_g1(self.fc_g1(PPI_x)))
         # print('PPI_x.sum()', x.sum())
         # x_1 = self.relu(self.fc_g2(x) + PPI_x)
 
@@ -121,13 +127,13 @@ class TemplateSimpleNet(torch.nn.Module):
         # x = self.relu(self.fc3(x_2))
         # x_3 = self.relu(self.fc4(x) + x_2)
 
-        x = self.relu(self.fc1(x))
+        x = self.relu(self.bn_1(self.fc1(x)))
         # print('x.sum()', x.sum())
-        x = self.relu(self.fc2(x))
+        x = self.relu(self.bn_2(self.fc2(x)))
         # print('x.sum()', x.sum())
-        x = self.relu(self.fc3(x))
+        x = self.relu(self.bn_3(self.fc3(x)))
         # print('x.sum()', x.sum())
-        x = self.relu(self.fc4(x))
+        x = self.relu(self.bn_4(self.fc4(x)))
         print('x.sum()', x.sum())
         x = self.fc5(x)
         print('x.sum()', x.sum())
