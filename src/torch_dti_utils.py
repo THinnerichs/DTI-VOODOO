@@ -289,6 +289,7 @@ class ProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
+        print('DDI_features', self.DDI_features[:10, :10])
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
@@ -300,6 +301,9 @@ class ProtFuncDTINetworkData:
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
         print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
+
+        print(self.feature_matrix[:4,:])
+        print(self.y_dti_data[:4,:])
 
         raise Exception
 
