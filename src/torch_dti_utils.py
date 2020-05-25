@@ -289,6 +289,8 @@ class ProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
+        print('DDI_features', self.DDI_features[:10, :10])
+
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
         for drug_index in tqdm(range(self.num_drugs)):
@@ -303,6 +305,10 @@ class ProtFuncDTINetworkData:
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
 
+        print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
+
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].shape)
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].sum())
 
         '''
         # Set data to true labels for sanity test
@@ -381,6 +387,123 @@ class ProtFuncDTINetworkData:
 
         return np.array(data_list)
 
+class QuickProtFuncDTINetworkData:
+    def __init__(self, config):
+        self.config = config
+
+        print("Loading data ...")
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        print(len(self.drug_list), "drugs present")
+        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
+        print(len(self.protein_list), "proteins present\n")
+
+        # PPI data
+        print("Loading PPI graph ...")
+        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        PPI_graph = PPI_graph.subgraph(self.protein_list)
+
+        # calculate dimensions of network
+        self.num_proteins = len(PPI_graph.nodes())
+        self.num_drugs = len(self.drug_list)
+
+        print("Building index dict ...")
+        self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
+        print("Building edge list ...")
+        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                              for node1, node2 in list(PPI_graph.edges())]
+        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
+                               for node2, node1 in list(PPI_graph.edges())]
+        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
+                                      dtype=torch.long)
+        self.num_PPI_features = 1
+
+        # DDI data
+        print("Loading DDI features ...")
+        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
+        # add self-interactions for better performance
+        self.DDI_features[np.identity(self.num_drugs)==1] = 1
+        print(self.DDI_features.shape)
+
+        # DTI data
+        print("Loading DTI links ...")
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
+        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
+        print(self.y_dti_data.shape)
+
+        print("Building feature matrix ...")
+        self.train_prots = config.train_prots
+        self.train_mask = np.zeros(self.num_proteins)
+        self.train_mask[self.train_prots] = 1
+        # self.test_prots = config.test_prots
+
+        print('DDI_features', self.DDI_features[:10, :10])
+
+        self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
+        epsilon = 0.00001
+        for drug_index in tqdm(range(self.num_drugs)):
+            drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
+            for drug_interactor in drug_interactors:
+                # self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
+                self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
+
+            # print(list(self.feature_matrix[drug_index, :]))
+            # print(list(self.y_dti_data[drug_index, :]))
+
+            # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
+
+
+        print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
+
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].shape)
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].sum())
+
+        '''
+        # Set data to true labels for sanity test
+        for drug_index in tqdm(range(self.num_drugs)):
+            self.feature_matrix[drug_index, :] = self.y_dti_data[drug_index, :]
+        '''
+
+        if not config.pretrain:
+            print('Building protfunc data...')
+            self.ProtFuncDataBuilder = ProteinFunctionDTIDataBuilder(config, num_proteins=config.num_proteins)
+
+        print("Finished.\n")
+
+        """
+        test with open(file='graph_testing', mode='a') as f:
+            print('\nTests')
+            print(self.DDI_features.sum(), self.DDI_features.sum(axis=0), file=f)
+            for drug_index in range(len(self.drug_list)):
+                diff = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]
+                print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(diff), file=f)
+        """
+
+    def get(self, indices):
+        data_list = []
+
+        protfunc_data = None
+        if not self.config.pretrain:
+            print('Loading protfunc data...')
+            protfunc_data = self.ProtFuncDataBuilder.get(indices)
+
+        # for index in tqdm(indices):
+        for drug_index in range(indices):
+            # build protein mask
+
+            y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
+
+            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
+            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
+
+            # full_PPI_graph.__num_nodes__ = self.num_proteins
+
+            data_list.append(full_PPI_graph)
+
+        return data_list
+
+    def __len__(self):
+        return self.num_drugs
+
 
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
@@ -426,7 +549,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
-        weight_vec = torch.ones([1]) * weight_dict[1] *4
+        weight_vec = torch.ones([1]) * weight_dict[1]
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
         return_loss += loss
@@ -441,6 +564,39 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
             sys.stdout.flush()
     return return_loss
 
+def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio, train_mask):
+    print('Training on {} samples...'.format(len(train_loader.dataset)))
+    sys.stdout.flush()
+    model.train()
+    return_loss = 0
+    for batch_idx, data in enumerate(train_loader):
+        optimizer.zero_grad()
+        output = model(data)
+        # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
+        y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
+
+        print('y.size', y.size())
+        print('output.size', output.size())
+
+        weights = y * (neg_to_pos_ratio-1) + 1
+
+        print(weights.size(), weights)
+
+        loss = nn.functional.binary_cross_entropy(output[train_mask], y[train_mask], weight=weights.to(output.device))
+        print(loss.size(), loss)
+        return_loss += loss
+        loss.backward()
+        optimizer.step()
+        if batch_idx % 10 == 0:
+            print('Train epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(epoch,
+                                                                           batch_idx * output.size(0),
+                                                                           len(train_loader.dataset),
+                                                                           100. * batch_idx / len(train_loader),
+                                                                           loss.item()))
+            sys.stdout.flush()
+    return return_loss
+
+
 def predicting(model, device, loader):
     model.eval()
     total_preds = torch.Tensor()
@@ -454,6 +610,22 @@ def predicting(model, device, loader):
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
     return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
+
+def quick_predicting(model, device, loader):
+    model.eval()
+    total_preds = torch.Tensor()
+    total_labels = torch.Tensor()
+    print('Make prediction for {} samples...'.format(len(loader.dataset)))
+    with torch.no_grad():
+        for data in loader:
+            # data = data.to(device)
+            output = model(data).sigmoid()
+            total_preds = torch.cat((total_preds, output.cpu()), 0)
+            y = torch.Tensor([graph_data.y for graph_data in data])
+            total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
+
+    print('total_labels.shape', total_labels.round().numpy().shape)
+    return total_labels.round().numpy().flatten(), np.around(total_preds.numpy()).flatten()
 
 
 def rmse(y, f):

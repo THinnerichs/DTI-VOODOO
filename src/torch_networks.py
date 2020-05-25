@@ -310,6 +310,77 @@ class CombinedProtFuncInteractionNetwork(torch.nn.Module):
 
 
 
+class QuickTemplateSimpleNet(torch.nn.Module):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, dropout=0.2):
+        super(QuickTemplateSimpleNet, self).__init__()
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
+
+
+        # mask feature
+
+        # GCN laye4s
+        if 'GCNConv' in conv_method:
+            self.conv1 = nn.GCNConv(num_features, num_features*1, cached=False)
+            self.conv2 = nn.GCNConv(num_features*1, num_features*1, cached=False)
+            self.conv3 = nn.GCNConv(num_features*1, num_features*1, cached=False)
+        elif 'ChebConv' in conv_method:
+            self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
+            self.conv2 = nn.ChebConv(num_features*8, num_features*32, 3)
+            # self.conv3 = nn.ChebConv(num_features*16, num_features*128, 3)
+        elif 'SAGEConv' in conv_method:
+            self.conv1 = nn.SAGEConv(num_features, num_features*8)
+            self.conv2 = nn.SAGEConv(num_features*8, num_features*32)
+            # self.conv3 = nn.SAGEConv(num_features*16, num_features*128)
+        elif 'GraphConv' in conv_method:
+            self.conv1 = nn.GraphConv(num_features, num_features*4)
+            self.conv2 = nn.GraphConv(num_features*4, num_features*16)
+            self.conv3 = nn.GraphConv(num_features*16, num_features*128)
+        elif 'GATConv' in conv_method:
+            self.conv1 = nn.GATConv(num_features, num_features*8, heads=5)
+            self.conv2 = nn.GATConv(num_features*8, num_features*32, heads=5)
+            # self.conv3 = nn.GATConv(num_features*16, num_features*128, heads=5)
+        elif 'TAGConv' in conv_method:
+            self.conv1 = nn.TAGConv(num_features, num_features*4)
+            self.conv2 = nn.TAGConv(num_features*4, num_features*16)
+            self.conv3 = nn.TAGConv(num_features*16, num_features*128)
+        elif 'ARMAConv' in conv_method:
+            self.conv1 = nn.ARMAConv(num_features, num_features*4)
+            self.conv2 = nn.ARMAConv(num_features*4, num_features*16)
+            self.conv3 = nn.ARMAConv(num_features*16, num_features*128)
+        elif 'SGConv' in conv_method:
+            self.conv1 = nn.SGConv(num_features, num_features*4)
+            self.conv2 = nn.SGConv(num_features*4, num_features*16)
+            self.conv3 = nn.SGConv(num_features*16, num_features*128)
+        elif 'FeaStConv' in conv_method:
+            self.conv1 = nn.FeaStConv(num_features, num_features*4, heads=5)
+            self.conv2 = nn.FeaStConv(num_features*4, num_features*16, heads=5)
+            self.conv3 = nn.FeaStConv(num_features*16, num_features*128, heads=5)
+        else:
+            print("No valid model selected.")
+            sys.stdout.flush()
+            raise ValueError
+
+        self.relu = torch.nn.ReLU()
+        self.dropout = torch.nn.Dropout(dropout)
+    def forward(self, PPI_data_object):
+        # DDI_feature = PPI_data_object.DDI_features
+        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
+
+        # print(DDI_feature.shape)
+        # print('protein_mask.size()', protein_mask.size())
+
+        # PPI graph network
+
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
+        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
+        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+
+        PPI_x = PPI_x.view((-1, self.num_prots))
+
+        return PPI_x.sigmoid()
+
 
 
 
