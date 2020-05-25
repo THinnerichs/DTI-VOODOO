@@ -567,6 +567,8 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         optimizer.zero_grad()
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
+
+        print([graph_data.y for graph_data in data])
         y = torch.Tensor(np.array([graph_data.y for graph_data in data])).to(output.device)
 
         print('y.size', y.size())
