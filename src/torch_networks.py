@@ -379,7 +379,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         PPI_x = PPI_x.view((-1, self.num_prots))
 
-        return PPI_x.sigmoid()
+        return PPI_x
 
 
 

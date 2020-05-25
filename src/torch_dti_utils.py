@@ -568,17 +568,15 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
 
-        print(np.array([graph_data.y.numpy() for graph_data in data]).shape)
         y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data])).to(output.device)
 
-        print('y.size', y.size())
-        print('output.size', output.size())
+        print('y.size', y[train_mask].size())
+        print('output.size', output[train_mask].size())
 
-        weights = y * (neg_to_pos_ratio-1) + 1
+        pos_weights = torch.Tensor([neg_to_pos_ratio])
 
-        print(weights.size(), weights)
 
-        loss = nn.functional.binary_cross_entropy(output[train_mask], y[train_mask], weight=weights.to(output.device))
+        loss = nn.BCEWithLogitsLoss(output[train_mask].view(-1, 1), y[train_mask].view(-1, 1), pos_weight=pos_weights)
         print(loss.size(), loss)
         return_loss += loss
         loss.backward()
