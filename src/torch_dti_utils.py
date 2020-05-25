@@ -299,7 +299,7 @@ class ProtFuncDTINetworkData:
                 self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
-        print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[, :self.train_prots])**2).sum())
+        print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
 
         raise Exception
 
