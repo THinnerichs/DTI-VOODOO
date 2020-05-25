@@ -20,8 +20,8 @@ class TemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, num_features*8, cached=False)
-            self.conv2 = nn.GCNConv(num_features*8, num_features*32, cached=False)
+            self.conv1 = nn.GCNConv(num_features, num_features*1, cached=False)
+            # self.conv2 = nn.GCNConv(num_features*8, num_features*32, cached=False)
             # self.conv3 = nn.GCNConv(num_features*16, num_features*128, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*8, 3)
@@ -61,7 +61,7 @@ class TemplateSimpleNet(torch.nn.Module):
             raise ValueError
 
 
-        self.fc_g1 = torch.nn.Linear(num_features*32, 64)
+        self.fc_g1 = torch.nn.Linear(num_features*1, 64)
         self.fc_g2 = torch.nn.Linear(64, GCN_num_outchannels)
 
 
@@ -100,9 +100,9 @@ class TemplateSimpleNet(torch.nn.Module):
         # PPI graph network
 
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
-        PPI_x = F.relu(PPI_x)
-        PPI_x = self.conv2(PPI_x, PPI_edge_index)
-        PPI_x = F.relu(PPI_x)
+        # PPI_x = F.relu(PPI_x)
+        # PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        # PPI_x = F.relu(PPI_x)
         # PPI_x = F.relu(self.conv3(PPI_x, PPI_edge_index))
 
         PPI_x = PPI_x.view((batch_size, self.num_prots, PPI_x.shape[-1]))
@@ -113,6 +113,8 @@ class TemplateSimpleNet(torch.nn.Module):
         # multiply for flattening
         PPI_x = torch.bmm(protein_mask, PPI_x)
         PPI_x = PPI_x.view((batch_size, -1))
+
+        return PPI_x
 
         # print('PPI_x.sum()', PPI_x.sum())
 
