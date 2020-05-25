@@ -441,9 +441,14 @@ if __name__ == '__main__':
     if config.mode == 'standard':
         transductive_missing_target_predictor(config)
     elif config.mode == 'drug':
-        transductive_missing_drug_predictor(config)
+        # transductive_missing_drug_predictor(config)
+        pass
     elif config.mode == 'protein_drughub':
-        test_predictor_on_drughub_protein_data(config)
+        # test_predictor_on_drughub_protein_data(config)
+        pass
     elif config.mode == 'drug_drughub':
-        test_predictor_on_drughub_drug_data(config)
+        # test_predictor_on_drughub_drug_data(config)
+        pass
+    elif config.mode == 'quick_standard':
+        quickened_missing_target_predictor(config)
 
