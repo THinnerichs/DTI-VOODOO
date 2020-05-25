@@ -273,7 +273,7 @@ def quickened_missing_target_predictor(config,
         train_dataset = DTIGraphDataset(train_dataset)
 
         # Calculate weights
-        positives = network_data.y_dti_data.flatten()[:, train_protein_indices].sum()
+        positives = network_data.y_dti_data[:, train_protein_indices].sum()
         len_to_sum_ratio = (network_data.num_drugs * len(train_protein_indices)-positives)/positives #Get negatives/positives ratio
         print('Neg/pos ratio:', len_to_sum_ratio)
 
