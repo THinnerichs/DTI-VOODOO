@@ -436,8 +436,6 @@ class QuickProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
-        print('DDI_features', self.DDI_features[:10, :10])
-
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
         for drug_index in tqdm(range(self.num_drugs)):
@@ -451,11 +449,6 @@ class QuickProtFuncDTINetworkData:
 
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
-
-        print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
-
-        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].shape)
-        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==0].sum())
 
         '''
         # Set data to true labels for sanity test
@@ -478,16 +471,17 @@ class QuickProtFuncDTINetworkData:
                 print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(diff), file=f)
         """
 
-    def get(self, indices):
+    def get(self):
         data_list = []
 
+        indices = list(range(self.num_drugs))
         protfunc_data = None
         if not self.config.pretrain:
             print('Loading protfunc data...')
             protfunc_data = self.ProtFuncDataBuilder.get(indices)
 
         # for index in tqdm(indices):
-        for drug_index in range(indices):
+        for drug_index in indices:
             # build protein mask
 
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)

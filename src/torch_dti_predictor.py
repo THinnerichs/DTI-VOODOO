@@ -269,15 +269,11 @@ def quickened_missing_target_predictor(config,
         test_indices = help_matrix[:, test_protein_indices].flatten()
         print(train_indices.shape, test_indices.shape)
 
-        print('Fetching train data...')
-        train_dataset = network_data.get(train_indices)
-        print('\nDone.\n')
-        print('Fetching test data...')
-        test_dataset = network_data.get(test_indices)
+        print('Fetching data...')
+        train_dataset = network_data.get()
         print('\nDone.\n')
 
         train_dataset = DTIGraphDataset(train_dataset)
-        test_dataset = DTIGraphDataset(test_dataset)
 
         # Calculate weights
         positives = network_data.y_dti_data.flatten()[:, train_indices].sum()
@@ -294,7 +290,6 @@ def quickened_missing_target_predictor(config,
         # build DataLoaders
         train_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=True)
         # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
-        test_loader = data.DataListLoader(test_dataset, config.batch_size, shuffle=False)
 
         model = None
         if config.pretrain:
@@ -348,7 +343,7 @@ def quickened_missing_target_predictor(config,
                 file='../results/interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(epoch)+'_epochs'
                 with open(file=file, mode='a') as f:
                     labels, predictions = quick_predicting(model, device, train_loader)
-                    train_labels = labels.reshape()
+                    # train_labels = labels.reshape()
                     print(config.model_id, 'Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
