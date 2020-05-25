@@ -265,9 +265,6 @@ def quickened_missing_target_predictor(config,
         network_data = QuickProtFuncDTINetworkData(config=config)
 
         # build train data over whole dataset with help matrix
-        train_indices = help_matrix[:, train_protein_indices].flatten()
-        test_indices = help_matrix[:, test_protein_indices].flatten()
-        print(train_indices.shape, test_indices.shape)
 
         print('Fetching data...')
         train_dataset = network_data.get()
@@ -276,8 +273,8 @@ def quickened_missing_target_predictor(config,
         train_dataset = DTIGraphDataset(train_dataset)
 
         # Calculate weights
-        positives = network_data.y_dti_data.flatten()[:, train_indices].sum()
-        len_to_sum_ratio = (len(train_indices)-positives)/positives #Get negatives/positives ratio
+        positives = network_data.y_dti_data.flatten()[:, train_protein_indices].sum()
+        len_to_sum_ratio = (network_data.num_drugs * len(train_protein_indices)-positives)/positives #Get negatives/positives ratio
         print('Neg/pos ratio:', len_to_sum_ratio)
 
         train_mask = network_data.train_mask
