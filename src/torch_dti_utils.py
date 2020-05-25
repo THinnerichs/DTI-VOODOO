@@ -307,8 +307,8 @@ class ProtFuncDTINetworkData:
 
         print('sum', ((self.feature_matrix[:, self.train_prots] - self.y_dti_data[:, self.train_prots])**2).sum())
 
-        print(self.feature_matrix[self.y_dti_data[:,self.train_prots]==1])
-        print(self.feature_matrix[self.y_dti_data[:,self.train_prots]==1].min())
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==1])
+        print(self.feature_matrix[:,self.train_prots][self.y_dti_data[:,self.train_prots]==1].min())
 
         raise Exception
 
