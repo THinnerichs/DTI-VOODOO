@@ -301,8 +301,8 @@ class ProtFuncDTINetworkData:
                 # self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
                 self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
 
-            print(list(self.feature_matrix[drug_index, :]))
-            print(list(self.y_dti_data[drug_index, :]))
+            # print(list(self.feature_matrix[drug_index, :]))
+            # print(list(self.y_dti_data[drug_index, :]))
 
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
