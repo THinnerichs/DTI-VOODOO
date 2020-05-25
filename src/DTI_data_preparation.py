@@ -13,7 +13,8 @@ import similarity_measurement
 
 
 
-def write_human_DTI_graph(min_score=0):
+def write_human_DTI_graph(min_score=0,
+                          mode=''):
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
 
@@ -27,8 +28,12 @@ def write_human_DTI_graph(min_score=0):
             split_line = line.split('\t')
             drug = split_line[0].replace('s','m')
             target = split_line[1]
-            # score = int(split_line[-1])
-            score = int(split_line[2]) + int(split_line[3])
+
+            score = None
+            if mode=='experimental':
+                score = int(split_line[2]) + int(split_line[3])
+            else:
+                score = int(split_line[-1])
 
             if not drug in drug_set:
                 continue
@@ -43,16 +48,14 @@ def write_human_DTI_graph(min_score=0):
     print('num_nodes', len(dti_graph.nodes()) - len(drug_set))
     print('num_edges', len(dti_graph.edges()))
 
-    return
-
     print("Writing human only DTI-graph to disk ...")
-    filename = "../data/STITCH_data/human_only_DTI_graph"
+    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(dti_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.\n".format(filename))
 
-def get_human_DTI_graph():
-    filename = "../data/STITCH_data/human_only_DTI_graph"
+def get_human_DTI_graph(mode=''):
+    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
@@ -176,14 +179,17 @@ def get_PPI_dti_feature_list(drug_list, protein_list):
     return protein_dti_mat
 
 
-def get_DTIs(drug_list, protein_list):
-    DTI_graph = get_human_DTI_graph()
+def get_DTIs(drug_list,
+             protein_list,
+             mode=''):
+    DTI_graph = get_human_DTI_graph(mode=mode)
 
     y_data = np.zeros(len(drug_list)*len(protein_list))
 
     for i in range(len(protein_list)):
         protein = protein_list[i]
-
+        if protein not in DTI_graph.nodes():
+            continue
         for drug in DTI_graph.neighbors(protein):
             if drug not in drug_list:
                 continue

@@ -299,7 +299,12 @@ class ProtFuncDTINetworkData:
                 self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
 
+        print('sum', ((self.feature_matrix[self.train_prots] - self.y_dti_data[self.train_prots])**2).sum())
+
+        raise Exception
+
         '''
+        # Set data to true labels for sanity test
         for drug_index in tqdm(range(self.num_drugs)):
             self.feature_matrix[drug_index, :] = self.y_dti_data[drug_index, :]
         '''
@@ -417,7 +422,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
         output = model(data)
-        print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
+        # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
         y = torch.Tensor([graph_data.y for graph_data in data]).float().to(output.device)
 
         weight_vec = torch.ones([1]) * weight_dict[1] *4

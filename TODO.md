@@ -39,20 +39,13 @@ Robert talk:
 - Resnik Similarity drug-protein-similarity
 
 - Remove self-loops from GCN
-- try without DDI identitity
 - use only boyce for DDIs
-- use semsim-weighted PPI features 
-
-- Transferred vs. normal
-- take only experimental targets
-  - Take proteins from nature paper (see Skype)
-  - Take proteins and links from STITCH with appropriate score
 
 
 Data for experimental only:
 - 300: num_nodes 1828, num_edges 4494
 - 500: num_nodes 1725, num_edges 3620
-- 600: num_nodes 1578, num_edges 3043
+- 700: num_nodes 1578, num_edges 3043
 
 
 
