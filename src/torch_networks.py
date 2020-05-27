@@ -398,6 +398,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = self.conv4(x, edge_index, edge_attr)
         x = F.elu(self.conv5(x, edge_index, edge_attr))
         x = self.conv6(x, edge_index, edge_attr)
+
+        print('bumm1', x.size())
+        raise Exception
         x = F.dropout(x, training=self.training)
         return x
 

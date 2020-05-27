@@ -582,8 +582,10 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
 
         print('BUMM', y.size(), output.size())
 
+        print(y.max(), y.min(), output.max(), output.min())
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(output[:, train_mask].view(-1, 1), y[:, train_mask].view(-1, 1),)
+
+        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask].view(-1, 1), target=y[:, train_mask].view(-1, 1),)
         return_loss += loss
         loss.backward()
         optimizer.step()
