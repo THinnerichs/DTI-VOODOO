@@ -357,6 +357,13 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv1 = nn.FeaStConv(num_features, num_features*4, heads=5)
             self.conv2 = nn.FeaStConv(num_features*4, num_features*16, heads=5)
             self.conv3 = nn.FeaStConv(num_features*16, num_features*1, heads=5)
+        elif 'SplineConv' in conv_method:
+            self.conv1 = nn.SplineConv(1, 16, dim=1, kernel_size=5)
+            self.conv2 = nn.SplineConv(16, 32, dim=1, kernel_size=5)
+            self.conv3 = nn.SplineConv(32, 64, dim=1, kernel_size=7)
+            self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
+            self.conv5 = nn.SplineConv(128, 128, dim=1, kernel_size=11)
+            self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -376,13 +383,24 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        PPI_x = F.elu(self.bn_1(self.conv1(PPI_x, PPI_edge_index)))
-        PPI_x = F.elu(self.bn_2(self.conv2(PPI_x, PPI_edge_index)))
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        # PPI_x = F.elu(self.bn_1(self.conv1(PPI_x, PPI_edge_index)))
+        # PPI_x = F.elu(self.bn_2(self.conv2(PPI_x, PPI_edge_index)))
+        # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
-        PPI_x = PPI_x.view((-1, self.num_prots))
+        # PPI_x = PPI_x.view((-1, self.num_prots))
+        # return PPI_x
 
-        return PPI_x
+        edge_index = PPI_edge_index
+        x = PPI_x
+        x = F.elu(self.conv1(x, edge_index))
+        x = self.conv2(x, edge_index)
+        x = F.elu(self.conv3(x, edge_index))
+        x = self.conv4(x, edge_index)
+        x = F.elu(self.conv5(x, edge_index))
+        x = self.conv6(x, edge_index)
+        x = F.dropout(x, training=self.training)
+        return x
+
 
 
 
