@@ -418,7 +418,9 @@ class QuickProtFuncDTINetworkData:
         self.num_PPI_features = 1
 
         self.edge_attr = torch.ones((self.edge_list.size(0),1))
+
         print('edge_attr', self.edge_attr)
+        print(self.edge_list.size())
 
         raise Exception
 
