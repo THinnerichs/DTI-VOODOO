@@ -620,8 +620,7 @@ def quick_predicting(model, device, loader):
             total_labels = torch.cat((total_labels.view(-1,
                                                         1), y.view(-1, 1).float().cpu()), 0)
 
-    print('total_labels.shape', total_labels.round().numpy().shape)
-    print('total_preds.shape', total_labels.round().numpy().shape)
+    print('total_preds.max/min', total_labels.max(), total_labels.min())
     return total_labels.round().numpy().flatten(), np.around(total_preds.numpy()).flatten()
 
 
