@@ -362,6 +362,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             sys.stdout.flush()
             raise ValueError
 
+        self.bn_1 = nn.BatchNorm(4*config.heads)
+        self.bn_2 = nn.BatchNorm(16*config.heads)
+
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
     def forward(self, PPI_data_object):
@@ -373,8 +376,8 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
+        PPI_x = F.elu(self.bn_1(self.conv1(PPI_x, PPI_edge_index)))
+        PPI_x = F.elu(self.bn_2(self.conv2(PPI_x, PPI_edge_index)))
         PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         PPI_x = PPI_x.view((-1, self.num_prots))

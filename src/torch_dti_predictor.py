@@ -434,6 +434,7 @@ if __name__ == '__main__':
     parser.add_argument("--pretrain", type=bool, default=True)
     parser.add_argument("--model_id", type=str, default='')
 
+    parser.add_argument("--heads", type=int, default=1)
 
     config = parser.parse_args()
 
