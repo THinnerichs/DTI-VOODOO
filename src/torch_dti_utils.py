@@ -416,13 +416,8 @@ class QuickProtFuncDTINetworkData:
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
                                       dtype=torch.long)
         self.num_PPI_features = 1
+        self.edge_attr = torch.ones((self.edge_list.size(1),1))
 
-        self.edge_attr = torch.ones((self.edge_list.size(0),1))
-
-        print('edge_attr', self.edge_attr)
-        print(self.edge_list.size())
-
-        raise Exception
 
         # DDI data
         print("Loading DDI features ...")
@@ -495,7 +490,7 @@ class QuickProtFuncDTINetworkData:
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
 
             feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
-            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, y=y)
+            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, edge_attr=self.edge_attr, y=y)
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
