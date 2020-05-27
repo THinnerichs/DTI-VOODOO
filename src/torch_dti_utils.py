@@ -579,7 +579,6 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
 
 
         loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(output[:, train_mask].view(-1, 1), y[:, train_mask].view(-1, 1),)
-        print(loss.size(), loss)
         return_loss += loss
         loss.backward()
         optimizer.step()
@@ -621,6 +620,7 @@ def quick_predicting(model, device, loader):
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
 
     print('total_labels.shape', total_labels.round().numpy().shape)
+    print('total_preds.shape', total_labels.round().numpy().shape)
     return total_labels.round().numpy().flatten(), np.around(total_preds.numpy()).flatten()
 
 

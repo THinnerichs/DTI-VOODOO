@@ -340,14 +340,20 @@ def quickened_missing_target_predictor(config,
                 file='../results/interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(epoch)+'_epochs'
                 with open(file=file, mode='a') as f:
                     labels, predictions = quick_predicting(model, device, train_loader)
-                    # train_labels = labels.reshape()
+
+                    # get train and test predictions
+                    train_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==1]
+                    train_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==1]
+
+                    test_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==0]
+                    test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0]
+
                     print(config.model_id, 'Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions))#@TODO, file=f)
 
-                    test_labels, test_predictions = predicting(model, device, test_loader)
                     print(config.model_id, 'Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
