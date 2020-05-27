@@ -48,8 +48,6 @@ def write_human_DTI_graph(min_score=0,
     print('num_nodes', len(dti_graph.nodes()) - len(drug_set))
     print('num_edges', len(dti_graph.edges()))
 
-    return
-
     print("Writing human only DTI-graph to disk ...")
     filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='wb') as f:
