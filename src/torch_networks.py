@@ -400,6 +400,8 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = self.conv6(x, edge_index, edge_attr)
 
         x = F.dropout(x, training=self.training)
+
+        x = x.view((-1, self.num_prots))
         return x
 
 
