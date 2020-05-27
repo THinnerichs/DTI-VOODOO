@@ -465,6 +465,11 @@ class QuickProtFuncDTINetworkData:
 
         print("Finished.\n")
 
+        print("testitest")
+        print(self.feature_matrix.shape)
+        print(self.edge_list.size())
+        print(self.edge_attr.size())
+
         """
         test with open(file='graph_testing', mode='a') as f:
             print('\nTests')
@@ -495,6 +500,9 @@ class QuickProtFuncDTINetworkData:
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
+
+            print('full_PPI_graph', full_PPI_graph)
+            raise Exception
 
         return data_list
 
