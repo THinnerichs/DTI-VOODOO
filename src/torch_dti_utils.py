@@ -617,7 +617,8 @@ def quick_predicting(model, device, loader):
             output = model(data).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data]))
-            total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
+            total_labels = torch.cat((total_labels.view(-1,
+                                                        1), y.view(-1, 1).float().cpu()), 0)
 
     print('total_labels.shape', total_labels.round().numpy().shape)
     print('total_preds.shape', total_labels.round().numpy().shape)

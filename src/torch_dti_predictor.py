@@ -342,11 +342,11 @@ def quickened_missing_target_predictor(config,
                     labels, predictions = quick_predicting(model, device, train_loader)
 
                     # get train and test predictions
-                    train_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==1]
-                    train_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==1]
+                    train_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==1].flatten()
+                    train_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==1].flatten()
 
-                    test_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==0]
-                    test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0]
+                    test_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==0].flatten()
+                    test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0].flatten()
 
                     print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min())
                     print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min())
