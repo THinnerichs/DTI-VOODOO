@@ -429,28 +429,29 @@ if __name__ == '__main__':
 
     parser.add_argument("--fold", type=int, default=-1)
 
-    parser.add_argument("--mode", type=str, default='standard')
+    parser.add_argument("--split_mode", type=str, default='standard')
     parser.add_argument("--drug_mode", type=str, default='standard')
     parser.add_argument("--pretrain", type=bool, default=True)
     parser.add_argument("--model_id", type=str, default='')
 
     parser.add_argument("--heads", type=int, default=1)
+    parser.add_argument("--mode", type=str, default='')
 
     config = parser.parse_args()
 
 
     # Run classifier
-    if config.mode == 'standard':
+    if config.split_mode == 'standard':
         transductive_missing_target_predictor(config)
-    elif config.mode == 'drug':
+    elif config.split_mode == 'drug':
         # transductive_missing_drug_predictor(config)
         pass
-    elif config.mode == 'protein_drughub':
+    elif config.split_mode == 'protein_drughub':
         # test_predictor_on_drughub_protein_data(config)
         pass
-    elif config.mode == 'drug_drughub':
+    elif config.split_mode == 'drug_drughub':
         # test_predictor_on_drughub_drug_data(config)
         pass
-    elif config.mode == 'quick_standard':
+    elif config.split_mode == 'quick_standard':
         quickened_missing_target_predictor(config)
 

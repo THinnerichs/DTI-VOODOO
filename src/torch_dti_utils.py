@@ -392,7 +392,7 @@ class QuickProtFuncDTINetworkData:
         self.config = config
 
         print("Loading data ...")
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
         self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
@@ -427,7 +427,7 @@ class QuickProtFuncDTINetworkData:
         # DTI data
         print("Loading DTI links ...")
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
-                                                   mode='experimental')
+                                                   mode=config.mode)
         self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
