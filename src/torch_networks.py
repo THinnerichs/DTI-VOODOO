@@ -393,13 +393,18 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         edge_index = PPI_edge_index
         x = PPI_x
         x = F.elu(self.conv1(x, edge_index, edge_attr))
+        print('bumm1', x.size())
         x = self.conv2(x, edge_index, edge_attr)
+        print('bumm2', x.size())
         x = F.elu(self.conv3(x, edge_index, edge_attr))
+        print('bumm3', x.size())
         x = self.conv4(x, edge_index, edge_attr)
+        print('bumm4', x.size())
         x = F.elu(self.conv5(x, edge_index, edge_attr))
+        print('bumm5', x.size())
         x = self.conv6(x, edge_index, edge_attr)
 
-        print('bumm1', x.size())
+        print('bumm6', x.size())
         raise Exception
         x = F.dropout(x, training=self.training)
         return x
