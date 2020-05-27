@@ -339,7 +339,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv3 = nn.GraphConv(num_features*16, num_features*1)
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(num_features, num_features*4, heads=8)
-            self.conv2 = nn.GATConv(num_features*4*5, num_features*16, heads=8)
+            self.conv2 = nn.GATConv(num_features*4*8, num_features*16, heads=8)
             self.conv3 = nn.GATConv(num_features*16*8, num_features*1, heads=1)
         elif 'TAGConv' in conv_method:
             self.conv1 = nn.TAGConv(num_features, num_features*4)
