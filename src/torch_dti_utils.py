@@ -417,6 +417,11 @@ class QuickProtFuncDTINetworkData:
                                       dtype=torch.long)
         self.num_PPI_features = 1
 
+        self.edge_attr = torch.ones((self.edge_list.size(0),1))
+        print('edge_attr', self.edge_attr)
+
+        raise Exception
+
         # DDI data
         print("Loading DDI features ...")
         self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
