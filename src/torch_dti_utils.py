@@ -495,14 +495,14 @@ class QuickProtFuncDTINetworkData:
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
 
             feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
-            full_PPI_graph = Data(x=feature_array, edge_index=self.edge_list, edge_attr=self.edge_attr, y=y)
+            full_PPI_graph = Data(x=feature_array,
+                                  edge_index=self.edge_list,
+                                  # edge_attr=self.edge_attr,
+                                  y=y)
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
-
-            print('full_PPI_graph', full_PPI_graph)
-            raise Exception
 
         return data_list
 
