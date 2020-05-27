@@ -465,11 +465,6 @@ class QuickProtFuncDTINetworkData:
 
         print("Finished.\n")
 
-        print("testitest")
-        print(self.feature_matrix.shape)
-        print(self.edge_list.size())
-        print(self.edge_attr.size())
-
         """
         test with open(file='graph_testing', mode='a') as f:
             print('\nTests')
@@ -497,7 +492,7 @@ class QuickProtFuncDTINetworkData:
             feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
-                                  # edge_attr=self.edge_attr,
+                                  edge_attr=self.edge_attr,
                                   y=y)
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
@@ -589,9 +584,6 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         # print('check', output.min(), output.max(), y.min(), y.max())
 
         print('BUMM', y.size(), output.size())
-
-        print(y.max(), y.min(), output.max(), output.min())
-
 
         loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask].view(-1, 1), target=y[:, train_mask].view(-1, 1),)
         return_loss += loss
