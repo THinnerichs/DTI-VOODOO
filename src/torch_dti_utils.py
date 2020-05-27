@@ -575,10 +575,10 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
 
         pos_weights = torch.Tensor([neg_to_pos_ratio])
 
-        print('check', output.min(), output.max(), y.min(), y.max())
+        # print('check', output.min(), output.max(), y.min(), y.max())
 
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights)(output[:, train_mask].view(-1, 1), y[:, train_mask].view(-1, 1),)
+        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(output[:, train_mask].view(-1, 1), y[:, train_mask].view(-1, 1),)
         print(loss.size(), loss)
         return_loss += loss
         loss.backward()
