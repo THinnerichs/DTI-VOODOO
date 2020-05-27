@@ -570,8 +570,8 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
 
         y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data])).float().to(output.device)
 
-        print('y.size', y[:, train_mask].size())
-        print('output.size', output[:, train_mask].size())
+        # print('y.size', y[:, train_mask].size())
+        # print('output.size', output[:, train_mask].size())
 
         pos_weights = torch.Tensor([neg_to_pos_ratio])
 
@@ -617,7 +617,7 @@ def quick_predicting(model, device, loader):
             # data = data.to(device)
             output = model(data).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
-            y = torch.Tensor([graph_data.y for graph_data in data])
+            y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data]))
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
 
     print('total_labels.shape', total_labels.round().numpy().shape)
