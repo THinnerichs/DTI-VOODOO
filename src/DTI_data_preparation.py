@@ -59,8 +59,8 @@ def get_human_DTI_graph(mode=''):
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def write_human_protein_list():
-    human_DTI_graph = get_human_DTI_graph()
+def write_human_protein_list(mode=''):
+    human_DTI_graph = get_human_DTI_graph(mode=mode)
     protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
     protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
 
@@ -82,9 +82,9 @@ def get_human_proteins():
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def write_human_prot_func_protein_list():
+def write_human_prot_func_protein_list(mode=''):
     print('Loading standard proteins...')
-    human_DTI_graph = get_human_DTI_graph()
+    human_DTI_graph = get_human_DTI_graph(mode=mode)
     human_proteins = get_human_proteins()
 
     DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
@@ -118,8 +118,8 @@ def get_human_prot_func_proteins():
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def get_drug_list():
-    human_DTI_graph = get_human_DTI_graph()
+def get_drug_list(mode=''):
+    human_DTI_graph = get_human_DTI_graph(mode=mode)
     # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
     drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
@@ -333,9 +333,11 @@ def test():
 
 
 if __name__ == '__main__':
-    write_human_DTI_graph(300, mode='experimental')
-    write_human_DTI_graph(500, mode='experimental')
-    write_human_DTI_graph(700, mode='experimental')
+
+    mode='experimental'
+    # write_human_DTI_graph(300, mode='experimental')
+    # write_human_DTI_graph(500, mode='experimental')
+    write_human_DTI_graph(700, mode=mode)
 
     # dti_graph = get_human_DTI_graph()
     # print("Nodes", len(dti_graph.nodes()))
@@ -344,7 +346,7 @@ if __name__ == '__main__':
     # drug_list = get_drug_list()
     # print('Drugs:', len(drug_list))
 
-    # write_human_protein_list()
+    write_human_protein_list(mode=mode)
 
 
     # write_truncated_drug_to_SMILES_dict()
@@ -378,8 +380,11 @@ if __name__ == '__main__':
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     '''
 
-    # write_human_prot_func_protein_list()
+    write_human_prot_func_protein_list(mode=mode)
     # dicki = get_human_prot_func_proteins()
     # print('num_proteins', len(dicki))
+
+    print('drugs', len(get_drug_list(mode=mode)))
+    print('prots', len(get_human_prot_func_proteins()))
 
     pass
