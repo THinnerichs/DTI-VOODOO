@@ -416,7 +416,7 @@ class QuickProtFuncDTINetworkData:
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
                                       dtype=torch.long)
         self.num_PPI_features = 1
-        self.edge_attr = torch.ones((self.edge_list.size(1),1))
+        self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
 
         # DDI data
@@ -579,6 +579,8 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         pos_weights = torch.Tensor([neg_to_pos_ratio])
 
         # print('check', output.min(), output.max(), y.min(), y.max())
+
+        print('BUMM', y.size(), output.size())
 
 
         loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(output[:, train_mask].view(-1, 1), y[:, train_mask].view(-1, 1),)
