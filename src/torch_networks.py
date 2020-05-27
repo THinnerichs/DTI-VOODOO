@@ -392,6 +392,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         edge_index = PPI_edge_index
         x = PPI_x
+        print('bumm', x.size())
         x = F.elu(self.conv1(x, edge_index, edge_attr))
         print('bumm1', x.size())
         x = self.conv2(x, edge_index, edge_attr)
