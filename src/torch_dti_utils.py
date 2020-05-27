@@ -426,7 +426,8 @@ class QuickProtFuncDTINetworkData:
 
         # DTI data
         print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
+                                                   mode='experimental')
         self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
