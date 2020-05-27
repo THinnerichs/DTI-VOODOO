@@ -348,6 +348,9 @@ def quickened_missing_target_predictor(config,
                     test_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==0]
                     test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0]
 
+                    print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min())
+                    print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min())
+
                     print(config.model_id, 'Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
