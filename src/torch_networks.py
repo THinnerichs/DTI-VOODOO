@@ -376,7 +376,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         self.dropout = torch.nn.Dropout(dropout)
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
-        PPI_x, PPI_edge_index, PPI_batch = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
@@ -392,12 +392,12 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         edge_index = PPI_edge_index
         x = PPI_x
-        x = F.elu(self.conv1(x, edge_index))
-        x = self.conv2(x, edge_index)
-        x = F.elu(self.conv3(x, edge_index))
-        x = self.conv4(x, edge_index)
-        x = F.elu(self.conv5(x, edge_index))
-        x = self.conv6(x, edge_index)
+        x = F.elu(self.conv1(x, edge_index, edge_attr))
+        x = self.conv2(x, edge_index, edge_attr)
+        x = F.elu(self.conv3(x, edge_index, edge_attr))
+        x = self.conv4(x, edge_index, edge_attr)
+        x = F.elu(self.conv5(x, edge_index, edge_attr))
+        x = self.conv6(x, edge_index, edge_attr)
         x = F.dropout(x, training=self.training)
         return x
 
