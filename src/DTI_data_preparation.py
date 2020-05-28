@@ -11,6 +11,8 @@ import PPI_utils
 import DDI_utils
 import similarity_measurement
 
+import argparse
+
 
 
 def write_human_DTI_graph(min_score=0,
@@ -334,7 +336,13 @@ def test():
 
 if __name__ == '__main__':
 
-    mode=''
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--mode", type=str, default='')
+
+    config = parser.parse_args()
+
+    mode=config.mode
     # write_human_DTI_graph(300, mode='experimental')
     # write_human_DTI_graph(500, mode='experimental')
     write_human_DTI_graph(700, mode=mode)

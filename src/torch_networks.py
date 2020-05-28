@@ -358,7 +358,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv2 = nn.FeaStConv(num_features*4, num_features*16, heads=5)
             self.conv3 = nn.FeaStConv(num_features*16, num_features*1, heads=5)
         elif 'SplineConv' in conv_method:
-            self.conv1 = nn.SplineConv(1, 16, dim=1, kernel_size=5)
+            self.conv1 = nn.SplineConv(num_features, 16, dim=1, kernel_size=5)
             self.conv2 = nn.SplineConv(16, 32, dim=1, kernel_size=5)
             self.conv3 = nn.SplineConv(32, 64, dim=1, kernel_size=7)
             self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
