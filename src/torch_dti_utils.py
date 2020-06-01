@@ -573,8 +573,8 @@ class QuickProtFuncDTIMissingDrugNetworkData:
 
         print("Building feature matrix ...")
         # self.train_prots = config.train_prots
-        self.train_mask = np.zeros(self.num_proteins)
-        self.train_mask[self.train_prots] = 1
+        # self.train_mask = np.zeros(self.num_proteins)
+        # self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
