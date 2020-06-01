@@ -325,6 +325,7 @@ def quickened_missing_target_predictor(config,
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
+            print('train_mask', train_mask[:20])
             loss = quick_train(model=model,
                                device=device,
                                train_loader=train_loader,
@@ -466,7 +467,7 @@ def quickened_missing_drug_predictor(config,
         test_dataset = DTIGraphDataset(test_dataset)
 
         # Calculate weights
-        positives = network_data.y_dti_data[:, train_drug_indices].sum()
+        positives = network_data.y_dti_data[train_drug_indices, :].sum()
         len_to_sum_ratio = (network_data.num_proteins * len(train_drug_indices)-positives)/positives #Get negatives/positives ratio
         print('Neg/pos ratio:', len_to_sum_ratio)
 
