@@ -47,6 +47,10 @@ Data for experimental only:
 - 500: num_nodes 1725, num_edges 3620
 - 700: num_nodes 1578, num_edges 3043
 
-
+Robert talk 28.05.:
+- side effects and phenotype similarity
+  - see mouse model features 
+  - use Siamese network
+- side effect weighted PPI node features
 
 

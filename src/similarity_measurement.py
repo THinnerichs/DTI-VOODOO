@@ -345,7 +345,8 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     SIDER_drug_list = get_SIDER_drug_list()
     print("Finished.\n")
     print("Reading merged DDI graph ...")
-    merged_DDI_graph = DDI_utils.get_merged_DDI_graph()
+    # merged_DDI_graph = DDI_utils.get_merged_DDI_graph()
+    merged_DDI_graph = DDI_utils.get_DDI_Boyce_graph()
     print("Finished.\n")
 
     intersection = set(SIDER_drug_list) & set(merged_DDI_graph.nodes())

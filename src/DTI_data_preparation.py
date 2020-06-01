@@ -122,8 +122,8 @@ def get_human_prot_func_proteins():
 
 def get_drug_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
-    # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
-    drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
+    drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    # drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
 
@@ -133,7 +133,11 @@ def get_side_effect_similarity_feature_list(intersect_drug_list):
 
     index_mapping = lambda drug: SIDER_drug_list.index(drug)
 
-    return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
+    indices = np.array(map(index_mapping, intersect_drug_list))
+
+    return semsim_matrix[indices,:][:,indices]
+
+    # return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
 
 def get_DDI_feature_list(intersect_drug_list):
     # intersect_drug_list = get_drug_list()

@@ -426,6 +426,15 @@ class QuickProtFuncDTINetworkData:
         self.DDI_features[np.identity(self.num_drugs)==1] = 1
         print(self.DDI_features.shape)
 
+        # SemSim data
+        print("Loading semantic similarity data ...")
+        self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
+
+        print('semsim.shape', self.semsim_feature_matrix.shape)
+
+        raise Exception
+
+
         # DTI data
         print("Loading DTI links ...")
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
@@ -439,13 +448,6 @@ class QuickProtFuncDTINetworkData:
         self.train_mask[self.train_prots] = 1
         # self.test_prots = config.test_prots
 
-        # Use simple features instead
-        self.feature_matrix = torch.tensor(DTI_data_preparation.get_PPI_node_feature_mat_list(self.protein_list),
-                                           dtype=torch.float)
-        print("feature_matrix.size()", self.feature_matrix.size())
-        self.num_PPI_features = self.feature_matrix.shape[1]
-
-        '''
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
         for drug_index in tqdm(range(self.num_drugs)):
@@ -458,7 +460,6 @@ class QuickProtFuncDTINetworkData:
             # print(list(self.y_dti_data[drug_index, :]))
 
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
-        '''
 
 
         '''
@@ -497,8 +498,8 @@ class QuickProtFuncDTINetworkData:
 
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
 
-            # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
-            full_PPI_graph = Data(x=self.feature_matrix,
+            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
+            full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
                                   edge_attr=self.edge_attr,
                                   y=y)
