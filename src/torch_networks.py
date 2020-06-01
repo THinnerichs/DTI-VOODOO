@@ -374,6 +374,8 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
+
+        self.bummi = False
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
@@ -384,8 +386,15 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         # PPI graph network
 
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
+        if self.bummi == True:
+            print('bumm1', PPI_x.max(), PPI_x.min())
         PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
+        if self.bummi == True:
+            print('bumm2', PPI_x.max(), PPI_x.min())
         PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        if self.bummi == True:
+            print('bumm3', PPI_x.max(), PPI_x.min())
+            raise Exception
 
         PPI_x = PPI_x.view((-1, self.num_prots))
 

@@ -587,6 +587,10 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
     return_loss = 0
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
+
+        if epoch%10 == 0:
+            model.bummi = True
+
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
 
@@ -595,7 +599,7 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         # print('y.size', y[:, train_mask].size())
         # print('output.size', output[:, train_mask].size())
 
-        pos_weights = torch.Tensor([neg_to_pos_ratio]) # * 0.75
+        pos_weights = torch.Tensor([neg_to_pos_ratio]) #* 0.75
 
         # print('check', output.min(), output.max(), y.min(), y.max())
 
