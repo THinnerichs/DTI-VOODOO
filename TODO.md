@@ -53,4 +53,4 @@ Robert talk 28.05.:
   - use Siamese network
 - side effect weighted PPI node features
 
-
+- Make split over drugs 
