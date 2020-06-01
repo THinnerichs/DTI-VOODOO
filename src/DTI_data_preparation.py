@@ -128,7 +128,6 @@ def get_drug_list(mode=''):
 
 
 def get_side_effect_similarity_feature_list(intersect_drug_list):
-    print('get_side_effenberg')
     SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
     semsim_matrix = similarity_measurement.get_semantic_similarity_matrix()
 

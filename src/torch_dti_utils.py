@@ -462,6 +462,11 @@ class QuickProtFuncDTINetworkData:
         print('Building semsim PPI node features')
         for drug_index in tqdm(range(self.num_drugs)):
             for drug_interactor, drug_factor in enumerate(self.semsim_feature_matrix[drug_index, :]):
+                print('bumm', drug_interactor, drug_factor)
+                print(drug_factor[0])
+                print((self.train_mask * self.y_dti_data[drug_interactor, :]))
+                print(drug_factor[0] * (self.train_mask * self.y_dti_data[drug_interactor, :]))
+                print(drug_factor[0] * (self.train_mask * self.y_dti_data[drug_interactor, :]).shape)
                 self.feature_matrix[drug_index, :] += drug_factor[0] * (self.train_mask * self.y_dti_data[drug_interactor, :])
 
         print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.min())
