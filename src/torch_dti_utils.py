@@ -724,9 +724,6 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
 
-        if epoch%10 == 0:
-            model.bummi = True
-
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
 
