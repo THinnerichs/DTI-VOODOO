@@ -429,11 +429,7 @@ class QuickProtFuncDTINetworkData:
         # SemSim data
         print("Loading semantic similarity data ...")
         self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
-
         print('semsim.shape', self.semsim_feature_matrix.shape)
-
-        raise Exception
-
 
         # DTI data
         print("Loading DTI links ...")
@@ -450,6 +446,7 @@ class QuickProtFuncDTINetworkData:
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
+        '''
         for drug_index in tqdm(range(self.num_drugs)):
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
             for drug_interactor in drug_interactors:
@@ -460,6 +457,16 @@ class QuickProtFuncDTINetworkData:
             # print(list(self.y_dti_data[drug_index, :]))
 
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
+        '''
+
+        print('Building semsim PPI node features')
+        for drug_index in tqdm(range(self.num_drugs)):
+            for drug_interactor, drug_factor in enumerate(self.semsim_feature_matrix[drug_index, :]):
+                self.feature_matrix[drug_index, :] += drug_factor[0] * (self.train_mask * self.y_dti_data[drug_interactor, :])
+
+        print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.min())
+
+
 
 
         '''
@@ -498,7 +505,7 @@ class QuickProtFuncDTINetworkData:
 
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
 
-            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).round().view(-1, 1)
+            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
                                   edge_attr=self.edge_attr,

@@ -136,13 +136,6 @@ def get_side_effect_similarity_feature_list(intersect_drug_list):
 
     indices = np.array(list(map(index_mapping, intersect_drug_list)))
 
-    print(indices)
-    print(semsim_matrix.shape)
-    print(intersect_drug_list)
-    print(SIDER_drug_list)
-
-
-
     return semsim_matrix[indices,:][:,indices]
 
     # return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
