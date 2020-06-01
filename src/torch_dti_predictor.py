@@ -325,7 +325,6 @@ def quickened_missing_target_predictor(config,
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            print('train_mask', train_mask[:20])
             loss = quick_train(model=model,
                                device=device,
                                train_loader=train_loader,
