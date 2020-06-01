@@ -128,12 +128,20 @@ def get_drug_list(mode=''):
 
 
 def get_side_effect_similarity_feature_list(intersect_drug_list):
+    print('get_side_effenberg')
     SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
     semsim_matrix = similarity_measurement.get_semantic_similarity_matrix()
 
     index_mapping = lambda drug: SIDER_drug_list.index(drug)
 
     indices = np.array(map(index_mapping, intersect_drug_list))
+
+    print(indices)
+    print(semsim_matrix.shape)
+    print(intersect_drug_list)
+    print(SIDER_drug_list)
+
+
 
     return semsim_matrix[indices,:][:,indices]
 
