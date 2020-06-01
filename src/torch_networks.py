@@ -322,8 +322,8 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, 128, cached=False)
-            self.conv2 = nn.GCNConv(128, 16, cached=False)
+            self.conv1 = nn.GCNConv(num_features, 4, cached=False)
+            self.conv2 = nn.GCNConv(4, 16, cached=False)
             self.conv3 = nn.GCNConv(16, 1, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
@@ -383,13 +383,13 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        '''
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
         PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         PPI_x = PPI_x.view((-1, self.num_prots))
-        '''
+
+        return PPI_x
 
         edge_index = PPI_edge_index
         x = PPI_x

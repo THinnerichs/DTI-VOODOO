@@ -595,7 +595,7 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
         # print('y.size', y[:, train_mask].size())
         # print('output.size', output[:, train_mask].size())
 
-        pos_weights = torch.Tensor([neg_to_pos_ratio]) * 0.75
+        pos_weights = torch.Tensor([neg_to_pos_ratio]) # * 0.75
 
         # print('check', output.min(), output.max(), y.min(), y.max())
 

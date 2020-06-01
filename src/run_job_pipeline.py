@@ -87,6 +87,7 @@ def submit_gpu_job(num_proteins=-1,
                    mem=300,
                    neg_sample_ratio=1.0,
                    mode='standard',
+                   split_mode='standard',
                    pretrain=True,
                    model_id='',
                    lr=0.001):
@@ -128,6 +129,7 @@ python3 torch_dti_predictor.py '''.format(jobname=jobname,
     preface_script += "--arch {arch} ".format(arch=arch)
     preface_script += "--lr {lr} ".format(lr=lr)
     preface_script += "--mode {mode} ".format(mode=mode)
+    preface_script += "--split_mode {split_mode} ".format(split_mode=split_mode)
     preface_script += "--neg_sample_ratio {neg_sample_ratio} ".format(neg_sample_ratio=str(neg_sample_ratio))
     preface_script += "--pretrain {pretrain} ".format(pretrain=pretrain)
     preface_script += "--model_id {model_id} ".format(model_id=model_id)
