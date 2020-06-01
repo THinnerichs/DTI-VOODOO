@@ -356,7 +356,7 @@ def get_SIDER_Boyce_Drubank_drug_intersection():
     # intersection_files = [drug_name + "_fasta_" + str(700) + "_min_score.fasta" for drug_name in intersection]
     # fasta_filename = "../data/fasta_files/" + drug_name + "_fasta_" + str(min_score) + "_min_score.fasta"
 
-    return intersection
+    return SIDER_drug_list
 
 
 
