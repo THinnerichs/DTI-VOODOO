@@ -324,10 +324,12 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(num_features, 4, cached=False)
             self.conv2 = nn.GCNConv(4, 16, cached=False)
-            self.conv3 = nn.GCNConv(16, 16, cached=False)
-            self.conv4 = nn.GCNConv(16, 16, cached=False)
-            self.conv5 = nn.GCNConv(16, 16, cached=False)
-            self.conv6 = nn.GCNConv(16, 1, cached=False)
+            self.conv3 = nn.GCNConv(16, 32, cached=False)
+            self.conv4 = nn.GCNConv(32, 32, cached=False)
+            self.conv5 = nn.GCNConv(32, 32, cached=False)
+            self.conv6 = nn.GCNConv(32, 32, cached=False)
+            self.conv7 = nn.GCNConv(32, 32, cached=False)
+            self.conv8 = nn.GCNConv(32, 1, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
             self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
@@ -392,7 +394,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         PPI_x = F.elu(self.conv3(PPI_x, PPI_edge_index))
         PPI_x = F.elu(self.conv4(PPI_x, PPI_edge_index))
         PPI_x = F.elu(self.conv5(PPI_x, PPI_edge_index))
-        PPI_x = self.conv6(PPI_x, PPI_edge_index)
+        PPI_x = F.elu(self.conv6(PPI_x, PPI_edge_index))
+        PPI_x = F.elu(self.conv7(PPI_x, PPI_edge_index))
+        PPI_x = self.conv8(PPI_x, PPI_edge_index)
 
         PPI_x = PPI_x.view((-1, self.num_prots))
 
