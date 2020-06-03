@@ -66,6 +66,8 @@ def write_human_protein_list(min_score=700,
     human_DTI_graph = get_human_DTI_graph(mode=mode)
     PPI_graph = PPI_utils.get_PPI_graph(min_score=min_score)
 
+    print('BUMM PPI_graph.nodes', len(PPI_graph.nodes()), len(PPI_graph.edges()))
+
     print("Gathering proteins ...")
     protein_list = []
     for node in tqdm(human_DTI_graph.nodes()):
