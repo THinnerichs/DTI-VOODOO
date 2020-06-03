@@ -366,9 +366,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv1 = nn.SplineConv(num_features, 4, dim=1, kernel_size=5)
             self.conv2 = nn.SplineConv(4, 16, dim=1, kernel_size=5)
             self.conv3 = nn.SplineConv(16, 16, dim=1, kernel_size=7)
-            # self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
-            # self.conv5 = nn.SplineConv(128, 128, dim=1, kernel_size=11)
-            # self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
+            self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
+            self.conv5 = nn.SplineConv(128, 128, dim=1, kernel_size=11)
+            self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -382,10 +382,10 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         self.fc1 = torch.nn.Linear(16*self.num_prots, 4*self.num_prots)
         self.fc2 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc2 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc2 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
         self.fc3 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc4 = torch.nn.Linear(4*self.num_prots, self.num_prots)
+        self.fc4 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
+        self.fc5 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
+        self.fc6 = torch.nn.Linear(4*self.num_prots, self.num_prots)
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
@@ -429,7 +429,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        x = self.fc4(x)
+        x = F.relu(self.fc4(x))
+        x = F.relu(self.fc5(x))
+        x = self.fc6(x)
 
         x = x.view((-1, self.num_prots))
 
