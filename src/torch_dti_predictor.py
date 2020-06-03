@@ -285,9 +285,11 @@ def quickened_missing_target_predictor(config,
         # train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [train_size, valid_size])
 
         # build DataLoaders
+        print('Building data loader ...')
         train_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=True)
         # valid_loader = data.DataLoader(valid_dataset, config.batch_size, shuffle=False)
 
+        print('Initializing model ...')
         model = None
         if config.pretrain:
             if 'Res' not in config.arch:

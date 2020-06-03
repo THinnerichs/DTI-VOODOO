@@ -380,10 +380,10 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
-        self.fc1 = torch.nn.Linear(128*self.num_prots, 64*self.num_prots)
-        self.fc2 = torch.nn.Linear(64*self.num_prots, 32*self.num_prots)
-        self.fc3 = torch.nn.Linear(32*self.num_prots, 16*self.num_prots)
-        self.fc4 = torch.nn.Linear(16*self.num_prots, self.num_prots)
+        self.fc1 = torch.nn.Linear(128*self.num_prots, 4*self.num_prots)
+        self.fc2 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
+        self.fc3 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
+        self.fc4 = torch.nn.Linear(4*self.num_prots, self.num_prots)
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
