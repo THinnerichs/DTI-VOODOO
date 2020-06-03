@@ -394,7 +394,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        print('ppi_x', PPI_x)
+        print('ppi_x', PPI_x.size())
 
         raise Exception
         '''
