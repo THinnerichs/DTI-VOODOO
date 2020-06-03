@@ -51,6 +51,9 @@ Robert talk 28.05.:
 - side effects and phenotype similarity
   - see mouse model features 
   - use Siamese network
-- side effect weighted PPI node features
 
-- Make split over drugs 
+- normalize node features to Gaussian?
+  - divide by mean and substract 1
+  - plot histogram
+- use whole PPI graph with less important edges and their scores too
+  - quadratic increase in computational time
