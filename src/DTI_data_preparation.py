@@ -139,6 +139,17 @@ def get_side_effect_similarity_feature_list(intersect_drug_list):
 
     # return np.array([semsim_matrix[index_mapping(drug),:] for drug in intersect_drug_list], dtype=np.float32)
 
+def get_jaccard_side_effect_similarity_feature_list(intersect_drug_list):
+    SIDER_drug_list = similarity_measurement.get_SIDER_drug_list()
+    jaccard_feature_matrix = similarity_measurement.write_jaccard_se_similarity_graph()
+
+    index_mapping = lambda drug: SIDER_drug_list.index(drug)
+    indices = np.array(list(map(index_mapping, intersect_drug_list)))
+
+    print('jaccard_feature_matrix.shape', jaccard_feature_matrix.shape)
+
+    return jaccard_feature_matrix[indices,:][:,indices]
+
 def get_DDI_feature_list(intersect_drug_list):
     # intersect_drug_list = get_drug_list()
     # merged_graph = DDI_utils.get_merged_DDI_graph()

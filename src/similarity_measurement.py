@@ -141,21 +141,28 @@ def write_jaccard_se_similarity_graph():
     SIDER_graph = get_SIDER_only_graph()
     drug_SIDER_list = get_SIDER_drug_list()
 
-    print("Building jaccard similarity graph ...")
-    similarity_graph = nx.Graph()
-    similarity_graph.add_nodes_from(drug_SIDER_list)
-    for drug1, drug2 in itertools.product(drug_SIDER_list, drug_SIDER_list):
+    print("Building jaccard similarity matrix ...")
+    return_matrix = np.zeros((len(drug_SIDER_list), len(drug_SIDER_list)))
+    for drug1_index, drug2_index in itertools.product(range(len(drug_SIDER_list)), range(len(drug_SIDER_list))):
+        drug1 = drug_SIDER_list[drug1_index]
+        drug2 = drug_SIDER_list[drug2_index]
+
         adj_set1 = set(SIDER_graph.neighbors(drug1))
         adj_set2 = set(SIDER_graph.neighbors(drug2))
 
         intersec_size = len(adj_set1 & adj_set2)
         union_size = len(adj_set1 | adj_set2)
+        jaccard_similarity = None
         if union_size != 0:
             jaccard_similarity = intersec_size / union_size
-            similarity_graph.add_edge(drug1, drug2, weight=jaccard_similarity)
+
         else:
-            similarity_graph.add_edge(drug1, drug2, weight=0)
+            jaccard_similarity = 0
+
+        return_matrix[drug1_index, drug2_index] = jaccard_similarity
     print("Finished.\n")
+
+    return return_matrix
 
     print("Writing jaccard side effect similarity graph to disc ...")
     filename = "../data/similarity_results/jaccard_similarity_graph"

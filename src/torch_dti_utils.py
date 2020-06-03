@@ -459,6 +459,7 @@ class QuickProtFuncDTINetworkData:
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
+        '''
         for drug_index in tqdm(range(self.num_drugs)):
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
             for drug_interactor in drug_interactors:
@@ -469,6 +470,7 @@ class QuickProtFuncDTINetworkData:
             # print(list(self.y_dti_data[drug_index, :]))
 
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
+        '''
 
         '''
         print('Building semsim PPI node features')
@@ -480,6 +482,18 @@ class QuickProtFuncDTINetworkData:
 
         print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.mean())
         '''
+
+        self.jaccard_sim_feature_matrix = DTI_data_preparation.get_jaccard_side_effect_similarity_feature_list(self.drug_list)
+        print('Building jaccard similarity PPI node features ...')
+        for drug_index in tqdm(range(self.num_drugs)):
+            for drug_interactor, drug_factor in enumerate(self.jaccard_sim_feature_matrix[drug_index, :]):
+                self.feature_matrix[drug_index, :] += drug_factor * (
+                            self.train_mask * self.y_dti_data[drug_interactor, :])
+
+            self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix.max() + epsilon)
+
+        print('jacc_sim_PPI.max', self.feature_matrix.max(), self.feature_matrix.mean())
+
         '''
         histogram = np.zeros((24))
         for sim in self.feature_matrix.flatten():
