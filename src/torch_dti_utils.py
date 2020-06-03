@@ -470,7 +470,7 @@ class QuickProtFuncDTINetworkData:
             for drug_interactor, drug_factor in enumerate(self.semsim_feature_matrix[drug_index, :]):
                 self.feature_matrix[drug_index, :] += drug_factor * (self.train_mask * self.y_dti_data[drug_interactor, :])
 
-            self.feature_matrix[drug_index,:] = self.feature_matrix[drug_index,:]/(self.feature_matrix.max() + epsilon)
+            # self.feature_matrix[drug_index,:] = self.feature_matrix[drug_index,:]/(self.feature_matrix.max() + epsilon)
 
         print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.mean())
         histogram = np.zeros((24))

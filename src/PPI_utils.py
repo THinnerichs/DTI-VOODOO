@@ -23,7 +23,12 @@ def prune_protein_protein_db(min_score=700):
     print("Processing raw human protein links file ...")
     p = 0.041 # see STRING documentation
     with open(file=filename, mode='r') as f, open(file=target_filename, mode='w') as targetfile:
-        targetfile.write(f.readline())
+        head = f.readline()
+        targetfile.write(head)
+
+        print('head', head.strip().split(' ')[-7], head.strip().split(' ')[-6])
+
+        raise Exception
 
         counter = 0
 
@@ -67,6 +72,9 @@ def write_PPI_graph(min_score=700):
             PPI_graph.add_node(node_2)
             PPI_graph.add_edge(node_1, node_2, score=score)
     print("Finished.")
+
+    print('nodes', len(PPI_graph.nodes()))
+    print('edges', len(PPI_graph.edges()))
 
     print("Writing PPI graph to disk ...")
     graph_filename = "../data/PPI_data/PPI_graph_"+str(min_score)+"_min_score"

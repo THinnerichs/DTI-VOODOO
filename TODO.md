@@ -57,3 +57,7 @@ Robert talk 28.05.:
   - plot histogram
 - use whole PPI graph with less important edges and their scores too
   - quadratic increase in computational time
+
+- semsim out of order? values at identity are not 1 
+  - Is it algorithm or my dumbness?
+  - Get maximum of each row and its index
