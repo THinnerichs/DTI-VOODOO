@@ -61,3 +61,12 @@ Robert talk 28.05.:
 - semsim out of order? values at identity are not 1 
   - Is it algorithm or my dumbness?
   - Get maximum of each row and its index
+
+Data for PPI graph reduction:
+- no reduction: nodes: 16042, edges: 401752
+- reduction: 
+  - 100: nodes: 17982, edges: 1711038
+  - 300: nodes: 15647, edges: 220167
+  - 500: nodes: 12120, edges: 80325
+  - 700: nodes: 8290, edges: 48558
+  - 900: nodes: 5055, edges: 23601

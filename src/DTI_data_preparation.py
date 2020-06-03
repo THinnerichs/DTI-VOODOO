@@ -348,7 +348,7 @@ if __name__ == '__main__':
     mode=config.mode
     # write_human_DTI_graph(300, mode='experimental')
     # write_human_DTI_graph(500, mode='experimental')
-    write_human_DTI_graph(700, mode=mode)
+    # write_human_DTI_graph(700, mode=mode)
 
     # dti_graph = get_human_DTI_graph()
     # print("Nodes", len(dti_graph.nodes()))
