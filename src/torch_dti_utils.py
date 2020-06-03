@@ -441,7 +441,7 @@ class QuickProtFuncDTINetworkData:
         # SemSim data
         print("Loading semantic similarity data ...")
         self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
-        print(self.semsim_feature_matrix[np.identity(self.num_drugs)==1])
+        # print(self.semsim_feature_matrix[np.identity(self.num_drugs)==1])
         print('semsim.shape', self.semsim_feature_matrix.shape)
 
         # DTI data
@@ -480,10 +480,12 @@ class QuickProtFuncDTINetworkData:
             self.feature_matrix[drug_index,:] = self.feature_matrix[drug_index,:]/(self.feature_matrix.max() + epsilon)
 
         print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.mean())
+        '''
         histogram = np.zeros((24))
         for sim in self.feature_matrix.flatten():
             histogram[int(sim*8)] += 1
         print('histogram', histogram)
+        '''
 
 
         # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()
