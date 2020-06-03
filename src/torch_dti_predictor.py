@@ -623,8 +623,9 @@ if __name__ == '__main__':
     parser.add_argument("--pretrain", type=bool, default=True)
     parser.add_argument("--model_id", type=str, default='')
 
-    parser.add_argument("--heads", type=int, default=1)
+    parser.add_argument("--heads", type=int, default=1) # attention heads for GATConv
     parser.add_argument("--mode", type=str, default='')
+    parser.add_argument("--PPI_min_score", type=int, default=700)
 
     config = parser.parse_args()
 

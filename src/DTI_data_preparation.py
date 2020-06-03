@@ -61,9 +61,10 @@ def get_human_DTI_graph(mode=''):
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
-def write_human_protein_list(mode=''):
+def write_human_protein_list(min_score=700,
+                             mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
-    PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+    PPI_graph = PPI_utils.get_PPI_graph(min_score=min_score)
 
     print("Gathering proteins ...")
     protein_list = []

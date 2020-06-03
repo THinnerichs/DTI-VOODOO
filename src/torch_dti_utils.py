@@ -391,6 +391,11 @@ class QuickProtFuncDTINetworkData:
     def __init__(self, config):
         self.config = config
 
+        # write data first
+        print("Preparing protein data ...")
+        DTI_data_preparation.write_human_protein_list(min_score=config.PPI_min_score, mode=config.mode)
+        DTI_data_preparation.write_human_prot_func_protein_list(mode=config.mode)
+
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
@@ -405,6 +410,8 @@ class QuickProtFuncDTINetworkData:
         # calculate dimensions of network
         self.num_proteins = len(PPI_graph.nodes())
         self.num_drugs = len(self.drug_list)
+
+        print('PPI_graph nodes/edges:', len(PPI_graph.nodes()), len(PPI_graph.edges()))
 
         print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
