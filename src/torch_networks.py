@@ -380,6 +380,11 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
+        self.fc1 = torch.nn.Linear(self.num_drugs, self.num_drugs)
+        self.fc2 = torch.nn.Linear(self.num_drugs, self.num_drugs)
+        self.fc3 = torch.nn.Linear(self.num_drugs, self.num_drugs)
+        self.fc4 = torch.nn.Linear(self.num_drugs, self.num_drugs)
+
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
@@ -414,7 +419,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = F.elu(self.conv5(x, edge_index, edge_attr))
         x = self.conv6(x, edge_index, edge_attr)
 
-        x = F.dropout(x, training=self.training)
+        # x = F.dropout(x, training=self.training)
 
         x = x.view((-1, self.num_prots))
         return x
