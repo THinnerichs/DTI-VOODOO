@@ -63,8 +63,7 @@ def get_human_DTI_graph(mode=''):
 
 def write_human_protein_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
-    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
-    protein_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
+    protein_node_feature_dict = PPI_utils.get_PPI_graph(min_score=700)
 
     print("Gathering proteins ...")
     protein_list = []

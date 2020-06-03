@@ -15,7 +15,8 @@ from Bio import SeqIO
 
 
 
-def prune_protein_protein_db(min_score=700):
+def prune_protein_protein_db(min_score=700,
+                             mode=''):
 
     filename = "../data/STRING_data/9606.protein.links.full.v11.0.txt"
     target_filename = "../data/STRING_data/9606.protein.links." + str(min_score) + "_min_score.v11.0.txt"
@@ -26,10 +27,6 @@ def prune_protein_protein_db(min_score=700):
         head = f.readline()
         targetfile.write(head)
 
-        print('head', head.strip().split(' ')[-7], head.strip().split(' ')[-6])
-
-        raise Exception
-
         counter = 0
 
         for line in f:
@@ -39,15 +36,21 @@ def prune_protein_protein_db(min_score=700):
 
             split_line = line.strip().split(' ')
 
-            total_score = int(split_line[15])/1000
-            total_score_nop = (total_score-p)/(1-p)
-            txt_score = int(split_line[14])/1000
-            txt_score_nop = (txt_score - p)/(1-p)
-            total_score_updated_nop = 1 - (1-total_score_nop)/(1-txt_score_nop)
-            total_score_updated = total_score_updated_nop + p * (1-total_score_updated_nop)
-            if total_score_updated * 1000 < min_score:
-                continue
-            targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(int(total_score_updated*1000))+'\n')
+            if mode=='experimental':
+                experimental_score = int(split_line[-6]) + int(split_line[-7])
+                if experimental_score < min_score:
+                    continue
+                targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(experimental_score)+'\n')
+            else:
+                total_score = int(split_line[15])/1000
+                total_score_nop = (total_score-p)/(1-p)
+                txt_score = int(split_line[14])/1000
+                txt_score_nop = (txt_score - p)/(1-p)
+                total_score_updated_nop = 1 - (1-total_score_nop)/(1-txt_score_nop)
+                total_score_updated = total_score_updated_nop + p * (1-total_score_updated_nop)
+                if total_score_updated * 1000 < min_score:
+                    continue
+                targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(int(total_score_updated*1000))+'\n')
     print("Finished.")
 
 def get_human_protein_list(min_score=700):
