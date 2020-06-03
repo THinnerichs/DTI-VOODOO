@@ -63,12 +63,12 @@ def get_human_DTI_graph(mode=''):
 
 def write_human_protein_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
-    protein_node_feature_dict = PPI_utils.get_PPI_graph(min_score=700)
+    PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
 
     print("Gathering proteins ...")
     protein_list = []
     for node in tqdm(human_DTI_graph.nodes()):
-        if not node.startswith('CID') and node in list(protein_node_feature_dict.keys()):
+        if not node.startswith('CID') and node in list(PPI_graph.nodes()):
             protein_list.append(node)
     print("Finished.\n")
 
