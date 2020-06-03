@@ -368,7 +368,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv3 = nn.SplineConv(32, 64, dim=1, kernel_size=7)
             self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
             self.conv5 = nn.SplineConv(128, 128, dim=1, kernel_size=11)
-            self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
+            # self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -380,10 +380,10 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
-        self.fc1 = torch.nn.Linear(self.num_drugs, self.num_drugs)
-        self.fc2 = torch.nn.Linear(self.num_drugs, self.num_drugs)
-        self.fc3 = torch.nn.Linear(self.num_drugs, self.num_drugs)
-        self.fc4 = torch.nn.Linear(self.num_drugs, self.num_drugs)
+        self.fc1 = torch.nn.Linear(128*self.num_prots, 64*self.num_prots)
+        self.fc2 = torch.nn.Linear(64*self.num_prots, 32*self.num_prots)
+        self.fc3 = torch.nn.Linear(32*self.num_prots, 16*self.num_prots)
+        self.fc4 = torch.nn.Linear(16*self.num_prots, self.num_prots)
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
@@ -417,11 +417,19 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = F.elu(self.conv3(x, edge_index, edge_attr))
         x = self.conv4(x, edge_index, edge_attr)
         x = F.elu(self.conv5(x, edge_index, edge_attr))
-        x = self.conv6(x, edge_index, edge_attr)
+        # x = self.conv6(x, edge_index, edge_attr)
 
         # x = F.dropout(x, training=self.training)
+        # x = x.view((-1, self.num_prots))
+
+        x = x.view(-1, 1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
 
         x = x.view((-1, self.num_prots))
+
         return x
 
 
