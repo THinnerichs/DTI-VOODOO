@@ -414,10 +414,10 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         edge_index = PPI_edge_index
         x = PPI_x
         x = F.elu(self.conv1(x, edge_index, edge_attr))
-        x = self.conv2(x, edge_index, edge_attr)
+        x = F.elu(self.conv2(x, edge_index, edge_attr))
         x = F.elu(self.conv3(x, edge_index, edge_attr))
-        x = self.conv4(x, edge_index, edge_attr)
-        x = F.elu(self.conv5(x, edge_index, edge_attr))
+        # x = self.conv4(x, edge_index, edge_attr)
+        # x = F.elu(self.conv5(x, edge_index, edge_attr))
         # x = self.conv6(x, edge_index, edge_attr)
 
         # x = F.dropout(x, training=self.training)
