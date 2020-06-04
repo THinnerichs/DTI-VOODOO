@@ -38,7 +38,7 @@ def prune_protein_protein_db(min_score=700,
 
             if mode=='experimental':
                 experimental_score = (1-int(split_line[-6])/1000) * (1-int(split_line[-7])/1000)
-                experimental_score = 1000 * (1-experimental_score)
+                experimental_score = int(1000 * (1-experimental_score))
                 if experimental_score < min_score:
                     continue
                 targetfile.write(split_line[0]+" "+ split_line[1]+" "+str(experimental_score)+'\n')
