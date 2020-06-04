@@ -55,6 +55,8 @@ class TemplateSimpleNet(torch.nn.Module):
             self.conv1 = nn.FeaStConv(num_features, num_features*4, heads=5)
             self.conv2 = nn.FeaStConv(num_features*4, num_features*16, heads=5)
             self.conv3 = nn.FeaStConv(num_features*16, num_features*128, heads=5)
+        elif 'Node2Vec' in conv_method:
+            self.conv1 = nn.Node2Vec
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -322,14 +324,14 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, 4, normalize=False, cached=False)
-            self.conv2 = nn.GCNConv(4, 16, normalize=False, cached=False)
-            self.conv3 = nn.GCNConv(16, 32, normalize=False, cached=False)
-            self.conv4 = nn.GCNConv(32, 64, normalize=False, cached=False)
-            self.conv5 = nn.GCNConv(64, 128, normalize=False, cached=False)
-            self.conv6 = nn.GCNConv(128, 128, normalize=False, cached=False)
-            self.conv7 = nn.GCNConv(128, 128, normalize=False, cached=False)
-            self.conv8 = nn.GCNConv(128, 1, normalize=False, cached=False)
+            self.conv1 = nn.GCNConv(num_features, 4, cached=False)
+            self.conv2 = nn.GCNConv(4, 16, cached=False)
+            self.conv3 = nn.GCNConv(16, 32, cached=False)
+            self.conv4 = nn.GCNConv(32, 64, cached=False)
+            self.conv5 = nn.GCNConv(64, 128, cached=False)
+            self.conv6 = nn.GCNConv(128, 128, cached=False)
+            self.conv7 = nn.GCNConv(128, 128, cached=False)
+            self.conv8 = nn.GCNConv(128, 1, cached=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
             self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
@@ -369,6 +371,8 @@ class QuickTemplateSimpleNet(torch.nn.Module):
             self.conv4 = nn.SplineConv(64, 128, dim=1, kernel_size=7)
             self.conv5 = nn.SplineConv(128, 128, dim=1, kernel_size=11)
             self.conv6 = nn.SplineConv(128, 1, dim=1, kernel_size=11)
+        elif 'Node2Vec' in conv_method:
+            self.conv1 = nn.Node2Vec()
         else:
             print("No valid model selected.")
             sys.stdout.flush()
