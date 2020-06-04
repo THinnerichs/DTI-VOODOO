@@ -387,7 +387,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
-        PPI_x, PPI_edge_index, PPI_batch, edge_attr, edge_weight = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr, PPI_data_object.edge_weight
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
