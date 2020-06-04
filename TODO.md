@@ -70,3 +70,14 @@ Data for PPI graph reduction:
   - 500: nodes: 12120, edges: 80325 | 11377/71528
   - 700: nodes: 8290, edges: 48558 | 7963/45906
   - 900: nodes: 5055, edges: 23601 | 3396/14859
+
+Robert 04.06.:
+- side effect and protein function similarity HPO (Human phenotype ontology)
+- Interpro motive 
+
+- phenotypes and functions localize on PPI network
+
+- take example: 
+  - e.g. Diclophenac 
+
+
