@@ -511,7 +511,7 @@ def quickened_missing_drug_predictor(config,
         model = nn.DataParallel(model).to(device)
         print("model total parameters", sum(p.numel() for p in model.parameters()))
 
-        optimizer = torch.optim.SGD(model.parameters(), lr=config.lr, momentum=0.9)
+        optimizer = torch.optim.SparseAdam(model.parameters(), lr=config.lr)
 
         # storing best results
         best_loss = math.inf
