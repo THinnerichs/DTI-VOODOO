@@ -232,10 +232,15 @@ def quickened_missing_target_predictor(config,
 
     np.random.seed(42)
 
-    # get full protein num
+    # build data
     config.num_proteins = None if config.num_proteins==-1 else config.num_proteins
-    num_drugs = len(np.array(DTI_data_preparation.get_drug_list(mode=config.mode)))
-    num_proteins = config.num_proteins if config.num_proteins else len(np.array(DTI_data_preparation.get_human_prot_func_proteins()))
+    network_data = QuickProtFuncDTINetworkData(config=config)
+
+    # get full protein num
+    num_drugs = network_data.num_drugs
+    num_proteins = network_data.num_proteins
+    # num_drugs = len(np.array(DTI_data_preparation.get_drug_list(mode=config.mode)))
+    # num_proteins = config.num_proteins if config.num_proteins else len(np.array(DTI_data_preparation.get_human_prot_func_proteins()))
 
     # num_proteins = config.num_proteins if config.num_proteins else 11499 # 11518
     # num_drugs = 568 # 641
@@ -262,7 +267,7 @@ def quickened_missing_target_predictor(config,
         print("Fold:", fold)
 
         config.train_prots = train_protein_indices
-        network_data = QuickProtFuncDTINetworkData(config=config)
+        network_data.build_data(config)
 
         # build train data over whole dataset with help matrix
 
