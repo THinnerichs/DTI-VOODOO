@@ -428,8 +428,8 @@ class QuickProtFuncDTINetworkData:
         self.num_PPI_features = 1
 
         print('Building edge feature attributes ...')
-        forward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
-        backward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
+        forward_edge_feature_list = [self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
+        backward_edge_feature_list = [self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
         self.edge_attr = torch.tensor(forward_edge_feature_list + backward_edge_feature_list, dtype=torch.float).view(-1,1)
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
@@ -549,7 +549,7 @@ class QuickProtFuncDTINetworkData:
             feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
-                                  edge_attr=self.edge_attr,
+                                  edge_weight=self.edge_attr,
                                   y=y)
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
@@ -775,7 +775,7 @@ def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio,
 
         # print('check', output.min(), output.max(), y.min(), y.max())
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output.round()[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
+        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
         return_loss += loss
         loss.backward()
         optimizer.step()
