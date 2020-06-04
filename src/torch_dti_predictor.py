@@ -342,7 +342,7 @@ def quickened_missing_target_predictor(config,
             print('Train loss:', loss)
             sys.stdout.flush()
 
-            if epoch%10 == 0:
+            if epoch%1 == 0:
                 print('Predicting for validation data...')
                 file='../results/interactions_results_' +config.arch+'_'+ str(num_proteins) + '_prots_'+str(epoch)+'_epochs'
                 with open(file=file, mode='a') as f:
