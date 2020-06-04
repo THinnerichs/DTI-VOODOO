@@ -396,6 +396,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # batch_size = int(PPI_x.size(0)/self.num_prots)
 
+        '''
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_weight=edge_weight))
         PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index, edge_weight=edge_weight))
         PPI_x = F.elu(self.conv3(PPI_x, PPI_edge_index, edge_weight=edge_weight))
@@ -408,6 +409,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         PPI_x = PPI_x.view((-1, self.num_prots))
 
         return PPI_x
+        '''
 
         edge_index = PPI_edge_index
         x = PPI_x
