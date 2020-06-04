@@ -383,7 +383,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
-        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr, edge_weight = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr, PPI_data_object.edge_weight
 
         # print(DDI_feature.shape)
         # print('protein_mask.size()', protein_mask.size())
@@ -392,14 +392,14 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # batch_size = int(PPI_x.size(0)/self.num_prots)
 
-        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv3(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv4(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv5(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv6(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv7(PPI_x, PPI_edge_index))
-        PPI_x = self.conv8(PPI_x, PPI_edge_index)
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv3(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv4(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv5(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv6(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = F.elu(self.conv7(PPI_x, PPI_edge_index, edge_weight=edge_weight))
+        PPI_x = self.conv8(PPI_x, PPI_edge_index, edge_weight=edge_weight)
 
         PPI_x = PPI_x.view((-1, self.num_prots))
 
