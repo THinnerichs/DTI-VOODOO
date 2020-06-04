@@ -380,12 +380,6 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
-        self.fc1 = torch.nn.Linear(16*self.num_prots, 4*self.num_prots)
-        self.fc2 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc3 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc4 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc5 = torch.nn.Linear(4*self.num_prots, 4*self.num_prots)
-        self.fc6 = torch.nn.Linear(4*self.num_prots, self.num_prots)
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
@@ -396,7 +390,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # PPI graph network
 
-        batch_size = int(PPI_x.size(0)/self.num_prots)
+        # batch_size = int(PPI_x.size(0)/self.num_prots)
 
         '''
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
@@ -418,22 +412,14 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         x = F.elu(self.conv1(x, edge_index, edge_attr))
         x = F.elu(self.conv2(x, edge_index, edge_attr))
         x = F.elu(self.conv3(x, edge_index, edge_attr))
-        # x = self.conv4(x, edge_index, edge_attr)
-        # x = F.elu(self.conv5(x, edge_index, edge_attr))
-        # x = self.conv6(x, edge_index, edge_attr)
+        x = self.conv4(x, edge_index, edge_attr)
+        x = F.elu(self.conv5(x, edge_index, edge_attr))
+        x = self.conv6(x, edge_index, edge_attr)
 
         # x = F.dropout(x, training=self.training)
-        # x = x.view((-1, self.num_prots))
-
-        x = x.view((batch_size, -1))
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        x = F.relu(self.fc5(x))
-        x = self.fc6(x)
-
         x = x.view((-1, self.num_prots))
+
+
 
         return x
 
