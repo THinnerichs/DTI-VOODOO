@@ -402,33 +402,34 @@ class QuickProtFuncDTINetworkData:
         self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
-
-    def build_data(self, config):
         # PPI data
         print("Loading PPI graph ...")
-        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
-        PPI_graph = PPI_graph.subgraph(self.protein_list)
+        self.PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
-        self.num_proteins = len(PPI_graph.nodes())
+        self.num_proteins = len(self.PPI_graph.nodes())
         self.num_drugs = len(self.drug_list)
 
-        print('PPI_graph nodes/edges:', len(PPI_graph.nodes()), len(PPI_graph.edges()))
+
+    def build_data(self, config):
+
+        print('PPI_graph nodes/edges:', len(self.PPI_graph.nodes()), len(self.PPI_graph.edges()))
 
         print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
         print("Building edge list ...")
         forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                              for node1, node2 in list(PPI_graph.edges())]
+                              for node1, node2 in list(self.PPI_graph.edges())]
         backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                               for node2, node1 in list(PPI_graph.edges())]
+                               for node2, node1 in list(self.PPI_graph.edges())]
         self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
                                       dtype=torch.long)
         self.num_PPI_features = 1
 
         print('Building edge feature attributes ...')
-        forward_edge_feature_list = [1-PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(PPI_graph.edges())]
-        backward_edge_feature_list = [1-PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(PPI_graph.edges())]
+        forward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
+        backward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
         self.edge_attr = torch.tensor(forward_edge_feature_list + backward_edge_feature_list, dtype=torch.float).view(-1,1)
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
