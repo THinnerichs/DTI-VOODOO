@@ -317,7 +317,7 @@ def quickened_missing_target_predictor(config,
         model = nn.DataParallel(model).to(device)
         print("model total parameters", sum(p.numel() for p in model.parameters()))
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
+        optimizer = torch.optim.SGD(model.parameters(), lr=config.lr, momentum=0.9)
 
         # storing best results
         best_loss = math.inf
@@ -355,8 +355,8 @@ def quickened_missing_target_predictor(config,
                     test_labels = labels.reshape((num_drugs, num_proteins))[:, train_mask==0].flatten()
                     test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0].flatten()
 
-                    print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min())
-                    print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min())
+                    print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min(), train_predictions.shape)
+                    print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min(), test_predictions.shape, test_labels.shape)
 
                     print(config.model_id, 'Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
