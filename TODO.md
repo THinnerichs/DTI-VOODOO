@@ -65,8 +65,8 @@ Robert talk 28.05.:
 Data for PPI graph reduction:
 - no reduction: nodes: 16042, edges: 401752
 - reduction: 
-  - 100: nodes: 17982, edges: 1711038
-  - 300: nodes: 15647, edges: 220167
-  - 500: nodes: 12120, edges: 80325
-  - 700: nodes: 8290, edges: 48558
-  - 900: nodes: 5055, edges: 23601
+  - 100: nodes: 17982, edges: 1711038 | 17978/1705657
+  - 300: nodes: 15647, edges: 220167 | 15616/218487
+  - 500: nodes: 12120, edges: 80325 | 11377/71528
+  - 700: nodes: 8290, edges: 48558 | 7963/45906
+  - 900: nodes: 5055, edges: 23601 | 3396/14859

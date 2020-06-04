@@ -425,8 +425,8 @@ class QuickProtFuncDTINetworkData:
         self.num_PPI_features = 1
 
         print('Building edge feature attributes ...')
-        forward_edge_feature_list = [PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(PPI_graph.edges())]
-        backward_edge_feature_list = [PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(PPI_graph.edges())]
+        forward_edge_feature_list = [1-PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(PPI_graph.edges())]
+        backward_edge_feature_list = [1-PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(PPI_graph.edges())]
         self.edge_attr = torch.tensor(forward_edge_feature_list + backward_edge_feature_list, dtype=torch.float).view(-1,1)
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
