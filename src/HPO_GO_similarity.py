@@ -164,9 +164,8 @@ def write_association_file():
     SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
     print('SIDER original num nodes:', len(SIDER_graph.nodes()))
     # remove side effects that got no mapping to HPO
-    for node in SIDER_graph:
-        if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys()):
-            SIDER_graph.remove_node(node)
+    remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
+    SIDER_graph.remove_nodes_from(remove_nodes)
 
     num_SIDER_drugs = len([node for node in SIDER_graph if not node.startswith('CID')])
     print('Num SIDER drugs:', num_SIDER_drugs)
