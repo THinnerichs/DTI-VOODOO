@@ -196,7 +196,7 @@ def write_association_file():
     drugs = set()
     for side_effect in premapped_side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(updated_mapping[side_effect]))
-    for side_effect in side_effect:
+    for side_effect in side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(side_effect))
     drugs = list(drugs)
 
