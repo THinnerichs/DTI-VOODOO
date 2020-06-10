@@ -80,4 +80,14 @@ Robert 04.06.:
 - take example: 
   - e.g. Diclophenac 
 
+------------------------------
 
+1. map SIDER side effects to HPO
+2. See what DL2vec has actually done
+  2.1. Ontology comes in in which form?
+  2.2. How to build GO function according to this
+  2.3. How to build HPO according to this
+  2.4. How to build the actual model?!
+3. get GO functions for proteins
+4. Build ontologies according to DL2vec
+5. Rebuild their model
