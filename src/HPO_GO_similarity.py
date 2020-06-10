@@ -186,6 +186,8 @@ def write_association_file():
     for UMLS_id, MedDRA_id, MedDRAParent_id, UMLS_Parentid in qres:
         UMLS_id_to_UMLS_parent_dict[UMLS_id] = UMLS_Parentid
     print(len(UMLS_id_to_UMLS_parent_dict))
+    print(list(UMLS_id_to_UMLS_parent_dict.items())[:10])
+
 
     # some analysis
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
