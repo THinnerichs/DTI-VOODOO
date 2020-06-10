@@ -119,4 +119,87 @@ def get_UniProt_prot_to_GO_function_mapping():
                         except:
                             gene_go_feature[human_gene] = [go_id]
             '''
-            
+
+def get_prot_to_EntrezGene_mapping():
+    filename = '../data/STRING_data/9606.protein.aliases.v11.0.txt'
+
+    mapping_dict = {}
+    with open(file=filename, mode='r') as f:
+        # skip header
+        f.readline()
+        for line in f:
+            prot_id, gene_id, rest = line.split('\t')
+            if 'EntrezGene' in rest:
+                mapping_dict[prot_id.strip()] = gene_id.strip()
+    print('Prot to EntrezGene entries:', len(mapping_dict.keys()))
+    return mapping_dict
+
+def get_gene_HPO_class_associations():
+    filename = '../data/HPO_data/genes_to_phenotype.txt'
+    gene_to_HPO_class_dict = {}
+    print('Parsing', filename)
+    with open(file=filename, mode='r') as f:
+        # skip header
+        f.readline()
+        counter = 0
+        for line in f:
+            split_line = line.split('\t')
+            gene_id, HPO_term = split_line[1].strip(), split_line[2].strip()
+            if not gene_to_HPO_class_dict.get(gene_id, None):
+                gene_to_HPO_class_dict[gene_id] = [HPO_term]
+            else:
+                gene_to_HPO_class_dict[gene_id]+= [HPO_term]
+            counter += 1
+    print('Done.\n')
+
+    return gene_to_HPO_class_dict
+
+def write_association_file():
+    # Get drug associations
+    SIDER_graph = similarity_measurement.get_updated_MedDRA_label_SIDER_graph()
+    MedDRA_to_HPO_mapping = get_SIDER_to_HPO_mapping_dict()
+
+    # prune dict so it doesn't contain any additional keys, otherwise throws error
+    updated_mapping = {k:v for k,v in MedDRA_to_HPO_mapping.items() if k in list(SIDER_graph.nodes())}
+    SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
+    print('SIDER original num nodes:', len(SIDER_graph.nodes()))
+    # remove side effects that got no mapping to HPO
+    for node in SIDER_graph:
+        if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys()):
+            SIDER_graph.remove_node(node)
+
+    num_SIDER_drugs = len([node for node in SIDER_graph if not node.startswith('CID')])
+    print('Num SIDER drugs:', num_SIDER_drugs)
+    print('Num SIDER side effects:', len(SIDER_graph.nodes()) - num_SIDER_drugs)
+
+    # get protein associations
+    prot_to_gene_mapping = get_prot_to_EntrezGene_mapping()
+    gene_to_HPO_mapping = get_gene_HPO_class_associations()
+    prot_list = [prot for prot in prot_to_gene_mapping.keys() if gene_to_HPO_mapping.get(prot_to_gene_mapping[prot], default=None)]
+
+    # Write association file
+    print('Writing association file...')
+    filename = '../data/HPO_data/association_file'
+    with open(file=filename, mode='w') as f:
+        # write drug associations
+        for node in SIDER_graph.nodes():
+            if not node.startswith('CID'):
+                continue
+            for neighbour in SIDER_graph.neighbors(node):
+                f.write(node+' '+MedDRA_to_HPO_mapping[neighbour]+'\n')
+
+        for prot in prot_list:
+            f.write(prot+' '+gene_to_HPO_mapping[prot_to_gene_mapping[prot]]+'\n')
+
+    print('Done.\n')
+
+
+
+
+
+
+
+
+
+
+
