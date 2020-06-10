@@ -191,6 +191,8 @@ def write_association_file():
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
     mapped_side_effects = list(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys()))
 
+    # get drugs that have at least one side effect in the remaining set
+    # thus build union over neighbours of side effects as graph is bipartite
     drugs = set()
     for side_effect in mapped_side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(side_effect))
@@ -201,8 +203,6 @@ def write_association_file():
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
     print('sidies', len(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys())))
     print('mappies', len(set(updated_mapping.keys()) & set(UMLS_id_to_UMLS_parent_dict.values())))
-
-    raise Exception
 
 
     # get protein associations
@@ -219,8 +219,13 @@ def write_association_file():
             if not node.startswith('CID'):
                 parent_id = UMLS_id_to_UMLS_parent_dict.get(node, None)
                 if parent_id:
-                    parent_HPO_class = None # @TODO Continue to work here!!!
+                    parent_HPO_class = updated_mapping.get(parent_id, None)
+                    if parent_HPO_class:
+                        f.write(node+' '+parent_HPO_class+'\n')
 
+        for node in SIDER_graph.nodes():
+            if not node.startswith('CID'):
+                continue
 
             for neighbour in SIDER_graph.neighbors(node):
                 f.write(node+' '+MedDRA_to_HPO_mapping[neighbour]+'\n')
