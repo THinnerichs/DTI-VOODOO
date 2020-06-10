@@ -2,8 +2,10 @@ import numpy as np
 import networkx as nx
 
 import pickle
+import subprocess
 
 import similarity_measurement
+from DL2vec import runDL2vec
 
 
 def get_SIDER_to_HPO_mapping_dict():
@@ -197,6 +199,10 @@ def write_association_file():
     for side_effect in mapped_side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(side_effect))
     drugs = list(drugs)
+
+    filename = '../data/HPO_data/HPO_SIDER_drug_list'
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(drugs, f, pickle.HIGHEST_PROTOCOL)
     print('num drugs', len(drugs))
 
     # some analysis
@@ -209,6 +215,12 @@ def write_association_file():
     prot_to_gene_mapping = get_prot_to_EntrezGene_mapping()
     gene_to_HPO_mapping = get_gene_HPO_class_associations()
     prot_list = [prot for prot in prot_to_gene_mapping.keys() if gene_to_HPO_mapping.get(prot_to_gene_mapping[prot])]
+
+    print('prots', len(prot_list))
+
+    filename = '../data/HPO_data/HPO_prots'
+    with open(file=filename+'.pkl', mode='wb') as f:
+        pickle.dump(prot_list, f, pickle.HIGHEST_PROTOCOL)
 
     # Write association file
     print('Writing association file...')
@@ -237,13 +249,44 @@ def write_association_file():
 
     print('Done.\n')
 
+def get_HPO_SIDER_drug_list():
+    filename = '../data/HPO_data/HPO_SIDER_drug_list'
+    with open(file=filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
 
+def get_HPO_prot_list():
+    filename = '../data/HPO_data/HPO_prots'
+    with open(file=filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
 
+def write_entity_list():
+    drug_list =  get_HPO_SIDER_drug_list()
+    prot_list = get_HPO_prot_list()
 
+    print('Writing entity list ...')
+    filename = '../data/HPO_data/entity_list'
+    with open(file=filename, mode='w') as f:
+        for drug in drug_list:
+            f.write(drug+'\n')
+        for protein in prot_list:
+            f.write(protein+'\n')
 
+    print('Done.')
 
+def run_DL2vec_embeddings():
 
-
-
+    print('Running DL2vec embedding generator ...')
+    path = '../data/HPO_data/'
+    onto = path+'hp.owl'
+    asso = path+'association_file'
+    outfile = path+'embedding_model'
+    ents = path+'entity_list'
+    command = 'python runDL2vec.py -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents}'.format(onto=onto,
+                                                                                                                        asso=asso,
+                                                                                                                        outfile=outfile,
+                                                                                                                        ents=ents)
+    print('Command:', command)
+    subprocess.call(command, shell=True)
+    print('Done.')
 
 
