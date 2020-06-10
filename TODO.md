@@ -91,3 +91,8 @@ Robert 04.06.:
 3. get GO functions for proteins
 4. Build ontologies according to DL2vec
 5. Rebuild their model
+
+------------------------------
+
+- Rebuild prot to gene mapping with UniProt mapping stuff
+
