@@ -163,13 +163,22 @@ def write_association_file():
     updated_mapping = {k:v for k,v in MedDRA_to_HPO_mapping.items() if k in list(SIDER_graph.nodes())}
     SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
     print('SIDER original num nodes:', len(SIDER_graph.nodes()))
+    print('bumm', len([node for node in SIDER_graph if node.startswith('CID')]))
+
     # remove side effects that got no mapping to HPO
     remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
     SIDER_graph.remove_nodes_from(remove_nodes)
 
+    print(len(MedDRA_to_HPO_mapping.keys()), list(MedDRA_to_HPO_mapping)[:10])
+    side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
+    print(len(side_effects), side_effects[:20])
+
     num_SIDER_drugs = len([node for node in SIDER_graph if not node.startswith('CID')])
     print('Num SIDER drugs:', num_SIDER_drugs)
     print('Num SIDER side effects:', len(SIDER_graph.nodes()) - num_SIDER_drugs)
+
+    raise Exception
+
 
     # get protein associations
     prot_to_gene_mapping = get_prot_to_EntrezGene_mapping()
