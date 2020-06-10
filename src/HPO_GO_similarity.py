@@ -81,9 +81,14 @@ def get_mapped_SIDER_graph():
         print('object', object)
         counter += 1
 
+        if counter >10:
+            break
+
     # perform partial mapping of node labels
     return_graph = nx.relabel_nodes(SIDER_graph, mapping_dict, copy=False)
     print('Affected nodes:', len(set(mapping_dict.keys()) & set(return_graph.nodes())))
+    raise Exception
+
     return return_graph
 
 def get_UniProt_prot_to_GO_function_mapping():
