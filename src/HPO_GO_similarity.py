@@ -200,13 +200,6 @@ def write_association_file():
         drugs = drugs | set(SIDER_graph.neighbors(side_effect))
     drugs = list(drugs)
 
-    print('len drugs', len(drugs))
-    print(len(premapped_side_effects))
-    print(len(mapped_side_effects))
-    print(len(set(premapped_side_effects) & set(mapped_side_effects)))
-
-    raise Exception
-
     filename = '../data/HPO_data/HPO_SIDER_drug_list'
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(drugs, f, pickle.HIGHEST_PROTOCOL)
@@ -217,7 +210,7 @@ def write_association_file():
     pruned_side_effects = list(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys()))
     print('sidies', len(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys())))
     print('mappies', len(set(updated_mapping.keys()) & set(UMLS_id_to_UMLS_parent_dict.values())))
-    SIDER_graph = SIDER_graph.subgraph(drugs + pruned_side_effects)
+    SIDER_graph = SIDER_graph.subgraph(drugs + pruned_side_effects + [updated_mapping[se] for se in premapped_side_effects])
 
 
     # get protein associations
@@ -238,24 +231,28 @@ def write_association_file():
     with open(file=filename, mode='w') as f:
         # write drug associations
         for node in SIDER_graph.nodes():
-            if not node.startswith('CID'):
+            if not node.startswith('CID') and not node.startswith('HP'):
                 parent_id = UMLS_id_to_UMLS_parent_dict.get(node, None)
                 if parent_id:
                     parent_HPO_class = updated_mapping.get(parent_id, None)
                     if parent_HPO_class:
-                        f.write(node+' '+prefix+parent_HPO_class+'>\n')
+                        f.write(node+' '+prefix+parent_HPO_class.replace(':','_')+'>\n')
 
         for node in SIDER_graph.nodes():
             if not node.startswith('CID'):
                 continue
 
             for neighbour in SIDER_graph.neighbors(node):
-                f.write(node+' '+neighbour+'\n')
+                if neighbour.startswith('HP'):
+                    f.write(node+' '+prefix+neighbour.replace(':','_')+'>\n')
+                else:
+                    f.write(node+' '+neighbour+'\n')
+
 
 
         for prot in prot_list:
             for HPO_class in gene_to_HPO_mapping[prot_to_gene_mapping[prot]]:
-                f.write(prot+' '+ prefix+HPO_class + '>\n')
+                f.write(prot+' '+ prefix+HPO_class.replace(':','_') + '>\n')
 
     print('Done.\n')
 
