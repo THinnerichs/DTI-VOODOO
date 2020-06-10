@@ -187,8 +187,6 @@ def write_association_file():
     UMLS_id_to_UMLS_parent_dict = {}
     for UMLS_id, MedDRA_id, MedDRAParent_id, UMLS_Parentid in qres:
         UMLS_id_to_UMLS_parent_dict[UMLS_id.value] = UMLS_Parentid.value
-    print(len(UMLS_id_to_UMLS_parent_dict))
-    print(list(UMLS_id_to_UMLS_parent_dict.items())[:10])
 
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
     mapped_side_effects = list(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys()))
@@ -198,9 +196,14 @@ def write_association_file():
     drugs = set()
     for side_effect in premapped_side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(updated_mapping[side_effect]))
+    for side_effect in side_effect:
+        drugs = drugs | set(SIDER_graph.neighbors(side_effect))
     drugs = list(drugs)
 
     print('len drugs', len(drugs))
+    print(len(premapped_side_effects))
+    print(len(mapped_side_effects))
+    print(len(set(premapped_side_effects) & set(mapped_side_effects)))
 
     raise Exception
 
