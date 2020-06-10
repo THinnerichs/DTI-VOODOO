@@ -28,12 +28,13 @@ def get_mapped_SIDER_graph():
 
     print('SIDER nodes')
     counter = 0
-    while counter<10:
-        for node in SIDER_graph.nodes():
-            if node.startswith('CID'):
-                continue
-            counter +=1
-            print(node)
+    for node in SIDER_graph.nodes():
+        if node.startswith('CID'):
+            continue
+        counter +=1
+        print(node)
+        if counter >= 10:
+            break
 
 
     print("Reading meddra RDF graph ...")
