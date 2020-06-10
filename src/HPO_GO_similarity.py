@@ -162,11 +162,9 @@ def write_association_file():
 
     # prune dict so it doesn't contain any additional keys, otherwise throws error
     updated_mapping = {k:v for k,v in MedDRA_to_HPO_mapping.items() if k in list(SIDER_graph.nodes())}
-    print('test', len(set(SIDER_graph.nodes()) & set(updated_mapping.keys())))
-    # SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
+    premapped_side_effects = list(set(updated_mapping.keys()) & set(SIDER_graph.nodes()))
+    SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
     print('SIDER original num nodes:', len(SIDER_graph.nodes()))
-
-    raise Exception
 
     # remove side effects that got no mapping to HPO
     # remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
@@ -198,9 +196,13 @@ def write_association_file():
     # get drugs that have at least one side effect in the remaining set
     # thus build union over neighbours of side effects as graph is bipartite
     drugs = set()
-    for side_effect in mapped_side_effects:
+    for side_effect in premapped_side_effects:
         drugs = drugs | set(SIDER_graph.neighbors(side_effect))
     drugs = list(drugs)
+
+    print('len drugs', len(drugs))
+
+    raise Exception
 
     filename = '../data/HPO_data/HPO_SIDER_drug_list'
     with open(file=filename+'.pkl', mode='wb') as f:
