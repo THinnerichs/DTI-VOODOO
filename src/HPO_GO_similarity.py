@@ -228,7 +228,7 @@ def write_association_file():
                 continue
 
             for neighbour in SIDER_graph.neighbors(node):
-                f.write(node+' '+MedDRA_to_HPO_mapping[neighbour]+'\n')
+                f.write(node+' '+neighbour+'\n')
 
 
         for prot in prot_list:
