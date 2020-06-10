@@ -167,7 +167,7 @@ def write_association_file():
 
     # remove side effects that got no mapping to HPO
     remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
-    SIDER_graph.remove_nodes_from(remove_nodes)
+    # SIDER_graph.remove_nodes_from(remove_nodes)
 
     print(len(MedDRA_to_HPO_mapping.keys()), list(MedDRA_to_HPO_mapping)[:10])
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
