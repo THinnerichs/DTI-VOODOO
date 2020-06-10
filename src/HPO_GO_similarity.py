@@ -163,7 +163,6 @@ def write_association_file():
     updated_mapping = {k:v for k,v in MedDRA_to_HPO_mapping.items() if k in list(SIDER_graph.nodes())}
     SIDER_graph = nx.relabel_nodes(SIDER_graph, updated_mapping, copy=False)
     print('SIDER original num nodes:', len(SIDER_graph.nodes()))
-    print('bumm', len([node for node in SIDER_graph if node.startswith('CID')]))
 
     # remove side effects that got no mapping to HPO
     # remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
@@ -186,6 +185,7 @@ def write_association_file():
     UMLS_id_to_UMLS_parent_dict = {}
     for UMLS_id, MedDRA_id, MedDRAParent_id, UMLS_Parentid in qres:
         UMLS_id_to_UMLS_parent_dict[UMLS_id] = UMLS_Parentid
+    print(len(UMLS_id_to_UMLS_parent_dict))
 
     # some analysis
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
