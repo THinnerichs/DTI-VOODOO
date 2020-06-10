@@ -176,7 +176,7 @@ def get_jaccard_se_similarity_graph():
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
-def write_meddra_graph_to_disk():
+def write_meddra_graph():
     meddra_rdf_graph_filename = "../data/MedDRA_data/MEDDRA_RDF_original.ttl"
     meddra_graph = rdflib.Graph()
     result = meddra_graph.parse(meddra_rdf_graph_filename, format='n3')
@@ -187,15 +187,16 @@ def write_meddra_graph_to_disk():
         pickle.dump(meddra_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
+def get_meddra_graph():
+    filename = "../data/MedDRA_data/meddra_RDF_graph"
+    with open(filename + '.pkl', 'rb') as f:
+         return pickle.load(f)
+
 def write_enriched_SIDER_graph():
 
     # read meddra RDF graph from disc
     print("Reading meddra RDF graph ...")
-    graph_filename = "../data/MedDRA_data/meddra_RDF_graph"
-    meddra_RDF_graph = None
-    with open(graph_filename + '.pkl', 'rb') as f:
-         meddra_RDF_graph = pickle.load(f)
-    print("Finished.\n")
+    meddra_RDF_graph = get_meddra_graph()
 
     # fetch mapping of MedDRA URIs to UMLS ids
     qres = meddra_RDF_graph.query(

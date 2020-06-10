@@ -148,7 +148,7 @@ def get_gene_HPO_class_associations():
             if not gene_to_HPO_class_dict.get(gene_id, None):
                 gene_to_HPO_class_dict[gene_id] = [HPO_term]
             else:
-                gene_to_HPO_class_dict[gene_id]+= [HPO_term]
+                gene_to_HPO_class_dict[gene_id] += [HPO_term]
             counter += 1
     print('Done.\n')
 
@@ -166,16 +166,31 @@ def write_association_file():
     print('bumm', len([node for node in SIDER_graph if node.startswith('CID')]))
 
     # remove side effects that got no mapping to HPO
-    remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
+    # remove_nodes = [node for node in SIDER_graph if not node.startswith('CID') and node not in list(MedDRA_to_HPO_mapping.keys())]
     # SIDER_graph.remove_nodes_from(remove_nodes)
 
-    print(len(MedDRA_to_HPO_mapping.keys()), list(MedDRA_to_HPO_mapping)[:10])
-    side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
-    print(len(side_effects), side_effects[:20])
-
-    num_SIDER_drugs = len([node for node in SIDER_graph if not node.startswith('CID')])
+    num_SIDER_drugs = len([node for node in SIDER_graph if node.startswith('CID')])
     print('Num SIDER drugs:', num_SIDER_drugs)
     print('Num SIDER side effects:', len(SIDER_graph.nodes()) - num_SIDER_drugs)
+
+    meddra_RDF_graph = similarity_measurement.get_meddra_graph()
+    # fetch mapping of MedDRA URIs to UMLS ids
+    qres = meddra_RDF_graph.query(
+        """SELECT DISTINCT ?UMLSid ?MedDRAid ?MedDRAParentid ?UMLSParentid
+           WHERE {
+              ?MedDRAid umls:cui ?UMLSid .
+              ?MedDRAid rdfs:subClassOf ?MedDRAParentid .
+              ?MedDRAParentid umls:cui ?UMLSParentid .
+           }""")
+
+    UMLS_id_to_UMLS_parent_dict = {}
+    for UMLS_id, MedDRA_id, MedDRAParent_id, UMLS_Parentid in qres:
+        UMLS_id_to_UMLS_parent_dict[UMLS_id] = UMLS_Parentid
+
+    # some analysis
+    side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
+    print('sidies', len(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys())))
+    print('mappies', len(set(updated_mapping.keys()) & set(UMLS_id_to_UMLS_parent_dict.values())))
 
     raise Exception
 
@@ -192,9 +207,14 @@ def write_association_file():
         # write drug associations
         for node in SIDER_graph.nodes():
             if not node.startswith('CID'):
-                continue
+                parent_id = UMLS_id_to_UMLS_parent_dict.get(node, None)
+                if parent_id:
+                    parent_HPO_class = None # @TODO Continue to work here!!!
+
+
             for neighbour in SIDER_graph.neighbors(node):
                 f.write(node+' '+MedDRA_to_HPO_mapping[neighbour]+'\n')
+
 
         for prot in prot_list:
             for HPO_class in gene_to_HPO_mapping[prot_to_gene_mapping[prot]]:
