@@ -234,7 +234,7 @@ def write_association_file():
             if not node.startswith('CID') and not node.startswith('HP'):
                 parent_id = UMLS_id_to_UMLS_parent_dict.get(node, None)
                 if parent_id:
-                    parent_HPO_class = updated_mapping.get(parent_id, None)
+                    parent_HPO_class = MedDRA_to_HPO_mapping.get(parent_id, None)
                     if parent_HPO_class:
                         f.write(node+' '+prefix+parent_HPO_class.replace(':','_')+'>\n')
 
