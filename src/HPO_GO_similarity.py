@@ -188,6 +188,14 @@ def write_association_file():
     print(len(UMLS_id_to_UMLS_parent_dict))
     print(list(UMLS_id_to_UMLS_parent_dict.items())[:10])
 
+    side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
+    mapped_side_effects = list(set(side_effects) & set(UMLS_id_to_UMLS_parent_dict.keys()))
+
+    drugs = set()
+    for side_effect in mapped_side_effects:
+        drugs = drugs | set(SIDER_graph.neighbors(side_effect))
+    drugs = list(drugs)
+    print('num drugs', len(drugs))
 
     # some analysis
     side_effects = [node for node in SIDER_graph if not node.startswith('CID')]
