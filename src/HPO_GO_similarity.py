@@ -197,7 +197,7 @@ def write_association_file():
     # thus build union over neighbours of side effects as graph is bipartite
     drugs = set()
     for side_effect in premapped_side_effects:
-        drugs = drugs | set(SIDER_graph.neighbors(side_effect))
+        drugs = drugs | set(SIDER_graph.neighbors(updated_mapping[side_effect]))
     drugs = list(drugs)
 
     print('len drugs', len(drugs))
