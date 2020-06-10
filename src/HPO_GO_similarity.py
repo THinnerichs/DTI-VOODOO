@@ -188,7 +188,8 @@ def write_association_file():
                 f.write(node+' '+MedDRA_to_HPO_mapping[neighbour]+'\n')
 
         for prot in prot_list:
-            f.write(prot+' '+gene_to_HPO_mapping[prot_to_gene_mapping[prot]]+'\n')
+            for HPO_class in gene_to_HPO_mapping[prot_to_gene_mapping[prot]]:
+                f.write(prot+' '+ HPO_class + '\n')
 
     print('Done.\n')
 
