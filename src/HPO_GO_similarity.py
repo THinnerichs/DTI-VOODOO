@@ -174,7 +174,7 @@ def write_association_file():
     # get protein associations
     prot_to_gene_mapping = get_prot_to_EntrezGene_mapping()
     gene_to_HPO_mapping = get_gene_HPO_class_associations()
-    prot_list = [prot for prot in prot_to_gene_mapping.keys() if gene_to_HPO_mapping.get(prot_to_gene_mapping[prot], default=None)]
+    prot_list = [prot for prot in prot_to_gene_mapping.keys() if gene_to_HPO_mapping.get(prot_to_gene_mapping[prot])]
 
     # Write association file
     print('Writing association file...')
