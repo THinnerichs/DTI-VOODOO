@@ -127,12 +127,9 @@ def write_updated_MedDRA_label_SIDER_graph():
     # merge CIDm and CIDs into CIDm
     return_graph = nx.Graph()
     for node1, node2 in SIDER_only_graph.edges():
-        node1 = node1.replace('s','m')
-        node2 = node2.replace('s','m')
-        if 's' in node1 or 's' in node2:
-            print(node1, node2)
+        node1 = node1.replace('CIDs','CIDm')
+        node2 = node2.replace('CIDs','CIDm')
         return_graph.add_edge(node1, node2)
-
 
     print("Writing updated MedDRA label SIDER graph to disc ...")
     filename = "../data/MedDRA_data/updated_MedDRA_label_SIDER_graph"
