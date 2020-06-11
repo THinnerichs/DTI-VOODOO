@@ -475,6 +475,7 @@ class QuickProtFuncDTINetworkData:
             # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
         '''
 
+        '''
         print('Building semsim PPI node features')
         for drug_index in tqdm(range(self.num_drugs)):
             for drug_interactor, drug_factor in enumerate(self.semsim_feature_matrix[drug_index, :]):
@@ -483,6 +484,7 @@ class QuickProtFuncDTINetworkData:
             self.feature_matrix[drug_index,:] = self.feature_matrix[drug_index,:]/(self.feature_matrix.max() + epsilon)
 
         print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.mean())
+        '''
 
         '''
         self.jaccard_sim_feature_matrix = DTI_data_preparation.get_jaccard_side_effect_similarity_feature_list(self.drug_list)
@@ -561,141 +563,6 @@ class QuickProtFuncDTINetworkData:
 
     def __len__(self):
         return self.num_drugs
-
-class QuickProtFuncDTIMissingDrugNetworkData:
-    def __init__(self, config):
-        self.config = config
-
-        print("Loading data ...")
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
-        print(len(self.drug_list), "drugs present")
-        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
-        print(len(self.protein_list), "proteins present\n")
-
-        # PPI data
-        print("Loading PPI graph ...")
-        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
-        PPI_graph = PPI_graph.subgraph(self.protein_list)
-
-        # calculate dimensions of network
-        self.num_proteins = len(PPI_graph.nodes())
-        self.num_drugs = len(self.drug_list)
-
-        print("Building index dict ...")
-        self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
-        print("Building edge list ...")
-        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                              for node1, node2 in list(PPI_graph.edges())]
-        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                               for node2, node1 in list(PPI_graph.edges())]
-        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
-                                      dtype=torch.long)
-        self.num_PPI_features = 1
-        self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
-
-
-        # DDI data
-        print("Loading DDI features ...")
-        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
-        # add self-interactions for better performance
-        self.DDI_features[np.identity(self.num_drugs)==1] = 1
-        print(self.DDI_features.shape)
-
-        # SemSim data
-        print("Loading semantic similarity data ...")
-        self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
-        print('semsim.shape', self.semsim_feature_matrix.shape)
-
-        # DTI data
-        print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
-                                                   mode=config.mode)
-        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
-        print(self.y_dti_data.shape)
-
-        print("Building feature matrix ...")
-        # self.train_prots = config.train_prots
-        # self.train_mask = np.zeros(self.num_proteins)
-        # self.train_mask[self.train_prots] = 1
-        # self.test_prots = config.test_prots
-
-        self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
-        epsilon = 0.00001
-        '''
-        for drug_index in tqdm(range(self.num_drugs)):
-            drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]
-            for drug_interactor in drug_interactors:
-                # self.feature_matrix[drug_index, :] += self.train_mask * self.y_dti_data[drug_interactor, :]
-                self.feature_matrix[drug_index, (self.train_mask * self.y_dti_data[drug_interactor, :]) == 1] = 1
-
-            # print(list(self.feature_matrix[drug_index, :]))
-            # print(list(self.y_dti_data[drug_index, :]))
-
-            # self.feature_matrix[drug_index, :] = self.feature_matrix[drug_index, :] / (self.feature_matrix[drug_index, :].max() + epsilon)
-        '''
-
-        print('Building semsim PPI node features')
-        self.train_drugs = config.train_drugs
-        self.train_mask = np.zeros(self.num_drugs)
-        self.train_mask[self.train_drugs] = 1
-        for drug_index in tqdm(range(self.num_drugs)):
-            for drug_interactor, drug_factor in enumerate(self.semsim_feature_matrix[drug_index, :]):
-                self.feature_matrix[drug_index, :] += drug_factor * self.train_mask[drug_interactor] * (self.y_dti_data[drug_interactor, :])
-
-        print('semsim_PPI.max', self.feature_matrix.max(), self.feature_matrix.min())
-
-
-        '''
-        # Set data to true labels for sanity test
-        for drug_index in tqdm(range(self.num_drugs)):
-            self.feature_matrix[drug_index, :] = self.y_dti_data[drug_index, :]
-        '''
-
-        if not config.pretrain:
-            print('Building protfunc data...')
-            self.ProtFuncDataBuilder = ProteinFunctionDTIDataBuilder(config, num_proteins=config.num_proteins)
-
-        print("Finished.\n")
-
-        """
-        test with open(file='graph_testing', mode='a') as f:
-            print('\nTests')
-            print(self.DDI_features.sum(), self.DDI_features.sum(axis=0), file=f)
-            for drug_index in range(len(self.drug_list)):
-                diff = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]
-                print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(diff), file=f)
-        """
-
-    def get(self, indices):
-        data_list = []
-
-        # indices = list(range(self.num_drugs))
-        protfunc_data = None
-        if not self.config.pretrain:
-            print('Loading protfunc data...')
-            protfunc_data = self.ProtFuncDataBuilder.get(indices)
-
-        # for index in tqdm(indices):
-        for drug_index in indices:
-            # build protein mask
-
-            y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
-
-            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
-            full_PPI_graph = Data(x=feature_array,
-                                  edge_index=self.edge_list,
-                                  edge_attr=self.edge_attr,
-                                  y=y)
-
-            # full_PPI_graph.__num_nodes__ = self.num_proteins
-
-            data_list.append(full_PPI_graph)
-
-        return data_list
-
-    def __len__(self):
-        return self.num_drugs
-
 
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):

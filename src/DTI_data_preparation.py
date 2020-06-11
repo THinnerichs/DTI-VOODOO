@@ -10,6 +10,7 @@ from tqdm import tqdm
 import PPI_utils
 import DDI_utils
 import similarity_measurement
+import HPO_GO_similarity
 
 import argparse
 
@@ -89,6 +90,8 @@ def write_human_prot_func_protein_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
     human_proteins = get_human_proteins()
 
+    HPO_prots = HPO_GO_similarity.get_HPO_prot_list()
+
     DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
     uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
     GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
@@ -105,7 +108,8 @@ def write_human_prot_func_protein_list(mode=''):
     for node in tqdm(human_DTI_graph.nodes()):
         if not node.startswith('CID') and \
                 node in human_proteins and \
-                node in uberon_model and node in GO_model and node in phenotype_model:
+                node in uberon_model and node in GO_model and node in phenotype_model and \
+                node in HPO_prots:
             protein_list.append(node)
     print("Finished.\n")
 
@@ -122,8 +126,9 @@ def get_human_prot_func_proteins():
 
 def get_drug_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
-    drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+    # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
     # drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
+    drug_list = HPO_GO_similarity.get_HPO_SIDER_drug_list()
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
 
