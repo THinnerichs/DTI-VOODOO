@@ -435,17 +435,17 @@ class QuickProtFuncDTINetworkData:
 
 
         # DDI data
-        print("Loading DDI features ...")
-        self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
+        # print("Loading DDI features ...")
+        # self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
         # add self-interactions for better performance
-        self.DDI_features[np.identity(self.num_drugs)==1] = 1
-        print(self.DDI_features.shape)
+        # self.DDI_features[np.identity(self.num_drugs)==1] = 1
+        # print(self.DDI_features.shape)
 
         # SemSim data
-        print("Loading semantic similarity data ...")
-        self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
+        # print("Loading semantic similarity data ...")
+        # self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
         # print(self.semsim_feature_matrix[np.identity(self.num_drugs)==1])
-        print('semsim.shape', self.semsim_feature_matrix.shape)
+        # print('semsim.shape', self.semsim_feature_matrix.shape)
 
         # DTI data
         print("Loading DTI links ...")
@@ -505,6 +505,10 @@ class QuickProtFuncDTINetworkData:
             histogram[int(sim*8)] += 1
         print('histogram', histogram)
         '''
+
+        self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+
 
 
         # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()

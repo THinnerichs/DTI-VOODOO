@@ -48,7 +48,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
                 curr_node = next_node
 
             pairs.append(walk_accumulate)
-        if count % 1000 == 0:
+        if count % 100 == 0:
             print("Done walks for", count, "nodes")
     write_file(pairs)
 

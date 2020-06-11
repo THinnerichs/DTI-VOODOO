@@ -124,10 +124,14 @@ def write_updated_MedDRA_label_SIDER_graph():
         merge_nodes(SIDER_only_graph, old_cui_list, new_cui)
     print("Finished.\n")
 
-    # merge CIDm and CIDs into CIDms
+    # merge CIDm and CIDs into CIDm
     return_graph = nx.Graph()
     for node1, node2 in SIDER_only_graph.edges():
-        return_graph.add_edge(node1.replace('s','m'), node2.replace('s','m'))
+        node1 = node1.replace('s','m')
+        node2 = node2.replace('s','m')
+        if 's' in node1 or 's' in node2:
+            print(node1, node2)
+        return_graph.add_edge(node1, node2)
 
 
     print("Writing updated MedDRA label SIDER graph to disc ...")
@@ -139,8 +143,9 @@ def write_updated_MedDRA_label_SIDER_graph():
 def get_updated_MedDRA_label_SIDER_graph():
     print("Reading updated MedDRA label SIDER only graph ...\n")
     graph_filename = "../data/SIDER_data/updated_MedDRA_label_SIDER_graph"
+    graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
-        return pickle.load(f)
+        graph = pickle.load(f)
 
 def write_jaccard_se_similarity_graph():
     # SIDER only graph
