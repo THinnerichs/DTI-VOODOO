@@ -506,12 +506,15 @@ class QuickProtFuncDTINetworkData:
         print('histogram', histogram)
         '''
 
+        # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()
+
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
 
 
-        # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()
+
+
 
 
 
@@ -552,7 +555,8 @@ class QuickProtFuncDTINetworkData:
 
             y = torch.tensor(self.y_dti_data[drug_index, :]).view(-1)
 
-            feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
+            # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
+
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,

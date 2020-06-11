@@ -142,7 +142,7 @@ def write_updated_MedDRA_label_SIDER_graph():
 
 def get_updated_MedDRA_label_SIDER_graph():
     print("Reading updated MedDRA label SIDER only graph ...\n")
-    graph_filename = "../data/SIDER_data/updated_MedDRA_label_SIDER_graph"
+    graph_filename = "../data/MedDRA_data/updated_MedDRA_label_SIDER_graph"
     with open(graph_filename + '.pkl', 'rb') as f:
         return pickle.load(f)
 
