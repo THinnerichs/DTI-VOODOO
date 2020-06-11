@@ -561,6 +561,9 @@ class QuickProtFuncDTINetworkData:
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
             drug_feature = np.vstack(self.drug_features[drug_index, :]*self.num_proteins)
+            print(self.drug_features[drug_index, :].shape)
+            print(drug_feature.shape)
+
             # protein_feature = self.protein_features
             feature_array = torch.tensor(drug_feature, dtype=torch.float).view(-1, self.num_PPI_features)
             print(feature_array.size())
