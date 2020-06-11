@@ -563,6 +563,9 @@ class QuickProtFuncDTINetworkData:
             drug_feature = np.vstack(self.drug_features[drug_index, :]*self.num_proteins)
             # protein_feature = self.protein_features
             feature_array = torch.tensor(drug_feature, dtype=torch.float).view(-1, self.num_PPI_features)
+            print(feature_array.size())
+
+            raise Exception
 
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
