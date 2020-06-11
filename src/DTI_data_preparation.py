@@ -90,7 +90,7 @@ def write_human_prot_func_protein_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
     human_proteins = get_human_proteins()
 
-    HPO_prots = HPO_GO_similarity.get_HPO_prot_list()
+    # HPO_prots = HPO_GO_similarity.get_HPO_prot_list()
 
     DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
     uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
@@ -108,8 +108,7 @@ def write_human_prot_func_protein_list(mode=''):
     for node in tqdm(human_DTI_graph.nodes()):
         if not node.startswith('CID') and \
                 node in human_proteins and \
-                node in uberon_model and node in GO_model and node in phenotype_model and \
-                node in HPO_prots:
+                node in uberon_model and node in GO_model and node in phenotype_model:
             protein_list.append(node)
     print("Finished.\n")
 
