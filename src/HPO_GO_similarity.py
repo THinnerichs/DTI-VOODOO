@@ -221,7 +221,7 @@ def write_association_file():
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(prot_list, f, pickle.HIGHEST_PROTOCOL)
 
-    updated_drugs = []
+    updated_drugs = set()
 
     # Write association file
     print('Writing association file...')
@@ -246,7 +246,7 @@ def write_association_file():
                     f.write(node+' '+prefix+neighbour.replace(':','_')+'>\n')
                 else:
                     f.write(node+' '+neighbour+'\n')
-                updated_drugs.append(node)
+                updated_drugs.add(node)
 
         # write protein associations
         for prot in prot_list:
@@ -255,7 +255,7 @@ def write_association_file():
 
     filename = '../data/HPO_data/HPO_SIDER_drug_list'
     with open(file=filename + '.pkl', mode='wb') as f:
-        pickle.dump(updated_drugs, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(list(updated_drugs), f, pickle.HIGHEST_PROTOCOL)
     print('Eventual num of drugs:', len(updated_drugs))
 
 
