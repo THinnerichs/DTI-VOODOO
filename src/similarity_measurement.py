@@ -143,9 +143,8 @@ def write_updated_MedDRA_label_SIDER_graph():
 def get_updated_MedDRA_label_SIDER_graph():
     print("Reading updated MedDRA label SIDER only graph ...\n")
     graph_filename = "../data/SIDER_data/updated_MedDRA_label_SIDER_graph"
-    graph = None
     with open(graph_filename + '.pkl', 'rb') as f:
-        graph = pickle.load(f)
+        return pickle.load(f)
 
 def write_jaccard_se_similarity_graph():
     # SIDER only graph
