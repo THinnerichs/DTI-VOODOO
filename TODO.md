@@ -1,7 +1,5 @@
 ## TODO
 
-1.1. Find DTI paper which uses drughub
-
 Also write down failed approach?
 
 Options:
@@ -22,7 +20,6 @@ Draw images for Networks
 - Images for splits
 
 Robert talk:
-  - search bioinformatics for drug repuposing
   - 10 years ago side effect similarity paper in Science  (0.7 AUC)
   - locality in PPI network coincides with phenotypes
     - See paper in Skype
@@ -39,7 +36,6 @@ Robert talk:
 - Resnik Similarity drug-protein-similarity
 
 - Remove self-loops from GCN
-- use only boyce for DDIs
 
 
 Data for experimental only:
@@ -51,12 +47,6 @@ Robert talk 28.05.:
 - side effects and phenotype similarity
   - see mouse model features 
   - use Siamese network
-
-- normalize node features to Gaussian?
-  - divide by mean and substract 1
-  - plot histogram
-- use whole PPI graph with less important edges and their scores too
-  - quadratic increase in computational time
 
 - semsim out of order? values at identity are not 1 
   - Is it algorithm or my dumbness?
@@ -95,4 +85,12 @@ Robert 04.06.:
 ------------------------------
 
 - Rebuild prot to gene mapping with UniProt mapping stuff
+- take example and test hypothesis for Diclophenac
+  - DDI:
+    - take DDIs and analyze their targets within PPI graph
+      - does it localize? how to measure? 
+        - #edges between them vs avg edge count?
+      - anything obvious in there?
+  - side effects:
+    - 
 
