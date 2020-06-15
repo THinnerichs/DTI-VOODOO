@@ -85,6 +85,9 @@ Robert 04.06.:
 ------------------------------
 
 - Rebuild prot to gene mapping with UniProt mapping stuff
+
+- add Mouse phenotypes to ontology 
+
 - take example and test hypothesis for Diclophenac
   - DDI:
     - take DDIs and analyze their targets within PPI graph
@@ -92,5 +95,11 @@ Robert 04.06.:
         - #edges between them vs avg edge count?
       - anything obvious in there?
   - side effects:
+    - does side effect similarity work? does it localize? 
+      - take highest values from similarity matrix and check
+  - DL2vec:
     - 
+- PPI not only experimental:
+  - also take:
+    - from other databases
 
