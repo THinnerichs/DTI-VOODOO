@@ -318,6 +318,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--model_id", type=str, default='')
     parser.add_argument("--model", type=str, default='protein')
+    parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--fold", type=int, default=1)
 
     config = parser.parse_args()
