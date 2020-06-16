@@ -108,7 +108,7 @@ class HPODTIDataBuilder:
 
 class DTIGraphDataset(data.Dataset):
     def __init__(self, data_list):
-        super(DTIGraphDataset, self).__init__('/data/torch_raw/')
+        super(DTIGraphDataset, self).__init__()
         # self.data, self.slices = self.collate(data_list)
         self.data_list = data_list
 
