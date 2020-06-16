@@ -186,6 +186,8 @@ def siamese_drug_protein_network(config):
         if config.fold != -1 and config.fold != fold:
             continue
 
+        dti_data.build_data(config)
+
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
         test_indices = help_matrix[:, test_protein_indices].flatten()
