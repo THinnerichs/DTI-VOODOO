@@ -72,7 +72,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
 def run_walk(nodes,G):
     global data_pairs
 
-    number=1
+    number=48
     length = len(nodes) // number
 
     processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length])) for index
@@ -117,5 +117,5 @@ def gene_node_vector(graph, entity_list,outfile):
 
     print("start to train the word2vec models")
     sentences=gensim.models.word2vec.LineSentence("walks.txt")
-    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=100, window=10,iter=30,workers=1)
+    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=100, window=10,iter=30,workers=48)
     model.save(outfile)
