@@ -38,7 +38,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
             curr_node = node
             walk_accumulate=[]
             for j in range(WALK_LEN):
-                neighbours = G.neighbors(curr_node)
+                neighbours = list(G.neighbors(curr_node))
                 neighbour_types = [G.edges[curr_node, neighbour]['type'] for neighbour in neighbours]
                 num_HasAssociations = neighbour_types.count('HasAssociation')
                 # make HasAssociation and non-HasAssociation equally likely
