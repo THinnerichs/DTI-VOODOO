@@ -88,6 +88,8 @@ Robert 04.06.:
 
 - add Mouse phenotypes to ontology 
 
+- Build plain (non-graph conv.) network (siamese) for similarity
+
 - take example and test hypothesis for Diclophenac
   - DDI:
     - take DDIs and analyze their targets within PPI graph
