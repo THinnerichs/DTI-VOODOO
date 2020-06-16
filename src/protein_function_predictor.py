@@ -7,7 +7,6 @@ import torch
 
 import pickle
 import sys
-import gc
 import argparse
 
 from molecular_utils import train, predicting
@@ -40,7 +39,6 @@ def protein_function_predictor(config):
         print("Fold:", fold)
         if config.fold != -1 and config.fold != fold:
             continue
-        gc.collect()
 
         # build train data over whole dataset with help matrix
         train_indices = help_matrix[:, train_protein_indices].flatten()
@@ -123,7 +121,6 @@ def protein_function_predictor(config):
 
         print('Build overall data...')
         sys.stdout.flush()
-        gc.collect()
         overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
         overall_dataloader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
 
@@ -134,7 +131,6 @@ def protein_function_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
-        gc.collect()
 
         model_filename = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)
@@ -268,7 +264,6 @@ def drug_split_protein_function_predictor(config):
 
         print('Build overall data...')
         sys.stdout.flush()
-        gc.collect()
         overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
         overall_dataloader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
 
@@ -279,7 +274,6 @@ def drug_split_protein_function_predictor(config):
         with open(file=filename+'.pkl', mode='wb') as f:
             pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
 
-        gc.collect()
 
         model_filename = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
         torch.save(model.state_dict(), model_filename)

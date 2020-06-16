@@ -36,7 +36,7 @@ def write_human_DTI_graph(min_score=0,
             if mode=='experimental':
                 score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000))*1000)
             if mode=='database':
-                score =  int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000) * (1-int(split_line[6])/1000) * (1-int(split_line[7])/1000))*1000)
+                score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000) * (1-int(split_line[6])/1000) * (1-int(split_line[7])/1000))*1000)
             else:
                 score = int(split_line[-1])
             if not drug in drug_set:
