@@ -39,10 +39,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
             walk_accumulate=[]
             for j in range(WALK_LEN):
                 neighbours = list(G.neighbors(curr_node))
-                print('neighbours', neighbours[:20])
-                print([G.edges[curr_node, neighbour] for neighbour in neighbours][:10])
                 neighbour_types = [G.edges[curr_node, neighbour]['type'] for neighbour in neighbours]
-                print('neighbours_types', neighbour_types[:20])
                 num_HasAssociations = neighbour_types.count('HasAssociation')
 
                 # make HasAssociation and non-HasAssociation equally likely
@@ -55,12 +52,9 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
                 # next_node = random.choice(list(G.neighbors(curr_node)))
                 next_node = random.choices(population=neighbours,
                                            weights=weight_vec,
-                                           k=1)
+                                           k=1)[0]
 
                 type_nodes = G.edges[curr_node, next_node]["type"]
-
-                raise Exception
-
 
                 if curr_node ==node:
                     walk_accumulate.append(curr_node)
