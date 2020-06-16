@@ -70,12 +70,6 @@ class HPODTIDataBuilder:
         self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
-        print("Building feature matrix ...")
-        self.train_prots = config.train_prots
-        self.train_mask = np.zeros(self.num_proteins)
-        self.train_mask[self.train_prots] = 1
-        # self.test_prots = config.test_prots
-
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
 
