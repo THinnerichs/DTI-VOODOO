@@ -32,13 +32,29 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
 
         if G.degree(node) == 0:
             continue
+
+        epsilon = 0.000001
         for i in range(num_walks):
             curr_node = node
             walk_accumulate=[]
             for j in range(WALK_LEN):
-                next_node = random.choice(list(G.neighbors(curr_node)))
+                neighbours = G.neighbors(curr_node)
+                neighbour_types = [G.edges[curr_node, neighbour]['type'] for neighbour in neighbours]
+                num_HasAssociations = neighbour_types.count('HasAssociation')
+                # make HasAssociation and non-HasAssociation equally likely
+                HasAssociation_weight = 0.5 / (num_HasAssociations + epsilon)
+                non_HasAssociation_weight = 0.5 / (len(neighbours)-num_HasAssociations + epsilon)
+
+                # build weight vector
+                weight_vec = [(HasAssociation_weight if type=='HasAssociation' else non_HasAssociation_weight) for type in neighbour_types]
+
+                # next_node = random.choice(list(G.neighbors(curr_node)))
+                next_node = random.choices(population=neighbours,
+                                           weights=weight_vec,
+                                           k=1)
 
                 type_nodes = G.edges[curr_node, next_node]["type"]
+
 
                 if curr_node ==node:
                     walk_accumulate.append(curr_node)

@@ -87,6 +87,7 @@ Robert 04.06.:
 - Rebuild prot to gene mapping with UniProt mapping stuff
 
 - add Mouse phenotypes to ontology 
+  - rebuild association file with updated mapping
 
 - Build plain (non-graph conv.) network (siamese) for similarity
 
@@ -101,7 +102,9 @@ Robert 04.06.:
       - take highest values from similarity matrix and check
   - DL2vec:
     - 
+
 - PPI not only experimental:
   - also take:
     - from other databases
 
+- run model with updated walks
