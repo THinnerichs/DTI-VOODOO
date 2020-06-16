@@ -39,8 +39,12 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
             walk_accumulate=[]
             for j in range(WALK_LEN):
                 neighbours = list(G.neighbors(curr_node))
+                print('neighbours', neighbours[:20])
+                print([neighbour for neighbour in neighbours][:10])
                 neighbour_types = [G.edges[curr_node, neighbour]['type'] for neighbour in neighbours]
+                print('neighbours_types', neighbour_types[:20])
                 num_HasAssociations = neighbour_types.count('HasAssociation')
+
                 # make HasAssociation and non-HasAssociation equally likely
                 HasAssociation_weight = 0.5 / (num_HasAssociations + epsilon)
                 non_HasAssociation_weight = 0.5 / (len(neighbours)-num_HasAssociations + epsilon)
@@ -54,6 +58,8 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
                                            k=1)
 
                 type_nodes = G.edges[curr_node, next_node]["type"]
+
+                raise Exception
 
 
                 if curr_node ==node:
@@ -72,7 +78,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
 def run_walk(nodes,G):
     global data_pairs
 
-    number=20
+    number=1
     length = len(nodes) // number
 
     processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length])) for index
@@ -117,5 +123,5 @@ def gene_node_vector(graph, entity_list,outfile):
 
     print("start to train the word2vec models")
     sentences=gensim.models.word2vec.LineSentence("walks.txt")
-    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=100, window=10,iter=30,workers=20)
+    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=100, window=10,iter=30,workers=1)
     model.save(outfile)
