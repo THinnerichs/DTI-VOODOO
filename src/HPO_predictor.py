@@ -111,10 +111,9 @@ class HPODTIDataBuilder:
 class DTIGraphDataset(data.Dataset):
     def __init__(self, data_list):
         super(DTIGraphDataset, self).__init__()
-        # self.data, self.slices = self.collate(data_list)
         self.data_list = data_list
 
-    def get(self, idx):
+    def __getitem__(self, idx):
         return self.data_list[idx]
 
     def __len__(self):
@@ -194,6 +193,8 @@ def siamese_drug_protein_network(config):
 
         train_dataset = DTIGraphDataset(train_dataset)
         test_dataset = DTIGraphDataset(test_dataset)
+
+        print('len(train_dataset)', len(train_dataset))
 
         # Calculate weights
         positives = dti_data.y_dti_data.flatten()[train_indices].sum()
