@@ -226,7 +226,7 @@ def siamese_drug_protein_network(config):
             loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if epoch%config.num_epochs == 1:
+            if epoch%3 == 0:
                 print('Predicting for validation data...')
                 file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
