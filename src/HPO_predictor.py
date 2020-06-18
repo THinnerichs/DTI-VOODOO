@@ -228,7 +228,7 @@ def siamese_drug_protein_network(config):
 
             if epoch%config.num_epochs == 10:
                 print('Predicting for validation data...')
-                # file='../results/protfunc_pred_results_' + str(config.num_epochs)+'_epochs'
+                file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
                     print('Train: Acc, ROC_AUC, f1, matthews_corrcoef',
