@@ -22,14 +22,19 @@ def write_human_DTI_graph(min_score=0,
     dti_graph = nx.Graph()
 
     # drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
-    drug_set = get_drug_list()
+    # drug_set = get_drug_list()
+
+    stereo_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
     print("Parsing human drug-protein-links data ...")
     with open(file=filename, mode='r') as f:
         f.readline()
         for line in tqdm(f, total=15473940):
             split_line = line.split('\t')
-            drug = split_line[0].replace('s','m')
+            drug = split_line[0].strip()
+            if 's' in drug:
+                drug = stereo_mono_mapping[drug]
+            # drug = split_line[0].replace('s','m')
             target = split_line[1]
 
             score = None
@@ -39,8 +44,8 @@ def write_human_DTI_graph(min_score=0,
                 score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000) * (1-int(split_line[6])/1000) * (1-int(split_line[7])/1000))*1000)
             else:
                 score = int(split_line[-1])
-            if not drug in drug_set:
-                continue
+            # if not drug in drug_set:
+                # continue
 
             if score >= min_score:
                 dti_graph.add_node(drug)
@@ -49,7 +54,7 @@ def write_human_DTI_graph(min_score=0,
 
     print("Finished.\n")
 
-    print('num_nodes', len(dti_graph.nodes()) - len(drug_set))
+    print('num_nodes', len(dti_graph.nodes()))
     print('num_edges', len(dti_graph.edges()))
 
     print("Writing human only DTI-graph to disk ...")
@@ -62,6 +67,7 @@ def get_human_DTI_graph(mode=''):
     filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
+
 
 def write_human_protein_list(min_score=700,
                              mode=''):

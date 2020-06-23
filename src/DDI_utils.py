@@ -177,6 +177,27 @@ def get_drug_to_SMILES_dict():
     with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def write_chemical_stereo_to_normal_mapping():
+    filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"
+    return_mapping_dict = {}
+    with open(file=filename, mode='r') as f:
+        # skip header
+        f.readline()
+
+        for line in tqdm(f, total=174324327):
+            mono, stereo, _, _ = line.strip().split('\t')
+            return_mapping_dict[stereo.strip()] = mono.strip()
+
+    filename = '../data/STITCH_data/chemical_stereo_to_normal_mapping_dict'
+    with open(file=filename, mode='wb') as f:
+        pickle.dump(return_mapping_dict, f, pickle.HIGHEST_PROTOCOL)
+
+def get_chemical_stereo_to_normal_mapping():
+    filename = '../data/STITCH_data/chemical_stereo_to_normal_mapping_dict'
+    with open(file=filename, mode='rb') as f:
+        return pickle.load(f)
+
+
 def evaluate_dicts_and_graph():
 
     '''
