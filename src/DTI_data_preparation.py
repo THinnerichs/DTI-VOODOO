@@ -33,7 +33,9 @@ def write_human_DTI_graph(min_score=0,
             split_line = line.split('\t')
             drug = split_line[0].strip()
             if 's' in drug:
-                drug = stereo_mono_mapping[drug]
+                drug = stereo_mono_mapping.get(drug, None)
+                if not drug:
+                    continue
             # drug = split_line[0].replace('s','m')
             target = split_line[1]
 
