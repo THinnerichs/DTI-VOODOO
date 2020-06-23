@@ -54,7 +54,7 @@ def get_DDI_Boyce_graph():
     # db := drugbank
     DDI_graph = nx.Graph()
 
-    mapping_dict = get_db_PubChem_id_mapping_dict()
+    mapping_dict = get_STITCH_db_Pubchem_mapping_dict()
 
     filename = "../data/pddi_data/CombinedDatasetNotConservative.csv"
     with open(file=filename, mode='r', encoding='utf-8-sig') as f:
