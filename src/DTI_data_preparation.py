@@ -24,7 +24,9 @@ def write_human_DTI_graph(min_score=0,
     # drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
     # drug_set = get_drug_list()
 
+    print("Loading chemical stereo to mono mapping...")
     stereo_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
+    print("Done.\n")
 
     print("Parsing human drug-protein-links data ...")
     with open(file=filename, mode='r') as f:
