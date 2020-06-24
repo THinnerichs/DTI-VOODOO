@@ -108,3 +108,19 @@ Robert 04.06.:
     - from other databases
 
 - run model with updated walks
+
+- Update side effect similarity pipeline with proper mapping 
+  - and obviously also calculate it 
+
+-----
+What I have done since last meeting:
+- DL2vec walks were stuck in 'HasAssociation'
+- non-graph nn over DL2vec -> no significant difference
+- fixed some errors in DL2vec walks
+- Manual check
+  - 1.4% in DDI-targest vs. 0.15% for rof
+  - 1.7% for paracetamol
+  - 5.9% for dapagliflozin
+  BUT those edges aren't specific at all 16000 overlapping edges, mainly due to protein hubs
+
+  
