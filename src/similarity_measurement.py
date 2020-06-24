@@ -125,6 +125,9 @@ def write_updated_MedDRA_label_SIDER_graph():
     print("Finished.\n")
 
     # merge CIDm and CIDs into CIDm
+
+    print('testitest', len([node for node in SIDER_only_graph.nodes() if 'CIDs' in node]))
+    raise Exception
     return_graph = nx.Graph()
     for node1, node2 in SIDER_only_graph.edges():
         node1 = node1.replace('CIDs','CIDm')
@@ -215,11 +218,6 @@ def write_enriched_SIDER_graph():
     UMLS_to_MedDRA_id_dict = {}
     for UMLSid, MedDRAid in qres:
         UMLS_to_MedDRA_id_dict[UMLSid.value] = MedDRAid
-        print(UMLSid)
-        print(UMLSid.value)
-        print(MedDRAid)
-
-        raise Exception
 
 
     updated_SIDER_graph = get_updated_MedDRA_label_SIDER_graph()
