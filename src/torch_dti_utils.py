@@ -13,6 +13,7 @@ import sys
 import pickle
 
 import DTI_data_preparation
+from PPI_utils import get_PPI_graph
 from protein_function_utils import ProteinFunctionDTIDataBuilder
 
 
@@ -33,7 +34,7 @@ class SimpleDTINetworkData():
             being saved to disk. (default: :obj:`None`)
     """
 
-    def __init__(self, num_proteins=None, transform=None, pre_transform=None):
+    def __init__(self, num_proteins=None, min_score=700, transform=None, pre_transform=None):
         # super(FullNetworkDataset, self).__init__(root='../data/torch_raw/')
 
         print("Loading data ...")
@@ -44,7 +45,7 @@ class SimpleDTINetworkData():
 
         # PPI data
         print("Loading PPI graph ...")
-        PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        PPI_graph = get_PPI_graph(min_score=min_score)
         PPI_graph = PPI_graph.subgraph(self.protein_list)
 
         print("Building index dict ...")
@@ -404,11 +405,11 @@ class QuickProtFuncDTINetworkData:
 
         # PPI data
         print("Loading PPI graph ...")
-        self.PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
+        self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
-        self.num_proteins = len(self.PPI_graph.nodes())
+        self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
 
 
@@ -462,6 +463,7 @@ class QuickProtFuncDTINetworkData:
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
+
         '''
         for drug_index in tqdm(range(self.num_drugs)):
             drug_interactors = np.arange(len(self.drug_list))[self.DDI_features[drug_index, :] == 1]

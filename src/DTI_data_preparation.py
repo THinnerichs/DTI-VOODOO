@@ -2,17 +2,19 @@ import numpy as np
 import networkx as nx
 import gensim
 
+import torch
+
 import pickle
 
 import os
 from tqdm import tqdm
+import argparse
 
 import PPI_utils
 import DDI_utils
 import similarity_measurement
 import HPO_GO_similarity
 
-import argparse
 
 
 
@@ -361,6 +363,39 @@ def get_DL2vec_features(entity_list):
 
     return np.array([vector_dict[enti] for enti in entity_list])
 
+def get_protein_function_embeddings(protein_list):
+    DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
+
+    uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
+    GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
+    phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
+
+    # load models
+    uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
+    GO_model = gensim.models.Word2Vec.load(GO_model_filename)
+    phenotype_model = gensim.models.Word2Vec.load(phenotype_model_filename)
+
+    # Build wordvector dicts
+    uberon_model = uberon_model.wv
+    GO_model = GO_model.wv
+    phenotype_model = phenotype_model.wv
+
+    uberon_embeddings = []
+    GO_embeddings = []
+    phenotype_embeddings = []
+    for protein in protein_list:
+        # organism, protein_id = protein.strip().split('.')
+        protein_id = protein
+
+        uberon_embeddings.append(uberon_model[protein_id])
+        GO_embeddings.append(GO_model[protein_id])
+        phenotype_embeddings.append(phenotype_model[protein_id])
+
+    uberon_embeddings = torch.Tensor(uberon_embeddings)
+    GO_embeddings = torch.Tensor(GO_embeddings)
+    phenotype_embeddings = torch.Tensor(phenotype_embeddings)
+
+    print('uberon_size', uberon_embeddings.size())
 
 
 def test():

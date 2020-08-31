@@ -1,1 +1,2 @@
 python3 torch_dti_predictor.py --split_mode quick_standard --arch GCNConv --num_epochs 1000 --batch_size 546 --fold 3 --lr 0.001 --PPI_min_score 700 --mode experimental
+srun -p batch --gres=gpu:v100:4 --time=2:00:00 --mem=240G --cpus-per-task=24 --pty bash

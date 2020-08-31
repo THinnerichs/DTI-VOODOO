@@ -112,8 +112,12 @@ Robert 04.06.:
 - Update side effect similarity pipeline with proper mapping 
   - and obviously also calculate it 
 
+- Check what part of DL2vec (@Jun) yielded that high performance
+  - Just check the different embeddings obtained from different embeddings 
+- 
+
 -----
-What I have done since last meeting:
+What I have done since last meeting 25.06.:
 - DL2vec walks were stuck in 'HasAssociation'
 - non-graph nn over DL2vec -> no significant difference
 - fixed some errors in DL2vec walks
@@ -122,5 +126,24 @@ What I have done since last meeting:
   - 1.7% for paracetamol
   - 5.9% for dapagliflozin
   BUT those edges aren't specific at all 16000 overlapping edges, mainly due to protein hubs
+  -> same for side effect similarity, BUT has much higher specificity
 
+- diameter of graph:
+```
+len([len(c) for c in sorted(nx.connected_components(ppi_graph), key=len, reverse=True)]) = 134
+```
   
+
+
+-----
+Robert Talk 25.06.:
+- remove normalization from GCN layer
+1. Does network for my 3 drugs work?
+2. train classification in new manner
+  - swap negative samples or train only on targets
+3. add GO functions, phenotypes, diseases as node features
+
+------
+
+
+What I have done since last meeting :

@@ -124,20 +124,10 @@ def write_updated_MedDRA_label_SIDER_graph():
         merge_nodes(SIDER_only_graph, old_cui_list, new_cui)
     print("Finished.\n")
 
-    # merge CIDm and CIDs into CIDm
-
-    print('testitest', len([node for node in SIDER_only_graph.nodes() if 'CIDs' in node]))
-    raise Exception
-    return_graph = nx.Graph()
-    for node1, node2 in SIDER_only_graph.edges():
-        node1 = node1.replace('CIDs','CIDm')
-        node2 = node2.replace('CIDs','CIDm')
-        return_graph.add_edge(node1, node2)
-
     print("Writing updated MedDRA label SIDER graph to disc ...")
     filename = "../data/MedDRA_data/updated_MedDRA_label_SIDER_graph"
     with open(filename + '.pkl', 'wb') as f:
-        pickle.dump(return_graph, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(SIDER_only_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing ", filename, '\n')
 
 def get_updated_MedDRA_label_SIDER_graph():
