@@ -514,13 +514,14 @@ class QuickProtFuncDTINetworkData:
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
-        self.num_PPI_features = self.drug_features.shape[1]*2 + 10
+        self.num_PPI_features = 100 # self.drug_features.shape[1]*2 + 10
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
         # self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
 
-        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list))
+        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list,
+                                                                                                           n=100))
 
         '''
         # Set data to true labels for sanity test
@@ -572,11 +573,8 @@ class QuickProtFuncDTINetworkData:
             # input node degree
             degree_feature = self.node_degree_protein_feature
 
-            print(degree_feature.size())
-            print(drug_feature.size())
-            print(protein_feature.size())
             feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
-            feature_array = torch.tensor(feature_array, dtype=torch.float)
+            feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 
             full_PPI_graph = Data(x=feature_array,
