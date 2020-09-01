@@ -513,6 +513,10 @@ class QuickProtFuncDTINetworkData:
         # un-comment for DL2vec features
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+        print(self.protein_features)
+
+        raise Exception
+
         self.num_PPI_features = self.drug_features.shape[1]*2 + 10
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
