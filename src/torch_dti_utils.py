@@ -565,8 +565,8 @@ class QuickProtFuncDTINetworkData:
             drug_feature = torch.tensor(drug_feature)
 
             # Dl2vec
-            # protein_feature = self.protein_features
-            protein_feature = self.prot_func_features
+            protein_feature = self.protein_features
+            # protein_feature = self.prot_func_features
 
             # input node degree
             degree_feature = self.node_degree_protein_feature
