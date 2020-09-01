@@ -520,6 +520,9 @@ class QuickProtFuncDTINetworkData:
         self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
 
         self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list))
+        print(self.node_degree_protein_feature.size())
+
+        raise Exception
 
 
         '''
