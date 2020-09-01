@@ -324,7 +324,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, 32, cached=False)
+            self.conv1 = nn.GCNConv(num_features, 1, cached=False)
             self.conv2 = nn.GCNConv(32, 32, cached=False)
             self.conv3 = nn.GCNConv(32, 1, cached=False)
         elif 'ChebConv' in conv_method:
@@ -391,10 +391,10 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # batch_size = int(PPI_x.size(0)/self.num_prots)
 
-        PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        PPI_x = self.conv1(PPI_x, PPI_edge_index)
+        ##PPI_x = self.conv2(PPI_x, PPI_edge_index)
         # PPI_x = F.dropout(PPI_x, p=0.3, training=self.training)
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        ##PPI_x = self.conv3(PPI_x, PPI_edge_index)
         # PPI_x = F.dropout(PPI_x, p=0.3, training=self.training)
         # PPI_x = F.elu(self.conv4(PPI_x, PPI_edge_index))
         # PPI_x = F.dropout(PPI_x, p=0.3, training=self.training)
