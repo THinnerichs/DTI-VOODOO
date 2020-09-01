@@ -517,7 +517,7 @@ class QuickProtFuncDTINetworkData:
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
-        self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
+        # self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
 
         self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list))
 
@@ -571,8 +571,9 @@ class QuickProtFuncDTINetworkData:
             # input node degree
             degree_feature = self.node_degree_protein_feature
 
-            # uncomment for DL2vec
-            print(degree_feature.size(), drug_feature.size(), protein_feature.size())
+            print(degree_feature.size())
+            print(drug_feature.size())
+            print(protein_feature.size())
             feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
             # feature_array = torch.tensor(feature_array, dtype=torch.float)
 
