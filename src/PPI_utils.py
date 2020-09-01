@@ -390,7 +390,7 @@ def get_PPI_degree_for_proteins(protein_list, PPI_min_score=700):
 
     return_list = []
     for protein in protein_list:
-        return_list.append(len(PPI_graph.neighbors(protein)))
+        return_list.append(len(list(PPI_graph.neighbors(protein))))
 
     return np.array(return_list)
 

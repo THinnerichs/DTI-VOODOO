@@ -508,7 +508,7 @@ class QuickProtFuncDTINetworkData:
         print('histogram', histogram)
         '''
 
-        # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()
+        # self.feature_matrix =    self.feature_matrix/self.feature_matrix.max()
 
         # un-comment for DL2vec features
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
