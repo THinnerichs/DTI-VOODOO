@@ -513,9 +513,6 @@ class QuickProtFuncDTINetworkData:
         # un-comment for DL2vec features
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
-        print(self.protein_features)
-
-        raise Exception
 
         self.num_PPI_features = self.drug_features.shape[1]*2 + 10
 
@@ -569,7 +566,7 @@ class QuickProtFuncDTINetworkData:
             drug_feature = torch.tensor(drug_feature)
 
             # Dl2vec
-            protein_feature = self.protein_features
+            protein_feature = torch.tensor(self.protein_features)
             # protein_feature = self.prot_func_features
 
             # input node degree
