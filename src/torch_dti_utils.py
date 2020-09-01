@@ -576,7 +576,7 @@ class QuickProtFuncDTINetworkData:
             print(drug_feature.size())
             print(protein_feature.size())
             feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
-            # feature_array = torch.tensor(feature_array, dtype=torch.float)
+            feature_array = torch.tensor(feature_array, dtype=torch.float)
 
 
             full_PPI_graph = Data(x=feature_array,
