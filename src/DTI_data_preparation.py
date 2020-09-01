@@ -406,7 +406,7 @@ def get_protein_degree_percentile(protein_list, n=10, PPI_min_score=700):
     return_matrix = np.zeros((len(protein_list), n))
 
     for i, val in enumerate(np.linspace(0, 100, 100/n, endpoint=False)):
-        return_matrix[:, i][node_degrees>val*max_degree]=1
+        return_matrix[:, i][node_degrees>val*max_degree/100]=1
 
     return return_matrix
 

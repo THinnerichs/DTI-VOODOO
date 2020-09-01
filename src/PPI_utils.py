@@ -388,6 +388,7 @@ def get_drughub_protein_list():
 def get_PPI_degree_for_proteins(protein_list, PPI_min_score=700):
     PPI_graph = get_PPI_graph(min_score=PPI_min_score)
 
+
     return_list = []
     for protein in protein_list:
         return_list.append(len(list(PPI_graph.neighbors(protein))))
