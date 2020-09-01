@@ -572,7 +572,7 @@ class QuickProtFuncDTINetworkData:
             degree_feature = self.node_degree_protein_feature
 
             # uncomment for DL2vec
-            feature_array = torch.stack([degree_feature, drug_feature, protein_feature], dim=1)
+            feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
             # feature_array = torch.tensor(feature_array, dtype=torch.float)
 
 
