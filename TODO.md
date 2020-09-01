@@ -145,5 +145,12 @@ Robert Talk 25.06.:
 
 ------
 
+Plan:
+1. Search for degree aware GCN methods
+2. if not possible build one of the following methods:
+  2.1. decentile (!)
+  2.2. full encoding
+  2.3. normalized number
+3. run stuff
 
-What I have done since last meeting :
+What I have done since last meeting:

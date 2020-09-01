@@ -510,12 +510,16 @@ class QuickProtFuncDTINetworkData:
 
         # self.feature_matrix = self.feature_matrix/self.feature_matrix.max()
 
+        # un-comment for DL2vec features
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
-        self.num_PPI_features = self.drug_features.shape[1]*2
+        self.num_PPI_features = self.drug_features.shape[1]*2 + 10
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
+        self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
+
+        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list))
 
 
         '''
@@ -556,11 +560,22 @@ class QuickProtFuncDTINetworkData:
 
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
-            drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
 
+            # uncomment for DL2vec
+            drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
+            drug_feature = torch.tensor(drug_feature)
+
+            # Dl2vec
             # protein_feature = self.protein_features
-            feature_array = np.hstack((drug_feature, self.protein_features))
-            feature_array = torch.tensor(feature_array, dtype=torch.float)
+            protein_feature = self.prot_func_features
+
+            # input node degree
+            degree_feature = self.node_degree_protein_feature
+
+            # uncomment for DL2vec
+            feature_array = torch.stack([degree_feature, drug_feature, protein_feature], dim=1)
+            # feature_array = torch.tensor(feature_array, dtype=torch.float)
+
 
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,

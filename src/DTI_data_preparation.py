@@ -395,7 +395,23 @@ def get_protein_function_embeddings(protein_list):
     GO_embeddings = torch.Tensor(GO_embeddings)
     phenotype_embeddings = torch.Tensor(phenotype_embeddings)
 
-    print('uberon_size', uberon_embeddings.size())
+    return torch.stack([uberon_embeddings, GO_embeddings, phenotype_embeddings], dim=1)
+
+def get_protein_degree_decentile(protein_list, n=10, PPI_min_score=700):
+    node_degrees = PPI_utils.get_PPI_degree_for_proteins(protein_list=protein_list, PPI_min_score=PPI_min_score)
+
+    max_degree = node_degrees.max()
+    return_matrix = np.zeros((len(protein_list), n))
+
+    for i, val in enumerate(np.linspace(0, 100, 100/n, endpoint=False)):
+        return_matrix[:, i][node_degrees>val*max_degree]=1
+
+    return return_matrix
+
+
+
+
+
 
 
 def test():
