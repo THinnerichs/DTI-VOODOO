@@ -591,6 +591,9 @@ class QuickProtFuncDTINetworkData:
     def __len__(self):
         return self.num_drugs
 
+
+class QuickProtFunx
+
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
         super(DTIGraphDataset, self).__init__('/data/torch_raw/')
@@ -709,8 +712,7 @@ def quick_predicting(model, device, loader):
             output = model(data).sigmoid()
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data]))
-            total_labels = torch.cat((total_labels.view(-1,
-                                                        1), y.view(-1, 1).float().cpu()), 0)
+            total_labels = torch.cat((total_labels.view(-1,1), y.view(-1, 1).float().cpu()), 0)
 
     print('total_preds.max/min', total_labels.max(), total_labels.min())
     return total_labels.round().numpy().flatten(), np.around(total_preds.numpy()).flatten()

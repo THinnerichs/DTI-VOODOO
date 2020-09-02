@@ -77,7 +77,10 @@ class HPODTIDataBuilder:
 
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
-        self.num_PPI_features = self.drug_features.shape[1]*2
+        # additional
+        self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
+
+        self.num_PPI_features = self.drug_features.shape[1]*2 + 100
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -101,7 +104,10 @@ class HPODTIDataBuilder:
             drug_feature = torch.tensor(self.drug_features[drug_index, :])
             protein_feature = torch.tensor(self.protein_features[protein_index, :])
 
-            data_list.append((torch.cat((drug_feature, protein_feature), 0), y))
+            # optional
+            degree_feature = torch.tensor(self.degree_features[protein_index, :])
+
+            data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0), y))
 
         return data_list
 
@@ -143,6 +149,7 @@ class HPOPredNet(nn.Module):
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
+        x = self.dropout(x)
         x = self.relu(self.fc2(x))
         x = self.dropout(x)
         x = self.relu(self.fc3(x))
