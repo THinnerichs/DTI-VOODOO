@@ -99,7 +99,7 @@ class ProteinFunctionDTIDataBuilder:
             return_list.append((torch.cat([(self.uberon_embeddings[protein_index] if self.include_uberon else torch.zeros(self.uberon_embeddings[protein_index].size())),
                                            (self.GO_embeddings[protein_index] if self.include_GO else torch.zeros(self.GO_embeddings[protein_index].size())),
                                            (self.phenotype_embeddings[protein_index] if self.include_phenotype else torch.zeros(self.phenotype_embeddings[protein_index].size())),
-                                           self.degree_features[protein_index,:],
+                                           torch.Tensor(self.degree_features[protein_index,:]),
                                            drug_encoding], 0), y))
         return return_list
 
