@@ -104,10 +104,10 @@ class HPODTIDataBuilder:
             drug_feature = torch.tensor(self.drug_features[drug_index, :])
             protein_feature = torch.tensor(self.protein_features[protein_index, :])
 
-            # optional
+            # additional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
 
-            data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0), y))
+            data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0).float(), y))
 
         return data_list
 
