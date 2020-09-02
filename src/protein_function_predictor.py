@@ -227,7 +227,7 @@ def drug_split_protein_function_predictor(config):
                   weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if epoch%config.num_epochs == 0:
+            if epoch%5 == 0:
                 print('Predicting for validation data...')
                 file='../results/protfunc_drug_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
