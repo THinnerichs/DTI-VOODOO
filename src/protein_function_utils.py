@@ -38,9 +38,8 @@ class ProteinFunctionDTIDataBuilder:
 
         print('Building protein embeddings...')
         self.build_protein_embeddings()
-        self.uberon_embeddings = torch.Tensor(self.uberon_embeddings)
-        self.GO_embeddings = torch.Tensor(self.GO_embeddings)
-        self.phenotype_embeddings = torch.Tensor(self.phenotype_embeddings)
+
+        self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
 
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
         y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
@@ -100,6 +99,7 @@ class ProteinFunctionDTIDataBuilder:
             return_list.append((torch.cat([(self.uberon_embeddings[protein_index] if self.include_uberon else torch.zeros(self.uberon_embeddings[protein_index].size())),
                                            (self.GO_embeddings[protein_index] if self.include_GO else torch.zeros(self.GO_embeddings[protein_index].size())),
                                            (self.phenotype_embeddings[protein_index] if self.include_phenotype else torch.zeros(self.phenotype_embeddings[protein_index].size())),
+                                           self.degree_features[protein_index,:],
                                            drug_encoding], 0), y))
         return return_list
 
@@ -118,7 +118,7 @@ class ProteinFunctionPredNet(nn.Module):
     def __init__(self):
         super(ProteinFunctionPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(600 + 1024, 256)
+        self.fc1 = nn.Linear(600 + 100 + 1024, 256)
         self.fc2 = nn.Linear(256,128)
         self.fc3 = nn.Linear(128,128)
         self.fc4 = nn.Linear(128,128)
