@@ -4,6 +4,7 @@ import torch
 import torch.nn.functional as F
 import torch_geometric
 import torch_geometric.nn as nn
+from torch_geometric.transforms import add_self_loops
 
 from protein_function_utils import ProteinFunctionPredNet
 
@@ -324,9 +325,9 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, 1, cached=False)
-            self.conv2 = nn.GCNConv(32, 32, cached=False)
-            self.conv3 = nn.GCNConv(32, 1, cached=False)
+            self.conv1 = nn.GCNConv(num_features, 1, cached=False, add_self_loops=False)
+            self.conv2 = nn.GCNConv(32, 32, cached=False, add_self_loops=False)
+            self.conv3 = nn.GCNConv(32, 1, cached=False, add_self_loops=False)
         elif 'ChebConv' in conv_method:
             self.conv1 = nn.ChebConv(num_features, num_features*4, 3)
             self.conv2 = nn.ChebConv(num_features*4, num_features*16, 3)
