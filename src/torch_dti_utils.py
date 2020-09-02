@@ -400,7 +400,8 @@ class QuickProtFuncDTINetworkData:
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
-        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
+        # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
+        self.protein_list = np.array(DTI_data_preparation.get_human_proteins()[:config.num_proteins])
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -511,8 +512,8 @@ class QuickProtFuncDTINetworkData:
         # self.feature_matrix =    self.feature_matrix/self.feature_matrix.max()
 
         # un-comment for DL2vec features
-        self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
-        self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+        # self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        # self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
         self.num_PPI_features = 100 # self.drug_features.shape[1]*2 + 10
 
@@ -520,8 +521,7 @@ class QuickProtFuncDTINetworkData:
 
         # self.prot_func_features = DTI_data_preparation.get_protein_function_embeddings(protein_list=self.protein_list)
 
-        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list,
-                                                                                                           n=100))
+        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list, n=100))
 
         '''
         # Set data to true labels for sanity test
@@ -563,17 +563,17 @@ class QuickProtFuncDTINetworkData:
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
             # uncomment for DL2vec
-            drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
-            drug_feature = torch.tensor(drug_feature)
+            # drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
+            # drug_feature = torch.tensor(drug_feature)
 
             # Dl2vec
-            protein_feature = torch.tensor(self.protein_features)
+            # protein_feature = torch.tensor(self.protein_features)
             # protein_feature = self.prot_func_features
 
             # input node degree
             degree_feature = self.node_degree_protein_feature
 
-            feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
+            # feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
             feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 
