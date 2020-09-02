@@ -82,7 +82,7 @@ def protein_function_predictor(config):
                   weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if epoch%config.num_epochs == 0:
+            if epoch%5 == 0:
                 print('Predicting for validation data...')
                 file='../results/protfunc_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
@@ -92,7 +92,7 @@ def protein_function_predictor(config):
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
-                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
+                          metrics.matthews_corrcoef(train_labels, train_predictions))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test:', config.include_uberon, config.include_GO, config.include_phenotype,
@@ -100,7 +100,7 @@ def protein_function_predictor(config):
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
-                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
+                          metrics.matthews_corrcoef(test_labels, test_predictions))#@TODO, file=f)
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
