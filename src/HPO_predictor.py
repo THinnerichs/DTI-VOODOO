@@ -106,6 +106,11 @@ class HPODTIDataBuilder:
 
             # optional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
+            print(drug_feature.size())
+            print(protein_feature.size())
+            print(degree_feature.size())
+
+            raise Exception
 
             data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0), y))
 
