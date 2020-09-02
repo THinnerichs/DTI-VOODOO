@@ -106,11 +106,6 @@ class HPODTIDataBuilder:
 
             # optional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
-            print(drug_feature.size())
-            print(protein_feature.size())
-            print(degree_feature.size())
-
-            raise Exception
 
             data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0), y))
 
@@ -141,7 +136,7 @@ class HPOPredNet(nn.Module):
     def __init__(self):
         super(HPOPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(200, 128)
+        self.fc1 = nn.Linear(300, 128)
         self.fc2 = nn.Linear(128, 128)
         self.fc3 = nn.Linear(128, 128)
         self.fc4 = nn.Linear(128, 128)
