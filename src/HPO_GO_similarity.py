@@ -306,10 +306,7 @@ def run_DL2vec_embeddings():
     asso = path+'association_file'
     outfile = path+'embedding_model'
     ents = path+'entity_list'
-    command = 'python ./DL2vec/runDL2vec.py -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents}'.format(onto=onto,
-                                                                                                                        asso=asso,
-                                                                                                                        outfile=outfile,
-                                                                                                                        ents=ents)
+    command = 'python ./DL2vec/runDL2vec.py -embedsize 500 -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents}'.format(onto=onto, asso=asso, outfile=outfile, ents=ents)
     print('Command:', command)
     subprocess.call(command, shell=True)
     print('Done.')
