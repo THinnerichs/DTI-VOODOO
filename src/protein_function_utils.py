@@ -38,7 +38,7 @@ class ProteinFunctionDTIDataBuilder:
             raise ValueError
 
 
-        self.drug_encodings = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        self.drug_encodings = torch.tensor(DTI_data_preparation.get_DL2vec_features(self.drug_list))
 
         print('Building protein embeddings...')
         self.build_protein_embeddings()
