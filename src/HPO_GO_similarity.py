@@ -298,7 +298,7 @@ def write_entity_list():
 
     print('Done.')
 
-def run_DL2vec_embeddings():
+def run_DL2vec_embeddings(embedsize=200):
 
     print('Running DL2vec embedding generator ...')
     path = '../data/HPO_data/'
@@ -306,7 +306,11 @@ def run_DL2vec_embeddings():
     asso = path+'association_file'
     outfile = path+'embedding_model'
     ents = path+'entity_list'
-    command = 'python ./DL2vec/runDL2vec.py -embedsize 500 -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents}'.format(onto=onto, asso=asso, outfile=outfile, ents=ents)
+    command = 'python ./DL2vec/runDL2vec.py -embedsize {embedsize} -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents}'.format(embedsize=embedsize,
+                                                                                                                                                        onto=onto,
+                                                                                                                                                        asso=asso,
+                                                                                                                                                        outfile=outfile,
+                                                                                                                                                        ents=ents)
     print('Command:', command)
     subprocess.call(command, shell=True)
     print('Done.')
