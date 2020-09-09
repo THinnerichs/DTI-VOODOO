@@ -29,12 +29,16 @@ class ProteinFunctionDTIDataBuilder:
         self.num_proteins = len(self.protein_list)
 
         # build drug features
+        print('Loading drug features...')
         drug_filename = '../models/drug_representation/' + drug_mode + '.npy'
         if drug_mode == 'trfm' or drug_mode == 'rnn':
             self.drug_encodings = torch.from_numpy(np.load(drug_filename))
         else:
             print("No valid mode selected for drug to SMILES encoding.")
             raise ValueError
+
+
+        self.drug_encodings = DTI_data_preparation.get_DL2vec_features(self.drug_list)
 
         print('Building protein embeddings...')
         self.build_protein_embeddings()
@@ -118,7 +122,7 @@ class ProteinFunctionPredNet(nn.Module):
     def __init__(self):
         super(ProteinFunctionPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(600 + 100 + 1024, 256)
+        self.fc1 = nn.Linear(600 + 100 + 100, 256)
         self.fc2 = nn.Linear(256,128)
         self.fc3 = nn.Linear(128,128)
         self.fc4 = nn.Linear(128,128)
@@ -131,6 +135,7 @@ class ProteinFunctionPredNet(nn.Module):
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
+        x = self.dropout(x)
         x = self.relu(self.fc2(x))
         x = self.dropout(x)
         x = self.relu(self.fc3(x))

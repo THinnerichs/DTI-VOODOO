@@ -153,4 +153,20 @@ Plan:
   2.3. normalized number
 3. run stuff
 
+Network:
+- build embedding from proteins and combine with drugs afterwards
+  - what to use as node features?
+    - DL2vec?
+- retest removal of normalization
+
+DL2Vec TODO:
+- test quality of my DL2vec features
+  - use my drug features as features for prot\_func
+  - why is their ontology having that many proteins in his ontology?
+    - just due to few proteins and their PPI connections
+- rebuild DL2vec with PPI connections
+  - like they do
+  - mine should have way better performance then
+- 
+
 What I have done since last meeting:

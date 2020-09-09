@@ -512,10 +512,10 @@ class QuickProtFuncDTINetworkData:
         # self.feature_matrix =    self.feature_matrix/self.feature_matrix.max()
 
         # un-comment for DL2vec features
-        # self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
-        # self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+        self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
-        self.num_PPI_features = 100 # self.drug_features.shape[1]*2 + 10
+        self.num_PPI_features = 200 # self.drug_features.shape[1]*2 + 10
 
         # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -565,22 +565,26 @@ class QuickProtFuncDTINetworkData:
             # uncomment for DL2vec
             # drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
             # drug_feature = torch.tensor(drug_feature)
+            drug_feature = torch.tensor(self.drug_features[drug_index, :])
 
             # Dl2vec
-            # protein_feature = torch.tensor(self.protein_features)
+            protein_feature = torch.tensor(self.protein_features)
             # protein_feature = self.prot_func_features
 
             # input node degree
             degree_feature = self.node_degree_protein_feature
 
             # feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
-            feature_array = torch.tensor(degree_feature, dtype=torch.float)
+            feature_array = torch.cat([degree_feature, protein_feature], dim=1)
+            # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 
             full_PPI_graph = Data(x=feature_array,
                                   edge_index=self.edge_list,
                                   edge_attr=self.edge_attr,
                                   y=y)
+
+            full_PPI_graph.drug_feature = drug_feature
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
@@ -591,8 +595,6 @@ class QuickProtFuncDTINetworkData:
     def __len__(self):
         return self.num_drugs
 
-
-class QuickProtFunx
 
 class DTIGraphDataset(Dataset):
     def __init__(self, data_list):
