@@ -24,20 +24,23 @@ parser.add_argument("-mincount", nargs = '?', metavar = "min count", type = int,
                      help = "Minimum count value for word2vec model")
 parser.add_argument("-model", nargs = '?', metavar = "model", type = str,default='sg',
                      help = "Preferred word2vec architecture, sg or cbow")
+parser.add_argument("-num_workers", nargs="?", metavar="num workers", type=int, default=24)
 
 parser.add_argument("-entity_list", nargs ="?", metavar ="the entity list that needs to generate the embedding", type=str, default="",
                     help =" the entity list in which each entity that need to start random walk and generate the embedding")
+
 
 args = parser.parse_args()
 
 ontology_file =args.ontology
 association_file=args.associations
 window=args.windsize
-embedding=args.embedsize
+embedding_size=args.embedsize
 mincoun=args.mincount
 model=args.model
 outfile =args.outfile
 entity_list =args.entity_list
+num_workers = args.num_workers
 
 if (ontology_file is '' ):
 	print ("\nError:Mandatory ontology file missing. For help, run: python runDL2Vec.py --help\n")
@@ -61,4 +64,4 @@ axiom_file = "axiomsorig.lst"
 G = generate_graph(association_file,axiom_file)
 
 
-gene_node_vector(G,entity_list,outfile)
+gene_node_vector(G,entity_list,outfile, embedding_size, num_workers=num_workers)
