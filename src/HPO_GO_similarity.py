@@ -96,6 +96,7 @@ def get_mapped_SIDER_graph():
     return return_graph
 
 def get_UniProt_prot_to_GO_function_mapping():
+    # useless function
     gene_go_feature = {}
     with open("../data/GO_data/goa_human.gaf", "r") as f:
         for line in f.readlines():
@@ -299,6 +300,7 @@ def write_entity_list():
     print('Done.')
 
 def run_DL2vec_embeddings(embedsize=200):
+    # This doesn't really work as groovy-DL2vec scripts cannot handle the path handling. Just copy the command and run it from the DL2vec dir
 
     print('Running DL2vec embedding generator ...')
     path = '../data/HPO_data/'
@@ -311,6 +313,7 @@ def run_DL2vec_embeddings(embedsize=200):
                                                                                                                                                         asso=asso,
                                                                                                                                                         outfile=outfile,
                                                                                                                                                         ents=ents)
+
     print('Command:', command)
     subprocess.call(command, shell=True)
     print('Done.')

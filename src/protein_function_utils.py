@@ -122,7 +122,7 @@ class ProteinFunctionPredNet(nn.Module):
     def __init__(self):
         super(ProteinFunctionPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(600 + 100 + 100, 256)
+        self.fc1 = nn.Linear(600 + 200 + 100, 256)
         self.fc2 = nn.Linear(256,128)
         self.fc3 = nn.Linear(128,128)
         self.fc4 = nn.Linear(128,128)

@@ -167,6 +167,12 @@ DL2Vec TODO:
 - rebuild DL2vec with PPI connections
   - like they do
   - mine should have way better performance then
-- 
+- use Junes axioms but without PPI axioms 
+  - check how many real connections to GO, ... there are 
+
+
 
 What I have done since last meeting:
+
+For next week:
+- 2-3 slides of what I have done in the last week
