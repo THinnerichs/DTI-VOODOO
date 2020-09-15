@@ -76,8 +76,8 @@ def write_PhenomeNET_files():
     print('Num protein-MP-associations:', len(protein_MP_term_pairs))
 
     # build distinct drugs and proteins lists
-    drug_list = list(set(drug_list)).sort()
-    protein_list = list(set(protein_list)).sort()
+    drug_list = sorted(list(set(drug_list)))
+    protein_list = sorted(list(set(protein_list)))
 
     # write drug and protein lists
     filename = 'PhenomeNET_drug_list'
