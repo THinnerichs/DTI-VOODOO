@@ -32,11 +32,8 @@ def write_PhenomeNET_files():
 
             HPO_term = '<' + HPO_term[1:-1] + '>'
 
-            print('drug, HPO_term:', drug, HPO_term)
             drug_list.append(drug)
             drug_HPO_pairs.append((drug, HPO_term))
-
-            raise Exception
 
     # parse GO and MP annotations for proteins and update protein list
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
@@ -53,8 +50,10 @@ def write_PhenomeNET_files():
 
             protein_list.append(protein)
             protein_GO_term_pairs.append((protein, GO_term))
+            print('protein/GO-term', protein, GO_term)
 
             raise Exception
+    print('Num protein-GO-associations:', len(protein_GO_term_pairs))
 
     filename = "final_MP_ProteinID_human.txt"
 
@@ -68,6 +67,7 @@ def write_PhenomeNET_files():
 
             protein_list.append(protein)
             protein_MP_term_pairs.append((protein, MP_term))
+    print('Num protein-MP-associations:', len(protein_MP_term_pairs))
 
     # write drug and protein lists
     filename = 'PhenomeNET_drug_list'
