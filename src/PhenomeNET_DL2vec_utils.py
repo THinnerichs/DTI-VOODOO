@@ -58,7 +58,6 @@ def write_PhenomeNET_files():
 
             protein_list.append(protein)
             protein_GO_term_pairs.append((protein, GO_term))
-            print('protein/GO-term', protein, GO_term)
 
     print('Num protein-GO-associations:', len(protein_GO_term_pairs))
 
@@ -75,6 +74,10 @@ def write_PhenomeNET_files():
             protein_list.append(protein)
             protein_MP_term_pairs.append((protein, MP_term))
     print('Num protein-MP-associations:', len(protein_MP_term_pairs))
+
+    # build distinct drugs and proteins lists
+    drug_list = list(set(drug_list)).sort()
+    protein_list = list(set(protein_list)).sort()
 
     # write drug and protein lists
     filename = 'PhenomeNET_drug_list'
