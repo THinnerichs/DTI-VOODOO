@@ -15,6 +15,7 @@ def write_PhenomeNET_files():
     drug_list = []
     drug_HPO_pairs = []
     print('Parsing SIDER associations...')
+    missed_drugs_counter = 0
     with open(file=path_prefix + filename, mode='r') as f:
         # skip header
         f.readline()
@@ -28,12 +29,19 @@ def write_PhenomeNET_files():
             if drug.startswith('0'):
                 drug = 'CIDm' + drug[1:]
             else:
-                drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
+                try:
+                    drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
+                except:
+                    missed_drugs_counter += 1
+                    continue
 
             HPO_term = '<' + HPO_term[1:-1] + '>'
 
             drug_list.append(drug)
             drug_HPO_pairs.append((drug, HPO_term))
+    print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
+    print('Missed drugs from stereo/mono mapping:', missed_drugs_counter)
+
 
     # parse GO and MP annotations for proteins and update protein list
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
