@@ -1,1 +1,1 @@
-python runDL2vec.py -embedsize 200 -ontology ../../data/HPO_data/hp.owl -associations ../../data/HPO_data/association_file -outfile ../../data/HPO_data/embedding_model -entity_list ../../data/HPO_data/entity_list
+python runDL2vec.py -embedsize 200 -num_workers 20 -ontology ../../data/HPO_data/hp.owl -associations ../../data/HPO_data/association_file -outfile ../../data/HPO_data/embedding_model -entity_list ../../data/HPO_data/entity_list

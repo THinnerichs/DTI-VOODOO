@@ -299,6 +299,9 @@ def write_entity_list():
 
     print('Done.')
 
+def write_PhenomeNET_association_file():
+
+
 def run_DL2vec_embeddings(embedsize=200):
     # This doesn't really work as groovy-DL2vec scripts cannot handle the path handling. Just copy the command and run it from the DL2vec dir
 

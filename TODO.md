@@ -171,6 +171,14 @@ DL2Vec TODO:
   - check how many real connections to GO, ... there are 
 
 
+- check phenomebrowser.net for rdf graph for drug-HPO connections
+
+PhenomenNET:
+- How to include MP? HPO?
+- For update ask Sara Alghamdi for original scripts
+  - phenomeblast/fixphenotypes/ReadEQs.groovy nothing else 
+    - needs MP and HP
+- SIDER included?
 
 What I have done since last meeting:
 
