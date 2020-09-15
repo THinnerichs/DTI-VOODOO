@@ -2,11 +2,15 @@ import numpy as np
 
 import pickle as pkl
 
+import DDI_utils
+
 
 def write_PhenomeNET_files():
     path_prefix = "../data/PhenomeNET_data/"
     # parse drug HPO annotations and build updated drug list
     filename = "drug_SIDER_HPO_annotations.csv"
+    print('Loading stereo to mono mapping...')
+    drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
     drug_list = []
     drug_HPO_pairs = []
@@ -19,7 +23,12 @@ def write_PhenomeNET_files():
             split_line = line.split(',')
             drug, HPO_term = split_line[1].strip(), split_line[2].strip()
             drug = drug.replace('"', "")
-            drug = 'CIDm' + drug.split("/")[-1]
+            drug = drug.split("/")[-1]
+            # map drugs from stereo to mono
+            if drug.startswith('0'):
+                drug = 'CIDm' + drug[1:]
+            else:
+                drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
 
             HPO_term = '<' + HPO_term[1:-1] + '>'
 
