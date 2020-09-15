@@ -60,7 +60,6 @@ def write_PhenomeNET_files():
             protein_GO_term_pairs.append((protein, GO_term))
             print('protein/GO-term', protein, GO_term)
 
-            raise Exception
     print('Num protein-GO-associations:', len(protein_GO_term_pairs))
 
     filename = "final_MP_ProteinID_human.txt"
