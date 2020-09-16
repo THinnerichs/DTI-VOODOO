@@ -443,7 +443,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # GCN laye4s
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(32, 32, cached=False, add_self_loops=False)
-            self.conv2 = nn.GCNConv(32, 16, cached=False, add_self_loops=False)
+            self.conv2 = nn.GCNConv(16, 16, cached=False)
             self.conv3 = nn.GCNConv(16, 16, cached=False, add_self_loops=False)
         else:
             print("No valid model selected.")
@@ -453,7 +453,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_1 = nn.BatchNorm(4 * config.heads)
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
-        self.linear1 = torch.nn.Linear(num_features, 64)
+        self.linear1 = torch.nn.Linear(num_features, 16)
         self.linear2 = torch.nn.Linear(64, 64)
         self.linear3 = torch.nn.Linear(64, 64)
         self.linear4 = torch.nn.Linear(64, 32)
@@ -483,7 +483,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.relu(self.linear3(PPI_x))
         # PPI_x = self.dropout(PPI_x)
-        PPI_x = F.leaky_relu(self.linear4(PPI_x))
+        # PPI_x = F.leaky_relu(self.linear4(PPI_x))
 
         # PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.leaky_relu(self.conv2(PPI_x, PPI_edge_index))
