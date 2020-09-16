@@ -507,9 +507,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = self.dropout(drug_feature)
 
         print('drug_feature after', drug_feature.size())
+        print('repeat size', drug_feature.repeat(1,self.num_prots, 1).size())
 
         # overall stuff
-        cat_feature = torch.cat([drug_feature.repeat(1,1,self.num_prots), PPI_x], dim=2)
+        cat_feature = torch.cat([drug_feature.repeat(1,self.num_prots, 1), PPI_x], dim=2)
         print('cat_feature Bumm', cat_feature.size())
         cat_feature = F.relu(self.overall_linear1(cat_feature))
         cat_feature = self.dropout(cat_feature)
