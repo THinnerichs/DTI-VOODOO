@@ -442,9 +442,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(32, 32, cached=False)
+            self.conv1 = nn.GCNConv(8, 8, cached=False)
             self.conv2 = nn.GCNConv(32, 16, cached=False)
-            self.conv3 = nn.GCNConv(16, 1, cached=False)
+            self.conv3 = nn.GCNConv(8, 1, cached=False)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -456,7 +456,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.linear1 = torch.nn.Linear(num_features, 64)
         self.linear2 = torch.nn.Linear(64, 64)
         self.linear3 = torch.nn.Linear(64, 64)
-        self.linear4 = torch.nn.Linear(64, 32)
+        self.linear4 = torch.nn.Linear(64, 8)
 
         self.drug_linear1 = torch.nn.Linear(num_features, 16)
         self.drug_linear2 = torch.nn.Linear(64, 64)
