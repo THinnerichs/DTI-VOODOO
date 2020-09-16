@@ -140,15 +140,12 @@ class HPOPredNet(nn.Module):
         self.fc2 = nn.Linear(128, 128)
         self.fc3 = nn.Linear(128, 128)
         self.fc4 = nn.Linear(128, 128)
-        self.fc5 = nn.Linear(128, 128)
-        self.fc6 = nn.Linear(128, 128)
-        self.fc7 = nn.Linear(128, 128)
-        self.fc8 = nn.Linear(128, 1)
+        self.fc5 = nn.Linear(128, 1)
 
         self.relu = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
 
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
@@ -158,15 +155,8 @@ class HPOPredNet(nn.Module):
         x = self.relu(self.fc3(x))
         x = self.dropout(x)
         x = self.relu(self.fc4(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc5(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc6(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc7(x))
-        x = self.dropout(x)
 
-        x = self.fc8(x)
+        x = self.fc5(x)
         # x = self.sigmoid(x)
 
         return x
@@ -243,7 +233,7 @@ def siamese_drug_protein_network(config):
             loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
             print('Train Loss:', loss)
 
-            if epoch%3 == 0:
+            if epoch%10 == 0:
                 print('Predicting for validation data...')
                 file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:

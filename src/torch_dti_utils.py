@@ -641,7 +641,7 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         weight_vec = torch.ones([1]) * weight_dict[1]
 
         loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, y.view(-1, 1))
-        return_loss += loss
+        return_loss += loss.item()
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
