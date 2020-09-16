@@ -147,7 +147,34 @@ class HPOPredNet(nn.Module):
 
         self.dropout = nn.Dropout(0.5)
 
+        # siamese network approach
+        self.model = nn.Sequential(
+            nn.Linear(200, 256),
+            nn.Dropout(0.2),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 50),
+            # nn.Dropout(0.5),
+            # nn.BatchNorm1d(50),
+            nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+        self.model2 = nn.Sequential(
+            nn.Linear(200, 256),
+            nn.Dropout(0.2),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 50),
+            # nn.BatchNorm1d(50),
+            # nn.Dropout(0.5),
+            nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+
     def forward(self, x):
+        '''
         x = self.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.relu(self.fc2(x))
@@ -160,6 +187,18 @@ class HPOPredNet(nn.Module):
         # x = self.sigmoid(x)
 
         return x
+        '''
+
+        p1 = self.model(x[:,:200]).view(-1, 1, 50)
+        d1 = self.model2(x[:,200:]).view(-1, 50, 1)
+
+        s1 = torch.bmm(p1, d1)
+
+        out = s1.reshape(-1, 1)
+
+        # out = self.output_sig(s1)
+
+        return out
 
 
 def siamese_drug_protein_network(config):
