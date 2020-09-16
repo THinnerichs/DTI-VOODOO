@@ -442,7 +442,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(num_features, 8, cached=False)
+            self.conv1 = nn.GCNConv(16, 8, cached=False)
             self.conv2 = nn.GCNConv(32, 16, cached=False)
             self.conv3 = nn.GCNConv(8, 1, cached=False)
         else:
@@ -456,7 +456,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.linear1 = torch.nn.Linear(num_features, 64)
         self.linear2 = torch.nn.Linear(64, 64)
         self.linear3 = torch.nn.Linear(64, 64)
-        self.linear4 = torch.nn.Linear(64, 8)
+        self.linear4 = torch.nn.Linear(64, 16)
 
         self.drug_linear1 = torch.nn.Linear(num_features, 16)
         self.drug_linear2 = torch.nn.Linear(64, 64)
@@ -476,8 +476,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # batch_size = drug_feature.size(0)
 
-        # PPI_x = F.relu(self.linear1(PPI_x))
-        # PPI_x = F.relu(self.linear4(PPI_x))
+        PPI_x = F.relu(self.linear1(PPI_x))
+        PPI_x = F.relu(self.linear4(PPI_x))
 
 
         PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
