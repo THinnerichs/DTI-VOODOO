@@ -164,14 +164,8 @@ DL2Vec TODO:
   - use my drug features as features for prot\_func
   - why is their ontology having that many proteins in his ontology?
     - just due to few proteins and their PPI connections
-- rebuild DL2vec with PPI connections
-  - like they do
-  - mine should have way better performance then
-- use Junes axioms but without PPI axioms 
-  - check how many real connections to GO, ... there are 
-
-
-- check phenomebrowser.net for rdf graph for drug-HPO connections
+- add UBERON
+- rerun without HasAssociation limitation
 
 PhenomenNET:
 - How to include MP? HPO?
