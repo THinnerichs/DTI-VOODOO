@@ -476,6 +476,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # batch_size = drug_feature.size(0)
 
+        print('PPI_x', PPI_x.size())
+
         PPI_x = F.relu(self.linear1(PPI_x))
         PPI_x = F.relu(self.linear4(PPI_x))
 
