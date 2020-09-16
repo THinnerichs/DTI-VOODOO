@@ -43,16 +43,14 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
                 num_HasAssociations = neighbour_types.count('HasAssociation')
 
                 # make HasAssociation and non-HasAssociation equally likely
-                HasAssociation_weight = 0.01 / (num_HasAssociations + epsilon)
-                non_HasAssociation_weight = 0.99 / (len(neighbours)-num_HasAssociations + epsilon)
+                # HasAssociation_weight = 0.01 / (num_HasAssociations + epsilon)
+                # non_HasAssociation_weight = 0.99 / (len(neighbours)-num_HasAssociations + epsilon)
 
                 # build weight vector
-                weight_vec = [(HasAssociation_weight if type=='HasAssociation' else non_HasAssociation_weight) for type in neighbour_types]
+                # weight_vec = [(HasAssociation_weight if type=='HasAssociation' else non_HasAssociation_weight) for type in neighbour_types]
 
-                # next_node = random.choice(list(G.neighbors(curr_node)))
-                next_node = random.choices(population=neighbours,
-                                           weights=weight_vec,
-                                           k=1)[0]
+                next_node = random.choice(list(G.neighbors(curr_node)))
+                # next_node = random.choices(population=neighbours, weights=weight_vec, k=1)[0]
 
                 type_nodes = G.edges[curr_node, next_node]["type"]
 
@@ -69,10 +67,10 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
     write_file(pairs)
 
 
-def run_walk(nodes,G):
+def run_walk(nodes,G, num_workers=48):
     global data_pairs
 
-    number = 48
+    number = num_workers
     length = len(nodes) // number
 
     processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length])) for index
@@ -113,7 +111,7 @@ def gene_node_vector(graph, entity_list,outfile, embedding_size, num_workers=48)
 
     G = graph.subgraph(nodes_G)
     nodes= [n for n in nodes_set]
-    run_walk(nodes,G)
+    run_walk(nodes,G, num_workers=num_workers)
 
     print("start to train the word2vec models")
     sentences=gensim.models.word2vec.LineSentence("walks.txt")

@@ -396,7 +396,7 @@ class QuickProtFuncDTINetworkData:
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins()[:config.num_proteins])
+        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins()#[:config.num_proteins])
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
