@@ -47,7 +47,7 @@ def write_PhenomeNET_files():
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
     filename = "final_GO_ProteinID_human.txt"
 
-    protein_list = []
+    protein_GO_list = []
     protein_GO_term_pairs = []
     print('Parsing protein-GO associations...')
     with open(file=path_prefix + filename, mode='r') as f:
@@ -56,13 +56,14 @@ def write_PhenomeNET_files():
             GO_term = GO_term.replace(':', '_')
             GO_term = onto_prefix.format(entity=GO_term)
 
-            protein_list.append(protein)
+            protein_GO_list.append(protein)
             protein_GO_term_pairs.append((protein, GO_term))
 
     print('Num protein-GO-associations:', len(protein_GO_term_pairs))
 
     filename = "final_MP_ProteinID_human.txt"
 
+    protein_MP_list = []
     protein_MP_term_pairs = []
     print('Parsing protein-MP associations...')
     with open(file=path_prefix + filename, mode='r') as f:
@@ -71,13 +72,28 @@ def write_PhenomeNET_files():
             MP_term = MP_term.replace(':', '_')
             MP_term = onto_prefix.format(entity=MP_term)
 
-            protein_list.append(protein)
+            protein_MP_list.append(protein)
             protein_MP_term_pairs.append((protein, MP_term))
     print('Num protein-MP-associations:', len(protein_MP_term_pairs))
 
+    filename = "final_uberon_ProteinID_human.txt"
+
+    protein_uberon_list = []
+    protein_uberon_term_pairs = []
+    print('Parsing protein-Uberon associations...')
+    with open(file=path_prefix + filename, mode='r') as f:
+        for line in f:
+            uberon_term, protein = line.strip().split('\t')
+            uberon_term = uberon_term.replace(':', '_')
+            uberon_term = onto_prefix.format(entity=uberon_term)
+
+            protein_uberon_list.append(protein)
+            protein_uberon_term_pairs.append((protein, uberon_term))
+    print('Num protein-uberon-associations:', len(protein_uberon_term_pairs))
+
     # build distinct drugs and proteins lists
     drug_list = sorted(list(set(drug_list)))
-    protein_list = sorted(list(set(protein_list)))
+    protein_list = sorted(list(set(protein_GO_list) & set(protein_MP_list) & set(protein_uberon_list)))
 
     # write drug and protein lists
     filename = 'PhenomeNET_drug_list'
@@ -103,6 +119,9 @@ def write_PhenomeNET_files():
 
         for protein, MP_term in protein_MP_term_pairs:
             f.write(protein+' '+MP_term+'\n')
+
+        for protein, uberon_term in protein_uberon_term_pairs:
+            f.write(protein+' '+uberon_term+'\n')
 
     # write entity list
     filename = "entity_list"
