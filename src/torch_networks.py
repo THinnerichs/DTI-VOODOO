@@ -432,7 +432,7 @@ class QuickTemplateSimpleNet(torch.nn.Module):
 
 class QuickTemplateNodeFeatureNet(torch.nn.Module):
     def __init__(self, config, num_drugs, num_prots, num_features, conv_method, dropout=0.2):
-        super(QuickTemplateSimpleNet, self).__init__()
+        super(QuickTemplateNodeFeatureNet, self).__init__()
 
         self.num_drugs = num_drugs
         self.num_prots = num_prots

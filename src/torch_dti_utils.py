@@ -271,12 +271,14 @@ class ProtFuncDTINetworkData:
                                       dtype=torch.long)
         self.num_PPI_features = 1
 
+        '''
         # DDI data
         print("Loading DDI features ...")
         self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
         # add self-interactions for better performance
         self.DDI_features[np.identity(self.num_drugs)==1] = 1
         print(self.DDI_features.shape)
+        '''
 
         # DTI data
         print("Loading DTI links ...")

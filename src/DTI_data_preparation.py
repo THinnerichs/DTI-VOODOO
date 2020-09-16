@@ -376,8 +376,8 @@ def get_drughub_STRING_protein_intersection():
 
 def get_DL2vec_features(entity_list):
     model_filename = "../data/PhenomeNET_data/embedding_model"
-    entities = gensim.models.Word2Vec.load(model_filename).wv.vocab.keys()
-    print('num present entities:', len(entities))
+    # entities = gensim.models.Word2Vec.load(model_filename).wv.vocab.keys()
+    # print('num present entities:', len(entities))
 
     vector_dict = gensim.models.Word2Vec.load(model_filename).wv
 
