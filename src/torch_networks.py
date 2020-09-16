@@ -458,11 +458,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.linear3 = torch.nn.Linear(64, 64)
         self.linear4 = torch.nn.Linear(64, 32)
 
-        self.drug_linear1 = torch.nn.Linear(num_features, 64)
+        self.drug_linear1 = torch.nn.Linear(num_features, 16)
         self.drug_linear2 = torch.nn.Linear(64, 64)
         self.drug_linear3 = torch.nn.Linear(64, 16)
 
-        self.overall_linear1 = torch.nn.Linear(16 + 16, 32)
+        self.overall_linear1 = torch.nn.Linear(16 + 16, 1)
         self.overall_linear2 = torch.nn.Linear(32, 16)
         self.overall_linear3 = torch.nn.Linear(16, 1)
 
@@ -477,36 +477,41 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
         # PPI_graph stuff
-        PPI_x = F.relu(self.linear1(PPI_x))
+        PPI_x = F.leaky_relu(self.linear1(PPI_x))
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.relu(self.linear2(PPI_x))
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.relu(self.linear3(PPI_x))
         # PPI_x = self.dropout(PPI_x)
-        PPI_x = F.relu(self.linear4(PPI_x))
+        PPI_x = F.leaky_relu(self.linear4(PPI_x))
 
         # PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.leaky_relu(self.conv2(PPI_x, PPI_edge_index))
         # PPI_x = F.dropout(PPI_x, p=0.3, training=self.training)
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         # drug feature stuff
-        drug_feature = F.relu(self.drug_linear1(drug_feature))
+        drug_feature = F.leaky_relu(self.drug_linear1(drug_feature))
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.relu(self.drug_linear2(drug_feature))
         # drug_feature = self.dropout(drug_feature)
-        drug_feature = F.relu(self.drug_linear3(drug_feature))
+        # drug_feature = F.relu(self.drug_linear3(drug_feature))
         # drug_feature = self.dropout(drug_feature)
         drug_feature = drug_feature.view(batch_size, 1, -1)
 
         # overall stuff
-        cat_feature = torch.cat([drug_feature.repeat(1,self.num_prots, 1).view(batch_size * self.num_prots,-1), PPI_x], dim=1)
+        # cat_feature = torch.cat([drug_feature.repeat(1,self.num_prots, 1).view(batch_size * self.num_prots,-1), PPI_x], dim=1)
         # cat_feature = F.relu(self.overall_linear1(cat_feature))
         # cat_feature = self.dropout(cat_feature)
-        cat_feature = F.relu(self.overall_linear2(cat_feature))
+        # cat_feature = F.relu(self.overall_linear2(cat_feature))
         # cat_feature = self.dropout(cat_feature)
-        cat_feature = F.relu(self.overall_linear3(cat_feature))
+        # cat_feature = F.relu(self.overall_linear3(cat_feature))
         # cat_feature = self.dropout(cat_feature)
+
+        # siamese approach
+        drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
+        PPI_x = PPI_x.unsqueeze(-1)
+        cat_feature = torch.bmm(drug_feature, PPI_x)
 
         cat_feature = cat_feature.view((-1, self.num_prots))
 
