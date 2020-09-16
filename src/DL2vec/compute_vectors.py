@@ -72,7 +72,7 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
 def run_walk(nodes,G):
     global data_pairs
 
-    number=48
+    number = 48
     length = len(nodes) // number
 
     processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length])) for index

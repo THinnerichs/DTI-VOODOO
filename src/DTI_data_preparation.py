@@ -14,6 +14,7 @@ import PPI_utils
 import DDI_utils
 import similarity_measurement
 import HPO_GO_similarity
+import PhenomeNET_DL2vec_utils
 
 
 
@@ -137,11 +138,30 @@ def get_human_prot_func_proteins():
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
 
+def write_human_PhenomeNET_proteins(mode=''):
+    phenomeNET_proteins = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list()
+    human_DTI_graph = get_human_DTI_graph(mode=mode)
+    human_proteins = get_human_proteins()
+
+    return_protein_list = list(set(phenomeNET_proteins) & set(human_DTI_graph.nodes()) & set(human_proteins))
+    return_protein_list = sorted(return_protein_list)
+
+    filename = "../data/human_PhenomeNET_protein_list"
+    with open(file=filename + '.pkl', mode='wb') as f:
+        pickle.dump(return_protein_list, f, pickle.HIGHEST_PROTOCOL)
+
+def get_human_PhenomeNET_proteins():
+    filename = "../data/human_PhenomeNET_protein_list"
+    with open(file=filename + '.pkl', mode='rb') as f:
+        return pickle.load(f)
+
+
 def get_drug_list(mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
     # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
     # drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
-    drug_list = HPO_GO_similarity.get_HPO_SIDER_drug_list()
+    # drug_list = HPO_GO_similarity.get_HPO_SIDER_drug_list()
+    drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
 
@@ -355,7 +375,7 @@ def get_drughub_STRING_protein_intersection():
     return list(protein_intersect)
 
 def get_DL2vec_features(entity_list):
-    model_filename = "../data/HPO_data/embedding_model"
+    model_filename = "../data/PhenomeNET_data/embedding_model"
     entities = gensim.models.Word2Vec.load(model_filename).wv.vocab.keys()
     print('num present entities:', len(entities))
 
@@ -482,11 +502,12 @@ if __name__ == '__main__':
     protein_intersect = set(protein_list) & set(drughub_protein_list)
     '''
 
-    write_human_prot_func_protein_list(mode=mode)
+    # write_human_prot_func_protein_list(mode=mode)
+    write_human_PhenomeNET_proteins(mode=mode)
     # dicki = get_human_prot_func_proteins()
     # print('num_proteins', len(dicki))
 
     print('drugs', len(get_drug_list(mode=mode)))
-    print('prots', len(get_human_prot_func_proteins()))
+    print('prots', len(get_human_PhenomeNET_proteins()))
 
     pass

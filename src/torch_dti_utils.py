@@ -392,16 +392,11 @@ class QuickProtFuncDTINetworkData:
     def __init__(self, config):
         self.config = config
 
-        # write data first
-        print("Preparing protein data ...")
-        DTI_data_preparation.write_human_protein_list(min_score=config.PPI_min_score, mode=config.mode)
-        DTI_data_preparation.write_human_prot_func_protein_list(mode=config.mode)
-
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
-        self.protein_list = np.array(DTI_data_preparation.get_human_proteins()[:config.num_proteins])
+        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins()[:config.num_proteins])
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -515,7 +510,7 @@ class QuickProtFuncDTINetworkData:
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
-        self.num_PPI_features = 200 # self.drug_features.shape[1]*2 + 10
+        self.num_PPI_features = self.protein_features.shape[1] # +100
 
         # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -575,7 +570,8 @@ class QuickProtFuncDTINetworkData:
             degree_feature = self.node_degree_protein_feature
 
             # feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
-            feature_array = torch.cat([degree_feature, protein_feature], dim=1)
+            # feature_array = torch.cat([degree_feature, protein_feature], dim=1)
+            feature_array = protein_feature
             # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 

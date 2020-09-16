@@ -29,7 +29,7 @@ class HPODTIDataBuilder:
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
-        self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
+        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -80,7 +80,7 @@ class HPODTIDataBuilder:
         # additional
         self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
 
-        self.num_PPI_features = self.drug_features.shape[1]*2 + 100
+        self.num_PPI_features = self.drug_features.shape[1]*2 # + 100
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -107,7 +107,7 @@ class HPODTIDataBuilder:
             # additional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
 
-            data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0).float(), y))
+            data_list.append((torch.cat((drug_feature, protein_feature), 0).float(), y))
 
         return data_list
 
@@ -136,7 +136,7 @@ class HPOPredNet(nn.Module):
     def __init__(self):
         super(HPOPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(300, 128)
+        self.fc1 = nn.Linear(400, 128)
         self.fc2 = nn.Linear(128, 128)
         self.fc3 = nn.Linear(128, 128)
         self.fc4 = nn.Linear(128, 128)

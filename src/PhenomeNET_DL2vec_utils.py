@@ -130,6 +130,16 @@ def output_example_DL2vec_command(workers=48, embedsize=200):
 
     print('Command:', command)
 
+def get_PhenomeNET_drug_list():
+    filename = '../data/PhenomeNET/PhenomeNET_drug_list'
+    with open(file=filename+'.pkl', mode='rb') as f:
+        return pkl.load(f)
+
+def get_PhenomeNET_protein_list():
+    filename = '../data/PhenomeNET/PhenomeNET_protein_list'
+    with open(file=filename+'.pkl', mode='rb') as f:
+        return pkl.load(f)
+
 
 if __name__ == '__main__':
     write_PhenomeNET_files()

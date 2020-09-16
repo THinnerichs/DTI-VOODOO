@@ -430,8 +430,93 @@ class QuickTemplateSimpleNet(torch.nn.Module):
         '''
 
 
+class QuickTemplateNodeFeatureNet(torch.nn.Module):
+    def __init__(self, config, num_drugs, num_prots, num_features, conv_method, dropout=0.2):
+        super(QuickTemplateSimpleNet, self).__init__()
+
+        self.num_drugs = num_drugs
+        self.num_prots = num_prots
+
+        # mask feature
+
+        # GCN laye4s
+        if 'GCNConv' in conv_method:
+            self.conv1 = nn.GCNConv(32, 32, cached=False, add_self_loops=False)
+            self.conv2 = nn.GCNConv(32, 16, cached=False, add_self_loops=False)
+            self.conv3 = nn.GCNConv(16, 16, cached=False, add_self_loops=False)
+        else:
+            print("No valid model selected.")
+            sys.stdout.flush()
+            raise ValueError
+
+        self.bn_1 = nn.BatchNorm(4 * config.heads)
+        self.bn_2 = nn.BatchNorm(16 * config.heads)
+
+        self.linear1 = torch.nn.Linear(num_features, 64)
+        self.linear2 = torch.nn.Linear(64, 64)
+        self.linear3 = torch.nn.Linear(64, 64)
+        self.linear4 = torch.nn.Linear(64, 32)
+
+        self.drug_linear1 = torch.nn.Linear(num_features, 64)
+        self.drug_linear2 = torch.nn.Linear(64, 64)
+        self.drug_linear3 = torch.nn.Linear(64, 32)
+
+        self.overall_linear1 = torch.nn.Linear(32 + 32, 32)
+        self.overall_linear2 = torch.nn.Linear(32, 16)
+        self.overall_linear3 = torch.nn.Linear(16, 1)
+
+        self.relu = torch.nn.ReLU()
+        self.dropout = torch.nn.Dropout(dropout)
+
+    def forward(self, PPI_data_object):
+        # DDI_feature = PPI_data_object.DDI_features
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
+        drug_feature = PPI_data_object.drug_feature
+
+        print('PPI_x, drug_feature', PPI_x.size(), drug_feature.size())
+
+        # PPI_graph stuff
+        PPI_x = F.relu(self.linear1(PPI_x))
+        PPI_x = self.dropout(PPI_x)
+        PPI_x = F.relu(self.linear2(PPI_x))
+        PPI_x = self.dropout(PPI_x)
+        PPI_x = F.relu(self.linear3(PPI_x))
+        PPI_x = self.dropout(PPI_x)
+        PPI_x = F.relu(self.linear4(PPI_x))
+
+        print('PPI_x after', PPI_x.size())
+
+        PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
+        PPI_x = F.relu(self.conv2(PPI_x, PPI_edge_index))
+        # PPI_x = F.dropout(PPI_x, p=0.3, training=self.training)
+        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+
+        print('PPI_x after GCN', PPI_x.size())
 
 
+        # drug feature stuff
+        drug_feature = F.relu(self.drug_linear1(drug_feature))
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.relu(self.drug_linear2(drug_feature))
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.relu(self.drug_linear3(drug_feature))
+        drug_feature = self.dropout(drug_feature)
 
+        print('drug_feature after', drug_feature.size())
 
+        # overall stuff
+        cat_feature = torch.cat([drug_feature.repeat(1,1,self.num_prots), PPI_x], dim=2)
+        print('cat_feature Bumm', cat_feature.size())
+        cat_feature = F.relu(self.overall_linear1(cat_feature))
+        cat_feature = self.dropout(cat_feature)
+        cat_feature = F.relu(self.overall_linear2(cat_feature))
+        cat_feature = self.dropout(cat_feature)
+        cat_feature = F.relu(self.overall_linear3(cat_feature))
+        cat_feature = self.dropout(cat_feature)
+
+        cat_feature = cat_feature.view((-1, self.num_prots))
+
+        raise Exception
+
+        return cat_feature
 

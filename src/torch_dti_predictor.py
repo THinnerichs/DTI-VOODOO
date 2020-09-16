@@ -298,11 +298,11 @@ def quickened_missing_target_predictor(config,
         model = None
         if config.pretrain:
             if 'Res' not in config.arch:
-                model = QuickTemplateSimpleNet(config,
-                                              num_drugs=0,
-                                              num_prots=network_data.num_proteins,
-                                              num_features=network_data.num_PPI_features,
-                                              conv_method=config.arch)
+                model = QuickTemplateNodeFeatureNet(config,
+                                                    num_drugs=0,
+                                                    num_prots=network_data.num_proteins,
+                                                    num_features=network_data.num_PPI_features,
+                                                    conv_method=config.arch)
             elif 'Res' in config.arch:
                 model = ResTemplateNet(config,
                                        num_drugs=0,
