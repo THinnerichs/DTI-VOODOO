@@ -460,9 +460,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.drug_linear1 = torch.nn.Linear(num_features, 64)
         self.drug_linear2 = torch.nn.Linear(64, 64)
-        self.drug_linear3 = torch.nn.Linear(64, 32)
+        self.drug_linear3 = torch.nn.Linear(64, 16)
 
-        self.overall_linear1 = torch.nn.Linear(32 + 32, 32)
+        self.overall_linear1 = torch.nn.Linear(16 + 16, 32)
         self.overall_linear2 = torch.nn.Linear(32, 16)
         self.overall_linear3 = torch.nn.Linear(16, 1)
 
@@ -504,7 +504,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = F.relu(self.drug_linear2(drug_feature))
         drug_feature = self.dropout(drug_feature)
         drug_feature = F.relu(self.drug_linear3(drug_feature))
-        drug_feature = self.dropout(drug_feature)
+        drug_feature = self.dropout(drug_feature).view(batch_size, 1, -1)
 
         print('drug_feature after', drug_feature.size())
         print('repeat size', drug_feature.repeat(1,self.num_prots, 1).size())
