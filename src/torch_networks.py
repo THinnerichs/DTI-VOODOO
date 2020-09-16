@@ -478,11 +478,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # PPI_graph stuff
         PPI_x = F.relu(self.linear1(PPI_x))
-        PPI_x = self.dropout(PPI_x)
-        PPI_x = F.relu(self.linear2(PPI_x))
-        PPI_x = self.dropout(PPI_x)
-        PPI_x = F.relu(self.linear3(PPI_x))
-        PPI_x = self.dropout(PPI_x)
+        # PPI_x = self.dropout(PPI_x)
+        # PPI_x = F.relu(self.linear2(PPI_x))
+        # PPI_x = self.dropout(PPI_x)
+        # PPI_x = F.relu(self.linear3(PPI_x))
+        # PPI_x = self.dropout(PPI_x)
         PPI_x = F.relu(self.linear4(PPI_x))
 
         PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
@@ -492,20 +492,20 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # drug feature stuff
         drug_feature = F.relu(self.drug_linear1(drug_feature))
-        drug_feature = self.dropout(drug_feature)
+        # drug_feature = self.dropout(drug_feature)
         drug_feature = F.relu(self.drug_linear2(drug_feature))
-        drug_feature = self.dropout(drug_feature)
+        # drug_feature = self.dropout(drug_feature)
         drug_feature = F.relu(self.drug_linear3(drug_feature))
         drug_feature = self.dropout(drug_feature).view(batch_size, 1, -1)
 
         # overall stuff
         cat_feature = torch.cat([drug_feature.repeat(1,self.num_prots, 1).view(batch_size * self.num_prots,-1), PPI_x], dim=1)
-        cat_feature = F.relu(self.overall_linear1(cat_feature))
-        cat_feature = self.dropout(cat_feature)
+        # cat_feature = F.relu(self.overall_linear1(cat_feature))
+        # cat_feature = self.dropout(cat_feature)
         cat_feature = F.relu(self.overall_linear2(cat_feature))
-        cat_feature = self.dropout(cat_feature)
+        # cat_feature = self.dropout(cat_feature)
         cat_feature = F.relu(self.overall_linear3(cat_feature))
-        cat_feature = self.dropout(cat_feature)
+        # cat_feature = self.dropout(cat_feature)
 
         cat_feature = cat_feature.view((-1, self.num_prots))
 
