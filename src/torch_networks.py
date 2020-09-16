@@ -436,6 +436,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.num_drugs = num_drugs
         self.num_prots = num_prots
+        self.num_features = num_features
 
         # mask feature
 
@@ -471,7 +472,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
-        drug_feature = PPI_data_object.drug_feature
+        drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
+
+        batch_size = drug_feature.size(0)
+
 
         print('PPI_x, drug_feature', PPI_x.size(), drug_feature.size())
 
