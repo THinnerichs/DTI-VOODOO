@@ -659,9 +659,12 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
     model.train()
     return_loss = 0
 
-    if epoch >= config.num_non_GCN_epochs:
+    if epoch == config.num_non_GCN_epochs:
         print('-----------------------------------------------------------')
+
+        model = model.to('cpu')
         model.include_GCN = True
+        model = model.to(device)
 
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
