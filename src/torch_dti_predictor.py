@@ -317,7 +317,7 @@ def quickened_missing_target_predictor(config,
         model = nn.DataParallel(model).to(device)
         print("model total parameters", sum(p.numel() for p in model.parameters()))
 
-        optimizer = torch.optim.SGD(model.parameters(), lr=config.lr, momentum=0.9)
+        optimizer = torch.optim.SGD(model.parameters(), lr=config.lr)#, momentum=0.9)
 
         # storing best results
         best_loss = math.inf
@@ -332,7 +332,8 @@ def quickened_missing_target_predictor(config,
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            loss = quick_train(model=model,
+            loss = quick_train(config=config,
+                               model=model,
                                device=device,
                                train_loader=train_loader,
                                optimizer=optimizer,
@@ -633,6 +634,8 @@ if __name__ == '__main__':
     parser.add_argument("--heads", type=int, default=1) # attention heads for GATConv
     parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--PPI_min_score", type=int, default=700)
+
+    parser.add_argument("--num_non_GCN_epochs", type=int, default=20)
 
     config = parser.parse_args()
 

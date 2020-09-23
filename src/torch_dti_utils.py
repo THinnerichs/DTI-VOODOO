@@ -512,7 +512,7 @@ class QuickProtFuncDTINetworkData:
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
-        self.num_PPI_features = self.protein_features.shape[1]*2# +100
+        self.num_PPI_features = self.protein_features.shape[1]# +100
 
         # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -572,8 +572,8 @@ class QuickProtFuncDTINetworkData:
             degree_feature = self.node_degree_protein_feature
 
             # feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
-            feature_array = torch.cat([drug_feature, protein_feature], dim=1)
-            # feature_array = protein_feature
+            # feature_array = torch.cat([drug_feature, protein_feature], dim=1)
+            feature_array = protein_feature
             # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 
@@ -653,13 +653,16 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
             sys.stdout.flush()
     return return_loss
 
-def quick_train(model, device, train_loader, optimizer, epoch, neg_to_pos_ratio, train_mask):
+def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_ratio, train_mask):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
     model.train()
     return_loss = 0
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
+
+        if epoch>= config.num_non_GCN_epochs:
+            model.include_GCN = True
 
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())

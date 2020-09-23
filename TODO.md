@@ -162,19 +162,14 @@ Network:
 DL2Vec TODO:
 - test quality of my DL2vec features
   - use my drug features as features for prot\_func
-  - why is their ontology having that many proteins in his ontology?
-    - just due to few proteins and their PPI connections
-- add UBERON
-- rerun without HasAssociation limitation
-
-PhenomenNET:
-- How to include MP? HPO?
-- For update ask Sara Alghamdi for original scripts
-  - phenomeblast/fixphenotypes/ReadEQs.groovy nothing else 
-    - needs MP and HP
+PhenomeNET:
 - SIDER included?
 
-What I have done since last meeting:
 
-For next week:
-- 2-3 slides of what I have done in the last week
+What I have done since last meeting:
+- add UBERON
+- rerun without HasAssociation limitation
+- test quality of my DL2vec features
+  - use my drug features as features for prot\_func
+
+

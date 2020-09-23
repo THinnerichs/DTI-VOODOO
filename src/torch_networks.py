@@ -442,9 +442,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(16, 8, cached=False)
-            self.conv2 = nn.GCNConv(32, 16, cached=False)
-            self.conv3 = nn.GCNConv(8, 1, cached=False)
+            self.conv1 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
+            self.conv2 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
+            self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -455,40 +455,60 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.linear1 = torch.nn.Linear(num_features, 64)
         self.linear2 = torch.nn.Linear(64, 64)
-        self.linear3 = torch.nn.Linear(64, 64)
-        self.linear4 = torch.nn.Linear(64, 16)
+        self.linear3 = torch.nn.Linear(64, 32)
 
         self.drug_linear1 = torch.nn.Linear(num_features, 16)
         self.drug_linear2 = torch.nn.Linear(64, 64)
-        self.drug_linear3 = torch.nn.Linear(64, 16)
+        self.drug_linear3 = torch.nn.Linear(64, 32)
 
-        self.overall_linear1 = torch.nn.Linear(16 + 16, 1)
-        self.overall_linear2 = torch.nn.Linear(32, 16)
-        self.overall_linear3 = torch.nn.Linear(16, 1)
+        # self.overall_linear1 = torch.nn.Linear(16 + 16, 1)
+        # self.overall_linear2 = torch.nn.Linear(32, 16)
+        # self.overall_linear3 = torch.nn.Linear(16, 1)
 
         self.relu = torch.nn.ReLU()
         self.dropout = torch.nn.Dropout(dropout)
 
+        self.include_GCN = False
+
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
-        # drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
+        drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
-        # batch_size = drug_feature.size(0)
-
-        PPI_x = F.relu(self.linear1(PPI_x))
-        PPI_x = F.relu(self.linear2(PPI_x))
-        PPI_x = F.relu(self.linear3(PPI_x))
-        PPI_x = F.relu(self.linear4(PPI_x))
+        batch_size = drug_feature.size(0)
 
 
-        PPI_x = F.relu(self.conv1(PPI_x, PPI_edge_index))
-        # PPI_x = F.relu(self.conv2(PPI_x, PPI_edge_index))
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
-        PPI_x = PPI_x.view((-1, self.num_prots))
+        PPI_x = F.leaky_relu(self.linear1(PPI_x), negative_slope=0.2)
+        # PPI_x = self.dropout(PPI_x)
+        PPI_x = F.leaky_relu(self.linear2(PPI_x), negative_slope=0.2)
+        # PPI_x = self.dropout(PPI_x)
+        PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
 
-        return PPI_x
+        drug_feature = F.leaky_relu(self.drug_linear1(drug_feature), negative_slope=0.2)
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.leaky_relu(self.drug_linear3(drug_feature), negative_slope=0.2)
+        drug_feature = drug_feature.view(batch_size, 1, -1)
+
+        if self.include_GCN:
+
+            PPI_x = F.leaky_relu(self.conv1(PPI_x, PPI_edge_index), negative_slope=0.2)
+            PPI_x = F.leaky_relu(self.conv2(PPI_x, PPI_edge_index), negative_slope=0.2)
+            # PPI_x = self.conv3(PPI_x, PPI_edge_index)
+
+            PPI_x = PPI_x.view((batch_size* self.num_prots, -1))
+
+        PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
+
+        drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
+        PPI_x = PPI_x.unsqueeze(-1)
+        cat_feature = torch.bmm(drug_feature, PPI_x)
+
+        cat_feature = cat_feature.view((-1, self.num_prots))
+
+        return cat_feature
 
         '''
 

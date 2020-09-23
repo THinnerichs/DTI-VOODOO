@@ -153,17 +153,6 @@ class HPOPredNet(nn.Module):
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Linear(256, 256),
-            nn.Dropout(0.2),
-            # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Linear(256, 256),
-            nn.Dropout(0.2),
-            # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-
             nn.Linear(256, 50),
             # nn.Dropout(0.5),
             # nn.BatchNorm1d(50),
@@ -176,17 +165,6 @@ class HPOPredNet(nn.Module):
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Linear(256, 256),
-            nn.Dropout(0.2),
-            # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-
-            nn.Linear(256, 256),
-            nn.Dropout(0.2),
-            # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-
             nn.Linear(256, 50),
             # nn.BatchNorm1d(50),
             # nn.Dropout(0.5),
