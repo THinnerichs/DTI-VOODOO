@@ -478,32 +478,20 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
 
-
-        PPI_x = F.leaky_relu(self.linear1(PPI_x), negative_slope=0.2)
+        PPI_x = F.elu(self.linear1(PPI_x))
         # PPI_x = self.dropout(PPI_x)
-        PPI_x = F.leaky_relu(self.linear2(PPI_x), negative_slope=0.2)
+        PPI_x = F.elu(self.linear2(PPI_x))
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
 
-        drug_feature = F.leaky_relu(self.drug_linear1(drug_feature), negative_slope=0.2)
+        drug_feature = F.relu(self.drug_linear1(drug_feature))
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
         # drug_feature = self.dropout(drug_feature)
-        drug_feature = F.leaky_relu(self.drug_linear3(drug_feature), negative_slope=0.2)
+        drug_feature = F.relu(self.drug_linear3(drug_feature))
         drug_feature = drug_feature.view(batch_size, 1, -1)
 
-        if self.include_GCN:
-
-            PPI_x = F.leaky_relu(self.conv1(PPI_x, PPI_edge_index), negative_slope=0.2)
-            PPI_x = F.leaky_relu(self.conv2(PPI_x, PPI_edge_index), negative_slope=0.2)
-            # PPI_x = self.conv3(PPI_x, PPI_edge_index)
-
-            PPI_x = PPI_x.view((batch_size* self.num_prots, -1))
-            print('PPI_x, drug_feature:', PPI_x.size(), drug_feature.size())
-
-
-        PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
-
+        PPI_x = F.leaky_relu(self.linear3(PPI_x))
 
         # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
         PPI_x = PPI_x.unsqueeze(-1)
@@ -514,34 +502,34 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         return cat_feature
 
-    def forward2(self, PPI_data_object):
+    def forward_with_GCN(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
         batch_size = drug_feature.size(0)
 
-        PPI_x = F.leaky_relu(self.linear1(PPI_x), negative_slope=0.2)
+        PPI_x = F.elu(self.linear1(PPI_x))
         # PPI_x = self.dropout(PPI_x)
-        PPI_x = F.leaky_relu(self.linear2(PPI_x), negative_slope=0.2)
+        PPI_x = F.elu(self.linear2(PPI_x))
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
 
-        drug_feature = F.leaky_relu(self.drug_linear1(drug_feature), negative_slope=0.2)
+        drug_feature = F.relu(self.drug_linear1(drug_feature))
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
         # drug_feature = self.dropout(drug_feature)
-        drug_feature = F.leaky_relu(self.drug_linear3(drug_feature), negative_slope=0.2)
+        drug_feature = F.relu(self.drug_linear3(drug_feature))
         drug_feature = drug_feature.view(batch_size, 1, -1)
 
-        PPI_x = F.leaky_relu(self.conv1(PPI_x, PPI_edge_index), negative_slope=0.2)
-        PPI_x = F.leaky_relu(self.conv2(PPI_x, PPI_edge_index), negative_slope=0.2)
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
+        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         PPI_x = PPI_x.view((batch_size * self.num_prots, -1))
         print('PPI_x, drug_feature:', PPI_x.size(), drug_feature.size())
 
-        PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
+        PPI_x = F.leaky_relu(self.linear3(PPI_x))
 
         # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
         PPI_x = PPI_x.unsqueeze(-1)
