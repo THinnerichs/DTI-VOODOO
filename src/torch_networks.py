@@ -454,8 +454,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
         self.linear1 = torch.nn.Linear(num_features, 64)
-        self.linear2 = torch.nn.Linear(64, 64)
-        self.linear3 = torch.nn.Linear(64, 32)
+        self.linear2 = torch.nn.Linear(64, 32)
+        self.linear3 = torch.nn.Linear(32, 32)
 
         self.drug_linear1 = torch.nn.Linear(num_features, 64)
         self.drug_linear2 = torch.nn.Linear(64, 64)
@@ -483,7 +483,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # PPI_x = self.dropout(PPI_x)
         PPI_x = F.leaky_relu(self.linear2(PPI_x), negative_slope=0.2)
         # PPI_x = self.dropout(PPI_x)
-        PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
+        # PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
 
         drug_feature = F.leaky_relu(self.drug_linear1(drug_feature), negative_slope=0.2)
         drug_feature = self.dropout(drug_feature)
