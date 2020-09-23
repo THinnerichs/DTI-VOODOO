@@ -149,7 +149,7 @@ class HPOPredNet(nn.Module):
 
         # siamese network approach
         self.model = nn.Sequential(
-            nn.Linear(200, 256),
+            nn.Linear(1024, 256),
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
@@ -161,7 +161,7 @@ class HPOPredNet(nn.Module):
             # nn.Sigmoid()
         )
         self.model2 = nn.Sequential(
-            nn.Linear(200, 256),
+            nn.Linear(1024, 256),
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
@@ -189,8 +189,8 @@ class HPOPredNet(nn.Module):
         return x
         '''
 
-        p1 = self.model(x[:,:200]).view(-1, 1, 50)
-        d1 = self.model2(x[:,200:]).view(-1, 50, 1)
+        p1 = self.model(x[:,:1024]).view(-1, 1, 50)
+        d1 = self.model2(x[:,1024:]).view(-1, 50, 1)
 
         s1 = torch.bmm(p1, d1)
 
