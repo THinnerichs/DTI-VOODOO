@@ -153,10 +153,10 @@ class HPOPredNet(nn.Module):
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 50),
+            nn.Linear(256, 100),
             # nn.Dropout(0.5),
             # nn.BatchNorm1d(50),
-            nn.LeakyReLU(0.2, inplace=True),
+            # nn.LeakyReLU(0.2, inplace=True),
             # nn.Linear(256, 1),
             # nn.Sigmoid()
         )
@@ -165,10 +165,10 @@ class HPOPredNet(nn.Module):
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 50),
+            nn.Linear(256, 100),
             # nn.BatchNorm1d(50),
             # nn.Dropout(0.5),
-            nn.LeakyReLU(0.2, inplace=True),
+            # nn.LeakyReLU(0.2, inplace=True),
             # nn.Linear(256, 1),
             # nn.Sigmoid()
         )
@@ -189,8 +189,8 @@ class HPOPredNet(nn.Module):
         return x
         '''
 
-        p1 = self.model(x[:,:1024]).view(-1, 1, 50)
-        d1 = self.model2(x[:,1024:]).view(-1, 50, 1)
+        p1 = self.model(x[:,:1024]).view(-1, 1, 100)
+        d1 = self.model2(x[:,1024:]).view(-1, 100, 1)
 
         s1 = torch.bmm(p1, d1)
 
