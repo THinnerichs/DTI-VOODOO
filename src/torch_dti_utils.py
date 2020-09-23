@@ -658,12 +658,14 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
     sys.stdout.flush()
     model.train()
     return_loss = 0
+
+    if epoch >= config.num_non_GCN_epochs:
+        print('-----------------------------------------------------------')
+        model.include_GCN = True
+
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
 
-        if epoch>=config.num_non_GCN_epochs:
-            print('-----------------------------------------------------------')
-            model.include_GCN = True
 
         output = model(data)
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())

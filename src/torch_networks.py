@@ -510,6 +510,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = torch.bmm(drug_feature, PPI_x)
 
+        print('cat_feature', cat_feature.size())
+
+        raise Exception
+
         cat_feature = cat_feature.view((-1, self.num_prots))
 
         return cat_feature
