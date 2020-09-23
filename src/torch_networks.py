@@ -457,7 +457,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.linear2 = torch.nn.Linear(64, 64)
         self.linear3 = torch.nn.Linear(64, 32)
 
-        self.drug_linear1 = torch.nn.Linear(num_features, 16)
+        self.drug_linear1 = torch.nn.Linear(num_features, 64)
         self.drug_linear2 = torch.nn.Linear(64, 64)
         self.drug_linear3 = torch.nn.Linear(64, 32)
 
