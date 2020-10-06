@@ -689,6 +689,9 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         neg_weight = 1
         loss = pos_weight * (y * torch.log(output)) + neg_weight * ((1 - y) * torch.log(1 - output))
 
+        print('loss.size()', loss.size())
+        print(loss.sum())
+
         # loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
         return_loss += loss
         loss.backward()

@@ -500,7 +500,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = cat_feature.view((-1, self.num_prots))
 
-        return F.sigmoid(cat_feature)
+        return torch.sigmoid(cat_feature)
 
     def forward_with_GCN(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
