@@ -659,7 +659,6 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
     model.train()
     return_loss = 0
 
-
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
 
@@ -682,7 +681,15 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         # print('check', output.min(), output.max(), y.min(), y.max())
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
+        # my implementation of BCELoss
+        output = torch.clamp(output, min=1e-8, max=1 - 1e-8)
+
+        print('output, y:', output.size(), y.size())
+        pos_weight = neg_to_pos_ratio
+        neg_weight = 1
+        loss = pos_weight * (y * torch.log(output)) + neg_weight * ((1 - y) * torch.log(1 - output))
+
+        # loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
         return_loss += loss
         loss.backward()
         optimizer.step()
