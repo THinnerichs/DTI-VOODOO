@@ -661,7 +661,7 @@ def BCELoss_ClassWeights(input, target, pos_weight):
     target = target.view(-1,1)
     weighted_bce = - pos_weight*target * torch.log(input) - 1*(1 - target) * torch.log(1 - input)
     # weighted_bce = weighted_bce / (pos_weight+1)
-    final_reduced_over_batch = weighted_bce.mean(axis=0)
+    final_reduced_over_batch = weighted_bce.sum(axis=0)
     return final_reduced_over_batch
 
 
