@@ -653,6 +653,18 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
             sys.stdout.flush()
     return return_loss
 
+def BCELoss_ClassWeights(input, target, pos_weight):
+    # input (n, d)
+    # target (n, d)
+    # class_weights (1, d)
+    input = torch.clamp(input,min=1e-7,max=1-1e-7)
+    target = target.view(-1,1)
+    weighted_bce = - pos_weight*target * torch.log(input) - 1*(1 - target) * torch.log(1 - input)
+    weighted_bce = weighted_bce / (pos_weight+1)
+    final_reduced_over_batch = weighted_bce.mean(axis=0)
+    return final_reduced_over_batch
+
+
 def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_ratio, train_mask):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
@@ -662,12 +674,6 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
 
-
-        output = None
-        if epoch <= config.num_non_GCN_epochs:
-            output = model.forward(data)
-        else:
-            output = model.forward_with_GCN(data)
 
 
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
@@ -682,13 +688,16 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         # print('check', output.min(), output.max(), y.min(), y.max())
 
         # my implementation of BCELoss
-        output = torch.clamp(output, min=1e-8, max=1 - 1e-8)
+        output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
+
 
         print('output, y:', output.size(), y.size())
         pos_weight = neg_to_pos_ratio
         neg_weight = 1
-        loss = pos_weight * (y * torch.log(output)) + neg_weight * ((1 - y) * torch.log(1 - output))
-        loss = loss.mean()
+        loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
+
+        print('loss', loss)
+        print(loss.size())
 
         # loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
         return_loss += loss
