@@ -674,6 +674,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
     for batch_idx, data in enumerate(train_loader):
         optimizer.zero_grad()
 
+        output = model(data)
 
 
         # print('max/min:', output.max(), output.sigmoid().max(), output.min(), output.sigmoid().min())
