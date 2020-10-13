@@ -168,7 +168,6 @@ Training:
 - put mask over results and randomly select negativ samples
 
 What I have done since last meeting:
-- add UBERON
 - rerun without HasAssociation limitation
 - test quality of my DL2vec features
   - use my drug features as features for prot\_func
@@ -176,5 +175,6 @@ What I have done since last meeting:
 
 - Test pathways manually
 - cosine similarity of target and drug as single features 
+- create protein embeddings over GO, UBERON and HP
 
 
