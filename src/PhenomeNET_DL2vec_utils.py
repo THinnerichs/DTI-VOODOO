@@ -138,7 +138,7 @@ def write_PhenomeNET_files(mode='all'):
                 f.write(protein+' '+uberon_term+'\n')
 
     # write entity list
-    filename = "entity_list"
+    filename = mode+'_entity_list' if mode in ['GO','MP','uberon','drug'] else 'entity_list'
     print('Writing entitiy list...')
     with open(file=path_prefix + filename, mode='w') as f:
         if mode =='drug' or mode=='all':
