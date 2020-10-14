@@ -560,9 +560,9 @@ class QuickProtFuncDTINetworkData:
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
             # uncomment for DL2vec
-            drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
-            drug_feature = torch.tensor(drug_feature)
-            # drug_feature = torch.tensor(self.drug_features[drug_index, :])
+            # drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
+            # drug_feature = torch.tensor(drug_feature)
+            drug_feature = torch.tensor(self.drug_features[drug_index, :])
 
             # Dl2vec
             protein_feature = torch.tensor(self.protein_features)
