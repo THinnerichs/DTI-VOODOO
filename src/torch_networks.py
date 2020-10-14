@@ -483,6 +483,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # PPI_x = F.elu(self.linear2(PPI_x))
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.leaky_relu(self.linear3(PPI_x), negative_slope=0.2)
+        PPI_x = PPI_x.unsqueeze(-1)
 
         drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, 1, -1)
         # drug_feature = self.dropout(drug_feature)
@@ -493,10 +494,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
 
 
-        print('drug_feature', drug_feature.size())
-        print('PPI_x', PPI_x.size())
         cat_feature = torch.bmm(drug_feature, PPI_x)
-        print('cat_feature', cat_feature.size())
         cat_feature = self.sigmoid(cat_feature)
 
         cat_feature = F.relu(self.conv1(cat_feature, PPI_edge_index))
