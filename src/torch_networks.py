@@ -475,8 +475,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
+        print('drug_feature0', drug_feature.size())
+        print('PPI_feature0', PPI_x.size())
+
         batch_size = drug_feature.size(0)
 
+        print('batch_size', batch_size)
 
         PPI_x = F.elu(self.linear1(PPI_x)).view(batch_size * self.num_prots, -1)
         # PPI_x = self.dropout(PPI_x)
