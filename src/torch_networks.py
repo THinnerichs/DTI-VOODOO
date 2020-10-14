@@ -466,6 +466,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
         self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
         self.dropout = torch.nn.Dropout(dropout)
 
         self.include_GCN = False
@@ -492,7 +493,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
 
 
-        cat_feature = torch.sigmoid(torch.bmm(drug_feature, PPI_x))
+        print('drug_feature', drug_feature.size())
+        print('PPI_x', PPI_x.size())
+        cat_feature = torch.bmm(drug_feature, PPI_x)
+        print('cat_feature', cat_feature.size())
+        cat_feature = self.sigmoid(cat_feature)
 
         cat_feature = F.relu(self.conv1(cat_feature, PPI_edge_index))
         cat_feature = self.conv2(cat_feature, PPI_edge_index)
