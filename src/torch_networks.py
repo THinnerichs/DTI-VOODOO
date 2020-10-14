@@ -476,6 +476,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
+        print('PPI_x orig', PPI_x.size())
+
         batch_size = drug_feature.size(0)
 
         PPI_x = F.elu(self.linear1(PPI_x)).view(batch_size * self.num_prots, -1)
@@ -496,6 +498,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = torch.bmm(drug_feature, PPI_x)
         cat_feature = self.sigmoid(cat_feature)
+        print('cat_feature', cat_feature.size())
 
         cat_feature = F.relu(self.conv1(cat_feature, PPI_edge_index))
         cat_feature = self.conv2(cat_feature, PPI_edge_index)
