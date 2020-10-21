@@ -685,6 +685,8 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         help_mask = np.around(np.array(y.to('cpu')) * train_mask)
 
+        print('help_mask', help_mask.dtype)
+
         for i in range(help_mask.shape[0]):
             # determine number of positive samples per drug/graph
             num_choices = help_mask.sum(axis=1)[i]
