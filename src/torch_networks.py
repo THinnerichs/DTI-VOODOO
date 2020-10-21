@@ -442,8 +442,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(1, 8, cached=False, add_self_loops=True)
-            self.conv2 = nn.GCNConv(8, 1, cached=False,  add_self_loops=True)
+            self.conv1 = nn.GCNConv(16, 8, cached=False, add_self_loops=True)
+            self.conv2 = nn.GCNConv(8, 8, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
             print("No valid model selected.")
@@ -472,6 +472,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.include_GCN = False
 
     def forward(self, PPI_data_object):
+        '''
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
@@ -509,11 +510,24 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         cat_feature = cat_feature.view((-1, self.num_prots))
 
         return torch.sigmoid(cat_feature)
+        '''
 
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
+        batch_size = drug_feature.size(0)
+
         PPI_x = F.elu(self.linear1(PPI_x))
-        drug_feature = F.elu(self.drug_linear1(drug_feature))
+        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, 1, -1)
+        drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
+
+        cat_feature = torch.cat([drug_feature, PPI_x], dim=1)
+
+        cat_feature = F.elu(self.conv1(cat_feature, PPI_edge_index))
+        cat_feature = F.relu(self.conv2(cat_feature, PPI_edge_index))
+
+        cat_feature = self.sigmoid(self.overall_linear1(cat_feature))
+
+        return cat_feature
 
 
 
