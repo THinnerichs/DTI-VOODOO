@@ -684,6 +684,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         print('y.size()', y.size())
 
         help_mask = np.around(np.array(y.to('cpu')) * train_mask).astype(np.int)
+        sub_bumm = help_mask
 
         print('help_mask', help_mask.dtype)
 
@@ -695,7 +696,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
             help_mask[i,np.random.choice(indices, num_choices, replace=False)] = 1
 
         print('help_mask.sum()', help_mask.sum())
-        print('y.sum()', y.sum())
+        print('sub_bumm.sum()', sub_bumm.sum())
 
         raise Exception
 
