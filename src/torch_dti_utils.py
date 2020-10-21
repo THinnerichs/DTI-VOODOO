@@ -684,7 +684,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         print('y.size()', y.size())
 
         help_mask = np.around(np.array(y.to('cpu')) * train_mask).astype(np.int)
-        sub_bumm = help_mask
+        sub_bumm = help_mask.copy()
 
         print('help_mask', help_mask.dtype)
 
