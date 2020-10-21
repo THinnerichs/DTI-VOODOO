@@ -495,14 +495,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
 
         cat_feature = torch.bmm(drug_feature, PPI_x)
-        print('cat_feature 1', cat_feature.max(), cat_feature.min(), cat_feature.mean())
         cat_feature = self.sigmoid(cat_feature).view(-1,1)
         cat_feature = torch.cat([drug_feature.squeeze(), PPI_x.squeeze(), cat_feature], dim=1)
 
         cat_feature = F.elu(self.conv1(cat_feature, PPI_edge_index))
         cat_feature = self.conv2(cat_feature, PPI_edge_index)
-
-        print('cat_feature 2', cat_feature.max(), cat_feature.min(), cat_feature.mean())
 
         # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
         # PPI_x = PPI_x.unsqueeze(-1)
