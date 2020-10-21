@@ -683,13 +683,14 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         print('y.size()', y.size())
 
-        help_mask = np.array(y.to('cpu')) * train_mask
+        help_mask = np.around(np.array(y.to('cpu')) * train_mask)
 
         for i in range(help_mask.shape[0]):
             # determine number of positive samples per drug/graph
             num_choices = help_mask.sum(axis=1)[i]
             # choose num_choices indices from num_proteins samples (masked by train_mask) without replacement and set their entries to 1 in help mask
-            help_mask[i,np.random.choice(np.arange(help_mask.shape[1])[help_mask[i,:]==0], num_choices, replace=False)] = 1
+            indices = np.arange(help_mask.shape[1])[help_mask[i,:]==0]
+            help_mask[i,np.random.choice(indices, num_choices, replace=False)] = 1
 
         print('help_mask.sum()', help_mask.sum())
         print('y.sum()', y.sum())
