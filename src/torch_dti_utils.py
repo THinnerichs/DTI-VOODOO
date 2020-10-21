@@ -681,6 +681,24 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data])).float().to(output.device)
 
+        print('y.size()', y.size())
+
+        help_mask = np.array(y) * train_mask
+
+        for i in range(help_mask.shape[0]):
+            # determine number of positive samples per drug/graph
+            num_choices = help_mask.sum(axis=1)[i]
+            # choose num_choices indices from num_proteins samples (masked by train_mask) without replacement and set their entries to 1 in help mask
+            help_mask[i,np.random.choice(np.arange(help_mask.shape[1])[help_mask[i,:]==0], num_choices, replace=False)] = 1
+
+        print('help_mask.sum()', help_mask.sum())
+        print('y.sum()', y.sum())
+
+        raise Exception
+
+
+
+
         # print('y.size', y[:, train_mask].size())
         # print('output.size', output[:, train_mask].size())
 
@@ -692,15 +710,12 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
 
 
-        print('output, y:', output.size(), y.size())
-        pos_weight = neg_to_pos_ratio
-        neg_weight = 1
-        loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
-
-        print('loss', loss)
-        print(loss.size())
+        # pos_weight = neg_to_pos_ratio
+        # neg_weight = 1
+        # loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
 
         # loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
+        loss = nn.BCELoss()(input=output[help_mask==1].view(-1, 1), target=y[help_mask==1].view(-1, 1))
         return_loss += loss
         loss.backward()
         optimizer.step()
