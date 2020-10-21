@@ -527,6 +527,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = self.sigmoid(self.overall_linear1(cat_feature))
 
+        cat_feature = cat_feature.view((-1, self.num_prots))
+
         return cat_feature
 
 
