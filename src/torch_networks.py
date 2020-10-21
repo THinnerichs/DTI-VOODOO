@@ -442,7 +442,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(16, 8, cached=False, add_self_loops=True)
+            self.conv1 = nn.GCNConv(16*2, 8, cached=False, add_self_loops=True)
             self.conv2 = nn.GCNConv(8, 8, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
