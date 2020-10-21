@@ -442,7 +442,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(2 *16 + 1, 8, cached=False, add_self_loops=True)
+            self.conv1 = nn.GCNConv(1, 8, cached=False, add_self_loops=True)
             self.conv2 = nn.GCNConv(8, 1, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
@@ -496,7 +496,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = torch.bmm(drug_feature, PPI_x)
         cat_feature = self.sigmoid(cat_feature).view(-1,1)
-        cat_feature = torch.cat([drug_feature.squeeze(), PPI_x.squeeze(), cat_feature], dim=1)
+        # cat_feature = torch.cat([drug_feature.squeeze(), PPI_x.squeeze(), cat_feature], dim=1)
 
         cat_feature = F.elu(self.conv1(cat_feature, PPI_edge_index))
         cat_feature = self.conv2(cat_feature, PPI_edge_index)
