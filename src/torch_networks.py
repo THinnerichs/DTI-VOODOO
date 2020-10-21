@@ -443,7 +443,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # GCN laye4s
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(2 *64 + 1, 8, cached=False, add_self_loops=True)
-            self.conv2 = nn.GCNConv(8, 1, cached=False,  add_self_loops=True)
+            self.conv2 = nn.GCNConv(32, 8, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
             print("No valid model selected.")
@@ -453,15 +453,15 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_1 = nn.BatchNorm(4 * config.heads)
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
-        self.linear1 = torch.nn.Linear(num_features, 64)
+        self.linear1 = torch.nn.Linear(num_features, 16)
         self.linear2 = torch.nn.Linear(64, 32)
         self.linear3 = torch.nn.Linear(32, 32)
 
-        self.drug_linear1 = torch.nn.Linear(num_features, 64)
+        self.drug_linear1 = torch.nn.Linear(num_features, 16)
         self.drug_linear2 = torch.nn.Linear(64, 64)
         self.drug_linear3 = torch.nn.Linear(64, 32)
 
-        # self.overall_linear1 = torch.nn.Linear(16 + 16, 1)
+        self.overall_linear1 = torch.nn.Linear(8, 1)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
@@ -473,12 +473,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
-        PPI_x_orig, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
         batch_size = drug_feature.size(0)
 
-        PPI_x = F.elu(self.linear1(PPI_x_orig)).view(batch_size * self.num_prots, -1)
+        PPI_x = F.elu(self.linear1(PPI_x)).view(batch_size * self.num_prots, -1)
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear2(PPI_x))
         # PPI_x = self.dropout(PPI_x)
@@ -495,11 +495,14 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
 
         cat_feature = torch.bmm(drug_feature, PPI_x)
+        print('cat_feature 1', cat_feature.max(), cat_feature.min(), cat_feature.mean())
         cat_feature = self.sigmoid(cat_feature).view(-1,1)
         cat_feature = torch.cat([drug_feature.squeeze(), PPI_x.squeeze(), cat_feature], dim=1)
 
         cat_feature = F.elu(self.conv1(cat_feature, PPI_edge_index))
         cat_feature = self.conv2(cat_feature, PPI_edge_index)
+
+        print('cat_feature 2', cat_feature.max(), cat_feature.min(), cat_feature.mean())
 
         # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
         # PPI_x = PPI_x.unsqueeze(-1)
@@ -509,6 +512,15 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         cat_feature = cat_feature.view((-1, self.num_prots))
 
         return torch.sigmoid(cat_feature)
+
+        PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
+        drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
+        PPI_x = F.elu(self.linear1(PPI_x))
+        drug_feature = F.elu(self.drug_linear1(drug_feature))
+
+
+
+
 
         '''
 

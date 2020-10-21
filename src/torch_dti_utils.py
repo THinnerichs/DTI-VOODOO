@@ -700,6 +700,8 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         # my implementation of BCELoss
         output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
 
+        print('output.sum()', output.sum())
+
         # pos_weight = neg_to_pos_ratio
         # neg_weight = 1
         # loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
