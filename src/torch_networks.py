@@ -442,8 +442,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(2 *64 + 1, 8, cached=False, add_self_loops=True)
-            self.conv2 = nn.GCNConv(32, 8, cached=False,  add_self_loops=True)
+            self.conv1 = nn.GCNConv(2 *16 + 1, 8, cached=False, add_self_loops=True)
+            self.conv2 = nn.GCNConv(8, 1, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
         else:
             print("No valid model selected.")
@@ -517,6 +517,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
         PPI_x = F.elu(self.linear1(PPI_x))
         drug_feature = F.elu(self.drug_linear1(drug_feature))
+
+
 
 
 
