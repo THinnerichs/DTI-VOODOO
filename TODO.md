@@ -176,11 +176,15 @@ What I have done since last meeting:
 - Test pathways manually
 - cosine similarity of target and drug as single features 
 - create protein embeddings over GO, UBERON and HP
-- Sumyyah approach  
-  - sum up for each drug
-  - choose that many from y\_data ==0 for each line
-  - add that to train\_mask
   
-  - apply weighting with respect to node degree?
+- apply weighting with respect to node degree?
+
+- Just test on the their non-PPI data
+- build own DL2vec stuff on Ashrafs Machine
+  - test plain predictor
+- check graph data building whether its correct
+  - toy example with 3 nodes and some random features
+  - apply empty model
+  - check what happens :)
 
 

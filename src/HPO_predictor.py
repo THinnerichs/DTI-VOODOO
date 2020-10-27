@@ -202,7 +202,7 @@ class HPOPredNet(nn.Module):
 
 
 def siamese_drug_protein_network(config):
-    model_st = 'siamese_drug_protein_netowrk'
+    model_st = 'siamese_drug_protein_network'
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

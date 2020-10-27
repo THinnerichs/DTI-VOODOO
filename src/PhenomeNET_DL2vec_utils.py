@@ -172,8 +172,8 @@ def get_PhenomeNET_drug_list():
 
 def get_PhenomeNET_protein_list(mode='all'):
     path = '../data/PhenomeNET_data/'
-    filename = mode+'_protein_list' if mode not in ['GO','MP','uberon'] else 'PhenomeNET_protein_list'
-    with open(file=filename+'.pkl', mode='rb') as f:
+    filename = mode+'_protein_list' if mode in ['GO','MP','uberon'] else 'PhenomeNET_protein_list'
+    with open(file=path+filename+'.pkl', mode='rb') as f:
         return pkl.load(f)
 
 
