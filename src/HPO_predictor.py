@@ -124,15 +124,15 @@ class HPODTIDataBuilder:
             # organism, protein_id = protein.strip().split('.')
             protein_id = protein
 
-            if protein_id in uberon_model.keys():
+            if protein_id in uberon_model.vocab.keys():
                 uberon_embeddings.append(uberon_model[protein_id])
             else:
                 uberon_embeddings.append(torch.zeros((200)))
-            if protein_id in GO_model.keys():
+            if protein_id in GO_model.vocab.keys():
                 GO_embeddings.append(GO_model[protein_id])
             else:
                 GO_embeddings.append(torch.zeros((200)))
-            if protein_id in MP_model.keys():
+            if protein_id in MP_model.vocab.keys():
                 MP_embeddings.append(MP_model[protein_id])
             else:
                 GO_embeddings.append(torch.zeros((200)))
