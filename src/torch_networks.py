@@ -453,7 +453,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_1 = nn.BatchNorm(4 * config.heads)
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
-        self.linear1 = torch.nn.Linear(num_features, 32)
+        self.linear1 = torch.nn.Linear(num_features, 16)
         self.linear2 = torch.nn.Linear(64, 32)
         self.linear3 = torch.nn.Linear(32, 32)
 
