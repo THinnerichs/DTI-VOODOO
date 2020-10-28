@@ -54,16 +54,15 @@ class ProteinFunctionDTIDataBuilder:
     def build_protein_embeddings(self):
         DL2vec_path_prefix = '../data/DL2vec/DL2vec_embeddings/'
 
-        uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
-        GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
-        phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
 
-        '''
+        if False:
+            uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_ppi_embedding'
+            GO_model_filename = DL2vec_path_prefix + 'go_intersection_ppi_embedding'
+            phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_ppi_embedding'
         else:
             uberon_model_filename = DL2vec_path_prefix + 'uberon_intersection_embedding'
             GO_model_filename = DL2vec_path_prefix + 'go_intersection_embedding'
             phenotype_model_filename = DL2vec_path_prefix + 'mp_intersection_embedding'
-        '''
 
         # load models
         uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
