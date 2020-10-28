@@ -218,6 +218,8 @@ class HPOPredNet(nn.Module):
             # nn.Sigmoid()
         )
 
+        self.sim = nn.CosineSimilarity(dim=1)
+
     def forward(self, x):
         '''
         x = self.relu(self.fc1(x))
@@ -234,10 +236,10 @@ class HPOPredNet(nn.Module):
         return x
         '''
 
-        p1 = self.model(x[:,:200]).view(-1, 1, 100)
-        d1 = self.model2(x[:,200:]).view(-1, 100, 1)
+        p1 = self.model(x[:,:200]).view(-1, 100)
+        d1 = self.model2(x[:,200:]).view(-1, 100)
 
-        s1 = torch.bmm(p1, d1)
+        s1 = self.sim(p1, d1)
 
         out = s1.reshape(-1, 1)
 
