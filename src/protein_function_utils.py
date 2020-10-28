@@ -11,6 +11,7 @@ import pickle
 import sys
 
 import DTI_data_preparation
+import PPI_utils
 
 
 class ProteinFunctionDTIDataBuilder:
@@ -75,7 +76,10 @@ class ProteinFunctionDTIDataBuilder:
         phenotype_model = phenotype_model.wv
 
         #@TODO remove this after usage
-        self.protein_list = np.array([prot for prot in set(uberon_model.vocab.keys()) & set(GO_model.vocab.keys()) & set(phenotype_model.vocab.keys()) if '9606' in prot])
+        dti_graph = DTI_data_preparation.get_human_DTI_graph()
+        PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+        self.protein_list = np.array([prot for prot in set(uberon_model.vocab.keys()) & set(GO_model.vocab.keys()) & set(phenotype_model.vocab.keys()) & set(dti_graph.nodes()) & set(PPI_graph.nodes())])
+
         print('New prots amount:', len(self.protein_list))
 
         uberon_embeddings = []
