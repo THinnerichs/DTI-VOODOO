@@ -485,7 +485,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
 
-        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, -1, 1)
+        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, 1, -1)
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
         # drug_feature = self.dropout(drug_feature)
