@@ -41,7 +41,7 @@ class HPODTIDataBuilder:
 
         dti_graph = DTI_data_preparation.get_human_DTI_graph()
         PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
-        self.protein_list = np.array(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list)) )
+        self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
