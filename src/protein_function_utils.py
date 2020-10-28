@@ -74,6 +74,10 @@ class ProteinFunctionDTIDataBuilder:
         GO_model = GO_model.wv
         phenotype_model = phenotype_model.wv
 
+        #@TODO remove this after usage
+        self.protein_list = np.array([prot for prot in set(uberon_model.vocab.keys()) & set(GO_model.vocab.keys()) & set(phenotype_model.vocab.keys()) if '9606' in prot])
+        print('New prots amount:', len(self.protein_list))
+
         uberon_embeddings = []
         GO_embeddings = []
         phenotype_embeddings = []
