@@ -15,6 +15,7 @@ import torch.nn as nn
 import torch.utils.data as data
 
 import DTI_data_preparation
+import PPI_utils
 import PhenomeNET_DL2vec_utils
 from molecular_utils import train, predicting
 import dti_utils
@@ -32,8 +33,16 @@ class HPODTIDataBuilder:
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
-        # GO_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='GO')
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
+
+        # get protein lists for each ontology
+        uberon_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='uberon')
+        GO_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='GO')
+        MP_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='MP')
+
+        dti_graph = DTI_data_preparation.get_human_DTI_graph()
+        PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+        self.protein_list = np.array(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list)) )
+        # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -115,9 +124,18 @@ class HPODTIDataBuilder:
             # organism, protein_id = protein.strip().split('.')
             protein_id = protein
 
-            uberon_embeddings.append(uberon_model[protein_id])
-            GO_embeddings.append(GO_model[protein_id])
-            MP_embeddings.append(MP_model[protein_id])
+            if protein_id in uberon_model.keys():
+                uberon_embeddings.append(uberon_model[protein_id])
+            else:
+                uberon_embeddings.append(torch.zeros((200)))
+            if protein_id in GO_model.keys():
+                GO_embeddings.append(GO_model[protein_id])
+            else:
+                GO_embeddings.append(torch.zeros((200)))
+            if protein_id in MP_model.keys():
+                MP_embeddings.append(MP_model[protein_id])
+            else:
+                GO_embeddings.append(torch.zeros((200)))
 
         for drug_id in self.drug_list:
             drug_embeddings.append((drug_model[drug_id]))
