@@ -3,6 +3,8 @@ import math
 from sklearn.model_selection import KFold
 from sklearn import metrics
 
+import gensim
+
 from tqdm import tqdm
 import argparse
 import sys
@@ -13,6 +15,7 @@ import torch.nn as nn
 import torch.utils.data as data
 
 import DTI_data_preparation
+import PhenomeNET_DL2vec_utils
 from molecular_utils import train, predicting
 import dti_utils
 
@@ -29,7 +32,8 @@ class HPODTIDataBuilder:
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())[:config.num_proteins]
+        # GO_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='GO')
+        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -84,6 +88,47 @@ class HPODTIDataBuilder:
 
         print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
+        DL2vec_path_prefix = '../data/PhenomeNET_data/'
+
+        drug_model_filename = DL2vec_path_prefix + 'drug_embedding_model'
+        uberon_model_filename = DL2vec_path_prefix + 'uberon_embedding_model'
+        GO_model_filename = DL2vec_path_prefix + 'GO_embedding_model'
+        MP_model_filename = DL2vec_path_prefix + 'MP_embedding_model'
+
+        # load models
+        drug_model = gensim.models.Word2Vec.load(drug_model_filename)
+        uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
+        GO_model = gensim.models.Word2Vec.load(GO_model_filename)
+        MP_model = gensim.models.Word2Vec.load(MP_model_filename)
+
+        # Build wordvector dicts
+        drug_model = drug_model.wv
+        uberon_model = uberon_model.wv
+        GO_model = GO_model.wv
+        MP_model = MP_model.wv
+
+        drug_embeddings = []
+        uberon_embeddings = []
+        GO_embeddings = []
+        MP_embeddings = []
+        for protein in self.protein_list:
+            # organism, protein_id = protein.strip().split('.')
+            protein_id = protein
+
+            uberon_embeddings.append(uberon_model[protein_id])
+            GO_embeddings.append(GO_model[protein_id])
+            MP_embeddings.append(MP_model[protein_id])
+
+        for drug_id in self.drug_list:
+            drug_embeddings.append((drug_model[drug_id]))
+
+        self.drug_embeddings = torch.Tensor(drug_embeddings)
+        self.uberon_embeddings = torch.Tensor(uberon_embeddings)
+        self.GO_embeddings = torch.Tensor(GO_embeddings)
+        self.MP_embeddings = torch.Tensor(MP_embeddings)
+
+        self.protein_embeddings = torch.cat([self.uberon_embeddings, self.GO_embeddings, self.MP_embeddings], dim=1)
+
         print("Finished.\n")
 
     def get(self, indices):
@@ -101,8 +146,8 @@ class HPODTIDataBuilder:
 
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
-            drug_feature = torch.tensor(self.drug_features[drug_index, :])
-            protein_feature = torch.tensor(self.protein_features[protein_index, :])
+            drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
+            protein_feature = torch.tensor(self.protein_embeddings[protein_index, :])
 
             # additional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
@@ -136,7 +181,7 @@ class HPOPredNet(nn.Module):
     def __init__(self):
         super(HPOPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(2048, 128)
+        self.fc1 = nn.Linear(800, 128)
         self.fc2 = nn.Linear(128, 128)
         self.fc3 = nn.Linear(128, 128)
         self.fc4 = nn.Linear(128, 128)
@@ -149,7 +194,7 @@ class HPOPredNet(nn.Module):
 
         # siamese network approach
         self.model = nn.Sequential(
-            nn.Linear(1024, 256),
+            nn.Linear(200, 256),
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
@@ -161,7 +206,7 @@ class HPOPredNet(nn.Module):
             # nn.Sigmoid()
         )
         self.model2 = nn.Sequential(
-            nn.Linear(1024, 256),
+            nn.Linear(600, 256),
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
@@ -189,8 +234,8 @@ class HPOPredNet(nn.Module):
         return x
         '''
 
-        p1 = self.model(x[:,:1024]).view(-1, 1, 100)
-        d1 = self.model2(x[:,1024:]).view(-1, 100, 1)
+        p1 = self.model(x[:,:200]).view(-1, 1, 100)
+        d1 = self.model2(x[:,200:]).view(-1, 100, 1)
 
         s1 = torch.bmm(p1, d1)
 

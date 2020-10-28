@@ -161,7 +161,9 @@ def get_drug_list(mode=''):
     # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
     # drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
     # drug_list = HPO_GO_similarity.get_HPO_SIDER_drug_list()
+
     drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
+
     return np.array([drug for drug in drug_list if drug in human_DTI_graph.nodes()])
 
 
