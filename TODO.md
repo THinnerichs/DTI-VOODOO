@@ -179,12 +179,13 @@ What I have done since last meeting:
   
 - apply weighting with respect to node degree?
 
-- Just test on the their non-PPI data
-- build own DL2vec stuff on Ashrafs Machine
-  - test plain predictor
+- Just test on the their non-PPI data -> too few proteins in non-PPI data
 - check graph data building whether its correct
   - toy example with 3 nodes and some random features
   - apply empty model
   - check what happens :)
+- normalize PPI features by max and not by num\_neighbours 
+
+- predict PPIs by DL2vec embeddings (GO) as sanity test for embeddings
 
 

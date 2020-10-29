@@ -469,8 +469,6 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.sigmoid = torch.nn.Sigmoid()
         self.dropout = torch.nn.Dropout(dropout)
 
-        self.sim = torch.nn.CosineSimilarity(dim=2)
-
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
@@ -485,7 +483,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
 
-        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, 1, -1)
+        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, -1, 1)
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
         # drug_feature = self.dropout(drug_feature)
@@ -493,13 +491,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # drug_feature = drug_feature.view(batch_size, 1, -1)
 
 
-        # cat_feature = torch.bmm(PPI_x, drug_feature)
+        cat_feature = torch.bmm(PPI_x, drug_feature)
 
-        drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size, self.num_prots,-1)
+        # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1).unsqueeze(-2)
         # PPI_x = PPI_x.unsqueeze(-1)
 
         # cat_feature = torch.bmm(drug_feature, PPI_x)
-        cat_feature = self.sim(PPI_x, drug_feature)
 
         cat_feature = cat_feature.view((-1, self.num_prots))
 
