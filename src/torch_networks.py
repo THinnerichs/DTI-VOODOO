@@ -461,7 +461,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.drug_linear2 = torch.nn.Linear(64, 64)
         self.drug_linear3 = torch.nn.Linear(64, 32)
 
-        self.overall_linear1 = torch.nn.Linear(16, 16)
+        self.overall_linear1 = torch.nn.Linear(32, 32)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
@@ -477,7 +477,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
         PPI_x = F.elu(self.linear1(PPI_x))
+        PPI_x = self.dropout(PPI_x)
         PPI_x = F.elu(self.linear2(PPI_x))
+        PPI_x = self.dropout(PPI_x)
         PPI_x = F.elu(self.linear3(PPI_x))
 
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
@@ -485,7 +487,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
 
-        drug_feature = F.elu(self.drug_linear1(drug_feature)).view(batch_size, -1, 1)
+        drug_feature = F.elu(self.drug_linear1(drug_feature))
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.elu(self.drug_linear2(drug_feature))
+        drug_feature = self.dropout(drug_feature)
+        drug_feature = F.elu(self.drug_linear3(drug_feature)).view(batch_size, -1, 1)
+
         # drug_feature = self.dropout(drug_feature)
         # drug_feature = F.leaky_relu(self.drug_linear2(drug_feature), negative_slope=0.2)
         # drug_feature = self.dropout(drug_feature)
