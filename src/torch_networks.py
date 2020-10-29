@@ -442,9 +442,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(16, 16, cached=False, add_self_loops=True)
-            self.conv2 = nn.GCNConv(16, 16, cached=False,  add_self_loops=True)
-            self.conv3 = nn.GCNConv(32, 32, cached=False, normalize=False, add_self_loops=True)
+            self.conv1 = nn.GCNConv(32, 32, cached=False, add_self_loops=True)
+            self.conv2 = nn.GCNConv(32, 32, cached=False,  add_self_loops=True)
+            self.conv3 = nn.GCNConv(32, 32, cached=False, add_self_loops=True)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -453,11 +453,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_1 = nn.BatchNorm(4 * config.heads)
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
-        self.linear1 = torch.nn.Linear(num_features, 16)
-        self.linear2 = torch.nn.Linear(64, 32)
-        self.linear3 = torch.nn.Linear(32, 32)
+        self.linear1 = torch.nn.Linear(num_features, 64)
+        self.linear2 = torch.nn.Linear(64, 64)
+        self.linear3 = torch.nn.Linear(64, 32)
 
-        self.drug_linear1 = torch.nn.Linear(num_features, 16)
+        self.drug_linear1 = torch.nn.Linear(num_features, 64)
         self.drug_linear2 = torch.nn.Linear(64, 64)
         self.drug_linear3 = torch.nn.Linear(64, 32)
 
@@ -477,6 +477,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
         PPI_x = F.elu(self.linear1(PPI_x))
+        PPI_x = F.elu(self.linear2(PPI_x))
+        PPI_x = F.elu(self.linear3(PPI_x))
 
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
