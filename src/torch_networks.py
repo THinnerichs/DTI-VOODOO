@@ -493,7 +493,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
-        PPI_x = self.sigmoid(self.conv3(PPI_x, PPI_edge_index))
+        PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         # PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
 
