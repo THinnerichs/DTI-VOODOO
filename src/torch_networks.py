@@ -447,7 +447,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv3 = nn.GCNConv(8, 1, cached=False, add_self_loops=True)
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(1, 2, heads=8, dropout=0.2)
-            self.conv2 = nn.GATConv(8*2, 2, heads=8, dropout=0.2)
+            # self.conv2 = nn.GATConv(4*2, 2, heads=4, dropout=0.2)
             self.conv3 = nn.GATConv(8*2, 1, heads=1)
         else:
             print("No valid model selected.")
@@ -500,7 +500,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
         PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
+        # PPI_x = F.elu(self.conv2(PPI_x, PPI_edge_index))
         PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         # PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
