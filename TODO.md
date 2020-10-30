@@ -181,10 +181,9 @@ What I have done since last meeting:
 
 - Just test on the their non-PPI data -> too few proteins in non-PPI data
 - check graph data building whether its correct
-  - toy example with 3 nodes and some random features
-  - apply empty model
-  - check what happens :)
-- normalize PPI features by max and not by num\_neighbours 
+
+- protein union instead of intersection
+- all three embeddings instead of just one
 
 - predict PPIs by DL2vec embeddings (GO) as sanity test for embeddings
 
