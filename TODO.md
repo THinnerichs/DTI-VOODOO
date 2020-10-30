@@ -187,4 +187,6 @@ What I have done since last meeting:
 
 - predict PPIs by DL2vec embeddings (GO) as sanity test for embeddings
 
-
+Results:
+- Flat intersec:  81.0 %AUROC
+- Flat union:     83.1 %AUROC
