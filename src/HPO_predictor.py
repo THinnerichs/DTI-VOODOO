@@ -165,7 +165,7 @@ class HPODTIDataBuilder:
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
             drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
-            protein_feature = torch.tensor(self.protein_features[protein_index, :])
+            protein_feature = torch.tensor(self.protein_embeddings[protein_index, :])
 
             # additional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])

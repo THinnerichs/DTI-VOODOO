@@ -2,11 +2,13 @@ import numpy as np
 from math import sqrt, log2
 from scipy import stats
 
+import gensim
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from torch_geometric.data import Dataset, Data, InMemoryDataset
+from torch_geometric.data import Dataset, Data
 
 from tqdm import tqdm
 import sys
@@ -508,11 +510,10 @@ class QuickProtFuncDTINetworkData:
 
         # self.feature_matrix =    self.feature_matrix/self.feature_matrix.max()
 
-        # un-comment for DL2vec features
         self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
         self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
-        self.num_PPI_features = self.protein_features.shape[1]# +100
+        self.num_PPI_features = 200# +100
 
         # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
@@ -540,6 +541,56 @@ class QuickProtFuncDTINetworkData:
                 diff = (1 - self.train_mask) * self.feature_matrix[drug_index, :] - (1 - self.train_mask) * self.y_dti_data[drug_index, :]
                 print(drug_index, self.feature_matrix[drug_index, :].sum(), self.y_dti_data[drug_index, :].sum(), np.linalg.norm(diff), file=f)
         """
+
+        DL2vec_path_prefix = '../data/PhenomeNET_data/'
+
+        drug_model_filename = DL2vec_path_prefix + 'drug_embedding_model'
+        uberon_model_filename = DL2vec_path_prefix + 'uberon_embedding_model'
+        GO_model_filename = DL2vec_path_prefix + 'GO_embedding_model'
+        MP_model_filename = DL2vec_path_prefix + 'MP_embedding_model'
+
+        # load models
+        drug_model = gensim.models.Word2Vec.load(drug_model_filename)
+        uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
+        GO_model = gensim.models.Word2Vec.load(GO_model_filename)
+        MP_model = gensim.models.Word2Vec.load(MP_model_filename)
+
+        # Build wordvector dicts
+        drug_model = drug_model.wv
+        uberon_model = uberon_model.wv
+        GO_model = GO_model.wv
+        MP_model = MP_model.wv
+
+        drug_embeddings = []
+        uberon_embeddings = []
+        GO_embeddings = []
+        MP_embeddings = []
+        for protein in self.protein_list:
+            # organism, protein_id = protein.strip().split('.')
+            protein_id = protein
+
+            if protein_id in uberon_model.vocab.keys():
+                uberon_embeddings.append(uberon_model[protein_id])
+            else:
+                uberon_embeddings.append(torch.zeros((200)))
+            if protein_id in GO_model.vocab.keys():
+                GO_embeddings.append(GO_model[protein_id])
+            else:
+                GO_embeddings.append(torch.zeros((200)))
+            if protein_id in MP_model.vocab.keys():
+                MP_embeddings.append(MP_model[protein_id])
+            else:
+                GO_embeddings.append(torch.zeros((200)))
+
+        for drug_id in self.drug_list:
+            drug_embeddings.append((drug_model[drug_id]))
+
+        self.drug_embeddings = torch.Tensor(drug_embeddings)
+        self.uberon_embeddings = torch.Tensor(uberon_embeddings)
+        self.GO_embeddings = torch.Tensor(GO_embeddings)
+        self.MP_embeddings = torch.Tensor(MP_embeddings)
+
+        self.protein_embeddings = torch.cat([self.uberon_embeddings, self.GO_embeddings, self.MP_embeddings], dim=1)
 
     def get(self):
         data_list = []
@@ -577,12 +628,12 @@ class QuickProtFuncDTINetworkData:
             # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
 
-            full_PPI_graph = Data(x=feature_array,
+            full_PPI_graph = Data(x=self.protein_embeddings,
                                   edge_index=self.edge_list,
                                   edge_attr=self.edge_attr,
                                   y=y)
 
-            full_PPI_graph.drug_feature = drug_feature
+            full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
