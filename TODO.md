@@ -183,12 +183,20 @@ What I have done since last meeting:
 - check graph data building whether its correct
 
 - protein union instead of intersection
-- all three embeddings instead of just one
 
 - predict PPIs by DL2vec embeddings (GO) as sanity test for embeddings
+
+## A new hope (27.10.2020)
+- test GCN with different approaches:
+  - pre similarity
+  - post similarity
+  - plain GCN
+  - different layer types
+  - different intermediate embedding sizes
+
 
 Results:
 - Flat distr intersec:  81.0 %AUROC
 - Flat distr union:     83.1 %AUROC
 - Flat combi intersec:  80.1 %AUROC
--
+- 
