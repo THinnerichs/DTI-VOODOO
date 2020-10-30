@@ -16,7 +16,9 @@ import pickle
 
 import DTI_data_preparation
 from PPI_utils import get_PPI_graph
+import PhenomeNET_DL2vec_utils
 from protein_function_utils import ProteinFunctionDTIDataBuilder
+
 
 
 
@@ -400,12 +402,20 @@ class QuickProtFuncDTINetworkData:
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
+        # get protein lists for each ontology
+        uberon_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='uberon')
+        GO_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='GO')
+        MP_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='MP')
+
+        dti_graph = DTI_data_preparation.get_human_DTI_graph()
+        self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
+        self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+
+        # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
         print("Loading PPI graph ...")
-        self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
@@ -750,8 +760,6 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         # my implementation of BCELoss
         output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
-
-        print('output.sum()', output.sum())
 
         # pos_weight = neg_to_pos_ratio
         # neg_weight = 1
