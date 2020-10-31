@@ -199,4 +199,4 @@ Results:
 - Flat distr intersec:  81.0 %AUROC
 - Flat distr union:     83.1 %AUROC
 - Flat combi intersec:  80.1 %AUROC
-- 
+- GCN distr union:      78.3 %AUROC
