@@ -20,7 +20,7 @@ class MolecularDTIDataBuilder:
         print('Loading data...')
         self.drug_list = np.array(DTI_data_preparation.get_drug_list())
         print(len(self.drug_list), ' drugs present.')
-        self.protein_list = np.array(DTI_data_preparation.get_human_proteins())[:num_proteins]
+        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())# [:num_proteins]
         print(len(self.protein_list), ' proteins present.')
 
         # build drug features
@@ -38,8 +38,7 @@ class MolecularDTIDataBuilder:
         self.protein_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
-        y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
-        self.y_dti_data = np.transpose(y_dti_data)
+        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
 
         # calculate dimenions of data
         self.num_proteins = len(self.protein_list)
