@@ -458,12 +458,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.bn_2 = nn.BatchNorm(16 * config.heads)
 
         self.linear1 = torch.nn.Linear(600, 256)
-        self.linear2 = torch.nn.Linear(256, 100)
-        self.linear3 = torch.nn.Linear(64, 32)
+        self.linear2 = torch.nn.Linear(256, 128)
+        self.linear3 = torch.nn.Linear(128, 100)
 
         self.drug_linear1 = torch.nn.Linear(200, 256)
-        self.drug_linear2 = torch.nn.Linear(256, 100)
-        self.drug_linear3 = torch.nn.Linear(64, 32)
+        self.drug_linear2 = torch.nn.Linear(256, 128)
+        self.drug_linear3 = torch.nn.Linear(128, 100)
 
         self.overall_linear1 = torch.nn.Linear(32, 32)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
@@ -487,6 +487,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x = self.dropout(PPI_x)
         PPI_x = self.activation(PPI_x)
         PPI_x = self.linear2(PPI_x)
+
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
 
@@ -521,7 +522,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         cat_feature = PPI_x.view((-1, self.num_prots))
 
-        return torch.sigmoid(cat_feature)
+        # return torch.sigmoid(cat_feature)
+        return cat_feature
 
         '''
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr

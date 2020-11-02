@@ -193,6 +193,7 @@ What I have done since last meeting:
   - plain GCN
   - different layer types
   - different intermediate embedding sizes
+- save model from HPO pred and run introduce it to GCN stuff 
 
 
 Results:
@@ -200,3 +201,5 @@ Results:
 - Flat distr union:     83.1 %AUROC
 - Flat combi intersec:  80.1 %AUROC
 - GCN distr union:      78.3 %AUROC
+
+
