@@ -802,7 +802,7 @@ def quick_predicting(model, device, loader):
     with torch.no_grad():
         for data in loader:
             # data = data.to(device)
-            output = model(data)
+            output = torch.sigmoid(model(data))
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data]))
             total_labels = torch.cat((total_labels.view(-1,1), y.view(-1, 1).float().cpu()), 0)
