@@ -178,14 +178,14 @@ def molecular_predictor(config):
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
-                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
+                          metrics.matthews_corrcoef(train_labels, train_predictions))#TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
-                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
+                          metrics.matthews_corrcoef(test_labels, test_predictions))#TODO, file=f)
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
@@ -318,14 +318,14 @@ def drug_split_molecular_predictor(config):
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
-                          metrics.matthews_corrcoef(train_labels, train_predictions))#TODO, file=f)
+                          metrics.matthews_corrcoef(train_labels, train_predictions), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
-                          metrics.matthews_corrcoef(test_labels, test_predictions))#TODO, file=f)
+                          metrics.matthews_corrcoef(test_labels, test_predictions), file=f)
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
