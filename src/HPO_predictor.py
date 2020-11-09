@@ -254,8 +254,8 @@ class HPOPredNet(nn.Module):
         return x
         '''
 
-        p1 = self.model(x[:,:200]).view(-1, 100)
-        d1 = self.model2(x[:,200:]).view(-1, 100)
+        p1 = self.model(x[:,:200]).view(-1, 200)
+        d1 = self.model2(x[:,200:]).view(-1, 200)
 
         s1 = self.sim(p1, d1)
 
