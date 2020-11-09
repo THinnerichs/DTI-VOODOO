@@ -333,6 +333,7 @@ def siamese_drug_protein_network(config):
         sys.stdout.flush()
 
         ret = None
+        best_AUROC = 0
         for epoch in range(1, config.num_epochs + 1):
             loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
             print('Train Loss:', loss)
@@ -368,6 +369,11 @@ def siamese_drug_protein_network(config):
                               best_test_ci, model_st)
                     else:
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
+
+                    test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
+                    if test_AUROC > best_AUROC:
+                        state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
+                        torch.save(model.state_dict(), state_dict_path)
             sys.stdout.flush()
 
         return

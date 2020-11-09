@@ -195,11 +195,12 @@ What I have done since last meeting:
   - different intermediate embedding sizes
 - save model from HPO pred and run introduce it to GCN stuff 
 
+- discrepancy between len(protein\_list) on kw60407 and glogin!!
+  - size of dti graph
+- fix molecular predictor issue
 
 Results:
 - Flat distr intersec:  81.0 %AUROC
 - Flat distr union:     83.1 %AUROC
 - Flat combi intersec:  80.1 %AUROC
 - GCN distr union:      78.3 %AUROC
-
-

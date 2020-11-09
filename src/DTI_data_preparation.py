@@ -80,7 +80,6 @@ def write_human_protein_list(min_score=700,
                              mode=''):
     human_DTI_graph = get_human_DTI_graph(mode=mode)
     PPI_graph = PPI_utils.get_PPI_graph(min_score=min_score)
-    dti_graph = DTI_data_preparation.get_human_DTI_graph()
 
     print("Gathering proteins ...")
     protein_list = []
