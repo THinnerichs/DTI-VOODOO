@@ -7,6 +7,7 @@ import torch_geometric.nn as nn
 from torch_geometric.transforms import add_self_loops
 
 from protein_function_utils import ProteinFunctionPredNet
+from HPO_predictor import HPOPredNet
 
 
 class TemplateSimpleNet(torch.nn.Module):
@@ -465,6 +466,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.drug_linear2 = torch.nn.Linear(256, 128)
         self.drug_linear3 = torch.nn.Linear(128, 100)
 
+        state_dict_path = '../models/HPO_models/hpo_pred_fold_' + str(fold) + '_model'
+        self.HPO_model = HPOPredNet()
+        self.HPO_model.load_state_dict(torch.load(state_dict_path))
+
         self.overall_linear1 = torch.nn.Linear(32, 32)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
@@ -483,19 +488,13 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         batch_size = drug_feature.size(0)
 
-        PPI_x = self.linear1(PPI_x)
-        PPI_x = self.dropout(PPI_x)
-        PPI_x = self.activation(PPI_x)
-        PPI_x = self.linear2(PPI_x)
+
+        PPI_x = self.HPO_model.model2(PPI_x).view(-1,200)
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
 
-
-        drug_feature = self.drug_linear1(drug_feature)
-        drug_feature = self.dropout(drug_feature)
-        drug_feature = self.activation(drug_feature)
-        drug_feature = self.drug_linear2(drug_feature).view(batch_size, 1, -1)
+        drug_feature = self.HPO_model.model1(drug_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
