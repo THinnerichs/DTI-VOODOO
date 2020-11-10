@@ -19,7 +19,7 @@ import PhenomeNET_DL2vec_utils
 
 
 
-def write_human_DTI_graph(min_score=0,
+def write_human_DTI_graph(min_score=700,
                           mode=''):
     filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
     dti_graph = nx.Graph()
