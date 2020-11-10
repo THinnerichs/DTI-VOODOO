@@ -51,7 +51,7 @@ class HPODTIDataBuilder:
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
-        self.num_proteins = len(self.PPI_graph.nodes())
+        self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
 
 
