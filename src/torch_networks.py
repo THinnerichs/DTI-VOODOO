@@ -497,9 +497,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
 
         PPI_x = self.HPO_model.model2(PPI_x)
-        print('PPI_x.size()', PPI_x.size())
         PPI_x = PPI_x.view(-1,200)
-        print('PPI_x1.size()', PPI_x.size())
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
