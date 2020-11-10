@@ -455,26 +455,33 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             sys.stdout.flush()
             raise ValueError
 
-        self.bn_1 = nn.BatchNorm(4 * config.heads)
-        self.bn_2 = nn.BatchNorm(16 * config.heads)
+        # self.bn_1 = nn.BatchNorm(4 * config.heads)
+        # self.bn_2 = nn.BatchNorm(16 * config.heads)
 
-        self.linear1 = torch.nn.Linear(600, 256)
-        self.linear2 = torch.nn.Linear(256, 128)
-        self.linear3 = torch.nn.Linear(128, 100)
+        # self.linear1 = torch.nn.Linear(600, 256)
+        # self.linear2 = torch.nn.Linear(256, 128)
+        # self.linear3 = torch.nn.Linear(128, 100)
 
-        self.drug_linear1 = torch.nn.Linear(200, 256)
-        self.drug_linear2 = torch.nn.Linear(256, 128)
-        self.drug_linear3 = torch.nn.Linear(128, 100)
+        # self.drug_linear1 = torch.nn.Linear(200, 256)
+        # self.drug_linear2 = torch.nn.Linear(256, 128)
+        # self.drug_linear3 = torch.nn.Linear(128, 100)
 
         state_dict_path = '../models/HPO_models/hpo_pred_fold_' + str(config.fold) + '_model'
         self.HPO_model = HPOPredNet()
-        self.HPO_model.load_state_dict(torch.load(state_dict_path))
+        state_dict = torch.load(state_dict_path)
+        from collections import OrderedDict
+        new_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            name = k[7:]
+            new_state_dict[name] = v
+        self.HPO_model.load_state_dict(new_state_dict)
+        self.HPO_model.eval()
 
-        self.overall_linear1 = torch.nn.Linear(32, 32)
+        # self.overall_linear1 = torch.nn.Linear(32, 32)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
-        self.relu = torch.nn.ReLU()
+        # self.relu = torch.nn.ReLU()
         self.activation = torch.nn.LeakyReLU(0.2)
         self.sigmoid = torch.nn.Sigmoid()
         self.dropout = torch.nn.Dropout(dropout)
