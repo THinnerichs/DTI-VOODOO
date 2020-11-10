@@ -501,7 +501,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
 
-        drug_feature = self.HPO_model.model1(drug_feature).view(batch_size, 1, -1)
+        drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
