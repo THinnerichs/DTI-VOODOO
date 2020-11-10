@@ -443,8 +443,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(1, 1, cached=False, add_self_loops=True)
-            self.conv2 = nn.GCNConv(1, 1, cached=False,  add_self_loops=True)
+            self.conv1 = nn.GCNConv(200, 200, cached=False, add_self_loops=True)
+            self.conv2 = nn.GCNConv(200, 200, cached=False,  add_self_loops=True)
             self.conv3 = nn.GCNConv(1, 1, cached=False, add_self_loops=True)
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(1, 2, heads=8, dropout=0.2)
@@ -496,7 +496,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
 
-        PPI_x = self.HPO_model.model2(PPI_x).view(-1,200)
+        PPI_x = self.HPO_model.model2(PPI_x)
+        print('PPI_x.size()', PPI_x.size())
+        PPI_x = PPI_x.view(-1,200)
+        print('PPI_x1.size()', PPI_x.size())
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
@@ -504,10 +507,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
-        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
-        PPI_x = self.conv1(PPI_x, PPI_edge_index)
+        PPI_x = self.activation(self.conv1(PPI_x, PPI_edge_index))
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
+
+        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
         # PPI_x = F.elu(self.overall_linear1(PPI_x)).view(batch_size, self.num_prots, -1)
