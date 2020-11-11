@@ -451,7 +451,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv2 = nn.GATConv(4*2, 1, heads=1, dropout=0.2)
             # self.conv3 = nn.GATConv(8*2, 1, heads=1)
         elif 'APPNP' in conv_method:
-            self.conv1 = nn.APPNP(K=20, alpha=0.15)
+            self.conv1 = nn.APPNP(K=50, alpha=0.15)
         else:
             print("No valid model selected.")
             sys.stdout.flush()
@@ -530,7 +530,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # cat_feature = torch.bmm(drug_feature, PPI_x)
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
-        
+
         cat_feature = PPI_x.view((-1, self.num_prots))
 
         # return torch.sigmoid(cat_feature)
