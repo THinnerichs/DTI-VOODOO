@@ -507,7 +507,6 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
-        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         # PPI_x = self.conv2(PPI_x, PPI_edge_index)
@@ -530,6 +529,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # cat_feature = torch.bmm(drug_feature, PPI_x)
 
+        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
+        
         cat_feature = PPI_x.view((-1, self.num_prots))
 
         # return torch.sigmoid(cat_feature)
