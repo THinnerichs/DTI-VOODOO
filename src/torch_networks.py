@@ -509,8 +509,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
-        PPI_x = self.conv1(PPI_x, PPI_edge_index)
-        # PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
+        PPI_x = self.conv2(PPI_x, PPI_edge_index)
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
