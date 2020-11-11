@@ -488,8 +488,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.sim = torch.nn.CosineSimilarity(dim=1)
 
-    def train(self):
-        super(QuickTemplateNodeFeatureNet, self).train()
+    def train(self, **kwargs):
+        super(QuickTemplateNodeFeatureNet, self).train(**kwargs)
         self.HPO_model.eval()
 
 
