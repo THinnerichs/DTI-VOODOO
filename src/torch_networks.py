@@ -488,6 +488,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.sim = torch.nn.CosineSimilarity(dim=1)
 
+    def train(self):
+        super(QuickTemplateNodeFeatureNet, self).train()
+        self.HPO_model.eval()
+
+
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
