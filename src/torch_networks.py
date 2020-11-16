@@ -445,6 +445,15 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(1, 8, cached=True, improved=True)
             self.conv2 = nn.GCNConv(8, 1, cached=True, improved=True)
+
+            weight1 = torch.zeros((1,8))
+            weight2 = torch.zeros((8,1))
+            weight1[0,0] = 1
+            weight2[0,0] = 1
+
+            self.conv1.weight = torch.nn.Parameter(weight1)
+            self.conv2.weight = torch.nn.Parameter(weight2)
+
             # self.conv3 = nn.GCNConv(1, 1, cached=False, add_self_loops=True)
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(1, 2, heads=4, dropout=0.2)
@@ -509,8 +518,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
-        PPI_x = self.activation(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        PPI_x = self.activation(self.conv1(PPI_x, PPI_edge_index, edge_attr))
+        PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
