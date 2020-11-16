@@ -204,3 +204,23 @@ Results:
 - Flat distr union:     83.1 %AUROC
 - Flat combi intersec:  80.1 %AUROC
 - GCN distr union:      78.3 %AUROC
+
+Discussion:
+- Sigmoid -> GCN -> Sigmoid 
+  - output GCNConv weight for this issue
+  - remove last Sigmoid
+  - reread GCN paper
+
+
+## TODO:
+
+- utilize edge weight
+- test with edge degree only
+  - HPO-pred
+- check parameters of GCN layer
+  - cached=True
+  - normalization=False
+  - improved=True
+- manually test effect of GCN layer on PPI\_graph 
+  - with normalization=True
+  - manual normalization

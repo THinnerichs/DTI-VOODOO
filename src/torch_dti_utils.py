@@ -422,6 +422,9 @@ class QuickProtFuncDTINetworkData:
         self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
 
+        config.num_drugs = self.num_drugs
+        config.num_proteins = self.num_proteins
+
 
     def build_data(self, config):
 
@@ -439,8 +442,8 @@ class QuickProtFuncDTINetworkData:
         self.num_PPI_features = 1
 
         print('Building edge feature attributes ...')
-        forward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
-        backward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
+        forward_edge_feature_list = [self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
+        backward_edge_feature_list = [self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
         self.edge_attr = torch.tensor(forward_edge_feature_list + backward_edge_feature_list, dtype=torch.float)# .view(-1,1)
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
@@ -761,11 +764,12 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
         # my implementation of BCELoss
         output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
 
-        # pos_weight = neg_to_pos_ratio
-        # neg_weight = 1
-        # loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
+        pos_weight = neg_to_pos_ratio
+        neg_weight = 1
+        loss = BCELoss_ClassWeights(input=output[:, train_mask==1].view(-1,1), target=y[:,train_mask==1].view(-1,1), pos_weight=pos_weight)
+        loss = loss/(config.num_drugs*config.num_proteins)
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
+        # loss = nn.BCEWithLogitsLoss(pos_weight=pos_weights.to(device))(input=output[:, train_mask==1].view(-1, 1), target=y[:, train_mask==1].view(-1, 1),)
         # loss = nn.BCELoss(reduction='mean')(input=output[help_mask==1].view(-1, 1), target=y[help_mask==1].view(-1, 1))
         return_loss += loss
         loss.backward()
