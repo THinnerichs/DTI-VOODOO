@@ -170,7 +170,7 @@ class HPODTIDataBuilder:
             # additional
             degree_feature = torch.tensor(self.degree_features[protein_index, :])
 
-            data_list.append((torch.cat((drug_feature, protein_feature), 0).float(), y))
+            data_list.append((torch.cat((drug_feature, protein_feature, degree_feature), 0).float(), y))
 
         return data_list
 
@@ -224,7 +224,7 @@ class HPOPredNet(nn.Module):
             # nn.Sigmoid()
         )
         self.model2 = nn.Sequential(
-            nn.Linear(600, 256),
+            nn.Linear(700, 256),
             nn.Dropout(0.2),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
@@ -371,7 +371,7 @@ def siamese_drug_protein_network(config):
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
 
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
-                    if test_AUROC > best_AUROC:
+                    if False and test_AUROC > best_AUROC:
                         state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
                         torch.save(model.state_dict(), state_dict_path)
             sys.stdout.flush()
