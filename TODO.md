@@ -224,3 +224,4 @@ Discussion:
 - manually test effect of GCN layer on PPI\_graph 
   - with normalization=True
   - manual normalization
+- increase PPI graph min score

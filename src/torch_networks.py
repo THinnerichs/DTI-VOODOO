@@ -486,7 +486,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             name = k[7:]
             new_state_dict[name] = v
         self.HPO_model.load_state_dict(new_state_dict)
-        self.HPO_model.eval()
+
+        for param in self.HPO_model.parameters():
+            param.requires_grad = False
 
         # self.overall_linear1 = torch.nn.Linear(32, 32)
         # self.overall_linear2 = torch.nn.Linear(32, 16)
@@ -498,6 +500,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.dropout = torch.nn.Dropout(dropout)
 
         self.sim = torch.nn.CosineSimilarity(dim=1)
+        self.eps = 1e-7
 
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
@@ -518,8 +521,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
-        PPI_x = self.activation(self.conv1(PPI_x, PPI_edge_index, edge_attr))
+        PPI_x = self.sigmoid(PPI_x)
+
+        PPI_x = self.conv1(PPI_x, PPI_edge_index, edge_attr)
         PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
+        PPI_x = PPI_x - (PPI_x.min()-self.eps)
+        PPI_x = PPI_x / (PPI_x.max()+self.eps)
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
@@ -543,7 +550,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         cat_feature = PPI_x.view((-1, self.num_prots))
 
         # return torch.sigmoid(cat_feature)
-        return self.sigmoid(cat_feature)
+        return cat_feature
 
         '''
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
