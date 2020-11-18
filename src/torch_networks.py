@@ -443,13 +443,14 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # GCN laye4s
         if 'GCNConv' in conv_method:
-            self.conv1 = nn.GCNConv(1, 8, cached=True, improved=True)
-            self.conv2 = nn.GCNConv(8, 1, cached=True, improved=True)
+            self.conv1 = nn.GCNConv(200, 200, cached=True, improved=True)
+            self.conv2 = nn.GCNConv(200, 200, cached=True, improved=True)
 
-            weight1 = torch.zeros((1,8))
-            weight2 = torch.zeros((8,1))
-            weight1[0,0] = 1
-            weight2[0,0] = 1
+            weight1 = torch.zeros((200,200))
+            weight2 = torch.zeros((200,200))
+            for i in range(200):
+                weight1[i,i] = 1
+                weight2[i,i] = 1
 
             self.conv1.weight = torch.nn.Parameter(weight1)
             self.conv2.weight = torch.nn.Parameter(weight2)
@@ -521,12 +522,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
 
-        PPI_x = self.sigmoid(PPI_x)
-
-        PPI_x = self.conv1(PPI_x, PPI_edge_index, edge_attr)
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_attr))
         PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
-        PPI_x = PPI_x - (PPI_x.min()-self.eps)
-        PPI_x = PPI_x / (PPI_x.max()+self.eps)
+        # PPI_x = PPI_x - (PPI_x.min()-self.eps)
+        # PPI_x = PPI_x / (PPI_x.max()+self.eps)
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
@@ -550,7 +549,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         cat_feature = PPI_x.view((-1, self.num_prots))
 
         # return torch.sigmoid(cat_feature)
-        return cat_feature
+        return self.sigmoid(cat_feature)
 
         '''
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
