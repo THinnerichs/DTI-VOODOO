@@ -215,13 +215,14 @@ Discussion:
 ## TODO:
 
 - utilize edge weight
-- test with edge degree only
-  - HPO-pred
 - check parameters of GCN layer
   - cached=True
   - normalization=False
   - improved=True
 - manually test effect of GCN layer on PPI\_graph 
   - with normalization=True
-  - manual normalization
 - increase PPI graph min score
+
+- use molcular features
+  - pretrain
+  - add to GCN model
