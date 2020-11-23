@@ -462,8 +462,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv3 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
 
         elif 'GATConv' in conv_method:
-            self.conv1 = nn.GATConv(200, 200, heads=4, dropout=0.2)
-            self.conv2 = nn.GATConv(200*4, 200, heads=1, dropout=0.2)
+            self.conv1 = nn.GATConv(200, 200, heads=4, dropout=0.2, add_self_loops=False)
+            self.conv2 = nn.GATConv(200*4, 200, heads=1, dropout=0.2, add_self_loops=False)
             # self.conv3 = nn.GATConv(8*2, 1, heads=1)
         elif 'APPNP' in conv_method:
             self.conv1 = nn.APPNP(K=50, alpha=0.15)
@@ -526,17 +526,17 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
-        # PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_attr))
-        # PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_attr))
+        PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
         # PPI_x = PPI_x*2 -1
         # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
         # PPI_x = self.overall_linear2(PPI_x) + PPI_x
 
-        PPI_x1 = self.conv1(PPI_x, PPI_edge_index, edge_attr)
-        PPI_x2 = self.conv2(PPI_x, PPI_edge_index, edge_attr)
-        PPI_x3 = self.conv3(PPI_x, PPI_edge_index, edge_attr)
-        PPI_x = self.activation(torch.cat([PPI_x1, PPI_x2, PPI_x3], dim=1))
-        PPI_x = self.overall_linear1(PPI_x)
+        # PPI_x1 = self.conv1(PPI_x, PPI_edge_index, edge_attr)
+        # PPI_x2 = self.conv2(PPI_x, PPI_edge_index, edge_attr)
+        # PPI_x3 = self.conv3(PPI_x, PPI_edge_index, edge_attr)
+        # PPI_x = self.activation(torch.cat([PPI_x1, PPI_x2, PPI_x3], dim=1))
+        # PPI_x = self.overall_linear1(PPI_x)
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
