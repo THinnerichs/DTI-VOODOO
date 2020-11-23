@@ -6,22 +6,34 @@ import torch
 import torch.nn as nn
 import torch.utils.data as data
 
-import DTI_data_preparation
-
 import sys
 from tqdm import tqdm
 
+import DTI_data_preparation
+import PhenomeNET_DL2vec_utils
+import PPI_utils
 
 
 
 class MolecularDTIDataBuilder:
     def __init__(self, num_proteins=None, drug_mode='trfm'):
         # super(MolecularDTIData, self).__init__()
-        print('Loading data...')
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
-        print(len(self.drug_list), ' drugs present.')
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())# [:num_proteins]
-        print(len(self.protein_list), ' proteins present.')
+
+        print("Loading data ...")
+        self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+        print(len(self.drug_list), "drugs present")
+
+        # get protein lists for each ontology
+        uberon_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='uberon')
+        GO_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='GO')
+        MP_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='MP')
+
+        dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
+        PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+        self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+        # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
+        print(len(self.protein_list), "proteins present\n")
+
 
         # build drug features
         drug_filename = '../models/drug_representation/' + drug_mode + '.npy'

@@ -25,11 +25,6 @@ class HPODTIDataBuilder:
     def __init__(self, config):
         self.config = config
 
-        # write data first
-        print("Preparing protein data ...")
-        # DTI_data_preparation.write_human_protein_list(min_score=config.PPI_min_score, mode=config.mode)
-        # DTI_data_preparation.write_human_prot_func_protein_list(mode=config.mode)
-
         print("Loading data ...")
         self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
