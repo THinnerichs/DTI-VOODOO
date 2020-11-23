@@ -521,11 +521,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
-        # PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_attr) + PPI_x)
-        # PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr) + PPI_x
+        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index, edge_attr))
+        PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
         # PPI_x = PPI_x*2 -1
-        PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
-        PPI_x = self.overall_linear2(PPI_x) + PPI_x
+        # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
+        # PPI_x = self.overall_linear2(PPI_x) + PPI_x
 
         # PPI_x = self.conv3(PPI_x, PPI_edge_index)
 
