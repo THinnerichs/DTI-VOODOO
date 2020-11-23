@@ -215,14 +215,13 @@ Discussion:
 ## TODO:
 
 - utilize edge weight
-- check parameters of GCN layer
-  - cached=True
-  - normalization=False
-  - improved=True
-- manually test effect of GCN layer on PPI\_graph 
-  - with normalization=True
 - increase PPI graph min score
 
-- use molcular features
+- use molecular features
   - pretrain
   - add to GCN model
+- test other layer types
+- DenseConvolution
+- normalization
+  - Graph norm
+  - batch norm

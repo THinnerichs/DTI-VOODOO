@@ -433,12 +433,10 @@ class QuickProtFuncDTINetworkData:
         print("Building index dict ...")
         self.protein_to_index_dict = {protein: index for index, protein in enumerate(self.protein_list)}
         print("Building edge list ...")
-        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                              for node1, node2 in list(self.PPI_graph.edges())]
-        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2])
-                               for node2, node1 in list(self.PPI_graph.edges())]
-        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)),
-                                      dtype=torch.long)
+        forward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2]) for node1, node2 in list(self.PPI_graph.edges())]
+        backward_edges_list = [(self.protein_to_index_dict[node1], self.protein_to_index_dict[node2]) for node2, node1 in list(self.PPI_graph.edges())]
+
+        self.edge_list = torch.tensor(np.transpose(np.array(forward_edges_list + backward_edges_list)), dtype=torch.long)
         self.num_PPI_features = 1
 
         print('Building edge feature attributes ...')
@@ -463,8 +461,7 @@ class QuickProtFuncDTINetworkData:
 
         # DTI data
         print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
-                                                   mode=config.mode)
+        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
         self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
