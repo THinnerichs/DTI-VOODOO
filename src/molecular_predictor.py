@@ -485,6 +485,7 @@ def XGBoost_molecular_predictor(config):
 
 
 if __name__=='__main__':
+    '''
     drug_list = DTI_data_preparation.get_drug_list()
 
     write_encoded_drugs(drug_list, mode='trfm')
@@ -521,4 +522,3 @@ if __name__=='__main__':
         print("No valid model selected.")
         raise ValueError
 
-    '''
