@@ -52,6 +52,8 @@ class MolecularDTIDataBuilder:
         filename = '../models/protein_representation/results/prot_to_encoding_dict'
         with open(file=filename+'.pkl', mode='rb') as f:
             protein_to_feature_dict = pickle.load(f)
+
+        self.protein_list = np.array(list(set(self.protein_list) & set(protein_to_feature_dict.keys())))
         self.protein_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
         y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
