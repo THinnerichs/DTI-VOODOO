@@ -339,7 +339,7 @@ def get_PPI_DTI_graph_intersection():
     return ppi_graph.subgraph(protein_set)
 
 def write_truncated_drug_to_SMILES_dict():
-    drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
+    drug_list = get_drug_list()
     drug_to_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
 
     # sn_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
