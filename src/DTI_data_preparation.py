@@ -290,7 +290,7 @@ def write_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
     filename = "../data/drug_to_HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_targets_dict"
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(drug_filtered_targets_dict, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished.\n"
+    print("Finished.\n")
 
 def get_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
                                           alignment_method='mafft'):
@@ -346,7 +346,7 @@ def write_truncated_drug_to_SMILES_dict():
 
     print("Writing truncated drug to SMILES dict...")
 
-    return_dict = {drug: drug_to_SMILES_dict[drug_list] for drug in drug_list}
+    return_dict = {drug: drug_to_SMILES_dict[drug] for drug in drug_list}
 
     filename = "../data/STITCH_data/truncated_drug_to_SMILES_dict"
     with open(file=filename+'.pkl', mode='wb') as f:
