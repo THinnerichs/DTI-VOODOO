@@ -229,3 +229,4 @@ Discussion:
 1. Check whether GCN doesn't put anything on themselves
 2. Fix molecular predictor
 3. check whether it localizes on graph
+4. What is pooling exactly

@@ -132,6 +132,35 @@ class MolecularPredNet(nn.Module):
     def __init__(self):
         super(MolecularPredNet, self).__init__()
 
+        # siamese network approach
+        self.model = nn.Sequential(
+            nn.Linear(8192, 256),
+            nn.Dropout(0.2),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 200),
+            # nn.Dropout(0.5),
+            # nn.BatchNorm1d(50),
+            # nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+        self.model2 = nn.Sequential(
+            nn.Linear(1024, 256),
+            nn.Dropout(0.2),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 200),
+            # nn.BatchNorm1d(50),
+            # nn.Dropout(0.5),
+            # nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+
+        self.sim = nn.CosineSimilarity(dim=1)
+
+        '''
         self.fc1 = nn.Linear(8192 + 1024, 256)
         self.fc2 = nn.Linear(256,128)
         self.fc3 = nn.Linear(128,128)
@@ -142,8 +171,10 @@ class MolecularPredNet(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
         self.dropout = nn.Dropout(0.3)
+        '''
 
     def forward(self, x):
+        '''
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.dropout(x)
@@ -154,6 +185,15 @@ class MolecularPredNet(nn.Module):
         # x = self.sigmoid(x)
 
         return x
+        '''
+
+        p1 = self.model(x[:,:8192]).view(-1,200)
+        d1 = self.model2(x[:,8192:]).view(-1,200)
+
+        s1 = self.sim(p1,d1)
+        out = s1.reshape(-1,1)
+
+        return out
 
 
 def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
