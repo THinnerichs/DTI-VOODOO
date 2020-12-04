@@ -230,3 +230,7 @@ Discussion:
 2. Fix molecular predictor
 3. check whether it localizes on graph
 4. What is pooling exactly
+
+- GENConv
+  - MsgNorm = True
+  - learn msgscale = True

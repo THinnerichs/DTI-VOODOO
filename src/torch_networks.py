@@ -460,6 +460,17 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv1 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
             self.conv2 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
             self.conv3 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
+        elif 'GENConv' in conv_method:
+            conv1 = nn.GENConv(200,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
+            norm1 = torch.nn.LayerNorm(200, elementwise_affine=True)
+
+            conv2 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
+            norm2 = torch.nn.LayerNorm(200, elementwise_affine=True)
+
+            act = torch.nn.LeakyReLU(0.2, inplace=True)
+
+            self.conv1 = nn.DeepGCNLayer(conv1, norm1, act, block='res', dropout=0.1)
+            self.conv2 = nn.DeepGCNLayer(conv2, norm2, act, block='res', dropout=0.1)
 
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(200, 200, heads=4, dropout=0.2, add_self_loops=False)
@@ -526,8 +537,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
-        PPI_x = F.elu(self.conv1(PPI_x, PPI_edge_index))
-        PPI_x = self.conv2(PPI_x, PPI_edge_index)
+        PPI_x = self.conv1(PPI_x, PPI_edge_index, edge_attr)
+        PPI_x = self.conv2(PPI_x, PPI_edge_index, edge_attr)
         # PPI_x = PPI_x*2 -1
         # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
         # PPI_x = self.overall_linear2(PPI_x) + PPI_x
