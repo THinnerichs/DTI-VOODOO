@@ -141,6 +141,7 @@ class MolecularPredNet(nn.Module):
             nn.Linear(8192, 256),
             nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
+            nn.LayerNorm(256, elementwise_affine=True),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
             # nn.Dropout(0.5),
@@ -152,6 +153,7 @@ class MolecularPredNet(nn.Module):
         self.model2 = nn.Sequential(
             nn.Linear(1024, 256),
             nn.Dropout(0.5),
+            nn.LayerNorm(256, elementwise_affine=True),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
