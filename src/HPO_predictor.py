@@ -4,6 +4,7 @@ from sklearn.model_selection import KFold
 from sklearn import metrics
 
 import gensim
+from torch import neg
 
 from tqdm import tqdm
 import argparse
@@ -304,9 +305,7 @@ def siamese_drug_protein_network(config):
 
         # Calculate weights
         positives = dti_data.y_dti_data.flatten()[train_indices].sum()
-        len_to_sum_ratio = (len(train_indices) - positives) / positives
-        weight_dict = {0: 1.,
-                       1: len_to_sum_ratio}
+        neg_to_pos_ratio = (len(train_indices) - positives) / positives
 
         train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
         test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
@@ -330,7 +329,7 @@ def siamese_drug_protein_network(config):
         ret = None
         best_AUROC = 0
         for epoch in range(1, config.num_epochs + 1):
-            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, weight_dict=weight_dict)
+            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, neg_to_pos_ratio=neg_to_pos_ratio)
             print('Train Loss:', loss)
 
             if epoch%1 == 0:

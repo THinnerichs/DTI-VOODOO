@@ -12,11 +12,12 @@ from tqdm import tqdm
 import DTI_data_preparation
 import PhenomeNET_DL2vec_utils
 import PPI_utils
+from torch_dti_utils import BCELoss_ClassWeights
 
 
 
 class MolecularDTIDataBuilder:
-    def __init__(self, num_proteins=None, drug_mode='trfm'):
+    def __init__(self, config, num_proteins=None, drug_mode='trfm'):
         # super(MolecularDTIData, self).__init__()
         print('Loading data...')
         # self.drug_list = np.array(DTI_data_preparation.get_drug_list())
@@ -36,6 +37,7 @@ class MolecularDTIDataBuilder:
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode='database')
         PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
         self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+        self.protein_list = self.protein_list[:num_proteins]
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
@@ -62,6 +64,8 @@ class MolecularDTIDataBuilder:
         # calculate dimenions of data
         self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
+        config.num_proteins = self.num_proteins
+        config.num_drugs = self.num_drugs
         print('Done.\n')
 
     def get(self, indices):
@@ -196,7 +200,7 @@ class MolecularPredNet(nn.Module):
         return out
 
 
-def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
+def train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_ratio):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
     model.train()
@@ -207,9 +211,10 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
         labels = labels.float().to(device)
         output = model(features)
 
-        weight_vec = torch.ones([1]) * weight_dict[1]
+        weight_vec = torch.ones([1]) * neg_to_pos_ratio
 
-        loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
+        # loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
+        loss = BCELoss_ClassWeights(input=output, target=labels.view(-1,1), pos_weight=neg_to_pos_ratio)
         return_loss += loss
         loss.backward()
         optimizer.step()

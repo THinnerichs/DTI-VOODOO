@@ -688,6 +688,17 @@ def train(model, optimizer, loader, device):
     return total_loss / len(loader.dataset)
 '''
 
+def BCELoss_ClassWeights(input, target, pos_weight):
+    # input (n, d)
+    # target (n, d)
+    # class_weights (1, d)
+    input = torch.clamp(input,min=1e-7,max=1-1e-7)
+    target = target.view(-1,1)
+    weighted_bce = - pos_weight*target * torch.log(input) - 1*(1 - target) * torch.log(1 - input)
+    # weighted_bce = weighted_bce / (pos_weight+1)
+    final_reduced_over_batch = weighted_bce.sum(axis=0)
+    return final_reduced_over_batch
+
 def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.}):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
@@ -714,18 +725,6 @@ def train(model, device, train_loader, optimizer, epoch, weight_dict={0:1., 1:1.
             sys.stdout.flush()
     return return_loss
 
-def BCELoss_ClassWeights(input, target, pos_weight):
-    # input (n, d)
-    # target (n, d)
-    # class_weights (1, d)
-    input = torch.clamp(input,min=1e-7,max=1-1e-7)
-    target = target.view(-1,1)
-    weighted_bce = - pos_weight*target * torch.log(input) - 1*(1 - target) * torch.log(1 - input)
-    # weighted_bce = weighted_bce / (pos_weight+1)
-    final_reduced_over_batch = weighted_bce.sum(axis=0)
-    return final_reduced_over_batch
-
-
 def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_ratio, train_mask):
     print('Training on {} samples...'.format(len(train_loader.dataset)))
     sys.stdout.flush()
@@ -742,6 +741,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data])).float().to(output.device)
 
+        '''
         help_mask = np.around(np.array(y.to('cpu')) * train_mask).astype(np.int)
         for i in range(help_mask.shape[0]):
             # determine number of positive samples per drug/graph
@@ -749,6 +749,7 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
             # choose num_choices indices from num_proteins samples (masked by train_mask) without replacement and set their entries to 1 in help mask
             indices = np.arange(help_mask.shape[1])[help_mask[i,:]==0]
             help_mask[i,np.random.choice(indices, num_choices, replace=False)] = 1
+        '''
 
 
         # print('y.size', y[:, train_mask].size())

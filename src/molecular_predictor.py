@@ -108,7 +108,7 @@ def molecular_predictor(config):
     if config.num_proteins <= 0:
         config.num_proteins = None
 
-    dti_data = MolecularDTIDataBuilder(num_proteins=config.num_proteins)
+    dti_data = MolecularDTIDataBuilder(config=config, num_proteins=config.num_proteins)
 
     # generate indices for proteins
     kf = KFold(n_splits=5, random_state=42, shuffle=True)
@@ -122,9 +122,9 @@ def molecular_predictor(config):
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
         fold += 1
-        print("Fold:", fold)
         if config.fold != -1 and config.fold != fold:
             continue
+        print("Fold:", fold)
         gc.collect()
 
         # build train data over whole dataset with help matrix
@@ -140,9 +140,7 @@ def molecular_predictor(config):
 
         # Calculate weights
         positives = dti_data.y_dti_data.flatten()[train_indices].sum()
-        len_to_sum_ratio = (len(train_indices) - positives) / positives
-        weight_dict = {0: 1.,
-                       1: len_to_sum_ratio}
+        neg_to_pos_ratio = (len(train_indices) - positives) / positives
 
         train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
         test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
@@ -165,8 +163,7 @@ def molecular_predictor(config):
 
         ret = None
         for epoch in range(1, config.num_epochs + 1):
-            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch,
-                  weight_dict=weight_dict)
+            loss = train(config=config, model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, neg_to_pos_ratio=neg_to_pos_ratio)
             print('Train Loss:', loss)
 
             if epoch%5 == 0:
