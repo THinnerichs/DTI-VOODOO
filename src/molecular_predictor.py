@@ -494,8 +494,8 @@ if __name__=='__main__':
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
-    # parser.add_argument("--arch", type=str, default='GCNConv')
-    # parser.add_argument("--node_features", type=str, default='simple')
+    parser.add_argument("--drug_model", type=str, default='trfm')
+
 
     parser.add_argument("--num_epochs", type=int, default=20)
     parser.add_argument("--batch_size", type=int, default=1024)

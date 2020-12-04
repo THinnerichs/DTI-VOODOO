@@ -43,8 +43,8 @@ class MolecularDTIDataBuilder:
 
 
         # build drug features
-        drug_filename = '../models/drug_representation/' + drug_mode + '.npy'
-        if drug_mode=='trfm' or drug_mode == 'rnn':
+        if config.drug_mode=='trfm' or config.drug_mode == 'rnn':
+            drug_filename = '../models/drug_representation/' + config.drug_mode + '.npy'
             self.drug_encodings = torch.from_numpy(np.load(drug_filename))
         else:
             print("No valid mode selected for drug to SMILES encoding.")
@@ -197,7 +197,7 @@ class MolecularPredNet(nn.Module):
         s1 = self.sim(p1,d1)
         out = s1.reshape(-1,1)
 
-        return out
+        return out.sigmoid()
 
 
 def train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_ratio):
@@ -215,6 +215,7 @@ def train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_rati
 
         # loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
         loss = BCELoss_ClassWeights(input=output, target=labels.view(-1,1), pos_weight=neg_to_pos_ratio)
+        loss = loss /(config.num_proteins * config.num_drugs)
         return_loss += loss
         loss.backward()
         optimizer.step()
@@ -235,7 +236,7 @@ def predicting(model, device, loader):
     with torch.no_grad():
         for batch_idx, (features, labels) in enumerate(loader):
             features = features.to(device)
-            output = model(features).sigmoid()
+            output = model(features)
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
 

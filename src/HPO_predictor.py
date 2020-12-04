@@ -259,7 +259,7 @@ class HPOPredNet(nn.Module):
 
         # out = self.output_sig(s1)
 
-        return out
+        return out.sigmoid()
 
 
 def siamese_drug_protein_network(config):
