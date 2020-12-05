@@ -483,17 +483,6 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             sys.stdout.flush()
             raise ValueError
 
-        # self.bn_1 = nn.BatchNorm(4 * config.heads)
-        # self.bn_2 = nn.BatchNorm(16 * config.heads)
-
-        # self.linear1 = torch.nn.Linear(600, 256)
-        # self.linear2 = torch.nn.Linear(256, 128)
-        # self.linear3 = torch.nn.Linear(128, 100)
-
-        # self.drug_linear1 = torch.nn.Linear(200, 256)
-        # self.drug_linear2 = torch.nn.Linear(256, 128)
-        # self.drug_linear3 = torch.nn.Linear(128, 100)
-
         state_dict_path = '../models/HPO_models/hpo_pred_fold_' + str(config.fold) + '_model'
         self.HPO_model = HPOPredNet()
         state_dict = torch.load(state_dict_path)
@@ -505,7 +494,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.HPO_model.load_state_dict(new_state_dict)
 
         for param in self.HPO_model.parameters():
-            param.requires_grad = False
+            param.requires_grad = True # False for freezing layers
 
         self.overall_linear1 = torch.nn.Linear(600, 200)
         self.overall_linear2 = torch.nn.Linear(200, 200)
@@ -537,7 +526,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
-        PPI_x = self.activation(self.conv1(PPI_x, PPI_edge_index))
+        PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         # PPI_x = PPI_x*2 -1
         # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)

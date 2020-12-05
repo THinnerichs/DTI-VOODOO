@@ -673,20 +673,6 @@ class DTIGraphDataset(Dataset):
     def _process(self):
         pass
 
-'''
-def train(model, optimizer, loader, device):
-    model.train()
-    total_loss = 0
-    for data in loader:
-        optimizer.zero_grad()
-        data = data.to(device)
-        out = model(data)
-        loss = F.nll_loss(out, data.y.view(-1))
-        loss.backward()
-        total_loss += loss.item() * loader.batch_size
-        optimizer.step()
-    return total_loss / len(loader.dataset)
-'''
 
 def BCELoss_ClassWeights(input, target, pos_weight):
     # input (n, d)
@@ -849,27 +835,4 @@ def ci(y, f):
     return ci
 def cross_entropy(p,q):
     return -sum([p[i] * log2(q[i]) for i in range(len(p))])
-'''
-def eval_acc(model, loader, device):
-    model.eval()
 
-    correct = 0
-    for data in loader:
-        data = data.to(device)
-        with torch.no_grad():
-            pred = model(data).max(1)[1]
-        correct += pred.eq(data.y.view(-1)).sum().item()
-    return correct / len(loader.dataset)
-
-
-def eval_loss(model, loader, device):
-    model.eval()
-
-    loss = 0
-    for data in loader:
-        data = data.to(device)
-        with torch.no_grad():
-            out = model(data)
-        loss += F.nll_loss(out, data.y.view(-1), reduction='sum').item()
-    return loss / len(loader.dataset)
-'''
