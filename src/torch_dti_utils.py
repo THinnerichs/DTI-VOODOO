@@ -410,9 +410,28 @@ class QuickProtFuncDTINetworkData:
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
-
+        print(len(self.protein_list), "proteins present.\n")
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
-        print(len(self.protein_list), "proteins present\n")
+
+        if config.include_mol_features:
+            print("Building molecular features")
+            # build drug features
+            if config.drug_mode == 'trfm' or config.drug_mode == 'rnn':
+                drug_filename = '../models/drug_representation/' + config.drug_mode + '.npy'
+                self.drug_encodings = torch.from_numpy(np.load(drug_filename))
+            else:
+                print("No valid mode selected for drug to SMILES encoding.")
+                raise ValueError
+
+            # build molecular protein features
+            filename = '../models/protein_representation/results/prot_to_encoding_dict'
+            with open(file=filename + '.pkl', mode='rb') as f:
+                protein_to_feature_dict = pickle.load(f)
+
+            self.protein_list = np.array(list(set(self.protein_list) & set(protein_to_feature_dict.keys())))
+            self.protein_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
+
+            print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
 
         # PPI data
         print("Loading PPI graph ...")

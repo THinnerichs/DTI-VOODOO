@@ -494,7 +494,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.HPO_model.load_state_dict(new_state_dict)
 
         for param in self.HPO_model.parameters():
-            param.requires_grad = True # False for freezing layers
+            param.requires_grad = False
 
         self.overall_linear1 = torch.nn.Linear(600, 200)
         self.overall_linear2 = torch.nn.Linear(200, 200)

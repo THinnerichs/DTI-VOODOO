@@ -650,7 +650,9 @@ if __name__ == '__main__':
     parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--PPI_min_score", type=int, default=700)
 
-    parser.add_argument("--num_non_GCN_epochs", type=int, default=20)
+    parser.add_argument("--include_mol_features", action='store_true')
+    parser.add_argument("--drug_mode", type=str, default='trfm')
+
 
     config = parser.parse_args()
 
