@@ -507,11 +507,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             param.requires_grad = False
 
         self.mol_protein_model = torch.nn.Sequential(
-            nn.Linear(8192, 256),
-            nn.Dropout(0.5),
+            torch.nn.Linear(8192, 256),
+            torch.nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 200),
+            torch.nn.LeakyReLU(0.2, inplace=True),
+            torch.nn.Linear(256, 200),
             # nn.Dropout(0.5),
             # nn.BatchNorm1d(50),
             # nn.LeakyReLU(0.2, inplace=True),
@@ -519,11 +519,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             # nn.Sigmoid()
         )
         self.mol_drug_model = torch.nn.Sequential(
-            nn.Linear(1024, 256),
-            nn.Dropout(0.5),
+            torch.nn.Linear(1024, 256),
+            torch.nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 200),
+            torch.nn.LeakyReLU(0.2, inplace=True),
+            torch.nn.Linear(256, 200),
             # nn.BatchNorm1d(50),
             # nn.Dropout(0.5),
             # nn.LeakyReLU(0.2, inplace=True),
