@@ -418,7 +418,7 @@ class QuickProtFuncDTINetworkData:
             # build drug features
             if config.drug_mode == 'trfm' or config.drug_mode == 'rnn':
                 drug_filename = '../models/drug_representation/' + config.drug_mode + '.npy'
-                self.drug_encodings = torch.from_numpy(np.load(drug_filename))
+                self.drug_mol_encodings = torch.from_numpy(np.load(drug_filename))
             else:
                 print("No valid mode selected for drug to SMILES encoding.")
                 raise ValueError
@@ -429,7 +429,7 @@ class QuickProtFuncDTINetworkData:
                 protein_to_feature_dict = pickle.load(f)
 
             self.protein_list = np.array(list(set(self.protein_list) & set(protein_to_feature_dict.keys())))
-            self.protein_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
+            self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
 
@@ -642,7 +642,7 @@ class QuickProtFuncDTINetworkData:
             # uncomment for DL2vec
             # drug_feature = np.vstack([self.drug_features[drug_index, :]]*self.num_proteins)
             # drug_feature = torch.tensor(drug_feature)
-            drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
+            # drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
 
             # Dl2vec
             protein_feature = torch.tensor(self.protein_features)
@@ -656,6 +656,8 @@ class QuickProtFuncDTINetworkData:
             feature_array = protein_feature
             # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
+            molecular_drug_feature = self.drug_mol_encodings[drug_index,:]
+
 
             full_PPI_graph = Data(x=self.protein_embeddings,
                                   edge_index=self.edge_list,
@@ -663,6 +665,8 @@ class QuickProtFuncDTINetworkData:
                                   y=y)
 
             full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
+            full_PPI_graph.drug_mol_feature = molecular_drug_feature
+            full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 

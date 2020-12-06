@@ -506,6 +506,33 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         for param in self.HPO_model.parameters():
             param.requires_grad = False
 
+        self.mol_protein_model = nn.Sequential(
+            nn.Linear(8192, 256),
+            nn.Dropout(0.5),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 200),
+            # nn.Dropout(0.5),
+            # nn.BatchNorm1d(50),
+            # nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+        self.mol_drug_model = nn.Sequential(
+            nn.Linear(1024, 256),
+            nn.Dropout(0.5),
+            # nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 200),
+            # nn.BatchNorm1d(50),
+            # nn.Dropout(0.5),
+            # nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(256, 1),
+            # nn.Sigmoid()
+        )
+
+        self.drug_linear = torch.nn.Linear(200, 200)
+
         self.overall_linear1 = torch.nn.Linear(600, 200)
         self.overall_linear2 = torch.nn.Linear(200, 200)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
@@ -526,13 +553,16 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         batch_size = drug_feature.size(0)
 
 
-        PPI_x = self.HPO_model.model2(PPI_x)
+        # PPI_x = self.HPO_model.model2(PPI_x)
+        PPI_x = self.mol_protein_model(PPI_data_object.drug_mol_feature)
         PPI_x = PPI_x.view(-1,200)
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
 
-        drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
+        # drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
+        # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
+        drug_feature = self.mol_drug_model(PPI_data_object.protein_mol_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
