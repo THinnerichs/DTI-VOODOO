@@ -506,7 +506,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         for param in self.HPO_model.parameters():
             param.requires_grad = False
 
-        self.mol_protein_model = nn.Sequential(
+        self.mol_protein_model = torch.nn.Sequential(
             nn.Linear(8192, 256),
             nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
@@ -518,7 +518,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             # nn.Linear(256, 1),
             # nn.Sigmoid()
         )
-        self.mol_drug_model = nn.Sequential(
+        self.mol_drug_model = torch.nn.Sequential(
             nn.Linear(1024, 256),
             nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
@@ -568,9 +568,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
-        PPI_x = self.conv4(PPI_x, PPI_edge_index)
-        PPI_x = self.conv5(PPI_x, PPI_edge_index)
+        # PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        # PPI_x = self.conv4(PPI_x, PPI_edge_index)
+        # PPI_x = self.conv5(PPI_x, PPI_edge_index)
         # PPI_x = PPI_x*2 -1
         # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
         # PPI_x = self.overall_linear2(PPI_x) + PPI_x
