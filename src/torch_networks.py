@@ -552,6 +552,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         batch_size = drug_feature.size(0)
 
+        print('drug_mol_feature.size', PPI_data_object.drug_mol_feature.size())
+        print('protein_mol_feature.size', PPI_data_object.protein_mol_feature.size())
+
 
         # PPI_x = self.HPO_model.model2(PPI_x)
         PPI_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
