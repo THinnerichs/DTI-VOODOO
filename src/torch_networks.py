@@ -469,12 +469,18 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
             conv3 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=1, norm='layer')
             norm3 = torch.nn.LayerNorm(200, elementwise_affine=True)
+            conv4 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=1, norm='layer')
+            norm4 = torch.nn.LayerNorm(200, elementwise_affine=True)
+            conv5 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=1, norm='layer')
+            norm5 = torch.nn.LayerNorm(200, elementwise_affine=True)
 
             act = torch.nn.LeakyReLU(0.2, inplace=True)
 
             self.conv1 = nn.DeepGCNLayer(conv1, norm1, act, block='res', dropout=0.1)
             self.conv2 = nn.DeepGCNLayer(conv2, norm2, act, block='res', dropout=0.1)
             self.conv3 = nn.DeepGCNLayer(conv3, norm3, act, block='res', dropout=0.1)
+            self.conv4 = nn.DeepGCNLayer(conv4, norm4, act, block='res', dropout=0.1)
+            self.conv5 = nn.DeepGCNLayer(conv5, norm5, act, block='res', dropout=0.1)
 
         elif 'GATConv' in conv_method:
             self.conv1 = nn.GATConv(200, 200, heads=4, dropout=0.2, add_self_loops=False)
@@ -533,6 +539,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
         PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        PPI_x = self.conv4(PPI_x, PPI_edge_index)
+        PPI_x = self.conv5(PPI_x, PPI_edge_index)
         # PPI_x = PPI_x*2 -1
         # PPI_x = F.elu(self.overall_linear1(PPI_x) + PPI_x)
         # PPI_x = self.overall_linear2(PPI_x) + PPI_x
