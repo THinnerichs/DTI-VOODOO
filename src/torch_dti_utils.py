@@ -668,11 +668,6 @@ class QuickProtFuncDTINetworkData:
             full_PPI_graph.drug_mol_feature = molecular_drug_feature
             full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
 
-            print('molecular_drug_feature.size', molecular_drug_feature.size())
-            print('molecular_drug_feature.size', self.drug_mol_encodings.size())
-            print('molecular_protein_feature.size', self.protein_mol_encodings)
-            raise Exception
-
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
