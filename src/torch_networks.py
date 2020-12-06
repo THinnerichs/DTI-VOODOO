@@ -554,7 +554,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
 
         # PPI_x = self.HPO_model.model2(PPI_x)
-        PPI_x = self.mol_protein_model(PPI_data_object.drug_mol_feature)
+        PPI_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
         PPI_x = PPI_x.view(-1,200)
 
         # PPI_x = self.dropout(PPI_x)
@@ -562,7 +562,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
         # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
-        drug_feature = self.mol_drug_model(PPI_data_object.protein_mol_feature).view(batch_size, 1, -1)
+        drug_feature = self.mol_drug_model(PPI_data_object.drug_mol_feature).view(batch_size, 1, -1)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
