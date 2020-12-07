@@ -533,8 +533,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         self.drug_linear = torch.nn.Linear(200, 200)
 
-        self.overall_linear1 = torch.nn.Linear(600, 200)
-        self.overall_linear2 = torch.nn.Linear(200, 200)
+        self.overall_linear1 = torch.nn.Linear(400, 200)
+        self.overall_linear2 = torch.nn.Linear(200, 1)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
         # self.relu = torch.nn.ReLU()
@@ -601,12 +601,13 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # cat_feature = torch.bmm(drug_feature, PPI_x)
 
-        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
+        # PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
+        # cat_feature = PPI_x.view((-1, self.num_prots))
+        cat_feature = torch.cat([drug_feature, PPI_x], dim=1)
+        cat_feature = F.relu(self.overall_linear1(cat_feature))
+        cat_feature = self.overall_linear1(cat_feature)
 
 
-        cat_feature = PPI_x.view((-1, self.num_prots))
-
-        # return torch.sigmoid(cat_feature)
         return self.sigmoid(cat_feature)
 
         '''
