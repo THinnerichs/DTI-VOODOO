@@ -604,11 +604,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
         # cat_feature = PPI_x.view((-1, self.num_prots))
         cat_feature = torch.cat([drug_feature, PPI_x], dim=1)
-        print('cat_feature.size', cat_feature.size())
-        print('PPI.size', PPI_x.size())
-        print('drug.size', drug_feature.size())
         cat_feature = F.relu(self.overall_linear1(cat_feature))
-        cat_feature = self.overall_linear1(cat_feature)
+        cat_feature = self.overall_linear2(cat_feature)
 
 
         return self.sigmoid(cat_feature)
