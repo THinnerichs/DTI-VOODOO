@@ -461,7 +461,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv2 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
             self.conv3 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
         elif 'GENConv' in conv_method:
-            conv1 = nn.GENConv(400,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
+            conv1 = nn.GENConv(200,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm1 = torch.nn.LayerNorm(200, elementwise_affine=True)
 
             conv2 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
@@ -559,12 +559,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.HPO_model.model2(PPI_x)
         PPI_mol_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
-        print('PPI_x.size', PPI_x.size())
         PPI_x = self.activation(torch.cat([PPI_x, PPI_mol_x], dim=1))
-        print('PPI_x_cat.size', PPI_x.size())
         PPI_x = self.protein_linear1(PPI_x)
         PPI_x = PPI_x.view(-1,200)
-        print('PPI_x_red.size', PPI_x.size())
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
