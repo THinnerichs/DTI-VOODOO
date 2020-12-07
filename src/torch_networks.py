@@ -568,6 +568,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         # drug_mol_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
         drug_mol_feature = self.mol_drug_model(drug_mol_feature).view(batch_size, 1, -1)
         drug_feature = self.activation(torch.cat([drug_mol_feature, drug_feature], dim=2))
+        drug_feature = self.activation(self.drug_linear1(drug_feature))
         drug_feature = self.drug_linear2(drug_feature)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
