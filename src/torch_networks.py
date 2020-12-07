@@ -461,7 +461,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv2 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
             self.conv3 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
         elif 'GENConv' in conv_method:
-            conv1 = nn.GENConv(200,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
+            conv1 = nn.GENConv(400,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm1 = torch.nn.LayerNorm(200, elementwise_affine=True)
 
             conv2 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
@@ -531,7 +531,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             # nn.Sigmoid()
         )
 
-        self.drug_linear = torch.nn.Linear(200, 200)
+        self.drug_linear1 = torch.nn.Linear(400, 200)
+        self.drug_linear2 = torch.nn.Linear(200, 200)
 
         self.overall_linear1 = torch.nn.Linear(400, 200)
         self.overall_linear2 = torch.nn.Linear(200, 1)
@@ -555,22 +556,25 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         drug_mol_feature = PPI_data_object.drug_mol_feature.view(batch_size, -1)
 
 
-        # PPI_x = self.HPO_model.model2(PPI_x)
-        PPI_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
-        PPI_x = PPI_x.view(-1,200)
+        PPI_x = self.HPO_model.model2(PPI_x)
+        PPI_mol_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
+        PPI_x = self.activation(torch.cat([PPI_x, PPI_mol_x], dim=1))
+        PPI_x = PPI_x.view(-1,400)
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
 
-        # drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
-        # drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
-        drug_feature = self.mol_drug_model(drug_mol_feature).view(batch_size, 1, -1)
+        drug_feature = self.HPO_model.model(drug_feature).view(batch_size, 1, -1)
+        # drug_mol_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
+        drug_mol_feature = self.mol_drug_model(drug_mol_feature).view(batch_size, 1, -1)
+        drug_feature = self.activation(torch.cat([drug_mol_feature, drug_feature], dim=2))
+        drug_feature = self.drug_linear2(drug_feature)
         drug_feature = drug_feature.repeat(1,self.num_prots,1).view(batch_size*self.num_prots,-1)
 
 
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
-        # PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        PPI_x = self.conv3(PPI_x, PPI_edge_index)
         # PPI_x = self.conv4(PPI_x, PPI_edge_index)
         # PPI_x = self.conv5(PPI_x, PPI_edge_index)
         # PPI_x = PPI_x*2 -1
@@ -601,11 +605,11 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # cat_feature = torch.bmm(drug_feature, PPI_x)
 
-        # PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
-        # cat_feature = PPI_x.view((-1, self.num_prots))
-        cat_feature = torch.cat([drug_feature, PPI_x], dim=1)
-        cat_feature = F.relu(self.overall_linear1(cat_feature))
-        cat_feature = self.overall_linear2(cat_feature).view(-1, self.num_prots)
+        PPI_x = self.sim(drug_feature, PPI_x).unsqueeze(-1)
+        cat_feature = PPI_x.view((-1, self.num_prots))
+        # cat_feature = torch.cat([drug_feature, PPI_x], dim=1)
+        # cat_feature = F.relu(self.overall_linear1(cat_feature))
+        # cat_feature = self.overall_linear2(cat_feature).view(-1, self.num_prots)
 
 
         return self.sigmoid(cat_feature)
