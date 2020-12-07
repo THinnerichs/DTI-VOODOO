@@ -559,9 +559,12 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.HPO_model.model2(PPI_x)
         PPI_mol_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
+        print('PPI_x.size', PPI_x.size())
         PPI_x = self.activation(torch.cat([PPI_x, PPI_mol_x], dim=1))
+        print('PPI_x_cat.size', PPI_x.size())
         PPI_x = self.protein_linear1(PPI_x)
         PPI_x = PPI_x.view(-1,200)
+        print('PPI_x_red.size', PPI_x.size())
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
