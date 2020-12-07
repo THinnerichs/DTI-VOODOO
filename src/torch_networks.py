@@ -530,15 +530,16 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             # nn.Linear(256, 1),
             # nn.Sigmoid()
         )
+        self.protein_linear1 = torch.nn.Linear(400, 200)
 
-        self.drug_linear1 = torch.nn.Linear(400, 200)
+        self.drug_linear1 = torch.nn.Linear(200, 200)
         self.drug_linear2 = torch.nn.Linear(200, 200)
 
         self.overall_linear1 = torch.nn.Linear(400, 200)
         self.overall_linear2 = torch.nn.Linear(200, 1)
         # self.overall_linear3 = torch.nn.Linear(16, 1)
 
-        # self.relu = torch.nn.ReLU()
+        self.relu = torch.nn.ReLU()
         self.activation = torch.nn.LeakyReLU(0.2)
         self.sigmoid = torch.nn.Sigmoid()
         self.dropout = torch.nn.Dropout(dropout)
@@ -559,7 +560,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         PPI_x = self.HPO_model.model2(PPI_x)
         PPI_mol_x = self.mol_protein_model(PPI_data_object.protein_mol_feature)
         PPI_x = self.activation(torch.cat([PPI_x, PPI_mol_x], dim=1))
-        PPI_x = PPI_x.view(-1,400)
+        PPI_x = self.protein_linear1(PPI_x)
+        PPI_x = PPI_x.view(-1,200)
 
         # PPI_x = self.dropout(PPI_x)
         # PPI_x = F.elu(self.linear3(PPI_x))
