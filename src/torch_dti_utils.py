@@ -658,7 +658,6 @@ class QuickProtFuncDTINetworkData:
 
             molecular_drug_feature = self.drug_mol_encodings[drug_index,:]
 
-
             full_PPI_graph = Data(x=self.protein_embeddings,
                                   edge_index=self.edge_list,
                                   edge_attr=self.edge_attr,

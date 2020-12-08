@@ -461,13 +461,13 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             self.conv2 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
             self.conv3 = nn.GCNConv(200, 200, cached=True, add_self_loops=False)
         elif 'GENConv' in conv_method:
-            conv1 = nn.GENConv(200,200, aggr='power', p=1.0, learn_p=True, num_layers=2, norm='layer')
+            conv1 = nn.GENConv(200,200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm1 = torch.nn.LayerNorm(200, elementwise_affine=True)
 
-            conv2 = nn.GENConv(200, 200, aggr='power', p=1.0, learn_p=True, num_layers=2, norm='layer')
+            conv2 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm2 = torch.nn.LayerNorm(200, elementwise_affine=True)
 
-            conv3 = nn.GENConv(200, 200, aggr='power', p=1.0, learn_p=True, num_layers=2, norm='layer')
+            conv3 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm3 = torch.nn.LayerNorm(200, elementwise_affine=True)
             conv4 = nn.GENConv(200, 200, aggr='softmax', t=1.0, learn_t=True, num_layers=2, norm='layer')
             norm4 = torch.nn.LayerNorm(200, elementwise_affine=True)
@@ -504,7 +504,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.HPO_model.load_state_dict(new_state_dict)
 
         for param in self.HPO_model.parameters():
-            param.requires_grad = False
+            param.requires_grad = True #False
 
         self.mol_protein_model = torch.nn.Sequential(
             torch.nn.Linear(8192, 256),
