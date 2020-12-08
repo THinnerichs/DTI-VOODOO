@@ -25,6 +25,10 @@ def write_predicted_DTIs(fold=3):
     print('intersection drug', len(set(drug_list) & set(drug_mapping.keys())))
     print('intersection protein', len(set(protein_list) & set(protein_mapping.keys())))
 
+    print(list(set(drug_list) - set(drug_mapping.keys()))[:100])
+
+    raise Exception
+
 
     pos_sanity_list = [tup for tup in pred_list if round(tup[2] == 1)]
     random.shuffle(pos_sanity_list)
@@ -40,7 +44,7 @@ def write_predicted_DTIs(fold=3):
     with open(file=filename, mode='w') as f:
         print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias', file=f)
         for drug, protein, _, confidence in pred_list:
-            if drug in protein_mapping.keys() and protein in protein_mapping.keys():
+            if drug in drug_mapping.keys() and protein in protein_mapping.keys():
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]), file=f)
 
 
