@@ -504,7 +504,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
         self.HPO_model.load_state_dict(new_state_dict)
 
         for param in self.HPO_model.parameters():
-            param.requires_grad = True #False
+            param.requires_grad = False
 
         self.mol_protein_model = torch.nn.Sequential(
             torch.nn.Linear(8192, 256),

@@ -317,6 +317,7 @@ def quickened_missing_target_predictor(config,
         sys.stdout.flush()
 
         ret = None
+        best_AUROC = 0
         for epoch in range(1, config.num_epochs + 1):
             loss = quick_train(config=config,
                                model=model,
@@ -371,10 +372,27 @@ def quickened_missing_target_predictor(config,
                           dti_utils.dti_f1_score(test_labels, test_predictions),
                           metrics.matthews_corrcoef(test_labels, test_predictions), file = f)
                     '''
-
-                    if False and not config.pretrain:
-                        model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
+                    test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
+                    if test_AUROC > best_AUROC:
+                        model_filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_' + str(fold) + '.model'
                         torch.save(model.state_dict(), model_filename)
+            if epoch == 50:
+
+                drug_list_repeated = network_data.drug_list.repeat(config.num_proteins)
+                protein_list_repeated = network_data.protein_list.reshape(1,-1).repeat(config.num_drugs, axis=0).reshape(-1)
+
+                pred_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=False)
+                labels, predictions = quick_predicting(model, device, pred_loader)
+
+                zipped_list = list(zip(drug_list_repeated, protein_list_repeated, labels, predictions))
+
+                pred_filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_' + str(fold) + '_predictions.pkl'
+                with open(file=pred_filename, mode='wb') as f:
+                    pickle.dump(zipped_list, f, pickle.HIGHEST_PROTOCOL)
+
+            if False and not config.pretrain:
+                model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
+                torch.save(model.state_dict(), model_filename)
 
             sys.stdout.flush()
         results.append(ret)

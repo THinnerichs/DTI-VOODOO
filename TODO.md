@@ -234,3 +234,6 @@ Discussion:
 - GENConv
   - MsgNorm = True
   - learn msgscale = True
+
+## Some questions
+- is it feasible to have the test entities already in the graph already?
