@@ -25,10 +25,7 @@ def write_predicted_DTIs(fold=3):
     print('intersection drug', len(set(drug_list) & set(drug_mapping.keys())))
     print('intersection protein', len(set(protein_list) & set(protein_mapping.keys())))
 
-    print(list(set(drug_list) - set(drug_mapping.keys()))[:100])
-
-    raise Exception
-
+    # print(list(set(drug_list) - set(drug_mapping.keys()))[:100])
 
     pos_sanity_list = [tup for tup in pred_list if round(tup[2] == 1)]
     random.shuffle(pos_sanity_list)

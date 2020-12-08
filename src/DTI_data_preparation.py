@@ -438,7 +438,7 @@ def get_protein_degree_percentile(protein_list, n=10, PPI_min_score=700):
     return return_matrix
 
 def get_drug_to_name_mapping():
-    drug_to_IUPAC_id_mapping = {}
+    drug_to_name_id_mapping = {} # only includes IUPAC, IUPHAR-DB, 816 (STITCH)
 
     filename='../data/STITCH_data/chemical.aliases.v5.0.tsv'
     print('Loading drug to IUPAC dict...')
@@ -448,10 +448,11 @@ def get_drug_to_name_mapping():
 
         for line in tqdm(f, total=174324327):
             drug_id, _, alias, source = line.strip().split('\t')
-            if 'IUPAC' in source:
-                drug_to_IUPAC_id_mapping[drug_id.strip()] = alias.strip()
+            if drug_id not in drug_to_name_id_mapping.keys():
+                if 'IUPAC' in source or 'IUPHAR-DB' in source or '816' == source:
+                    drug_to_name_id_mapping[drug_id.strip()] = alias.strip()
 
-    return drug_to_IUPAC_id_mapping
+    return drug_to_name_id_mapping
 
 def get_protein_to_EnsemblProtein_id():
     protein_to_Ensembl_protein_id_mapping = {}
