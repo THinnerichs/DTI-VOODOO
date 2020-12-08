@@ -20,8 +20,8 @@ def write_predicted_DTIs(fold=3):
     drug_list = [tup[0] for tup in pred_list]
     protein_list = [tup[1] for tup in pred_list]
 
-    print('drug_list', len(drug_list))
-    print('protein_list', len(protein_list))
+    print('drug_list', len(set(drug_list)))
+    print('protein_list', len(set(protein_list)))
     print('intersection drug', len(set(drug_list) & set(drug_mapping.keys())))
     print('intersection protein', len(set(protein_list) & set(protein_mapping.keys())))
 
