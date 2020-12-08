@@ -382,7 +382,7 @@ def quickened_missing_target_predictor(config,
                 protein_list_repeated = network_data.protein_list.reshape(1,-1).repeat(config.num_drugs, axis=0).reshape(-1)
 
                 pred_loader = data.DataListLoader(train_dataset, config.batch_size, shuffle=False)
-                labels, predictions = quick_predicting(model, device, pred_loader)
+                labels, predictions = quick_predicting(model, device, pred_loader, round=False)
 
                 zipped_list = list(zip(drug_list_repeated, protein_list_repeated, labels, predictions))
 
