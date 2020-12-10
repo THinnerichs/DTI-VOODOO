@@ -237,3 +237,18 @@ Discussion:
 
 ## Some questions
 - is it feasible to have the test entities already in the graph already?
+
+
+## Additional stuff
+- test on Saras driver gene cancer
+- test for gene OMIM stuff
+
+- find and test a gold standard 
+
+## TODO 
+
+- download Yamanishi dataset
+  - DTI matrix
+  - build drug DB to CID mapping
+  - build protein Uniprot to STRING mapping
+- build mapping to ENSG for Saras driver genes for cancer

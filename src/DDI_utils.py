@@ -198,6 +198,7 @@ def get_chemical_stereo_to_normal_mapping():
         return pickle.load(f)
 
 
+
 def evaluate_dicts_and_graph():
 
     '''

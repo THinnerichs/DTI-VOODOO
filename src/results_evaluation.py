@@ -44,7 +44,3 @@ def write_predicted_DTIs(fold=3):
             if drug in drug_mapping.keys() and protein in protein_mapping.keys():
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]), file=f)
 
-
-
-
-
