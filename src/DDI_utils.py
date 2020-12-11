@@ -36,8 +36,7 @@ def write_STITCH_db_Pubchem_mapping_dict():
     with open(file=filename, mode='r') as f:
         for line in tqdm(f, total=num_lines):
             drug, stereo, alias, source = line.split('\t')
-            if alias.startswith('DB'):
-                alias = alias.replace('-', '')
+            if alias.startswith('DB') and not alias.startswith('DB-'):
                 db_pubchem_mapping_dict[alias] = drug
 
     dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
