@@ -179,7 +179,7 @@ def get_PhenomeNET_protein_list(mode='all'):
 
 def query_drugpheno_rdf_graph():
     drugpheno_rdf_graph_filename = "../data/PhenomeNET_data/data-2020-12-07/drugphenotype.rdf"
-    drugpheno_graph = rdflib.Graph()
+    drugpheno_graph = rdflib.ConjunctiveGraph()
     print('Building drugpheno RDF graph...')
     result = drugpheno_graph.parse(drugpheno_rdf_graph_filename, format='xml')
 
