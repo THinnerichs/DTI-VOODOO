@@ -181,7 +181,7 @@ def get_PhenomeNET_protein_list(mode='all'):
 def write_query_drugpheno_rdf_graph():
     drugpheno_rdf_graph_filename = "../data/PhenomeNET_data/data-2020-12-07/drugphenotype.rdf"
     drugpheno_graph = rdflib.ConjunctiveGraph()
-    print('Building drugpheno RDF graph...')
+    print('Parsing drugpheno RDF graph...')
     result = drugpheno_graph.parse(drugpheno_rdf_graph_filename, format='xml')
 
     print('Query drugpheno RDF graph...')
@@ -203,7 +203,13 @@ WHERE {
 
     print('Writing results...')
 
-    results = [(d,p) for d, p in qres]
+    results = []
+    counter = 0
+    for d,p in qres:
+        results.append((d,p))
+        counter += 1
+        if counter % 1000 == 0:
+            print(counter)
     print(len(results))
     with open(file=outfile, mode='w') as f:
         for drug, phenotype in tqdm(results):
