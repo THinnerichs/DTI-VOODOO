@@ -2,6 +2,7 @@ import numpy as np
 
 import pickle as pkl
 import rdflib
+from tqdm import tqdm
 
 import DDI_utils
 
@@ -201,14 +202,15 @@ WHERE {
     outfile = '../data/PhenomeNET_data/drugpheno_query_results.tsv'
 
     print('Writing results...')
-    counter = 0
+
+    results = len(qres)
+    print(results)
     with open(file=outfile, mode='w') as f:
-        for drug, phenotype in qres:
-            counter+=1
+        for drug, phenotype in tqdm(qres, total=results):
             drug = drug.strip().split('/')[-1]
             phenotype = phenotype.strip().split('/')[-1]
             print(drug+'\t'+phenotype, file=f)
-    print('Done.', counter, 'drugpheno pairs.')
+    print('Done.', results, 'drugpheno pairs.')
 
 
 if __name__ == '__main__':
