@@ -186,7 +186,6 @@ def query_drugpheno_rdf_graph():
     print('Query drugpheno RDF graph...')
     qres = drugpheno_graph.query(
         """SELECT ?concept ?phenotype
-FROM <http://phenomebrowser.net>
 WHERE {
     ?association rdf:type rdf:Statement .
     ?association rdf:predicate obo:RO_0002200 .
