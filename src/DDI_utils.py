@@ -11,8 +11,9 @@ import similarity_measurement
 def get_db_PubChem_id_mapping_dict():
     STITCH_mapping = get_STITCH_db_Pubchem_mapping_dict()
     drugbank_mapping = get_drugbank_db_PubChem_id_mapping_dict()
+    dhimmel_dict = get_dhimmel_db_to_Pubchem_mapping_dict()
 
-    return {**STITCH_mapping, **drugbank_mapping}
+    return {**STITCH_mapping, **drugbank_mapping, **dhimmel_dict}
 
 
 def get_drugbank_db_PubChem_id_mapping_dict():
@@ -42,6 +43,31 @@ def write_STITCH_db_Pubchem_mapping_dict():
     dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
     with open(file=dict_filename+'.pkl', mode='wb') as f:
         pickle.dump(db_pubchem_mapping_dict, f, pickle.HIGHEST_PROTOCOL)
+
+def get_dhimmel_db_to_Pubchem_mapping_dict():
+    filename = '../data/DDI_utils/pubchem-mapping.tsv'
+
+    return_dict = {}
+    with open(file=filename, mode='r') as f:
+        f.readline()
+        for line in f:
+            db_id, pubchem_id = line.strip().split('\t')
+            pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
+            return_dict[db_id] = pubchem_id
+
+    return return_dict
+
+def get_Yamanishi_db_to_PubChem_mapping_dict():
+    filename = '../data/Yamanishi_data/drug_mapping.txt'
+    return_dict = {}
+
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            db_id, pubchem_id = line.strip().split('\t')
+            pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
+            return_dict[db_id] = pubchem_id
+
+    return return_dict
 
 def get_STITCH_db_Pubchem_mapping_dict():
     dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"

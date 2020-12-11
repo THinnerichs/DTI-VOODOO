@@ -404,7 +404,7 @@ def get_protein_Yamanishi_to_STITCH_mapping():
             yamanishi_id, uniprot_id = line.strip().split(':')
             protein_yamanishi_to_Uniprot_mapping[yamanishi_id] = uniprot_id
 
-    filename = '../data/9606.protein.aliases.v11.0.txt'
+    filename = '../data/STRING_data/9606.protein.aliases.v11.0.txt'
     protein_to_STRING_mapping = {}
     with open(file=filename, mode='r') as f:
         # skip header

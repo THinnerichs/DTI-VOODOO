@@ -27,10 +27,10 @@ import gc
 
 
 
-def write_encoded_drugs(drug_list,
-                        mode='trfm'):
+def write_encoded_drugs(mode='trfm'):
 
-    drug_SMILES_dict = DTI_data_preparation.get_truncated_drug_to_SMILES_dict()
+    drug_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
+    drug_list = list(drug_SMILES_dict.keys())
 
     pad_index = 0
     unk_index = 1
@@ -482,15 +482,14 @@ def XGBoost_molecular_predictor(config):
 
 
 if __name__=='__main__':
-    '''
     drug_list = DTI_data_preparation.get_drug_list()
 
     write_encoded_drugs(drug_list, mode='trfm')
     write_encoded_drugs(drug_list, mode='rnn')
 
-    '''
     # write_encoded_proteins()
 
+    '''
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
@@ -519,3 +518,4 @@ if __name__=='__main__':
         print("No valid model selected.")
         raise ValueError
 
+    '''
