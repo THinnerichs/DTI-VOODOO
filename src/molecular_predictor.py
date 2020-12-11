@@ -24,13 +24,14 @@ import argparse
 import sys
 from tqdm import tqdm
 import gc
+import pickle
 
 
 
 def write_encoded_drugs(mode='trfm'):
 
     drug_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
-    drug_list = list(drug_SMILES_dict.keys())
+    drug_list = sorted(list(drug_SMILES_dict.keys()))
 
     pad_index = 0
     unk_index = 1
@@ -47,7 +48,7 @@ def write_encoded_drugs(mode='trfm'):
         sm = sm.split()
         if len(sm) > 612: #formerly 218
             print('SMILES is too long ({:d})'.format(len(sm)))
-            sm = sm[:109] + sm[-109:]
+            sm = sm[:306] + sm[-306:]
         ids = [vocab.stoi.get(token, unk_index) for token in sm]
         ids = [sos_index] + ids + [eos_index]
         seg = [1] * len(ids)
@@ -64,28 +65,43 @@ def write_encoded_drugs(mode='trfm'):
         return torch.tensor(x_id), torch.tensor(x_seg)
 
     out_filename = '../models/drug_representation/'+mode+'.npy'
+    filename = '../models/drug_representation/' + mode + '_mol_drug_enc_mapping.pkl'
+
+    return_dict = {}
     if mode=='trfm':
         trfm = TrfmSeq2seq(len(vocab), 256, len(vocab), 4)
         trfm.load_state_dict(torch.load(pretrained_model_dir+'trfm.pkl'))
         trfm.eval()
 
+        print('Building data...')
         x_split = [split(sm) for sm in [drug_SMILES_dict[drug] for drug in drug_list]]
         xid, xseg = get_array(x_split)
         X = trfm.encode(torch.t(xid))
 
         print('Trfm size:', X.shape)
 
+        return_dict = {drug_list[i]: np.array(X[i,:]) for i in range(len(drug_list))}
+        with open(file=filename, mode='wb') as f:
+            pickle.dump(return_dict, f, pickle.HIGHEST_PROTOCOL)
+
         np.save(out_filename, X)
+
+
     elif mode=='rnn':
         rnn = RNNSeq2Seq(len(vocab), 256, len(vocab), 3)
         rnn.load_state_dict(torch.load(pretrained_model_dir+'seq2seq.pkl'))
         rnn.eval()
 
+        print('Building data...')
         x_split = [split(sm) for sm in [drug_SMILES_dict[drug] for drug in drug_list]]
         xid, _ = get_array(x_split)
         X = rnn.encode(torch.t(xid))
 
         print('RNN size:', X.shape)
+
+        return_dict = {drug_list[i]: np.array(X[i,:]) for i in range(len(drug_list))}
+        with open(file=filename, mode='wb') as f:
+            pickle.dump(return_dict, f, pickle.HIGHEST_PROTOCOL)
 
         np.save(out_filename, X)
     else:
