@@ -180,8 +180,10 @@ def get_PhenomeNET_protein_list(mode='all'):
 def query_drugpheno_rdf_graph():
     drugpheno_rdf_graph_filename = "../data/PhenomeNET_data/data-2020-12-07/drugphenotype.rdf"
     drugpheno_graph = rdflib.Graph()
+    print('Building drugpheno RDF graph...')
     result = drugpheno_graph.parse(drugpheno_rdf_graph_filename, format='xml')
 
+    print('Query drugpheno RDF graph...')
     qres = drugpheno_graph.query(
         """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX pb: <http://phenomebrowser.net/>
@@ -203,6 +205,7 @@ WHERE {
 }
 """)
 
+    print('Writing results...')
     i = 0
     for drug, phenotype in qres:
         i+=1
