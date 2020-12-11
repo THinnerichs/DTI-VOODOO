@@ -252,3 +252,7 @@ Discussion:
   - build drug DB to CID mapping
   - build protein Uniprot to STRING mapping
 - build mapping to ENSG for Saras driver genes for cancer
+
+- rebuild molecular data for whole SMILES dicts 
+- check side effect mapping as Yamanishi has a whole lot more
+- Check how to include all the other non-human proteins

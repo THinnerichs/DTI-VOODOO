@@ -1,6 +1,7 @@
 import numpy as np
 
 import pickle as pkl
+import rdflib
 
 import DDI_utils
 
@@ -176,6 +177,38 @@ def get_PhenomeNET_protein_list(mode='all'):
     with open(file=path+filename+'.pkl', mode='rb') as f:
         return pkl.load(f)
 
+def query_drugpheno_rdf_graph():
+    drugpheno_rdf_graph_filename = "../data/PhenomeNET_data/data-2020-12-07/drugphenotype.rdf"
+    drugpheno_graph = rdflib.Graph()
+    result = drugpheno_graph.parse(drugpheno_rdf_graph_filename, format='xml')
+
+    qres = drugpheno_graph.query(
+        """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX pb: <http://phenomebrowser.net/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+     
+SELECT ?concept ?phenotype
+FROM <http://phenomebrowser.net>
+WHERE {
+    ?association rdf:type rdf:Statement .
+    ?association rdf:predicate obo:RO_0002200 .
+    ?association rdf:object ?phenotype .
+    ?association rdf:subject ?concept .
+    ?concept rdf:type <http://phenomebrowser.net/Drug> .
+    ?association dc:provenance ?prov .
+    ?prov dc:creator ?creator .
+    ?prov dcterms:source ?source .
+}
+""")
+
+    i = 0
+    for drug, phenotype in qres:
+        i+=0
+        if i>10: break
+        print(drug, pheno)
 
 if __name__ == '__main__':
-    write_PhenomeNET_files()
+    # write_PhenomeNET_files()
+    query_drugpheno_rdf_graph()
