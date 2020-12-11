@@ -210,7 +210,7 @@ WHERE {
             drug = drug.strip().split('/')[-1]
             phenotype = phenotype.strip().split('/')[-1]
             print(drug+'\t'+phenotype, file=f)
-    print('Done.', results, 'drugpheno pairs.')
+    print('Done.', len(results), 'drugpheno pairs.')
 
 
 if __name__ == '__main__':
