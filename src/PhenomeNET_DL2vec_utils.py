@@ -177,7 +177,7 @@ def get_PhenomeNET_protein_list(mode='all'):
     with open(file=path+filename+'.pkl', mode='rb') as f:
         return pkl.load(f)
 
-def query_drugpheno_rdf_graph():
+def write_query_drugpheno_rdf_graph():
     drugpheno_rdf_graph_filename = "../data/PhenomeNET_data/data-2020-12-07/drugphenotype.rdf"
     drugpheno_graph = rdflib.ConjunctiveGraph()
     print('Building drugpheno RDF graph...')
@@ -198,13 +198,19 @@ WHERE {
 }
 """)
 
+    outfile = '../data/PhenomeNET_data/drugpheno_query_results.tsv'
+
     print('Writing results...')
-    i = 0
-    for drug, phenotype in qres:
-        i+=1
-        if i>10: break
-        print(drug, phenotype)
+    counter = 0
+    with open(file=outfile, mode='w') as f:
+        for drug, phenotype in qres:
+            counter+=1
+            drug = drug.strip().split('/')[-1]
+            phenotype = phenotype.strip().split('/')[-1]
+            print(drug+'\t'+phenotype, file=f)
+    print('Done.', counter, 'drugpheno pairs.')
+
 
 if __name__ == '__main__':
     # write_PhenomeNET_files()
-    query_drugpheno_rdf_graph()
+    write_query_drugpheno_rdf_graph()
