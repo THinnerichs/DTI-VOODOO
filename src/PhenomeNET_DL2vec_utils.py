@@ -203,10 +203,10 @@ WHERE {
 
     print('Writing results...')
 
-    results = len(qres)
-    print(results)
+    results = [(d,p) for d, p in qres]
+    print(len(results))
     with open(file=outfile, mode='w') as f:
-        for drug, phenotype in tqdm(qres, total=results):
+        for drug, phenotype in tqdm(results):
             drug = drug.strip().split('/')[-1]
             phenotype = phenotype.strip().split('/')[-1]
             print(drug+'\t'+phenotype, file=f)
