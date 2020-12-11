@@ -205,9 +205,9 @@ WHERE {
 
     i = 0
     for drug, phenotype in qres:
-        i+=0
+        i+=1
         if i>10: break
-        print(drug, pheno)
+        print(drug, phenotype)
 
 if __name__ == '__main__':
     # write_PhenomeNET_files()
