@@ -70,11 +70,11 @@ def write_predicted_DTIs(fold=3):
 
     filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives'
     with open(file=filename, mode='w') as f:
-        print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias\tcancer_type\tgene_name', file=f)
+        print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias\tcancer_type', file=f)
         for drug, protein, _, confidence in pred_list:
             if drug in drug_list and protein in protein_list:
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
-                      str(driver_gene_dict[protein_to_gene_mapping[protein[5:]]])[0], file=f)
+                      str(driver_gene_dict[protein_to_gene_mapping[protein[5:]][0]]), file=f)
 
 if __name__ == '__main__':
     write_predicted_DTIs()
