@@ -64,7 +64,7 @@ def write_predicted_DTIs(fold=3):
     print('Num driver genes:', len(driver_gene_dict))
 
     protein_list = [prot for prot in protein_list if prot[5:] in protein_to_gene_mapping.keys() and
-                                                     protein_to_gene_mapping[prot[:5]] in driver_gene_dict.keys()]
+                                                     protein_to_gene_mapping[prot[5:]] in driver_gene_dict.keys()]
 
     print('Num proteins that are driver genes:', len(protein_list))
 
@@ -75,6 +75,9 @@ def write_predicted_DTIs(fold=3):
             if drug in drug_list and protein in protein_list:
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
                       str(driver_gene_dict[protein_to_gene_mapping[protein]])[1:-1], file=f)
+
+if __name__ == '__main__':
+    write_predicted_DTIs()
 
 
 
