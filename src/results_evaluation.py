@@ -77,7 +77,7 @@ def write_predicted_DTIs(fold=3):
 
     print('drugs that are also present in yamanishi dataset:', len(drug_list))
 
-    filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives'
+    filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives_yama_subset'
     with open(file=filename, mode='w') as f:
         print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias\tcancer_type', file=f)
         for drug, protein, _, confidence in pred_list:
