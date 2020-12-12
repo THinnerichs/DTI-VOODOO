@@ -9,8 +9,11 @@ import DDI_utils
 
 def write_PhenomeNET_files(mode='all'):
     path_prefix = "../data/PhenomeNET_data/"
+    onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
+
     # parse drug HPO annotations and build updated drug list
-    filename = "drug_SIDER_HPO_annotations.csv"
+    # filename = "drug_SIDER_HPO_annotations.csv"
+    filename = 'drugpheno_query_results.tsv'
     print('Loading stereo to mono mapping...')
     drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
@@ -24,10 +27,7 @@ def write_PhenomeNET_files(mode='all'):
             f.readline()
 
             for line in f:
-                split_line = line.split(',')
-                drug, HPO_term = split_line[1].strip(), split_line[2].strip()
-                drug = drug.replace('"', "")
-                drug = drug.split("/")[-1]
+                drug, HPO_term = line.strip().split('\t')
                 # map drugs from stereo to mono
                 if drug.startswith('0'):
                     drug = 'CIDm' + drug[1:]
@@ -38,16 +38,17 @@ def write_PhenomeNET_files(mode='all'):
                         missed_drugs_counter += 1
                         continue
 
-                HPO_term = '<' + HPO_term[1:-1] + '>'
+                HPO_term = onto_prefix.format(entity=HPO_term)
 
                 drug_list.append(drug)
                 drug_HPO_pairs.append((drug, HPO_term))
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Missed drugs from stereo/mono mapping:', missed_drugs_counter)
 
+        return
+
 
     # parse GO and MP annotations for proteins and update protein list
-    onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
     filename = "final_GO_ProteinID_human.txt"
 
     protein_GO_list = []
@@ -220,5 +221,5 @@ WHERE {
 
 
 if __name__ == '__main__':
-    # write_PhenomeNET_files()
-    write_query_drugpheno_rdf_graph()
+    write_PhenomeNET_files('drug')
+    # write_query_drugpheno_rdf_graph()
