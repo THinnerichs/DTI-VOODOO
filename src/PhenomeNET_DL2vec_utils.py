@@ -18,6 +18,7 @@ def write_PhenomeNET_files(mode='all'):
     drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
     drug_list = []
+    missed_drugs = []
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
         print('Parsing SIDER associations...')
@@ -36,6 +37,7 @@ def write_PhenomeNET_files(mode='all'):
                         drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
                     except:
                         missed_drugs_counter += 1
+                        missed_drugs.append(drug)
                         continue
 
                 HPO_term = onto_prefix.format(entity=HPO_term)
