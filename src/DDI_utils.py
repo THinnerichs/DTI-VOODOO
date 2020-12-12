@@ -224,6 +224,8 @@ def get_chemical_stereo_to_normal_mapping():
 
 
 
+
+
 def evaluate_dicts_and_graph():
 
     '''
