@@ -74,7 +74,7 @@ def write_predicted_DTIs(fold=3):
         for drug, protein, _, confidence in pred_list:
             if drug in drug_list and protein in protein_list:
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
-                      str(driver_gene_dict[protein_to_gene_mapping[protein]])[1:-1], file=f)
+                      str(driver_gene_dict[protein_to_gene_mapping[protein[5:]]])[1:-1], file=f)
 
 if __name__ == '__main__':
     write_predicted_DTIs()
