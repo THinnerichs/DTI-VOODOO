@@ -37,8 +37,8 @@ def write_predicted_DTIs(fold=3):
     pred_list = sorted(pred_list, key=lambda tup: tup[3], reverse=True)
     print('len(pred_list):', len(pred_list))
 
-    drug_list = [drug for drug in drug_list if drug in drug_mapping.keys()]
-    protein_list = [protein for protein in protein_list if protein in protein_mapping.keys()]
+    drug_list = list({drug for drug in drug_list if drug in drug_mapping.keys()})
+    protein_list = list({protein for protein in protein_list if protein in protein_mapping.keys()})
 
     filename = '../data/PPI_data/protein_to_gene_dict.pkl'
     with open(file=filename, mode='rb') as f:
