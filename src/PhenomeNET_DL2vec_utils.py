@@ -47,6 +47,7 @@ def write_PhenomeNET_files(mode='all'):
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num unique found drugs', len(set(drug_list)))
         print('Missed drugs from stereo/mono mapping:', missed_drugs_counter)
+        print(missed_drugs[:100])
 
         return
 
