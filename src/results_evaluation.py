@@ -27,9 +27,9 @@ def write_predicted_DTIs(fold=3):
 
     # print(list(set(drug_list) - set(drug_mapping.keys()))[:100])
 
-    pos_sanity_list = [tup for tup in pred_list if round(tup[2] == 1)]
-    random.shuffle(pos_sanity_list)
-    print('sanity_check', pos_sanity_list[:200])
+    # pos_sanity_list = [tup for tup in pred_list if round(tup[2] == 1)]
+    # random.shuffle(pos_sanity_list)
+    # print('sanity_check', pos_sanity_list[:200])
 
 
     pred_list = [tup for tup in pred_list if round(tup[2])==0 and tup[3] > 0.7]
@@ -37,10 +37,45 @@ def write_predicted_DTIs(fold=3):
     pred_list = sorted(pred_list, key=lambda tup: tup[3], reverse=True)
     print('len(pred_list):', len(pred_list))
 
+    drug_list = [drug for drug in drug_list if drug in drug_mapping.keys()]
+    protein_list = [protein for protein in protein_list if protein in protein_mapping.keys()]
+
+    filename = '../data/PPI_data/protein_to_gene_dict.pkl'
+    with open(file=filename, mode='rb') as f:
+        protein_to_gene_mapping = pickle.load(f)
+
+    given_gene_list = map(lambda prot: protein_to_gene_mapping[prot[5:]], protein_list)
+
+    filename = '../data/PPI_data/all_samples_top10.txt'
+    driver_gene_dict = {}
+    with open(file=filename, mode='r') as f:
+        f.readline()
+
+        for line in f:
+            split_line = line.strip().split('\t')
+            gene = split_line[0]
+            is_driver = bool(split_line[3])
+
+            cancer_type, gene_name = split_line[1:3]
+
+            if is_driver:
+                driver_gene_dict[gene] = (cancer_type, gene_name)
+
+    print('Num driver genes:', len(driver_gene_dict))
+
+    protein_list = [prot for prot in protein_list if prot[5:] in protein_to_gene_mapping.keys() and
+                                                     protein_to_gene_mapping[prot[:5]] in driver_gene_dict.keys()]
+
+    print('Num proteins that are driver genes:', len(protein_list))
+
     filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives'
     with open(file=filename, mode='w') as f:
-        print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias', file=f)
+        print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias\tcancer_type\tgene_name', file=f)
         for drug, protein, _, confidence in pred_list:
-            if drug in drug_mapping.keys() and protein in protein_mapping.keys():
-                print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]), file=f)
+            if drug in drug_list and protein in protein_list:
+                print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
+                      str(driver_gene_dict[protein_to_gene_mapping[protein]])[1:-1], file=f)
+
+
+
 

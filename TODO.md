@@ -253,6 +253,8 @@ Discussion:
   - build protein Uniprot to STRING mapping
 - build mapping to ENSG for Saras driver genes for cancer
 
+- rebuild DL2vec embeddings again ( just execute command )
+
 - rebuild molecular data for whole SMILES dicts 
 - check side effect mapping as Yamanishi has a whole lot more
 - Check how to include all the other non-human proteins
