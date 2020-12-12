@@ -3,6 +3,7 @@ import numpy as np
 import random
 
 import DTI_data_preparation
+import DDI_utils
 
 def write_predicted_DTIs(fold=3):
     filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_'+str(fold)+'_predictions.pkl'
@@ -67,6 +68,14 @@ def write_predicted_DTIs(fold=3):
                                                      protein_to_gene_mapping[prot[5:]] in driver_gene_dict.keys()]
 
     print('Num proteins that are driver genes:', len(protein_list))
+
+    yamanishi_drug_mapping = DDI_utils.get_Yamanishi_db_to_PubChem_mapping_dict()
+
+    print('yamanishi mapping length', len(yamanishi_drug_mapping))
+    print(list(yamanishi_drug_mapping.items())[:10])
+    drug_list = [drug for drug in drug_list if drug in yamanishi_drug_mapping.values()]
+
+    print('drugs that are also present in yamanishi dataset:', len(drug_list))
 
     filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives'
     with open(file=filename, mode='w') as f:
