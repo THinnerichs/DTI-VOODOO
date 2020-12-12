@@ -51,8 +51,6 @@ def get_dhimmel_db_to_Pubchem_mapping_dict():
     with open(file=filename, mode='r') as f:
         f.readline()
         for line in f:
-            if len(line)<=10:
-                continue
             db_id, pubchem_id = line.strip().split('\t')
             pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
             return_dict[db_id] = pubchem_id
@@ -65,6 +63,8 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
 
     with open(file=filename, mode='r') as f:
         for line in f:
+            if len(line) <= 9:
+                continue
             db_id, pubchem_id = line.strip().split('\t')
             pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
             return_dict[db_id] = pubchem_id
