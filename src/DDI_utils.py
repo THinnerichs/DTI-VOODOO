@@ -63,7 +63,7 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
 
     with open(file=filename, mode='r') as f:
         for line in f:
-            db_id, pubchem_id = line.strip().split('\t')
+            db_id, pubchem_id = line.strip().split(' ')
             pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
             return_dict[db_id] = pubchem_id
 
