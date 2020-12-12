@@ -46,11 +46,11 @@ def write_encoded_drugs(drug_list, mode='trfm'):
     vocab = WordVocab.load_vocab(pretrained_model_dir + 'vocab.pkl')
 
     def get_inputs(sm):
-        seq_len = 614 # formerly 220
+        seq_len = 1004 # formerly 220
         sm = sm.split()
-        if len(sm) > 612: #formerly 218
+        if len(sm) > 1002: #formerly 218
             print('SMILES is too long ({:d})'.format(len(sm)))
-            sm = sm[:306] + sm[-306:]
+            sm = sm[:501] + sm[-501:]
         ids = [vocab.stoi.get(token, unk_index) for token in sm]
         ids = [sos_index] + ids + [eos_index]
         seg = [1] * len(ids)
