@@ -17,6 +17,8 @@ import DDI_utils
 import dti_utils
 from molecular_utils import *
 
+import PhenomeNET_DL2vec_utils
+
 from torch_dti_utils import rmse, mse, pearson, spearman, ci
 
 import subprocess
@@ -28,10 +30,10 @@ import pickle
 
 
 
-def write_encoded_drugs(mode='trfm'):
+def write_encoded_drugs(drug_list, mode='trfm'):
 
     drug_SMILES_dict = DDI_utils.get_drug_to_SMILES_dict()
-    drug_list = sorted(list(drug_SMILES_dict.keys()))
+    # drug_list = sorted(list(drug_SMILES_dict.keys()))
 
     pad_index = 0
     unk_index = 1
@@ -499,8 +501,9 @@ def XGBoost_molecular_predictor(config):
 
 if __name__=='__main__':
 
-    write_encoded_drugs(mode='trfm')
-    write_encoded_drugs(mode='rnn')
+    drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
+    write_encoded_drugs(drug_list, mode='trfm')
+    write_encoded_drugs(drug_list, mode='rnn')
 
     # write_encoded_proteins()
 
