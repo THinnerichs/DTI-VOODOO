@@ -5,8 +5,8 @@
 #SBATCH -o ../jobscript_outputs/DL2vec.%J.out
 #SBATCH -e ../jobscript_outputs/DL2vec.%J.err
 #SBATCH --time=0-24:00:00
-#SBATCH --mem=300G
-#SBATCH --cpus-per-task=64
+#SBATCH --mem=350G
+#SBATCH --cpus-per-task=40
 
 #run the application:
 source /home/hinnertr/.bashrc
