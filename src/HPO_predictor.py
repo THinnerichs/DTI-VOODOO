@@ -411,7 +411,6 @@ def siamese_drug_protein_network(config):
     sys.stdout.flush()
 
 if __name__ == '__main__':
-agurin
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
