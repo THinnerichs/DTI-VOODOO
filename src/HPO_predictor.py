@@ -84,14 +84,14 @@ class HPODTIDataBuilder:
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
 
-        self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
-        self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+        # self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        # self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
         # additional
-        self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
+        # self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
 
-        self.num_PPI_features = self.drug_features.shape[1]*2 # + 100
+        # self.num_PPI_features = self.drug_features.shape[1]*2 # + 100
 
-        print('feature shape', self.drug_features.shape, self.protein_features.shape)
+        # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
         DL2vec_path_prefix = '../data/PhenomeNET_data/'
 
