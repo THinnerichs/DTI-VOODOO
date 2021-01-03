@@ -365,7 +365,7 @@ def siamese_drug_protein_network(config):
                         print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
 
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
-                    if False and test_AUROC > best_AUROC:
+                    if test_AUROC > best_AUROC:
                         state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
                         torch.save(model.state_dict(), state_dict_path)
             sys.stdout.flush()
@@ -411,7 +411,7 @@ def siamese_drug_protein_network(config):
     sys.stdout.flush()
 
 if __name__ == '__main__':
-
+agurin
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
