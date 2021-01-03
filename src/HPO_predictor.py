@@ -50,6 +50,9 @@ class HPODTIDataBuilder:
         self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
 
+        config.num_proteins = self.num_proteins
+        config.num_drugs = self.num_drugs
+
 
     def build_data(self, config):
 
@@ -329,7 +332,7 @@ def siamese_drug_protein_network(config):
         ret = None
         best_AUROC = 0
         for epoch in range(1, config.num_epochs + 1):
-            loss = train(model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, neg_to_pos_ratio=neg_to_pos_ratio)
+            loss = train(config=config, model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, neg_to_pos_ratio=neg_to_pos_ratio)
             print('Train Loss:', loss)
 
             if epoch%1 == 0:
