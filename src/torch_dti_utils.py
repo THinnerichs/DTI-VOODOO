@@ -539,8 +539,8 @@ class QuickProtFuncDTINetworkData:
 
         # self.feature_matrix =    self.feature_matrix/self.feature_matrix.max()
 
-        self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
-        self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
+        # self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
+        # self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
 
         self.num_PPI_features = 200# +100
 
@@ -645,7 +645,7 @@ class QuickProtFuncDTINetworkData:
             # drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
 
             # Dl2vec
-            protein_feature = torch.tensor(self.protein_features)
+            # protein_feature = torch.tensor(self.protein_features)
             # protein_feature = self.prot_func_features
 
             # input node degree
@@ -653,7 +653,7 @@ class QuickProtFuncDTINetworkData:
 
             # feature_array = torch.cat([degree_feature, drug_feature, protein_feature], dim=1)
             # feature_array = torch.cat([drug_feature, protein_feature], dim=1)
-            feature_array = protein_feature
+            # feature_array = protein_feature
             # feature_array = torch.tensor(degree_feature, dtype=torch.float)
 
             molecular_drug_feature = self.drug_mol_encodings[drug_index,:]
