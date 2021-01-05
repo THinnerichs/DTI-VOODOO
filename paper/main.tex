@@ -16,8 +16,8 @@
 \title[short Title]{Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
-$^{\text{\sf 2}}$Department, Institution, City, Post Code,
-Country.}
+	$^{\text{\sf 2}}$Department, Institution, City, Post Code,
+	Country.}
 
 \corresp{$^\ast$To whom correspondence should be addressed.}
 
@@ -26,44 +26,56 @@ Country.}
 \editor{Associate Editor: XXXXXXX}
 
 \abstract{\textbf{Motivation:} Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text
-Text Text Text Text Text.\\
-\textbf{Results:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text\\
-\textbf{Availability:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text  Text\\
-\textbf{Contact:} \href{tilman.hinnerichs@kaust.edu.sa}{tilman.hinnerichs@kaust.edu.sa}\\
-\textbf{Supplementary information:}10264703 Supplementary data are available at \textit{Bioinformatics}
-online.}
+	Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+	Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+	Text Text Text Text Text Text
+	Text Text Text Text Text.\\
+	\textbf{Results:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text
+	Text Text Text Text Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text\\
+	\textbf{Availability:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text
+	Text Text Text Text Text Text Text Text Text Text Text Text Text Text  Text\\
+	\textbf{Contact:} \href{tilman.hinnerichs@kaust.edu.sa}{tilman.hinnerichs@kaust.edu.sa}\\
+	\textbf{Supplementary information:}10264703 Supplementary data are available at \textit{Bioinformatics}
+	online.}
 
 \maketitle
 \section{Introduction}
 
 \cite{Survey2018}\\
 In history, traditional remedies, that were known for their medicinal properties lead to drugs by extraction of the functional ingredients. Alternatively, characteristics and features of potential drugs were detected by accident like in the case of penicillin. More recently, biological drug targets can be found \textit{in silico} through discovery of suitable computational predictors.\\
-The challenge of accurately predicting drug-target-interactions (DTI) has shown its importance in the fields of drug repurposing and repositioning, and in the exploration of novel drugs and their interaction partners. Knowledge about those links between compounds and their target proteins help in an array of medical and pharmaceutical studies. Additionally, those associations can be utilized to identify disease specific targets, leading to desirable therapeutic effects.\\
+The challenge of accurately predicting drug-target-interactions (DTI) has shown its importance in the fields of drug repurposing and repositioning, and in the exploration of novel drugs and their interaction partners. Knowledge about those links between compounds and their target proteins aid an array of medical and pharmaceutical studies. Additionally, those associations can be utilized to identify disease specific targets, leading to desirable therapeutic effects.\\
 With the rapidly growing field of machine learning approaches and their application to bioscientifical problems in the realm of bioinformatics, different kinds of data, such as long DNA sequences could be utilized for feature generation, while rapid advances were made. Almost all state of the art models for drug-target-interaction prediction were based on the usage of neural networks with increasing size.\\
-Only recently, the technique of graph learning was introduced by \citet{GCNConv} through graph convolution algorithms, and improved and altered under usage of different kernels(\cite{ChebConv}, \cite{ARMAConv}), attention mechanisms (\cite{GATConv}), random walks (\cite{APPNPConv}) and mixtures of both (\cite{SAGEConv}). While based on diverse systems, they can be relevant for testing distinct hypothesis for given graphs. While convolutional filters are suitable for finding patterns among the the given graph, attention mechanisms are more relevant for discovery of important regions within. Lately, graph learning approaches found application for computing compound representations for DTI prediction.\\
-Approaches on this rather sophisticated problem can divided into top-down or network approaches (\textbf{CITATION}), and bottom-up or molecular approaches (\textbf{CITATION}). Top-down approaches take advantage of other data such as diseases (CITATION), side effects, knowledge graphs or ontologies, in order to learn representations for both compound and protein. On the other hand, bottom-up aspirations attempt to learn from chemical properties. For drugs, molecular structure (CITATION GraphDTA), molecular fingerprints, similarity to other drugs (See Bioinf Survey), and other molecular features. On the protein side, secondary structure prediction (CITATION), contact prediction (CITATION), or simply convolution over the amino acid sequences served to obtain a feature for the given proteins. However, both kinds contain and share some problems, that are not solvable within themselves. Thus, bottom-up approaches share the lack of ability to generalize, which we will show in later sections, and usually focus on engineering sophisticated features for the drugs, while neglecting to formulate meaningful features on the protein side. Top-down approaches lack the ability to spot small differences to cope with small differences within the drug structure and rely heavily on given data for the considered drug-target pair. The latter is not suitable for predictions on novel or unseen compounds, as e.g., data on side effects or its impact on diseases is seldom given for novel drugs.\\ 
-In order to design such a feature for proteins and drugs, respectively, we make use of the interaction networks for both proteins and compounds. Drug-drug interaction networks were introduced and standardized by \cite{Boyce2015} and have been used for clinical decision support (\cite{Scheife2015}). Drug-drug interaction networks may give a hint on common targeted pathways. As an additional compound feature we will use semantic side effect similarity, which we will discuss later on.\\
-Protein-protein interaction networks have shown great results in $\dots$(\cite{Vazquez2003}, \cite{Ackerman2019}) in granting context for molecular system biology. However, these contexts were never applied to the problem of drug-target-interaction prediction. Thus we formalized our hypotheses over these interaction graphs and will test them in the following chapters.
+Only recently, the technique of graph learning was introduced by \citet{GCNConv} through graph convolution algorithms, and improved and altered under usage of different kernels(\cite{ChebConv}, \cite{ARMAConv}), attention mechanisms (\cite{GATConv}), random walks (\cite{APPNPConv}) and mixtures of both (\cite{SAGEConv}). While based on diverse systems, they can be relevant for testing distinct hypothesis for given graphs. While convolutional filters are suitable for finding patterns among the the given graph, attention mechanisms are more relevant for discovery of important regions within. Lately, graph learning approaches found application for computing compound representations for DTI prediction.\textbf{CITATION}\\
+Approaches on this rather sophisticated problem can divided into top-down or network approaches (\textbf{CITATION}), and bottom-up or molecular approaches (\textbf{CITATION}). Top-down approaches take advantage of other data such as diseases (CITATION), side effects, knowledge graphs or ontologies, in order to learn representations for either compound or protein. On the other hand, bottom-up methods attempt to learn from chemical properties. For drugs, molecular structure (CITATION GraphDTA), molecular fingerprints, similarity to other drugs \cite{Survey2018}, and other molecular features. On the protein side, secondary structure prediction (CITATION), contact prediction (CITATION), or simply convolution over the amino acid sequences served to obtain a molecular feature for the given proteins. However, both kinds contain and share some problems, that are not solvable within themselves. Thus, bottom-up approaches share the lack of ability to generalize by dearth to inference on unknown chemical structures. Furthermore, usually focus on engineering expressive and sophisticated features on the compound side, while relying on less advanced features on the protein side\cite{Survey2018}. On the other hand, top-down approaches are unable to spot e.g. small non-functional alterations of the compound, and are hence unable to infer on minor differences and rely heavily on rich neighbourhood data for the considered drug-target pair. However, both types of concepts have shown their significance in a variety of tasks, while a combination of both has hardly been done. \\ 
+
+In order to combine both methods, we will use protein-protein interaction networks, which have shown great results in $\dots$(\cite{Vazquez2003}, \cite{Ackerman2019}) in granting context for molecular system biology. We will utilize this context hypothesis for deducing on the hypothesis of locality of protein functionality. We will therefor combine molecular representations for both drugs and proteins with features obtained from the Human Phenotype Ontology (HPO) over PPI graphs under usage of graph neural networks. 
 
 \enlargethispage{12pt}
 
-\section{Approach}
-\subsection{Choosing appropriate train-test splits}
-As shown, recent work lacks the ability to combine both top-down and bottom-up approaches for their predictions, however performing quite well on their datasets. Drug-target interaction prediction is the task to accurately predict whether for a given drug and a given protein there is a biological interaction within humans. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
+\section{Methods}
+\subsection{Problem Description}
+The issue of predicting drug-target interactions can be described quite easily: For a given drug and a given protein we want to forecast whether those interact or not. We hereby do not differentiate between activation and inhibition. 
+
+\begin{itemize}
+	\item how did we model it
+\end{itemize}
+
+
+\subsection{Choosing a train-test splitting scheme}
+In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
+
 \begin{enumerate}
 	\item Build split over drugs
 	\item Build split over drug-target pairs
 	\item Build split over proteins
 \end{enumerate} 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse. \\
-The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.\\
-As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
-Thus, building splitting over proteins is the most challenging of the three options. \\
+
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
+
+\subsection{Does protein functio localize on the PPI graph?}
+
+\subsection{Combining mutually exclusive approaches}
+
 
 \subsection{Tested hypotheses}
 
