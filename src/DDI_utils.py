@@ -60,6 +60,8 @@ def get_dhimmel_db_to_Pubchem_mapping_dict():
 def get_Yamanishi_db_to_PubChem_mapping_dict():
     filename = '../data/Yamanishi_data/drug_mapping.txt'
     stereo_to_mono_mapping = get_chemical_stereo_to_normal_mapping()
+    
+    stereo_to_mono_mapping['CIDs35398744'] = 'CIDm00005212'
     return_dict = {}
 
     with open(file=filename, mode='r') as f:
