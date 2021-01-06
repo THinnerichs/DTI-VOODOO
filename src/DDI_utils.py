@@ -60,7 +60,7 @@ def get_dhimmel_db_to_Pubchem_mapping_dict():
 def get_Yamanishi_db_to_PubChem_mapping_dict():
     filename = '../data/Yamanishi_data/drug_mapping.txt'
     stereo_to_mono_mapping = get_chemical_stereo_to_normal_mapping()
-    
+
     stereo_to_mono_mapping['CIDs35398744'] = 'CIDm00005212'
     return_dict = {}
 
@@ -70,9 +70,13 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
                 continue
             db_id, pubchem_id = line.strip().split('\t')
             if len(pubchem_id) > 8:
-                pubchem_id = stereo_to_mono_mapping['CIDs' + pubchem_id [1:]]
+                try:
+                    pubchem_id = stereo_to_mono_mapping['CIDs' + pubchem_id [1:]]
+                except:
+                    print(pubchem_id)
             else:
                 pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
+
             return_dict[db_id] = pubchem_id
 
     return return_dict
