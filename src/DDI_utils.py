@@ -61,7 +61,6 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
     filename = '../data/Yamanishi_data/drug_mapping.txt'
     stereo_to_mono_mapping = get_chemical_stereo_to_normal_mapping()
 
-    stereo_to_mono_mapping['CIDs35398744'] = 'CIDm00005212'
     return_dict = {}
 
     with open(file=filename, mode='r') as f:
@@ -233,6 +232,63 @@ def get_chemical_stereo_to_normal_mapping():
     filename = '../data/STITCH_data/chemical_stereo_to_normal_mapping_dict'
     with open(file=filename, mode='rb') as f:
         return pickle.load(f)
+
+def get_yamanishi_drug_list():
+    yamanishi_drug_mapping = get_Yamanishi_db_to_PubChem_mapping_dict()
+
+    path = '../data/Yamanishi_data/'
+
+    drug_list = []
+    with open(file=path + 'drug.txt', mode='r') as f:
+        for line in f:
+            drug_list.append(line.strip())
+
+    drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
+
+    return drug_list
+
+def get_yamanishi_side_effect_annotations():
+    path = '../data/Yamanishi_data/'
+
+    # parse side effect HPO_term to name mapping
+    filename = 'HP_name.tsv'
+    mapping_dict = {}
+    with open(file=path+filename, mode='r') as f:
+        # skip header
+        f.readline()
+
+        for line in f:
+            HPO_term, se_name = line.strip().split('\t')
+
+            HPO_term = HPO_term[1:-1]
+            se_name = se_name[1:-1].lower()
+
+            mapping_dict[se_name] = HPO_term
+
+    # parse side effect names
+    filename = 'se.txt'
+    side_effect_list = []
+    with open(file=path+filename, mode='r') as f:
+        for line in f:
+            side_effect_list.append(line.strip().lower())
+
+    mapped_list = list(map(lambda se: mapping_dict.get(se, None), side_effect_list))
+    print('mapped_list', mapped_list)
+    print(len(mapped_list))
+    print(mapped_list.count(None))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
