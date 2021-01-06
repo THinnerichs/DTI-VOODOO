@@ -47,6 +47,8 @@ def write_PhenomeNET_files(mode='all'):
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Missed drugs from stereo/mono mapping:', len(set(missed_drugs)))
 
+    drug_HPO_pairs = list(set(drug_HPO_pairs))
+
 
     # parse GO and MP annotations for proteins and update protein list
     filename = "final_GO_ProteinID_human.txt"
