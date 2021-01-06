@@ -30,20 +30,20 @@ def write_PhenomeNET_files(mode='all'):
             for line in f:
                 drug, HPO_term = line.strip().split('\t')
                 # map drugs from stereo to mono
-                if drug.startswith('0'):
-                    drug = 'CIDm' + drug[1:]
-                else:
-                    try:
-                        drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
-                    except:
-                        missed_drugs_counter += 1
-                        missed_drugs.append(drug)
-                        continue
+                drug = 'CIDm' + drug[1:]
+                try:
+                    drug_stereo_mapped = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
+                except:
+                    missed_drugs_counter += 1
+                    missed_drugs.append(drug)
+                    continue
 
                 HPO_term = onto_prefix.format(entity=HPO_term)
 
                 drug_list.append(drug)
+                drug_list.append(drug_stereo_mapped)
                 drug_HPO_pairs.append((drug, HPO_term))
+                drug_HPO_pairs.append((drug_stereo_mapped, HPO_term))
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Missed drugs from stereo/mono mapping:', len(set(missed_drugs)))
 
