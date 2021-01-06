@@ -501,8 +501,8 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
     drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
     protein_list = list(map(lambda p: yamanishi_protein_mapping.get(p, None), protein_list))
 
-    drug_indices = [drug_list.index(drug) for drug in tqdm(drug_list) if drug in original_drug_list]
-    protein_indices = [protein_list.index(protein) for protein in tqdm(protein_list) if protein in original_protein_list]
+    drug_indices = [drug_list.index(drug) for drug in drug_list if drug in original_drug_list]
+    protein_indices = [protein_list.index(protein) for protein in protein_list if protein in original_protein_list]
 
     drug_list = np.array(drug_list)
     protein_list = np.array(protein_list)
