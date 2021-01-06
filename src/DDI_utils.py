@@ -273,7 +273,8 @@ def get_yamanishi_side_effect_annotations():
             side_effect_list.append(line.strip().lower())
 
     mapped_list = list(map(lambda se: mapping_dict.get(se, None), side_effect_list))
-    print('mapped_list', mapped_list)
+    print('mapped_list', mapped_list[:100])
+
     print(len(mapped_list))
     print(mapped_list.count(None))
 
