@@ -438,6 +438,11 @@ class QuickProtFuncDTINetworkData:
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
+
+        self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+        print('shapes', self.drug_list.shape, self.protein_list.shape, self.y_dti_data.shape)
+        raise Exception
+
         self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
 

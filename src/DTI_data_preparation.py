@@ -469,6 +469,48 @@ def get_protein_to_EnsemblProtein_id():
 
     return protein_to_Ensembl_protein_id_mapping
 
+def get_yamanishi_data(original_drug_list, original_protein_list):
+    yamanishi_drug_mapping = DDI_utils.get_Yamanishi_db_to_PubChem_mapping_dict()
+
+    yamanishi_protein_mapping = PPI_utils.get_protein_Yamanishi_to_STITCH_mapping()
+
+
+    path = '../data/Yamanishi_data/'
+
+    drug_list = []
+    with open(file=path + 'drug.txt', mode='r') as f:
+        for line in f:
+            drug_list.append(line.strip())
+
+    protein_list = []
+    with open(file=path + 'protein.txt', mode='r') as f:
+        for line in f:
+            protein_list.append(line.strip())
+
+    # parse dti matrix provided by https://github.com/luoyunan/DTINet/
+    dti_matrix = []
+    with open(file=path + 'mat_drug_protein.txt', mode='r') as f:
+        for line in f:
+            dti_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
+    dti_matrix = np.array(dti_matrix)
+
+    drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
+    protein_list = list(map(lambda p: yamanishi_protein_mapping.get(p, None), protein_list))
+
+    drug_indices = []
+    protein_indices = []
+    for drug in drug_list:
+        for protein in protein_list:
+            if drug in original_drug_list:
+                drug_indices.append(drug_list.index(drug))
+            if protein in original_protein_list:
+                protein_indices.append(protein_list.index(protein))
+
+    drug_list = np.array(drug_list)
+    protein_list = np.array(protein_list)
+
+    return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices, :][:, protein_indices]
+
 
 def test():
     # print("DTI", len(get_human_proteins()))
