@@ -482,10 +482,13 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
         for line in f:
             drug_list.append(line.strip())
 
+    print('drug_list', len(drug_list))
+
     protein_list = []
     with open(file=path + 'protein.txt', mode='r') as f:
         for line in f:
             protein_list.append(line.strip())
+    print('protein_list', len(protein_list))
 
     # parse dti matrix provided by https://github.com/luoyunan/DTINet/
     dti_matrix = []
@@ -493,13 +496,14 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
         for line in f:
             dti_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
     dti_matrix = np.array(dti_matrix)
+    print('dti_matrix.shape', dti_matrix.shape)
 
     drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
     protein_list = list(map(lambda p: yamanishi_protein_mapping.get(p, None), protein_list))
 
     drug_indices = []
     protein_indices = []
-    for drug in drug_list:
+    for drug in tqdm(drug_list):
         for protein in protein_list:
             if drug in original_drug_list:
                 drug_indices.append(drug_list.index(drug))
