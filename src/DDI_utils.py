@@ -267,13 +267,9 @@ def get_yamanishi_side_effect_annotations():
                 mapping_dict[name] = id
             elif line.startswith('name'):
                 split_line = line.split(' ')
-                print('split_line', split_line)
 
                 name = ' '.join(split_line[1:]).lower()
-                print('name', name)
                 mapping_dict[name] = id
-                print('id', id)
-                raise Exception
 
             '''
             HPO_term, se_name = line.strip().split('\t')
