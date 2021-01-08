@@ -259,7 +259,7 @@ def get_yamanishi_drug_list():
     drug_side_effect_matrix = np.array(drug_side_effect_matrix)
     print('drug_side_effect_matrix.shape', drug_side_effect_matrix.shape)
 
-    mapped_side_effects = get_yamanishi_side_effect_annotations()
+    mapped_side_effects = np.array(get_yamanishi_side_effect_annotations())
 
     drug_valid_side_effect_matrix = drug_side_effect_matrix[:, mapped_side_effects!=None]
 
@@ -277,7 +277,6 @@ def get_yamanishi_drug_list():
 
 
 
-    return drug_list
 
 def get_yamanishi_side_effect_annotations():
     path = '../data/Yamanishi_data/'
