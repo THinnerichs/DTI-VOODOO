@@ -84,9 +84,6 @@ def run_walk(nodes,G, num_workers=48):
 
 
 
-    print("finish the work here")
-
-
 
 
 def write_file(pair):
