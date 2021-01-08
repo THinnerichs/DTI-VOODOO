@@ -248,7 +248,11 @@ def get_yamanishi_drug_list():
 
     drug_list = np.array(list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list)))
 
-    print(len(drug_list))
+    return drug_list
+
+def get_yamanishi_drug_side_effects():
+
+    path = '../data/Yamanishi_data/'
 
     # build drug-side effect matrix
     filename = 'mat_drug_se.txt'
@@ -259,28 +263,7 @@ def get_yamanishi_drug_list():
     drug_side_effect_matrix = np.array(drug_side_effect_matrix)
     print('drug_side_effect_matrix.shape', drug_side_effect_matrix.shape)
 
-    mapped_side_effects = np.array(get_yamanishi_side_effect_annotations())
-
-    drug_valid_side_effect_matrix = drug_side_effect_matrix[:, mapped_side_effects!=None]
-
-    print('drug_valid_side_effect_matrix', drug_valid_side_effect_matrix.shape)
-
-    print('(drug_valid_side_effect_matrix.sum(axis=1)>0)', drug_valid_side_effect_matrix.sum(axis=1).shape)
-
-    mat = drug_valid_side_effect_matrix.sum(axis=1)
-    print(mat.min(), mat.max(), mat[:20])
-    print((mat==1).sum())
-
-    print('(drug_valid_side_effect_matrix.sum(axis=1)>0)', (drug_valid_side_effect_matrix.sum(axis=1)>0).shape)
-
-    print('valid drugs', (drug_valid_side_effect_matrix.sum(axis=1)>0).sum())
-
-    print('usable drugs', len(drug_list))
-
-
-
-
-
+    return drug_side_effect_matrix
 
 def get_yamanishi_side_effect_annotations():
     path = '../data/Yamanishi_data/'
@@ -306,17 +289,6 @@ def get_yamanishi_side_effect_annotations():
                     name = ' '.join(split_line[1:]).lower()
                     mapping_dict[name] = id
 
-                '''
-                HPO_term, se_name = line.strip().split('\t')
-
-                HPO_term = HPO_term[1:-1]
-                se_name = se_name[1:-1].lower()
-
-                mapping_dict[se_name] = HPO_term
-                '''
-
-    print('mapping_dict', len(mapping_dict))
-
     # parse side effect names
     filename = 'se.txt'
     side_effect_list = []
@@ -329,7 +301,7 @@ def get_yamanishi_side_effect_annotations():
     print('total side effects:', len(mapped_list))
     print('Side effects with no mapping:', mapped_list.count(None))
 
-    return mapped_list
+    return np.array(mapped_list)
 
 
 

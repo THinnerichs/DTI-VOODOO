@@ -48,10 +48,25 @@ def write_PhenomeNET_files(mode='all'):
         print('Missed drugs from stereo/mono mapping:', len(set(missed_drugs)))
 
         # load yamanishi drug-HP/MP pairs
+        yama_drug_list = DDI_utils.get_yamanishi_drug_list()
+        drug_side_effect_matrix = DDI_utils.get_yamanishi_drug_side_effects()
+        side_effect_annotations = DDI_utils.get_yamanishi_side_effect_annotations()
 
+        drug_side_effect_matrix = drug_side_effect_matrix[:, side_effect_annotations!=None]
+        drug_side_effect_matrix = drug_side_effect_matrix[yama_drug_list!= None, :]
+        side_effect_annotations = side_effect_annotations[side_effect_annotations!=None]
+        yama_drug_list = yama_drug_list[yama_drug_list!=None]
 
+        print('Yamanishi results:')
+        print(yama_drug_list.shape, drug_side_effect_matrix.shape, side_effect_annotations.shape)
 
-
+        for i, drug in enumerate(yama_drug_list):
+            for j, onto_term in enumerate(side_effect_annotations):
+                if drug_side_effect_matrix[i,j] == 1:
+                    drug_list.append(yama_drug_list[i])
+                    drug_HPO_pairs.append((yama_drug_list[i], side_effect_annotations[j]))
+        print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
+        print('Num present drugs', len(drug_list))
 
     drug_HPO_pairs = list(set(drug_HPO_pairs))
 
