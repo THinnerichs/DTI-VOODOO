@@ -269,6 +269,7 @@ def get_yamanishi_drug_list():
 
     mat = drug_valid_side_effect_matrix.sum(axis=1)
     print(mat.min(), mat.max(), mat[:20])
+    print((mat==1).sum())
 
     print('(drug_valid_side_effect_matrix.sum(axis=1)>0)', (drug_valid_side_effect_matrix.sum(axis=1)>0).shape)
 
