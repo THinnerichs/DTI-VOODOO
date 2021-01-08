@@ -205,36 +205,6 @@ def get_DDI_feature_list(intersect_drug_list):
 
     return np.array(feature_vec_list)
 
-def get_PPI_adj_mat_list(protein_list):
-    # protein_list = get_human_proteins()
-    protein_to_adj_mat_dict = PPI_utils.get_protein_to_adj_mat_dict()
-
-    return np.array([protein_to_adj_mat_dict[protein] for protein in protein_list], dtype=np.int8)
-
-def get_PPI_node_feature_mat_list(protein_list):
-    # protein_list = get_human_proteins()
-
-    protein_node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
-
-    return np.array([protein_node_feature_dict[protein] for protein in protein_list], dtype=np.int8)
-
-def get_PPI_dti_feature_list(drug_list, protein_list):
-    human_dti_graph = get_human_DTI_graph()
-
-    # drug_list = get_drug_list()
-    # protein_list = get_human_proteins()
-
-    protein_dti_mat = np.zeros((len(protein_list), len(drug_list)), dtype=np.int8)
-    for protein_index in range(len(protein_list)):
-        protein = protein_list[protein_index]
-        neighbors = human_dti_graph.neighbors(protein)
-        for drug_index in range(len(drug_list)):
-            drug = drug_list[drug_index]
-            if drug in neighbors:
-                protein_dti_mat[protein_index, drug_index] = 1
-
-    return protein_dti_mat
-
 
 def get_DTIs(drug_list,
              protein_list,
@@ -256,79 +226,7 @@ def get_DTIs(drug_list,
 
     return np.array(y_data, dtype=np.int8)
 
-def get_annotated_PPI_graph():
-    PPI_graph = PPI_utils.get_PPI_graph()
-    node_feature_dict = PPI_utils.get_protein_to_node_feature_dict()
 
-    # nx.set_node_attributes(PPI_graph, 'node_feature', node_feature_dict)
-    for protein in PPI_graph.nodes():
-        PPI_graph.node[protein]['node_feature'] = node_feature_dict[protein]
-
-    return PPI_graph
-
-def write_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
-                                            alignment_method='mafft'):
-    predicted_targets_dir = "../data/predicted_targets/"
-
-    print("Parsing targets from Hmmer prediction ...")
-    files = [file for file in os.listdir(predicted_targets_dir)
-             if rel_weight_method in file and alignment_method in file]
-    drug_filtered_targets_dict = {}
-    for file in tqdm(files):
-        drug = file.split('_')[0]
-        target_list = []
-        with open(file=predicted_targets_dir + file, mode='r') as f:
-            first_line = f.readline()
-            if '---' not in first_line:
-                target_list.append(first_line.strip())
-            for line in f:
-                target_list.append(line.strip())
-
-        drug_filtered_targets_dict[drug] = target_list
-
-    print("Writing dict ...")
-    filename = "../data/drug_to_HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_targets_dict"
-    with open(file=filename+'.pkl', mode='wb') as f:
-        pickle.dump(drug_filtered_targets_dict, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished.\n")
-
-def get_drug_to_HMM_filtered_targets_dict(rel_weight_method='wnone',
-                                          alignment_method='mafft'):
-    filename = "../data/drug_to_HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_targets_dict"
-    with open(file=filename+'.pkl', mode='rb') as f:
-        return pickle.load(f)
-
-def write_drug_protein_HMM_filtered_feature_matrix(drug_list,
-                                                   protein_list,
-                                                   alignment_method='mafft',
-                                                   rel_weight_method='wnone'):
-    return_matrix = np.zeros((len(protein_list),len(drug_list)))
-    drug_HMM_filtered_targets_dict = get_drug_to_HMM_filtered_targets_dict(alignment_method=alignment_method,
-                                                                           rel_weight_method=rel_weight_method)
-
-    for protein_index, protein in enumerate(protein_list):
-        for drug_index, drug in enumerate(drug_list):
-            for predicted_target in drug_HMM_filtered_targets_dict[drug]:
-                if predicted_target == protein:
-                    return_matrix[protein_index, drug_index] = 1
-
-    filename = "../data/HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_"+"feature_matrix"
-    with open(file=filename+'.pkl', mode='wb') as f:
-        pickle.dump(return_matrix, f, pickle.HIGHEST_PROTOCOL)
-    print("Finished.\n")
-
-def get_drug_protein_HMM_filtered_feature_matrix(alignment_method='mafft',
-                                                 rel_weight_method='wnone'):
-    filename = "../data/HMM_filtered_"+alignment_method+"_"+rel_weight_method+"_"+"feature_matrix"
-    with open(file=filename, mode='rb') as f:
-        return pickle.load(f)
-
-def get_protein_HMM_filtered_features(drug_list):
-    # @TODO Implement this function for protein features
-    # drug_toHMM_filtered_targets_dict = get_drug_HMM_filtered_features()
-
-    print("Not implemented yet!")
-    raise Exception
 
 def get_PPI_DTI_graph_intersection():
     dti_graph = get_human_DTI_graph()

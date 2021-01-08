@@ -1,3 +1,5 @@
+import numpy as np
+
 import json
 import pickle
 from tqdm import tqdm
@@ -243,42 +245,65 @@ def get_yamanishi_drug_list():
         for line in f:
             drug_list.append(line.strip())
 
-    drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
+    drug_list = np.array(list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list)))
+
+    print(len(drug_list))
+
+    # build drug-side effect matrix
+    filename = 'mat_drug_se.txt'
+    drug_side_effect_matrix = []
+    with open(file=path + filename, mode='r') as f:
+        for line in f:
+            drug_side_effect_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
+    drug_side_effect_matrix = np.array(drug_side_effect_matrix)
+    print('drug_side_effect_matrix.shape', drug_side_effect_matrix.shape)
+
+    mapped_side_effects = get_yamanishi_side_effect_annotations()
+
+    drug_valid_side_effect_matrix = drug_side_effect_matrix[:, mapped_side_effects!=None]
+
+    print('valid drugs', (drug_valid_side_effect_matrix.sum(axis=1)>0).sum())
+
+    print('usable drugs', len(drug_list))
+
+
+
+
 
     return drug_list
 
 def get_yamanishi_side_effect_annotations():
-    path = '../data/Yamanishi_data/'
+    path = './data/Yamanishi_data/'
 
     # parse side effect HPO_term to name mapping
-    filename = 'hp_for_synonyms.obo'
     mapping_dict = {}
-    with open(file=path+filename, mode='r') as f:
-        # skip header
+    for db in ['hp','mp']:
+        filename = f'{db}_for_synonyms.obo'
+        with open(file=path+filename, mode='r') as f:
 
-        id = name = None
-        for line in f:
-            line = line.strip()
-            if line.startswith('id'):
-                id = line.split(' ')[-1]
-            elif line.startswith('synonym'):
-                split_line = line.split('"')
-                name = split_line[1].lower()
-                mapping_dict[name] = id
-            elif line.startswith('name'):
-                split_line = line.split(' ')
+            id = None
+            for line in f:
+                line = line.strip()
+                if line.startswith('id'):
+                    id = line.split(' ')[-1]
+                elif line.startswith('synonym'):
+                    split_line = line.split('"')
+                    name = split_line[1].lower()
+                    mapping_dict[name] = id
+                elif line.startswith('name'):
+                    split_line = line.split(' ')
 
-                name = ' '.join(split_line[1:]).lower()
-                mapping_dict[name] = id
+                    name = ' '.join(split_line[1:]).lower()
+                    mapping_dict[name] = id
 
-            '''
-            HPO_term, se_name = line.strip().split('\t')
+                '''
+                HPO_term, se_name = line.strip().split('\t')
 
-            HPO_term = HPO_term[1:-1]
-            se_name = se_name[1:-1].lower()
+                HPO_term = HPO_term[1:-1]
+                se_name = se_name[1:-1].lower()
 
-            mapping_dict[se_name] = HPO_term
-            '''
+                mapping_dict[se_name] = HPO_term
+                '''
 
     print('mapping_dict', len(mapping_dict))
 
@@ -290,21 +315,11 @@ def get_yamanishi_side_effect_annotations():
             side_effect_list.append(line.strip().lower())
 
     mapped_list = list(map(lambda se: mapping_dict.get(se, None), side_effect_list))
-    print('mapped_list', mapped_list[:100])
 
-    print(len(mapped_list))
-    print(mapped_list.count(None))
+    print('total side effects:', len(mapped_list))
+    print('Side effects with no mapping:', mapped_list.count(None))
 
-
-
-
-
-
-
-
-
-
-
+    return mapped_list
 
 
 

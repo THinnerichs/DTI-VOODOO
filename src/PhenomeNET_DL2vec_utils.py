@@ -13,7 +13,6 @@ def write_PhenomeNET_files(mode='all'):
 
     # parse drug HPO annotations and build updated drug list
     # filename = "drug_SIDER_HPO_annotations.csv"
-    filename = 'drugpheno_query_results.tsv'
     print('Loading stereo to mono mapping...')
     drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
@@ -21,6 +20,7 @@ def write_PhenomeNET_files(mode='all'):
     missed_drugs = []
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
+        filename = 'drugpheno_query_results.tsv'
         print('Parsing SIDER associations...')
         missed_drugs_counter = 0
         with open(file=path_prefix + filename, mode='r') as f:
@@ -46,6 +46,12 @@ def write_PhenomeNET_files(mode='all'):
                 drug_HPO_pairs.append((drug_stereo_mapped, HPO_term))
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Missed drugs from stereo/mono mapping:', len(set(missed_drugs)))
+
+        # load yamanishi drug-HP/MP pairs
+
+
+
+
 
     drug_HPO_pairs = list(set(drug_HPO_pairs))
 
