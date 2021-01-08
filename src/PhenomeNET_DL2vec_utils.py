@@ -64,7 +64,8 @@ def write_PhenomeNET_files(mode='all'):
             for j, onto_term in enumerate(side_effect_annotations):
                 if drug_side_effect_matrix[i,j] == 1:
                     drug_list.append(yama_drug_list[i])
-                    drug_HPO_pairs.append((yama_drug_list[i], side_effect_annotations[j]))
+                    drug_HPO_pairs.append((drug, onto_prefix.format(entity=onto_term.replace(':', '_'))))
+
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num present drugs', len(drug_list))
 
