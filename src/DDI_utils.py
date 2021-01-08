@@ -258,8 +258,9 @@ def get_yamanishi_side_effect_annotations():
 
         id = name = None
         for line in f:
+            line = line.strip()
             if line.startswith('id'):
-                id = line.strip().split(' ')[-1]
+                id = line.split(' ')[-1]
             elif line.startswith('synonym'):
                 split_line = line.split('"')
                 name = split_line[1].lower()
