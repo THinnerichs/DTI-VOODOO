@@ -74,6 +74,7 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
                 try:
                     pubchem_id = stereo_to_mono_mapping['CIDs' + pubchem_id [1:]]
                 except:
+                    pass
                     print(pubchem_id)
             else:
                 pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
@@ -261,6 +262,12 @@ def get_yamanishi_drug_list():
     mapped_side_effects = get_yamanishi_side_effect_annotations()
 
     drug_valid_side_effect_matrix = drug_side_effect_matrix[:, mapped_side_effects!=None]
+
+    print('drug_valid_side_effect_matrix', drug_valid_side_effect_matrix.shape)
+
+    print('(drug_valid_side_effect_matrix.sum(axis=1)>0)', drug_valid_side_effect_matrix.sum(axis=1).shape)
+
+    print('(drug_valid_side_effect_matrix.sum(axis=1)>0)', (drug_valid_side_effect_matrix.sum(axis=1)>0).shape)
 
     print('valid drugs', (drug_valid_side_effect_matrix.sum(axis=1)>0).sum())
 
