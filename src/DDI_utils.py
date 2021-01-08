@@ -251,19 +251,35 @@ def get_yamanishi_side_effect_annotations():
     path = '../data/Yamanishi_data/'
 
     # parse side effect HPO_term to name mapping
-    filename = 'HP_name.tsv'
+    filename = 'hp_for_synonyms.obo'
     mapping_dict = {}
     with open(file=path+filename, mode='r') as f:
         # skip header
-        f.readline()
 
+        id = name = None
         for line in f:
+            if line.startswith('id'):
+                id = line.strip().split(' ')[-1]
+            elif line.startswith('synonym'):
+                split_line = line.split('"')
+                name = split_line[1].lower()
+                mapping_dict[name] = id
+            elif line.startswith('name'):
+                split_line = line.split(' ')
+
+                name = ' '.join(split_line[1:]).lower()
+                mapping_dict[name] = id
+
+            '''
             HPO_term, se_name = line.strip().split('\t')
 
             HPO_term = HPO_term[1:-1]
             se_name = se_name[1:-1].lower()
 
             mapping_dict[se_name] = HPO_term
+            '''
+
+    print('mapping_dict', len(mapping_dict))
 
     # parse side effect names
     filename = 'se.txt'
