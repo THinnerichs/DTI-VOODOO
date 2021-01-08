@@ -273,7 +273,7 @@ def get_yamanishi_drug_list():
     return drug_list
 
 def get_yamanishi_side_effect_annotations():
-    path = './data/Yamanishi_data/'
+    path = '../data/Yamanishi_data/'
 
     # parse side effect HPO_term to name mapping
     mapping_dict = {}
