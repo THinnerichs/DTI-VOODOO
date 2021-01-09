@@ -66,9 +66,9 @@ class QuickProtFuncDTINetworkData:
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
 
-        self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
-        print('shapes', self.drug_list.shape, self.protein_list.shape, self.y_dti_data.shape)
-        raise Exception
+        if config.yamanishi_test:
+            print("Loading Yamanishi data ...")
+            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
 
         # calculate dimensions of network
         self.num_proteins = len(self.protein_list)
@@ -98,9 +98,10 @@ class QuickProtFuncDTINetworkData:
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
         # DTI data
-        print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
-        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
+        if not config.yamanishi_test:
+            print("Loading DTI links ...")
+            y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
+            self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
         print("Building feature matrix ...")

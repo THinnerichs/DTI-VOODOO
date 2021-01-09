@@ -74,7 +74,7 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
                 try:
                     pubchem_id = stereo_to_mono_mapping['CIDs' + pubchem_id [1:]]
                 except:
-                    pass
+                    continue
                     print(pubchem_id)
             else:
                 pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
