@@ -61,14 +61,14 @@ class QuickProtFuncDTINetworkData:
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
 
-        # PPI data
-        print("Loading PPI graph ...")
-        self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
-
 
         if config.yamanishi_test:
             print("Loading Yamanishi data ...")
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+
+        # PPI data
+        print("Loading PPI graph ...")
+        self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
 
         # calculate dimensions of network
         self.num_proteins = len(self.protein_list)

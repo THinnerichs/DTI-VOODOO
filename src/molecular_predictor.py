@@ -29,6 +29,12 @@ import gc
 import pickle
 
 
+def write_current_drug_list():
+    drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
+    drug_list = [drug for drug in drug_list if not drug.startswith('1')]
+    write_encoded_drugs(drug_list, mode='trfm')
+    write_encoded_drugs(drug_list, mode='rnn')
+
 
 def write_encoded_drugs(drug_list, mode='trfm'):
 
@@ -501,13 +507,9 @@ def XGBoost_molecular_predictor(config):
 
 if __name__=='__main__':
 
-    drug_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list()
-    write_encoded_drugs(drug_list, mode='trfm')
-    write_encoded_drugs(drug_list, mode='rnn')
 
     # write_encoded_proteins()
 
-    '''
     # Add parser arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_proteins", type=int, default=-1)
@@ -536,4 +538,3 @@ if __name__=='__main__':
         print("No valid model selected.")
         raise ValueError
 
-    '''
