@@ -408,7 +408,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
     print('len(drug_indices)', len(drug_indices))
     print('dti_matrix.shape', dti_matrix[drug_indices, :].shape)
 
-    return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices, :][:, protein_indices]
+    return drug_list, protein_list[protein_indices], dti_matrix[:, protein_indices]
 
 
 def test():
