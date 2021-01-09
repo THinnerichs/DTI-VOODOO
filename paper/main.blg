@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2019/Arch Linux)
+This is BibTeX, Version 0.99d (TeX Live 2020/Arch Linux)
 Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: natbib.bst.bst
@@ -10,45 +10,45 @@ Warning--empty journal in GCNConv
 Warning--empty journal in APPNPConv
 Warning--empty journal in Resnik1995
 Warning--empty journal in GATConv
-You've used 21 entries,
+You've used 30 entries,
             2378 wiz_defined-function locations,
-            656 strings with 9087 characters,
-and the built_in function-call counts, 11306 in all, are:
-= -- 940
-> -- 928
-< -- 7
-+ -- 286
-- -- 282
-* -- 1121
-:= -- 2073
-add.period$ -- 82
-call.type$ -- 21
-change.case$ -- 130
-chr.to.int$ -- 21
-cite$ -- 28
-duplicate$ -- 397
-empty$ -- 610
-format.name$ -- 311
-if$ -- 2156
+            715 strings with 15802 characters,
+and the built_in function-call counts, 22481 in all, are:
+= -- 1372
+> -- 2752
+< -- 8
++ -- 886
+- -- 878
+* -- 2593
+:= -- 4402
+add.period$ -- 122
+call.type$ -- 30
+change.case$ -- 185
+chr.to.int$ -- 30
+cite$ -- 37
+duplicate$ -- 562
+empty$ -- 879
+format.name$ -- 918
+if$ -- 4054
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 19
-newline$ -- 99
-num.names$ -- 86
-pop$ -- 170
+missing$ -- 26
+newline$ -- 142
+num.names$ -- 122
+pop$ -- 228
 preamble$ -- 1
-purify$ -- 130
+purify$ -- 185
 quote$ -- 0
-skip$ -- 270
+skip$ -- 376
 stack$ -- 0
-substring$ -- 543
-swap$ -- 68
+substring$ -- 838
+swap$ -- 98
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 189
+type$ -- 270
 warning$ -- 7
-while$ -- 82
+while$ -- 121
 width$ -- 0
-write$ -- 247
+write$ -- 357
 (There were 7 warnings)

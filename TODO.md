@@ -246,15 +246,74 @@ Discussion:
 - find and test a gold standard 
 
 ## TODO 
+- build name to HP onto mapping and apply to yamanishi dataset
+  - reevaluate Sparql query
+  see files in download for parsing
 
-- download Yamanishi dataset
-  - DTI matrix
-  - build drug DB to CID mapping
-  - build protein Uniprot to STRING mapping
-- build mapping to ENSG for Saras driver genes for cancer
-
+- check side effect mapping as Yamanishi has a whole lot more
 - rebuild DL2vec embeddings again ( just execute command )
 
-- rebuild molecular data for whole SMILES dicts 
-- check side effect mapping as Yamanishi has a whole lot more
-- Check how to include all the other non-human proteins
+
+
+- Analysis of subclasses
+- cherry pick drug and discuss that very drug 
+
+- intro, method results discussion
+
+- methods:
+  - datasets
+    - mappings
+      - how much data is lost
+  - hyperparameter tuning 
+    - why is model looking like it is
+      - formulas
+    - grid search
+    - split implementation
+    - size of dataset
+    - evaluation
+    - loss
+  - training process
+    - split implementation
+  - evaluation method
+    1. how did I evaluate (evaluation metrics)
+    2. comparative evaluation (comparative evaluation/comparison)
+    - how long for training
+    - why did i stop
+    - size of dataset
+    - evaluation
+    - loss
+  - discussion drug-driver genes
+
+- results
+  - description of method (high level) + figure for workflow
+    - da kommen diese features her, da die anderen, methode generisch
+  - experiments
+    - "I took this dataset and did this."
+    - Table(ROC-Curve)
+      - first features plain
+      - then molecular
+      - then phenotype
+      - then with network
+    - what did I learn?
+  - comparison
+    - Yamanishi benchmark
+    - comparison table 
+
+- discussion
+  - what is new
+    - reached goal of combining graph with ..
+  - driver gene stuff
+    - cherry pick
+  - technical discussion
+    - what did I learn
+      - softmax
+    - which features any why
+    - many other features possible (What could be done different)
+      - molecular features
+        - why as chosen
+      - ontology features
+        - many other ontology methods
+          - OWL2vec
+          - GNN (end-to-end)
+- conclusion (summary)
+          
