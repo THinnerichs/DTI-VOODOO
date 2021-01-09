@@ -3,6 +3,7 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: natbib.bst.bst
 Database file #1: citations.bib
+Warning--I didn't find a database entry for "Yaminishi2008"
 Warning--empty journal in ARMAConv
 Warning--empty journal in ChebConv
 Warning--empty journal in SAGEConv
@@ -10,45 +11,45 @@ Warning--empty journal in GCNConv
 Warning--empty journal in APPNPConv
 Warning--empty journal in Resnik1995
 Warning--empty journal in GATConv
-You've used 30 entries,
+You've used 31 entries,
             2378 wiz_defined-function locations,
-            715 strings with 15802 characters,
-and the built_in function-call counts, 22481 in all, are:
-= -- 1372
-> -- 2752
-< -- 8
-+ -- 886
-- -- 878
-* -- 2593
-:= -- 4402
-add.period$ -- 122
-call.type$ -- 30
-change.case$ -- 185
-chr.to.int$ -- 30
-cite$ -- 37
-duplicate$ -- 562
-empty$ -- 879
-format.name$ -- 918
-if$ -- 4054
+            721 strings with 15917 characters,
+and the built_in function-call counts, 22830 in all, are:
+= -- 1409
+> -- 2774
+< -- 9
++ -- 892
+- -- 884
+* -- 2618
+:= -- 4468
+add.period$ -- 124
+call.type$ -- 31
+change.case$ -- 192
+chr.to.int$ -- 31
+cite$ -- 38
+duplicate$ -- 574
+empty$ -- 896
+format.name$ -- 927
+if$ -- 4122
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 26
-newline$ -- 142
-num.names$ -- 122
-pop$ -- 228
+newline$ -- 146
+num.names$ -- 126
+pop$ -- 234
 preamble$ -- 1
-purify$ -- 185
+purify$ -- 192
 quote$ -- 0
-skip$ -- 376
+skip$ -- 388
 stack$ -- 0
-substring$ -- 838
-swap$ -- 98
+substring$ -- 850
+swap$ -- 99
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 270
+type$ -- 279
 warning$ -- 7
-while$ -- 121
+while$ -- 124
 width$ -- 0
-write$ -- 357
-(There were 7 warnings)
+write$ -- 367
+(There were 8 warnings)

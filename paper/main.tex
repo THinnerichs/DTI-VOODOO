@@ -132,23 +132,43 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 \enlargethispage{12pt}
 
 \section{Methods}
+\subsection{Problem Description}
+The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. Additionally, we presume the closed world assumption, that all drug-protein pairs without an interaction, do not have one eventually. We also do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond, thus leading to a binary classification task.\\
+
 \subsection{Datasets}
-The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched 11.574 proteins with over 170.000 links from STRING (\cite{STRINGv10}). For the drug-target interactions themselves, we fetched 
+The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched \text{num proteins} human proteins with over 170.000 links from STRING (\cite{STRINGv10}). For the drug-target interactions themselves, we fetched 
 137.000 links from STITCH database (\cite{STITCHv5}). As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
 For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
 Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
 
 We additionally obtained molecular structure based features for drugs from \textit{SmilesTransformer}\citep{SmilesTransformer} and proteins from \textit{DeepGOPlus}\citep{DeepGoPlus}.\\
+
+For comparative evaluation we used the gold standard dataset introduced by \citet{Yaminishi2008}, which includes both drug-target interaction pairs and side effects.\\ 
  
-Eventually the intersection between these resources yielded \todo{num drugs} drugs and \todo{num proteins} human proteins for the training phase. We provide links to and methods for the necessary data in the provided Github repository.\\
+Eventually, we only considered proteins that had at least one link in either STITCH or STRING, and drugs with at least one side effect and one existing target. Thus, the intersection between these resources yielded \todo{num drugs} drugs and \todo{num proteins} human proteins for the training phase. We provide links to and methods for the necessary data in the provided Github repository.\\
 
-\subsection{Problem Description}
-The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. We hereby do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond.\\
+\subsection{Evaluation and metrics}
+As the number of drug-targets are sparsely given w.r.t. to the number of both drugs and proteins considered, the resulting training, validation and testing datasets are highly imbalanced. As there are only $~22.000$ links in the considered subset the ratio
+\begin{equation*}
+	\frac{\#dti\_links}{\#drugs \cdot \#proteins} \approx 360,
+\end{equation*}
 
-\subsection{Model} 
+consequently needing compensation in the computed loss function and appropriate metrics for the evaluation.\\
+
+On that account, we weighted all positive drug-protein pair samples with this ratio by introducing the following loss function w.r.t. to binary cross-entropy:
+\begin{equation}
+	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
+\end{equation}
+for given prediction $x$ and target $y$. We average this loss among all drug-protein pairs in the training set, leading to a stable environment for the used optimizing scheme \textit{Adam} \citep{Adam2014}. We implemented a 5-fold cross validation among the proteins as justified in the results section. Furthermore, we  used early stopping to detect plateaus in the training process. \\
+
+To assess each model, we computed the \textit{area under receiver operating characteristic}-score (AUROC), \textit{F1-score} (F1) and \textit{Matthews correlation coefficient} (MCC) for each considered hyperparameter configuration setting.\\
+
+Avoiding validation overfitting, we eventually tested the best performing model on the Yamanishi dataset as presented and discussed. Furthermore, we compare our results on this very dataset with various other cutting edge approaches to DTI-prediction.\\
+
+\subsection{Model} \todo{speaking about the model structure without introducing it at all feels very odd.}
 In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each. In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. \\
 
-As we want to learn from the similarity of drug side effects and protein phenotypes we opted for a deep siamese network approach, hence learning a high-dimensional embedding emphasizing this identity by forcing a maximal cosine similarity between these embeddings. On the other hand we build a deep neural network for the molecular structure based features. \\
+As we wanted to learn from the similarity of drug side effects and protein phenotypes we opted for a deep siamese network approach, hence learning a high-dimensional embedding emphasizing this identity by forcing a maximal cosine similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features. \\
 
 \subsubsection{Graph convolutional layers}
 These molecular and ontology based sub-models were added to a larger graph convolutional model.
@@ -182,6 +202,8 @@ While in this initial formulation the node-wise update step is defined by the su
 
 While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. \\
 
+\subsubsection{Hyperparameter tuning}
+To find the best hyperparameter configuration for the proposed model we performed a grid search, to find the most expressive and non-redundant representation. Therefor, we pretrained the bottom-up and the top-down model separately and aimed at best performing models w.r.t. previously described metrics. Embedding sizes, depth of the neural network, optimizer, learning rate and layer types were found from an extensive, manual grid search. 
 
 
 
