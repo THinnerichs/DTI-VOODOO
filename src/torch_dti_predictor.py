@@ -152,13 +152,13 @@ def quickened_missing_target_predictor(config,
                     print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min(), train_predictions.shape)
                     print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min(), test_predictions.shape, test_labels.shape)
 
-                    print(config.model_id, 'Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions))#@TODO, file=f)
 
-                    print(config.model_id, 'Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -166,13 +166,13 @@ def quickened_missing_target_predictor(config,
 
                     # Uncomment for logging into file
                     '''
-                    print(config.model_id, 'Train:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions), file = f)
 
-                    print(config.model_id, 'Test:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
@@ -195,10 +195,6 @@ def quickened_missing_target_predictor(config,
                 pred_filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_' + str(fold) + '_predictions.pkl'
                 with open(file=pred_filename, mode='wb') as f:
                     pickle.dump(zipped_list, f, pickle.HIGHEST_PROTOCOL)
-
-            if False and not config.pretrain:
-                model_filename = '../models/PPI_network_' + (config.model_id+'_' if config.model_id else '') + config.arch + '_'+str(epoch)+'_epochs_model_fold_' + str(fold) + '.model'
-                torch.save(model.state_dict(), model_filename)
 
             sys.stdout.flush()
         results.append(ret)
