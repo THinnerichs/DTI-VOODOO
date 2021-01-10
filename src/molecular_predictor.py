@@ -117,7 +117,7 @@ def write_encoded_proteins():
     in_file = protein_dir+'data/PPI_graph_protein_seqs.fasta'
     out_file = protein_dir+'results/output'
 
-    subprocess.call(protein_dir+'predict.sh {} {}'.format(in_file, out_file))
+    subprocess.call('source' + protein_dir+f'predict.sh {in_file} {out_file}')
 
 def molecular_predictor(config):
     model_st = 'molecular_predictor'
@@ -501,9 +501,6 @@ def XGBoost_molecular_predictor(config):
 
 
 if __name__=='__main__':
-
-
-
 
     # write_encoded_proteins()
 

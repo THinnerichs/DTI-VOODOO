@@ -15,8 +15,7 @@ import sys
 import pickle
 
 import DTI_data_preparation
-from PPI_utils import get_PPI_graph
-import DDI_utils
+import PPI_utils
 import PhenomeNET_DL2vec_utils
 from protein_function_utils import ProteinFunctionDTIDataBuilder
 
@@ -37,19 +36,13 @@ class QuickProtFuncDTINetworkData:
         MP_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='MP')
 
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
-        self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
+        self.PPI_graph = PPI_utils.get_PPI_graph(min_score=config.PPI_min_score)
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
 
         print(len(self.protein_list), "proteins present.\n")
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
 
 
-
-        if config.yamanishi_test:
-            print("Loading Yamanishi data ...")
-            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
-            print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
-            
         if config.include_mol_features:
             print("Building molecular features")
             # build drug features
@@ -69,6 +62,12 @@ class QuickProtFuncDTINetworkData:
             self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
+
+        if config.yamanishi_test:
+            print("Loading Yamanishi data ...")
+            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+            print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
+
 
         # PPI data
         print("Loading PPI graph ...")
