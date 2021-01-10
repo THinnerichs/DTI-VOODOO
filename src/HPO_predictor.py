@@ -204,15 +204,6 @@ class HPOPredNet(nn.Module):
     def __init__(self):
         super(HPOPredNet, self).__init__()
 
-        self.fc1 = nn.Linear(800, 128)
-        self.fc2 = nn.Linear(128, 128)
-        self.fc3 = nn.Linear(128, 128)
-        self.fc4 = nn.Linear(128, 128)
-        self.fc5 = nn.Linear(128, 1)
-
-        self.relu = nn.ReLU()
-        self.sigmoid = nn.Sigmoid()
-
         self.dropout = nn.Dropout(0.5)
 
         # siamese network approach
