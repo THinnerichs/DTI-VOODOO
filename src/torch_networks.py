@@ -476,9 +476,9 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
             act = torch.nn.LeakyReLU(0.2, inplace=True)
 
-            self.conv1 = nn.DeepGCNLayer(conv1, norm1, act, block='res', dropout=0.1)
-            self.conv2 = nn.DeepGCNLayer(conv2, norm2, act, block='res', dropout=0.1)
-            self.conv3 = nn.DeepGCNLayer(conv3, norm3, act, block='res', dropout=0.1)
+            self.conv1 = nn.DeepGCNLayer(conv1, norm1, act, block='res', dropout=0.3)
+            self.conv2 = nn.DeepGCNLayer(conv2, norm2, act, block='res', dropout=0.3)
+            self.conv3 = nn.DeepGCNLayer(conv3, norm3, act, block='res', dropout=0.4)
             self.conv4 = nn.DeepGCNLayer(conv4, norm4, act, block='res', dropout=0.1)
             self.conv5 = nn.DeepGCNLayer(conv5, norm5, act, block='res', dropout=0.1)
 
