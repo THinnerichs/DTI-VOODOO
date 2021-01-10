@@ -47,8 +47,9 @@ class QuickProtFuncDTINetworkData:
             print("Building molecular features")
             # build drug features
             if config.drug_mode == 'trfm' or config.drug_mode == 'rnn':
-                drug_filename = '../models/drug_representation/' + config.drug_mode + '.npy'
-                self.drug_mol_encodings = torch.from_numpy(np.load(drug_filename))
+                drug_filename = '../models/drug_representation/' + mode + '_mol_drug_enc_mapping.pkl'
+                with open(file=drug_filename, mode='rb') as f:
+                    self.drug_mol_encodings = pickle.load(f)
             else:
                 print("No valid mode selected for drug to SMILES encoding.")
                 raise ValueError
@@ -64,13 +65,10 @@ class QuickProtFuncDTINetworkData:
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
 
         if config.yamanishi_test:
-            a = np.array([prot in self.PPI_graph.nodes() for prot in self.protein_list])
-            print('a:', a.sum()-len(a))
             print("Loading Yamanishi data ...")
             mol_prot = self.protein_list
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
-            print('intersec:', len(set(mol_prot) & set(self.protein_list)))
 
 
         # PPI data
@@ -125,7 +123,7 @@ class QuickProtFuncDTINetworkData:
 
         self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list, n=100))
 
-
+        self.drug_mol_encodings = torch.Tensor([self.drug_mol_encodings[drug] for drug in self.drug_list])
 
         print("Finished.\n")
 
