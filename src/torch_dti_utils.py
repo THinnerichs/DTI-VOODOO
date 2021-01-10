@@ -67,6 +67,7 @@ class QuickProtFuncDTINetworkData:
         if config.yamanishi_test:
             print("Loading Yamanishi data ...")
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+            print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
 
         # PPI data
         print("Loading PPI graph ...")
