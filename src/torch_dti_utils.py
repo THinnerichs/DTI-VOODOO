@@ -70,6 +70,15 @@ class QuickProtFuncDTINetworkData:
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
 
+            if config.include_mol_featuresL
+                # rebuild molecular protein features as above procedure both is dependent and alters the protein_list
+                filename = '../models/protein_representation/results/prot_to_encoding_dict'
+                with open(file=filename + '.pkl', mode='rb') as f:
+                    protein_to_feature_dict = pickle.load(f)
+
+                self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
+
+
 
         # PPI data
         print("Loading PPI graph ...")
