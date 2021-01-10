@@ -193,28 +193,21 @@ def get_merged_DDI_graph():
 
     return merged_graph
 
-def write_drug_to_SMILES_dict():
-    filename = '../data/STITCH_data/chemicals.v5.0.tsv'
+def get_drug_to_SMILES_dict():
+    filename = '../data/STITCH_data/drug_smiles_mapping'
 
-    print("Writing drug to SMILES dict...")
-
+    print('Fetching drug to SMILES mapping ...')
     drug_to_smiles_dict = {}
     with open(file=filename, mode='r') as f:
         # skip header
         f.readline()
 
         for line in f:
-            drug_id, _, _, drug_smiles_enc = line.strip().split('\t')
+            drug_id, drug_smiles_enc = line.strip().split('\t')
+            drug_id = 'CIDm' + (8-len(drug_id))*'0' + drug_id
             drug_to_smiles_dict[drug_id] = drug_smiles_enc.strip()
 
-    with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='wb') as f:
-        pickle.dump(drug_to_smiles_dict, f, pickle.HIGHEST_PROTOCOL)
-
-    print("Done.")
-
-def get_drug_to_SMILES_dict():
-    with open(file='../data/STITCH_data/drug_to_SMILES_dict.pkl', mode='rb') as f:
-        return pickle.load(f)
+    return drug_to_smiles_dict
 
 def write_chemical_stereo_to_normal_mapping():
     filename = "../data/STITCH_data/chemical.aliases.v5.0.tsv"

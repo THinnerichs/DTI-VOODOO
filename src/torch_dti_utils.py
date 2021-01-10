@@ -16,6 +16,7 @@ import pickle
 
 import DTI_data_preparation
 from PPI_utils import get_PPI_graph
+import DDI_utils
 import PhenomeNET_DL2vec_utils
 from protein_function_utils import ProteinFunctionDTIDataBuilder
 
@@ -38,6 +39,7 @@ class QuickProtFuncDTINetworkData:
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         self.PPI_graph = get_PPI_graph(min_score=config.PPI_min_score)
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+
         print(len(self.protein_list), "proteins present.\n")
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
 
