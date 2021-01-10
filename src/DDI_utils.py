@@ -199,9 +199,6 @@ def get_drug_to_SMILES_dict():
     print('Fetching drug to SMILES mapping ...')
     drug_to_smiles_dict = {}
     with open(file=filename, mode='r') as f:
-        # skip header
-        f.readline()
-
         for line in f:
             drug_id, drug_smiles_enc = line.strip().split('\t')
             drug_id = 'CIDm' + (8-len(drug_id))*'0' + drug_id
