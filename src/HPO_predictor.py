@@ -435,6 +435,8 @@ if __name__ == '__main__':
     parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--fold", type=int, default=3)
 
+    parser.add_argument("--yamanishi_test", action='store_true')
+
     config = parser.parse_args()
 
     if config.model=='protein':
