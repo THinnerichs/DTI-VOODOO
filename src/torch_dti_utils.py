@@ -47,7 +47,7 @@ class QuickProtFuncDTINetworkData:
             print("Building molecular features")
             # build drug features
             if config.drug_mode == 'trfm' or config.drug_mode == 'rnn':
-                drug_filename = '../models/drug_representation/' + config.mode + '_mol_drug_enc_mapping.pkl'
+                drug_filename = '../models/drug_representation/' + config.drug_mode + '_mol_drug_enc_mapping.pkl'
                 with open(file=drug_filename, mode='rb') as f:
                     self.drug_mol_encodings = pickle.load(f)
             else:
