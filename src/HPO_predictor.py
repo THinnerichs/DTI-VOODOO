@@ -41,6 +41,10 @@ class HPODTIDataBuilder:
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
         print(len(self.protein_list), "proteins present\n")
 
+        if config.yamanishi_test:
+            print("Loading Yamanishi data ...")
+            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+
         # PPI data
         print("Loading PPI graph ...")
         self.PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
@@ -78,10 +82,11 @@ class HPODTIDataBuilder:
         # print('semsim.shape', self.semsim_feature_matrix.shape)
 
         # DTI data
-        print("Loading DTI links ...")
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
-                                                   mode=config.mode)
-        self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
+        if not config.yamanishi_test:
+            print("Loading DTI links ...")
+            y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
+                                                       mode=config.mode)
+            self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))

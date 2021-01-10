@@ -530,6 +530,7 @@ if __name__=='__main__':
         drug_list = [drug for drug in drug_list if not drug.startswith('1')]
         write_encoded_drugs(drug_list, mode='trfm')
         write_encoded_drugs(drug_list, mode='rnn')
+        print('Successfully computed molecular drug embeddings. Aborting rest of script.')
 
         raise Exception
 
