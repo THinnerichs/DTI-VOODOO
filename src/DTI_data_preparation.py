@@ -401,6 +401,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 
     drug_indices = [drug_list.index(drug) for drug in drug_list if drug!=None and not drug.startswith('1')]
     intersec = list(set(original_protein_list) & set(protein_list))
+    print('intersec', intersec)
     protein_indices = [protein_list.index(protein) for protein in protein_list if protein in intersec]
 
     drug_list = np.array(drug_list)
