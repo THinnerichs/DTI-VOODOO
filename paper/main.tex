@@ -136,7 +136,7 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. Additionally, we presume the closed world assumption, that all drug-protein pairs without an interaction, do not have one eventually. We also do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond, thus leading to a binary classification task.\\
 
 \subsection{Datasets}
-The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched \text{num proteins} human proteins with over 170.000 links from STRING (\cite{STRINGv10}). For the drug-target interactions themselves, we fetched 
+The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched $\approx11000$ human proteins with over 170.000 links from STRING (\cite{STRINGv10}). For the drug-target interactions themselves, we fetched 
 137.000 links from STITCH database (\cite{STITCHv5}). As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
 For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
 Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
@@ -145,7 +145,7 @@ We additionally obtained molecular structure based features for drugs from \text
 
 For comparative evaluation we used the gold standard dataset introduced by \citet{Yaminishi2008}, which includes both drug-target interaction pairs and side effects.\\ 
  
-Eventually, we only considered proteins that had at least one link in either STITCH or STRING, and drugs with at least one side effect and one existing target. Thus, the intersection between these resources yielded \todo{num drugs} drugs and \todo{num proteins} human proteins for the training phase. We provide links to and methods for the necessary data in the provided Github repository.\\
+Eventually, we only considered proteins that had at least one link in either STITCH or STRING, and drugs with at least one side effect and one existing target. Thus, the intersection between these resources yielded 1160 drugs and 6680 human proteins for the training phase. We provide links to and methods for the necessary data in the provided Github repository.\\
 
 \subsection{Evaluation and metrics}
 As the number of drug-targets are sparsely given w.r.t. to the number of both drugs and proteins considered, the resulting training, validation and testing datasets are highly imbalanced. As there are only $~22.000$ links in the considered subset the ratio
@@ -165,14 +165,30 @@ To assess each model, we computed the \textit{area under receiver operating char
 
 Avoiding validation overfitting, we eventually tested the best performing model on the Yamanishi dataset as presented and discussed. Furthermore, we compare our results on this very dataset with various other cutting edge approaches to DTI-prediction.\\
 
-\subsection{Model} \todo{speaking about the model structure without introducing it at all feels very odd.}
-In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each. In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. \\
+\subsection{Model}
+In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each. In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. The overall structure of the ontology can be seen in Figure~\ref{fig:Onto}.\\
 
-As we wanted to learn from the similarity of drug side effects and protein phenotypes we opted for a deep siamese network approach, hence learning a high-dimensional embedding emphasizing this identity by forcing a maximal cosine similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features. \\
+\begin{figure}[!tpb]%figure1
+	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
+	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}\label{fig:Onto}
+\end{figure}
+
+
+As we wanted to learn from the similarity of drug side effects and protein phenotypes we opted for a deep siamese network approach, hence learning a high-dimensional embedding emphasizing this identity by forcing a maximal cosine similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features, also benefiting from the siamese network architecture. Therefore, the precomputed embeddings are run through a deep neural network transformation (DNNT) which also reduces the eventual representation size for drugs and proteins separately. An example structure for both types of features can be found in Figure~\ref{fig:SiameseNetwork}.\\
+
+\begin{figure}[!tpb]%figure1
+	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
+	\caption{Siamese network applied to molecular and DL2vec features, utilizing deep neural network transformations (DNNT). The similarity function $\otimes$ yields the similarity between both transformed embeddings e.g. by computing the cosine similarity.}\label{fig:SiameseNetwork}
+\end{figure}
+
+
+
+
 
 \subsubsection{Graph convolutional layers}
-These molecular and ontology based sub-models were added to a larger graph convolutional model.
-As described before, graph convolution has shown significant performance increase in a variety of tasks. While there are various methods out there we will only introduce the mose basic one here. A graph convolutional layer w.r.t. \citet{GCNConv} hereby consists of a learnable weight matrix followed by an aggregation step, formalized by
+These molecular and ontology based sub-models were added to a larger graph convolutional model, based on the protein-protein interaction (PPI) graph. The PPI dataset is represented by a graph $G=(V,E)$, where each protein is represented by a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$ symbolizes an interaction between two proteins. Additionally, we introduce mapping $x:V\rightarrow\mathbb{R}^{d}$ projecting each vertex $v$ to its node feature $x_v = x(v)$, where $d$ denotes the dimensionality of the node features. \\
+ 
+As described before, graph convolution has shown significant performance increase in a variety of tasks. While there are various methods out there we will only introduce the most basic one here. A graph convolutional layer w.r.t. \citet{GCNConv} hereby consists of a learnable weight matrix followed by an aggregation step, formalized by
 
 \begin{equation}
 	\mathbf{X}^{\prime} = \mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
@@ -188,22 +204,48 @@ The update rule for each individual node is denoted by
 	\frac{1}{\sqrt{\hat{d}_j \hat{d}_i}} \mathbf{x}_j
 \end{equation}
 
-where both $\hat{d}_i, \hat{d}_j$ are dependent on the edge weights $e_{ij}$ of the graph. With simple, single valued edge weights such as $e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to $d_i$, i.e. the degree of each vertex $i$. \\
+where both $\hat{d}_i, \hat{d}_j$ are dependent on the edge weights $e_{ij}$ of the graph. With simple, single valued edge weights such as $e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to $d_i$, i.e. the degree of each vertex $i$. We will denote this type of graph convolutional neural layers with \textsc{GCNConv}. \\
 
-While in this initial formulation the node-wise update step is defined by the sum over all neighbouring node representations, we are able to alter this formulation for a more sophisticated message passing scheme. As described we are able to rearrange the order of activation function, aggregation and linear neural layer with this formulation as proposed by \citet{GENConv2020}:
+While in this initial formulation the node-wise update step is defined by the sum over all neighbouring node representations, we are able to alter this formulation for a more sophisticated message passing scheme. As described we are able to rearrange the order of activation function $\sigma$, aggregation $\mathrm{AGG}$ and linear neural layer $\mathrm{MLP}$ with this formulation as proposed by \citet{GENConv2020}:
 
 \begin{equation}
 	\mathbf{x}_i^{\prime} = \mathrm{MLP} \left( \mathbf{x}_i +
 	\mathrm{AGG} \left( \left\{
-	\mathrm{ReLU} \left( \mathbf{x}_j + \mathbf{e_{ji}} \right) +\epsilon
+	\mathrm{\sigma} \left( \mathbf{x}_j + \mathbf{e_{ji}} \right) +\epsilon
 	: j \in \mathcal{N}(i) \right\} \right)
 	\right)
 \end{equation}
 
-While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. \\
+where we will generally only consider $\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We will denote this generalized layer type as \textsc{GENConv}, following the notation of \citet{PytorchGeometric}.
+While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. Additionally, the authors revise the aggregation function by generalizing it, allowing more sophisticated weighting functions such as learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming signals for each vertex, substituting the previously mentioned averaging step. Hence, while \textsc{GCNConv} suffers from both vanishing gradients and signal fading for large scale, highly connected graphs, each propagation step in \textsc{GENConv} emphasizes strong signals with values close to $0$ and $1$. \\
+
+We employ another mechanism to avoid redundancy and fading signals in stacked graph convolutional networks, which was introduced by \citet{DeepGCN2019} and refined in \citet{DeeperGCN2020}. The authors propose a residual network architecture and normalization scheme, solving these issues in a variety of graph predicting tasks. This structure is depicted in Figure~\ref{fig:ResGraphConvBlocks} resulting in reusable residual blocks, which can be stacked multiple times, thereby not losing focus of each node neighbourhood. \\
+
+ \begin{figure}[!tpb]%figure1
+ 	\centerline{\includegraphics[width=0.2\textwidth]{figures/ResGraphConvBlocks.png}}
+ 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+ 	\label{fig:ResGraphConvBlocks}
+ \end{figure}
 
 \subsubsection{Hyperparameter tuning}
 To find the best hyperparameter configuration for the proposed model we performed a grid search, to find the most expressive and non-redundant representation. Therefor, we pretrained the bottom-up and the top-down model separately and aimed at best performing models w.r.t. previously described metrics. Embedding sizes, depth of the neural network, optimizer, learning rate and layer types were found from an extensive, manual grid search. 
+
+
+\section{Results}
+
+\subsection{High level description}
+To obtain a prediction for a given drug-protein pair, we first need to pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
+
+\begin{figure}[!tpb]%figure1
+	\centerline{\includegraphics[width=0.33\textwidth]{figures/full_model.png}}
+	\caption{Full DTI prediction model based on the pretrained deep neural network transformers (DNNT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
+	\label{fig:Fullmodel}
+\end{figure}
+
+
+
+
+
 
 
 
@@ -251,7 +293,7 @@ Thereby, we concatenate these three features together and funnel them into anoth
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.4\textwidth]{figures/MolecularPredictor.png}}
-	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:01}
+	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:MolPred}
 \end{figure}
 
 \begin{figure}[!tpb]%figure2

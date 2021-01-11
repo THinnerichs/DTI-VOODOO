@@ -180,8 +180,16 @@ Kulmanov, M. and Hoehndorf, R. (2019).
 \newblock {DeepGOPlus}: improved protein function prediction from sequence.
 \newblock {\em Bioinformatics\/}.
 
-\bibitem[Li {\em et~al.}(2020)Li, Xiong, Thabet, and Ghanem]{GENConv2020}
-Li, G., Xiong, C., Thabet, A., and Ghanem, B. (2020).
+\bibitem[Li {\em et~al.}(2019)Li, Müller, Thabet, and Ghanem]{DeepGCN2019}
+Li, G., Müller, M., Thabet, A., and Ghanem, B. (2019).
+\newblock Deepgcns: Can gcns go as deep as cnns?
+
+\bibitem[Li {\em et~al.}(2020a)Li, Xiong, Thabet, and Ghanem]{GENConv2020}
+Li, G., Xiong, C., Thabet, A., and Ghanem, B. (2020a).
+\newblock Deepergcn: All you need to train deeper gcns.
+
+\bibitem[Li {\em et~al.}(2020b)Li, Xiong, Thabet, and Ghanem]{DeeperGCN2020}
+Li, G., Xiong, C., Thabet, A., and Ghanem, B. (2020b).
 \newblock Deepergcn: All you need to train deeper gcns.
 
 \bibitem[Mikolov {\em et~al.}(2013)Mikolov, Chen, Corrado, and
