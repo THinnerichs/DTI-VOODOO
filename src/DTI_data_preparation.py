@@ -373,7 +373,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
     yamanishi_protein_mapping = PPI_utils.get_protein_Yamanishi_to_STITCH_mapping()
 
 
-    path = '../data/Yamanishi_data/'
+    path = '../data/NeoDTI_data/'
 
     drug_list = []
     with open(file=path + 'drug.txt', mode='r') as f:
@@ -401,16 +401,6 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 
     drug_indices = [drug_list.index(drug) for drug in drug_list if drug!=None and not drug.startswith('1')]
     protein_indices = list(set([protein_list.index(protein) for protein in protein_list if protein in original_protein_list]))
-
-    filename = '../../drug_indices.csv'
-    with open(file=filename, mode='w') as f:
-        for index in drug_indices:
-            f.write(str(index)+'\n')
-
-    filename = '../../prot_indices.csv'
-    with open(file=filename, mode='w') as f:
-        for index in protein_indices:
-            f.write(str(index)+'\n')
 
     drug_list = np.array(drug_list)
     protein_list = np.array(protein_list)
