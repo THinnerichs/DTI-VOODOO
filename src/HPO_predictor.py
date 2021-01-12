@@ -275,7 +275,7 @@ def siamese_drug_protein_network(config):
     dti_data = HPODTIDataBuilder(config)
 
     # generate indices for proteins
-    kf = KFold(n_splits=config.num_splits, random_state=42, shuffle=True)
+    kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
     X = np.zeros((dti_data.num_proteins, 1))
 
     # build for help matrix for indices
