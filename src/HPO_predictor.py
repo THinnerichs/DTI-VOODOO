@@ -273,7 +273,7 @@ def siamese_drug_protein_network(config):
     dti_data = HPODTIDataBuilder(config)
 
     # generate indices for proteins
-    kf = KFold(n_splits=5, random_state=42, shuffle=True)
+    kf = KFold(n_splits=config.num_splits, random_state=42, shuffle=True)
     X = np.zeros((dti_data.num_proteins, 1))
 
     # build for help matrix for indices
@@ -337,20 +337,22 @@ def siamese_drug_protein_network(config):
                 file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train: Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
+                          metrics.average_precision_score(train_labels, train_labels),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           metrics.matthews_corrcoef(train_labels, train_predictions))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test: Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
+                          metrics.average_precision_score(test_labels, test_labels),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
                           metrics.matthews_corrcoef(test_labels, test_predictions))#@TODO, file=f)
 
-                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, dti_utils.dti_f1_score,
+                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, metrics.average_precision_score, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
                     ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
 
@@ -419,7 +421,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--num_epochs", type=int, default=20)
     parser.add_argument("--batch_size", type=int, default=1024)
-    # parser.add_argument("--num_folds", type=int, default=5)
+    parser.add_argument("--num_folds", type=int, default=5)
     parser.add_argument("--lr", type=float, default=0.001)
 
     parser.add_argument("--model_id", type=str, default='')
