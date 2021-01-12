@@ -9,6 +9,7 @@ import math
 
 def dti_auroc(y_true, y_pred):
     if len(np.unique(y_true)) == 1:  # bug in roc_auc_score
+        print('y_true.sum()', np.unique(y_pred), y_pred.sum())
         return 0.5
     if len(np.unique(y_pred)) == 1:
         print('y_pred.sum()', np.unique(y_pred), y_pred.sum())
