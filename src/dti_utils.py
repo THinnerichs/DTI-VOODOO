@@ -12,6 +12,7 @@ def dti_auroc(y_true, y_pred):
         return 0.5
     if len(np.unique(y_pred)) == 1:
         print('y_pred.sum()', np.unique(y_pred), y_pred.sum())
+        return 0.5
     if y_pred.sum() == 0 or (1-y_pred).sum() == 0 or y_true.sum() == 0 or (1-y_true).sum()==0:
         return 0.5
     return metrics.roc_auc_score(y_true, y_pred)
