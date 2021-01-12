@@ -397,7 +397,7 @@ def get_PPI_degree_for_proteins(protein_list, PPI_min_score=700):
 
 def get_protein_Yamanishi_to_STITCH_mapping():
     # filename = '../data/Yamanishi_data/protein_dict_map.txt'
-    filename = '../data/NeoDTI_data/uniprot_to_stitch_mapping.txt'
+    filename = '../data/NeoDTI_data/uniprot_to_stitch_mapping.txt' #obtained from https://www.uniprot.org/help/uploadlists
     protein_yamanishi_to_Uniprot_mapping = {}
     print('Loading Yamanishi to Uniprot Mapping...')
     with open(file=filename, mode='r') as f:

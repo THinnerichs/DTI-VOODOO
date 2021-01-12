@@ -372,6 +372,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 
     yamanishi_protein_mapping = PPI_utils.get_protein_Yamanishi_to_STITCH_mapping()
 
+    print('bumm', list(yamanishi_protein_mapping.items())[:10])
 
     path = '../data/NeoDTI_data/'
 
@@ -398,6 +399,9 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 
     drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
     protein_list = list(map(lambda p: yamanishi_protein_mapping.get(p, None), protein_list))
+
+    print('protein_list', protein_list[:20])
+    raise Exception
 
     drug_indices = [drug_list.index(drug) for drug in drug_list if drug!=None and not drug.startswith('1')]
     protein_indices = list(set([protein_list.index(protein) for protein in protein_list if protein in original_protein_list]))
