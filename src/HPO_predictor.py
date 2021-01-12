@@ -171,8 +171,8 @@ class HPODTIDataBuilder:
 
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
-            drug_feature = torch.tensor(self.drug_embeddings[drug_index, :])
-            protein_feature = torch.tensor(self.protein_embeddings[protein_index, :])
+            drug_feature = self.drug_embeddings[drug_index, :]
+            protein_feature = self.protein_embeddings[protein_index, :]
 
             # additional
             # degree_feature = torch.tensor(self.degree_features[protein_index, :])
@@ -237,20 +237,7 @@ class HPOPredNet(nn.Module):
         self.sim = nn.CosineSimilarity(dim=1)
 
     def forward(self, x):
-        '''
-        x = self.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc2(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc3(x))
-        x = self.dropout(x)
-        x = self.relu(self.fc4(x))
 
-        x = self.fc5(x)
-        # x = self.sigmoid(x)
-
-        return x
-        '''
 
         p1 = self.model(x[:,:200]).view(-1, 200)
         d1 = self.model2(x[:,200:]).view(-1, 200)
