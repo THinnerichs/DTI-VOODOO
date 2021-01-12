@@ -37,14 +37,16 @@ class HPODTIDataBuilder:
 
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
-        self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
         # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
-        print(len(self.protein_list), "proteins present\n")
 
         if config.yamanishi_test:
+            self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
+        else:
+            self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+        print(len(self.protein_list), "proteins present\n")
 
         # PPI data
         print("Loading PPI graph ...")
