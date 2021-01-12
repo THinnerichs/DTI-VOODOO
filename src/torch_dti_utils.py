@@ -39,8 +39,6 @@ class QuickProtFuncDTINetworkData:
         self.PPI_graph = PPI_utils.get_PPI_graph(min_score=config.PPI_min_score)
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
 
-        print(len(self.protein_list), "proteins present.\n")
-        # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins])
 
 
         if config.include_mol_features:
@@ -63,8 +61,8 @@ class QuickProtFuncDTINetworkData:
             self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
-
         if config.yamanishi_test:
+            self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
@@ -76,6 +74,8 @@ class QuickProtFuncDTINetworkData:
                     protein_to_feature_dict = pickle.load(f)
 
                 self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
+
+        print(len(self.protein_list), "proteins present\n")
 
 
 
