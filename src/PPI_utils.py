@@ -405,7 +405,7 @@ def get_protein_Yamanishi_to_STITCH_mapping():
             # yamanishi_id, uniprot_id = line.strip().split(':')
             yamanishi_id, uniprot_id = line.strip().split('\t')
             protein_yamanishi_to_Uniprot_mapping[yamanishi_id] = uniprot_id
-
+    '''
     filename = '../data/STRING_data/9606.protein.aliases.v11.0.txt'
     protein_to_STRING_mapping = {}
     with open(file=filename, mode='r') as f:
@@ -415,12 +415,16 @@ def get_protein_Yamanishi_to_STITCH_mapping():
             protein_id, alias, source = line.strip().split('\t')
             if 'UniProt' in source or 'KEGG' in source:
                 protein_to_STRING_mapping[alias] = protein_id
+    '''
 
     print('yama_dict', len(protein_yamanishi_to_Uniprot_mapping))
+    '''
     print('uniprot_dict', len(protein_to_STRING_mapping))
     return_dict = {prot: protein_to_STRING_mapping[protein_yamanishi_to_Uniprot_mapping[prot]] for prot
                    in protein_yamanishi_to_Uniprot_mapping.keys()
                    if protein_yamanishi_to_Uniprot_mapping[prot] in protein_to_STRING_mapping.keys()}
+    '''
+    return_dict = protein_yamanishi_to_Uniprot_mapping
 
     return return_dict
 
