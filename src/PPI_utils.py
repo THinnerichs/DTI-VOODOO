@@ -396,12 +396,14 @@ def get_PPI_degree_for_proteins(protein_list, PPI_min_score=700):
     return np.array(return_list)
 
 def get_protein_Yamanishi_to_STITCH_mapping():
-    filename = '../data/Yamanishi_data/protein_dict_map.txt'
+    # filename = '../data/Yamanishi_data/protein_dict_map.txt'
+    filename = '../data/NeoDTI_data/uniprot_to_stitch_mapping.txt'
     protein_yamanishi_to_Uniprot_mapping = {}
     print('Loading Yamanishi to Uniprot Mapping...')
     with open(file=filename, mode='r') as f:
         for line in f:
-            yamanishi_id, uniprot_id = line.strip().split(':')
+            # yamanishi_id, uniprot_id = line.strip().split(':')
+            yamanishi_id, uniprot_id = line.strip().split('\t')
             protein_yamanishi_to_Uniprot_mapping[yamanishi_id] = uniprot_id
 
     filename = '../data/STRING_data/9606.protein.aliases.v11.0.txt'
