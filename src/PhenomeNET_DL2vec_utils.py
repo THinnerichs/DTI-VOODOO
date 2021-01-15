@@ -91,7 +91,7 @@ def write_UMLS_NET_files():
     disease_list, dii_matrix = parse_drug_indications()
     drug_list = DDI_utils.get_yamanishi_drug_list()
 
-    drug_indices = [drug_list.index(drug) for drug in list(drug_list) if drug!=None and not drug.startswith('1')]
+    drug_indices = [list(drug_list).index(drug) for drug in drug_list if drug!=None and not drug.startswith('1')]
     drug_list = drug_list[drug_indices]
     dii_matrix = dii_matrix[drug_indices, :]
 
