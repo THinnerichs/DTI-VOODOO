@@ -1,4 +1,4 @@
-import networkx as n
+import networkx as nx
 
 import pickle as pkl
 import json
