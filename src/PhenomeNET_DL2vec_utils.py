@@ -58,7 +58,7 @@ def parse_drug_indications():
     '''
 
     # parse drug indication links
-    yamanishi_path = 'data/Yamanishi_data/'
+    yamanishi_path = '../data/Yamanishi_data/'
     filename = 'disease.txt'
 
     # parse diseases from yamanishi_dataset
