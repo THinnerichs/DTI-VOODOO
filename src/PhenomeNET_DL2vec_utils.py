@@ -8,7 +8,7 @@ import DDI_utils
 
 
 def parse_drug_indications():
-    path = 'data/drug_indications/'
+    path = '../data/drug_indications/'
     filename = 'drug_indication_links.csv'
 
     indication_name_to_UMLS_mapping = {}
