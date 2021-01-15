@@ -121,6 +121,7 @@ def write_UMLS_NET_files():
         for drug in drug_list:
             f.write(drug+'\n')
 
+    path_prefix = '../' + path_prefix
     print('Run this in src/DL2vec (with suitable number of workers):')
     command = f"python runDL2vec.py -embedsize 200 -ontology {path_prefix+'UMLS.owl'} -associations {path_prefix+asso_filename} -outfile {path_prefix+'embedding_model'} -entity_list {path_prefix+ent_filename} -num_workers {64}"
     print(command)
