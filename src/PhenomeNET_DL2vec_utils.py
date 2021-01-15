@@ -84,6 +84,46 @@ def parse_drug_indications():
 
     return disease_list[disease_indices], dii_matrix[:, disease_indices]
 
+def write_UMLS_NET_files():
+    path_prefix = "../data/drug_indications/"
+    onto_prefix = "<http://phenomebrowser.net/umls#{entity}>"
+
+    disease_list, dii_matrix = parse_drug_indications()
+    drug_list = DDI_utils.get_yamanishi_drug_list()
+
+    drug_indication_pairs = []
+    for drug_index in range(len(drug_list)):
+        interactors = disease_list[dii_matrix[drug_index, :]==1]
+        for disease in interactors:
+            disease = onto_prefix.format(entity=disease)
+            drug_indication_pairs.append((drug_list[drug_index], disease))
+
+    # write association file
+    asso_filename = 'drug_indication_association_file'
+    print('Writing association file...')
+    with open(file=path_prefix+asso_filename, mode='w') as f:
+        for drug, term in drug_indication_pairs:
+            f.write(drug+' '+term+'\n')
+
+    # write entity list
+    ent_filename = 'drug_indication_entity_list'
+    print('Writing entitiy list...')
+    with open(file=path_prefix + ent_filename, mode='w') as f:
+        for drug in drug_list:
+            f.write(drug+'\n')
+
+    print('Run this in src/DL2vec (with suitable number of workers):')
+    command = f"python runDL2vec.py -embedsize 200 -ontology {path_prefix+'UMLS.owl'} -associations {path_prefix+asso_filename} -outfile {path_prefix+'embedding_model'} -entity_list {path_prefix+ent_filename} -num_workers {64}"
+    print(command)
+
+
+
+
+
+
+
+
+
 
 def write_PhenomeNET_files(mode='all'):
     path_prefix = "../data/PhenomeNET_data/"
