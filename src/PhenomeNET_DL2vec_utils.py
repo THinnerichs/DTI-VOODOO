@@ -98,6 +98,9 @@ def write_UMLS_NET_files():
             disease = onto_prefix.format(entity=disease)
             drug_indication_pairs.append((drug_list[drug_index], disease))
 
+    print('drug_indications:', len(drug_indication_pairs))
+    print(disease_list.shape, None in disease_list)
+
     # write association file
     asso_filename = 'drug_indication_association_file'
     print('Writing association file...')
@@ -115,14 +118,6 @@ def write_UMLS_NET_files():
     print('Run this in src/DL2vec (with suitable number of workers):')
     command = f"python runDL2vec.py -embedsize 200 -ontology {path_prefix+'UMLS.owl'} -associations {path_prefix+asso_filename} -outfile {path_prefix+'embedding_model'} -entity_list {path_prefix+ent_filename} -num_workers {64}"
     print(command)
-
-
-
-
-
-
-
-
 
 
 def write_PhenomeNET_files(mode='all'):
