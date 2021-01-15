@@ -14,6 +14,8 @@ module load gcc/6.4.0
 conda activate ~/.conda/envs/dti/
 module load groovy/3.0.6
 
-python runDL2vec.py -embedsize 200 -num_workers 40 -ontology ../../data/PhenomeNET_data/phenomenet.owl -associations ../../data/PhenomeNET_data/drug_association_file -outfile ../../data/PhenomeNET_data/drug_embedding_model -entity_list ../../data/PhenomeNET_data/drug_entity_list
+python runDL2vec.py -embedsize 200 -ontology ../../data/drug_indications/UMLS.owl -associations ../../data/drug_indications/drug_indication_association_file -outfile ../../data/drug_indications/embedding_model -entity_list ../../data/drug_indications/drug_indication_entity_list -num_workers 40
+
+# python runDL2vec.py -embedsize 200 -num_workers 40 -ontology ../../data/PhenomeNET_data/phenomenet.owl -associations ../../data/PhenomeNET_data/drug_association_file -outfile ../../data/PhenomeNET_data/drug_embedding_model -entity_list ../../data/PhenomeNET_data/drug_entity_list
 
 
