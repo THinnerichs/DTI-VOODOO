@@ -53,7 +53,7 @@ if (outfile is ''):
 	sys.exit()
 
 if entity_list is "":
-    entity_list =association_file
+    entity_list = association_file
 
 if (model != 'sg' and model != 'cbow'):
 	model ='sg'
