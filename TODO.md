@@ -246,12 +246,13 @@ Discussion:
 - find and test a gold standard 
 
 ## TODO 
-- build name to HP onto mapping and apply to yamanishi dataset
-  - reevaluate Sparql query
-  see files in download for parsing
-
-- check side effect mapping as Yamanishi has a whole lot more
-- rebuild DL2vec embeddings again ( just execute command )
+1. use drug indication file for mappings from indications to UMLS id
+2. fuse yamanishi drug-indications and M's stuff
+3. execute umls2owl 
+4. start DL2vec on these indications
+  4.1. add as new mode to not completely wipe the existing embeddings
+5. integrate onto model
+ 
 
 
 
@@ -317,3 +318,5 @@ Discussion:
           - GNN (end-to-end)
 - conclusion (summary)
           
+
+

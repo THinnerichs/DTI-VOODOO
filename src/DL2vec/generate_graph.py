@@ -1,12 +1,11 @@
-import networkx as nx
+import networkx as n
+
 import pickle as pkl
 import json
 import sys
 
+
 from tree import Stack
-
-
-
 
 
 def split_sentence(sentence):

@@ -7,6 +7,84 @@ from tqdm import tqdm
 import DDI_utils
 
 
+def parse_drug_indications():
+    path = 'data/drug_indications/'
+    filename = 'drug_indication_links.csv'
+
+    indication_name_to_UMLS_mapping = {}
+    drug_name_list = []
+
+    with open(file=path+filename, mode='r') as f:
+        for _ in range(3):
+            f.readline()
+
+        for line in f:
+            line = line.strip()
+            term, term_alteration = line.split('\t')[42:44]
+            umls_term, umls_phenotype_term, umls_id = line.split('\t')[46:49]
+
+            umls_id = umls_id.strip()
+
+            # Add drug names to drug_list
+            drug = line.split('\t')[3]
+            drug_synonym = line.split('\t')[15]
+
+            drug_name_list.append(drug)
+            drug_name_list.append(drug_synonym)
+
+
+            for name in [term, term_alteration, umls_term, umls_phenotype_term]:
+                if name and umls_id:
+                    name = name.strip().replace('"', '').replace("'", "")
+                    indication_name_to_UMLS_mapping[name.strip().replace('"','').lower()] = umls_id
+
+    filename = 'meddra.tsv'
+    with open(file=path+filename, mode='r') as f:
+        for line in f:
+            line = line.strip()
+            umls_id, _, _, indication_name = line.split('\t')
+
+            indication_name_to_UMLS_mapping[indication_name.lower()] = umls_id
+
+
+    '''
+    # get drug indication links
+    filename = 'drug_names'
+    drug_name_list = list(set(drug_name_list))
+    with open(file=path+filename, mode='w') as f:
+        for drug in drug_name_list:
+            if drug:
+                f.write(drug+'\n')
+    '''
+
+    # parse drug indication links
+    yamanishi_path = 'data/Yamanishi_data/'
+    filename = 'disease.txt'
+
+    # parse diseases from yamanishi_dataset
+    disease_list = []
+    with open(file=yamanishi_path+filename, mode='r') as f:
+        for line in f:
+            line = line.strip()
+            disease_list.append(line.lower().replace('&apos;', ''))
+
+    mapped_disease_list = list(map(lambda d: indication_name_to_UMLS_mapping.get(d, None), disease_list))
+    disease_indices = [i for i, disease in enumerate(mapped_disease_list) if disease!=None and disease.startswith('C')]
+    print('indications matched:', len(disease_indices), 'of', len(disease_list))
+
+    disease_list = np.array(mapped_disease_list)
+
+    # parse drug_indication matrix provided by https://github.com/luoyunan/DTINet/
+    dii_matrix = []
+    with open(file=yamanishi_path + 'mat_drug_disease.txt', mode='r') as f:
+        for line in f:
+            dii_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
+    dii_matrix = np.array(dii_matrix)
+    print('dii_matrix.shape', dii_matrix.shape)
+
+    return disease_list[disease_indices], dii_matrix[:, disease_indices]
+
+
 def write_PhenomeNET_files(mode='all'):
     path_prefix = "../data/PhenomeNET_data/"
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
