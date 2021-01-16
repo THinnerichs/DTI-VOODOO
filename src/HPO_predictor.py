@@ -231,7 +231,7 @@ class HPOPredNet(nn.Module):
         # siamese network approach
         if self.include_indications:
             self.model = nn.Sequential(
-                nn.Linear(400, 256),
+                nn.Linear(200, 256),
                 nn.Dropout(0.5),
                 # nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
