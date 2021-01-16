@@ -186,7 +186,8 @@ class HPODTIDataBuilder:
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
             if self.config.include_indications:
-                drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
+                # drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
+                drug_feature = self.drug_indication_embeddings[drug_index, :]
             else:
                 drug_feature = self.drug_embeddings[drug_index, :]
             protein_feature = self.protein_embeddings[protein_index, :]
