@@ -129,7 +129,7 @@ def write_UMLS_NET_files():
             disease = onto_prefix.format(entity=disease)
             drug_indication_pairs.append((drug_list[drug_index], disease))
 
-    print('drug_indications:', len(drug_indication_pairs))
+    print('drug_indications:', len(drug_indication_pairs) + len(sharp_drug_indications))
 
     # write association file
     asso_filename = 'drug_indication_association_file'
