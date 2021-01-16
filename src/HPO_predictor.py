@@ -4,7 +4,6 @@ from sklearn.model_selection import KFold
 from sklearn import metrics
 
 import gensim
-from torch import neg
 
 from tqdm import tqdm
 import argparse
@@ -46,6 +45,9 @@ class HPODTIDataBuilder:
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
         else:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+            if config.drug_indications:
+                print("Drug indications can only be selected with yamanishi test for now.")
+                raise ValueError
         print(len(self.protein_list), "proteins present\n")
 
         # PPI data
@@ -105,25 +107,30 @@ class HPODTIDataBuilder:
         # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
         DL2vec_path_prefix = '../data/PhenomeNET_data/'
+        drug_indication_prefix = '../data/drug_indications/'
 
         drug_model_filename = DL2vec_path_prefix + 'drug_embedding_model'
+        drug_indication_filename = drug_indication_prefix + 'embedding_model'
         uberon_model_filename = DL2vec_path_prefix + 'uberon_embedding_model'
         GO_model_filename = DL2vec_path_prefix + 'GO_embedding_model'
         MP_model_filename = DL2vec_path_prefix + 'MP_embedding_model'
 
         # load models
         drug_model = gensim.models.Word2Vec.load(drug_model_filename)
+        drug_indication_model = gensim.models.Word2Vec.load(drug_indication_filename)
         uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
         GO_model = gensim.models.Word2Vec.load(GO_model_filename)
         MP_model = gensim.models.Word2Vec.load(MP_model_filename)
 
         # Build wordvector dicts
         drug_model = drug_model.wv
+        drug_indication_model = drug_indication_model.wv
         uberon_model = uberon_model.wv
         GO_model = GO_model.wv
         MP_model = MP_model.wv
 
         drug_embeddings = []
+        drug_indication_embeddings = []
         uberon_embeddings = []
         GO_embeddings = []
         MP_embeddings = []
@@ -147,10 +154,16 @@ class HPODTIDataBuilder:
         for drug_id in self.drug_list:
             drug_embeddings.append((drug_model[drug_id]))
 
+            if config.drug_indications:
+                drug_indication_embeddings.append((drug_indication_model[drug_id]))
+
         self.drug_embeddings = torch.Tensor(drug_embeddings)
         self.uberon_embeddings = torch.Tensor(uberon_embeddings)
         self.GO_embeddings = torch.Tensor(GO_embeddings)
         self.MP_embeddings = torch.Tensor(MP_embeddings)
+
+        if config.drug_indications:
+            self.drug_indication_embeddings = torch.Tensor(drug_indication_embeddings)
 
         self.protein_embeddings = torch.cat([self.uberon_embeddings, self.GO_embeddings, self.MP_embeddings], dim=1)
 
@@ -171,7 +184,12 @@ class HPODTIDataBuilder:
 
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
-            drug_feature = self.drug_embeddings[drug_index, :]
+
+            if self.config.drug_indications:
+                drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
+                print('drug_feature.size()', drug_feature.size())
+            else:
+                drug_feature = self.drug_embeddings[drug_index, :]
             protein_feature = self.protein_embeddings[protein_index, :]
 
             # additional
@@ -203,24 +221,40 @@ class DTIGraphDataset(data.Dataset):
 
 
 class HPOPredNet(nn.Module):
-    def __init__(self):
+    def __init__(self, drug_indications=False):
         super(HPOPredNet, self).__init__()
 
         self.dropout = nn.Dropout(0.5)
 
+        self.drug_indications = drug_indications
+
         # siamese network approach
-        self.model = nn.Sequential(
-            nn.Linear(200, 256),
-            nn.Dropout(0.2),
-            # nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 200),
-            # nn.Dropout(0.5),
-            # nn.BatchNorm1d(50),
-            # nn.LeakyReLU(0.2, inplace=True),
-            # nn.Linear(256, 1),
-            # nn.Sigmoid()
-        )
+        if self.drug_indications:
+            self.model = nn.Sequential(
+                nn.Linear(400, 256),
+                nn.Dropout(0.2),
+                # nn.BatchNorm1d(256),
+                nn.LeakyReLU(0.2, inplace=True),
+                nn.Linear(256, 200),
+                # nn.Dropout(0.5),
+                # nn.BatchNorm1d(50),
+                # nn.LeakyReLU(0.2, inplace=True),
+                # nn.Linear(256, 1),
+                # nn.Sigmoid()
+            )
+        else:
+            self.model = nn.Sequential(
+                nn.Linear(200, 256),
+                nn.Dropout(0.2),
+                # nn.BatchNorm1d(256),
+                nn.LeakyReLU(0.2, inplace=True),
+                nn.Linear(256, 200),
+                # nn.Dropout(0.5),
+                # nn.BatchNorm1d(50),
+                # nn.LeakyReLU(0.2, inplace=True),
+                # nn.Linear(256, 1),
+                # nn.Sigmoid()
+            )
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
             nn.Dropout(0.2),
@@ -239,8 +273,12 @@ class HPOPredNet(nn.Module):
     def forward(self, x):
 
 
-        p1 = self.model(x[:,:200]).view(-1, 200)
-        d1 = self.model2(x[:,200:]).view(-1, 200)
+        if self.drug_indications:
+            p1 = self.model(x[:,:400]).view(-1, 200)
+            d1 = self.model2(x[:,400:]).view(-1, 200)
+        else:
+            p1 = self.model(x[:,:200]).view(-1, 200)
+            d1 = self.model2(x[:,200:]).view(-1, 200)
 
         s1 = self.sim(p1, d1)
 
@@ -419,6 +457,7 @@ if __name__ == '__main__':
     parser.add_argument("--fold", type=int, default=3)
 
     parser.add_argument("--yamanishi_test", action='store_true')
+    parser.add_argument("--include_indications", action='store_true')
 
     config = parser.parse_args()
 
