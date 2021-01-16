@@ -187,7 +187,6 @@ class HPODTIDataBuilder:
 
             if self.config.include_indications:
                 drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
-                print('drug_feature.size()', drug_feature.size())
             else:
                 drug_feature = self.drug_embeddings[drug_index, :]
             protein_feature = self.protein_embeddings[protein_index, :]
