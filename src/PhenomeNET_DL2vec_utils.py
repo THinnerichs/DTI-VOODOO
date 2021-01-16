@@ -66,7 +66,9 @@ def parse_drug_indications():
     drug_name_to_id_mapping = {}
     with open(file=path+filename, mode='r') as f:
         for line in f:
-            drug, pubchem_id = line.strip().split('\t')
+            drug, pubchem_id = line.split('\t')
+
+            pubchem_id = pubchem_id.strip()
 
             if not pubchem_id or len(pubchem_id) >= 9:
                 continue
@@ -108,12 +110,14 @@ def write_UMLS_NET_files():
     path_prefix = "../data/drug_indications/"
     onto_prefix = "<http://phenomebrowser.net/umls#{entity}>"
 
-    disease_list, dii_matrix = parse_drug_indications()
+    disease_list, dii_matrix, sharp_drug_indications = parse_drug_indications()
     drug_list = DDI_utils.get_yamanishi_drug_list()
 
     drug_indices = [list(drug_list).index(drug) for drug in drug_list if drug!=None and not drug.startswith('1')]
     drug_list = drug_list[drug_indices]
     dii_matrix = dii_matrix[drug_indices, :]
+
+    sharp_drug_list = list(set(map(lambda tup: tup[0], sharp_drug_indications)))
 
     print('drug_list:', drug_list.shape)
     print('pruned dii_list:', dii_matrix.shape)
@@ -133,12 +137,16 @@ def write_UMLS_NET_files():
     with open(file=path_prefix+asso_filename, mode='w') as f:
         for drug, term in drug_indication_pairs:
             f.write(drug+' '+term+'\n')
+        for drug, term in sharp_drug_indications:
+            f.write(drug+' '+onto_prefix.format(entity=term)+'\n')
 
     # write entity list
     ent_filename = 'drug_indication_entity_list'
     print('Writing entitiy list...')
     with open(file=path_prefix + ent_filename, mode='w') as f:
         for drug in drug_list:
+            f.write(drug+'\n')
+        for drug in sharp_drug_list:
             f.write(drug+'\n')
 
     path_prefix = '../' + path_prefix
