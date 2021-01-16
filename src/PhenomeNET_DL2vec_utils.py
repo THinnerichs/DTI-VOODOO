@@ -125,6 +125,7 @@ def write_UMLS_NET_files():
     print('pruned dii_list:', dii_matrix.shape)
 
     print('num drugs:', len((set(sharp_drug_list) | set(drug_list)) & set(phenomenet_drugs)))
+    print(set(drug_list) <= set(phenomenet_drugs))
 
     drug_indication_pairs = []
     for drug_index in range(len(drug_list)):
