@@ -372,7 +372,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 
     yamanishi_protein_mapping = PPI_utils.get_protein_Yamanishi_to_STITCH_mapping()
 
-    path = '../data/NeoDTI_data/'
+    path = '../data/Yamanishi_data/'
 
     drug_list = []
     with open(file=path + 'drug.txt', mode='r') as f:

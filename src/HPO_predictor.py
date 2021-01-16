@@ -232,7 +232,7 @@ class HPOPredNet(nn.Module):
         if self.include_indications:
             self.model = nn.Sequential(
                 nn.Linear(400, 256),
-                nn.Dropout(0.2),
+                nn.Dropout(0.5),
                 # nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
                 nn.Linear(256, 200),
@@ -257,7 +257,7 @@ class HPOPredNet(nn.Module):
             )
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
-            nn.Dropout(0.2),
+            nn.Dropout(0.5),
             # nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
