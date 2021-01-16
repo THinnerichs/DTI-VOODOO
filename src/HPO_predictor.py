@@ -274,8 +274,8 @@ class HPOPredNet(nn.Module):
 
 
         if self.include_indications:
-            p1 = self.model(x[:,:400]).view(-1, 200)
-            d1 = self.model2(x[:,400:]).view(-1, 200)
+            p1 = self.model(x[:,:200]).view(-1, 200)
+            d1 = self.model2(x[:,200:]).view(-1, 200)
         else:
             p1 = self.model(x[:,:200]).view(-1, 200)
             d1 = self.model2(x[:,200:]).view(-1, 200)
