@@ -110,6 +110,8 @@ def write_UMLS_NET_files():
     path_prefix = "../data/drug_indications/"
     onto_prefix = "<http://phenomebrowser.net/umls#{entity}>"
 
+    phenomenet_drugs = get_PhenomeNET_drug_list()
+
     disease_list, dii_matrix, sharp_drug_indications = parse_drug_indications()
     drug_list = DDI_utils.get_yamanishi_drug_list()
 
@@ -121,6 +123,8 @@ def write_UMLS_NET_files():
 
     print('drug_list:', drug_list.shape)
     print('pruned dii_list:', dii_matrix.shape)
+
+    print('num drugs:', len((set(sharp_drug_list) | set(drug_list)) & set(phenomenet_drugs)))
 
     drug_indication_pairs = []
     for drug_index in range(len(drug_list)):
@@ -136,18 +140,22 @@ def write_UMLS_NET_files():
     print('Writing association file...')
     with open(file=path_prefix+asso_filename, mode='w') as f:
         for drug, term in drug_indication_pairs:
-            f.write(drug+' '+term+'\n')
+            if drug in phenomenet_drugs:
+                f.write(drug+' '+term+'\n')
         for drug, term in sharp_drug_indications:
-            f.write(drug+' '+onto_prefix.format(entity=term)+'\n')
+            if drug in phenomenet_drugs:
+                f.write(drug+' '+onto_prefix.format(entity=term)+'\n')
 
     # write entity list
     ent_filename = 'drug_indication_entity_list'
     print('Writing entitiy list...')
     with open(file=path_prefix + ent_filename, mode='w') as f:
         for drug in drug_list:
-            f.write(drug+'\n')
+            if drug in phenomenet_drugs:
+                f.write(drug+'\n')
         for drug in sharp_drug_list:
-            f.write(drug+'\n')
+            if drug in phenomenet_drugs:
+                f.write(drug+'\n')
 
     path_prefix = '../' + path_prefix
     print('Run this in src/DL2vec (with suitable number of workers):')
@@ -158,6 +166,7 @@ def write_UMLS_NET_files():
 def write_PhenomeNET_files(mode='all'):
     path_prefix = "../data/PhenomeNET_data/"
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
+
 
     # parse drug HPO annotations and build updated drug list
     # filename = "drug_SIDER_HPO_annotations.csv"
