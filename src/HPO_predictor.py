@@ -45,7 +45,7 @@ class HPODTIDataBuilder:
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
         else:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
-            if config.drug_indications:
+            if config.include_indications:
                 print("Drug indications can only be selected with yamanishi test for now.")
                 raise ValueError
         print(len(self.protein_list), "proteins present\n")
@@ -154,7 +154,7 @@ class HPODTIDataBuilder:
         for drug_id in self.drug_list:
             drug_embeddings.append((drug_model[drug_id]))
 
-            if config.drug_indications:
+            if config.include_indications:
                 drug_indication_embeddings.append((drug_indication_model[drug_id]))
 
         self.drug_embeddings = torch.Tensor(drug_embeddings)
@@ -162,7 +162,7 @@ class HPODTIDataBuilder:
         self.GO_embeddings = torch.Tensor(GO_embeddings)
         self.MP_embeddings = torch.Tensor(MP_embeddings)
 
-        if config.drug_indications:
+        if config.include_indications:
             self.drug_indication_embeddings = torch.Tensor(drug_indication_embeddings)
 
         self.protein_embeddings = torch.cat([self.uberon_embeddings, self.GO_embeddings, self.MP_embeddings], dim=1)
@@ -185,7 +185,7 @@ class HPODTIDataBuilder:
             # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
-            if self.config.drug_indications:
+            if self.config.include_indications:
                 drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
                 print('drug_feature.size()', drug_feature.size())
             else:
@@ -221,15 +221,15 @@ class DTIGraphDataset(data.Dataset):
 
 
 class HPOPredNet(nn.Module):
-    def __init__(self, drug_indications=False):
+    def __init__(self, include_indications=False):
         super(HPOPredNet, self).__init__()
 
         self.dropout = nn.Dropout(0.5)
 
-        self.drug_indications = drug_indications
+        self.include_indications = include_indications
 
         # siamese network approach
-        if self.drug_indications:
+        if self.include_indications:
             self.model = nn.Sequential(
                 nn.Linear(400, 256),
                 nn.Dropout(0.2),
@@ -273,7 +273,7 @@ class HPOPredNet(nn.Module):
     def forward(self, x):
 
 
-        if self.drug_indications:
+        if self.include_indications:
             p1 = self.model(x[:,:400]).view(-1, 200)
             d1 = self.model2(x[:,400:]).view(-1, 200)
         else:
@@ -337,7 +337,7 @@ def siamese_drug_protein_network(config):
         train_loader = data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
         test_loader = data.DataLoader(test_dataset, batch_size=config.batch_size)
 
-        model = HPOPredNet()
+        model = HPOPredNet(include_indications=config.include_indications)
         model = nn.DataParallel(model).to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
