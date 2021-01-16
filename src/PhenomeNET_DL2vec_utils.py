@@ -13,6 +13,7 @@ def parse_drug_indications():
 
     indication_name_to_UMLS_mapping = {}
     drug_name_list = []
+    drug_indication_links = []
 
     with open(file=path+filename, mode='r') as f:
         for _ in range(3):
@@ -38,6 +39,10 @@ def parse_drug_indications():
                     name = name.strip().replace('"', '').replace("'", "")
                     indication_name_to_UMLS_mapping[name.strip().replace('"','').lower()] = umls_id
 
+            drug_indication_links.append((drug.lower(), umls_id))
+    # remove duplicates
+    drug_indication_links = list(set(drug_indication_links))
+
     filename = 'meddra.tsv'
     with open(file=path+filename, mode='r') as f:
         for line in f:
@@ -46,16 +51,31 @@ def parse_drug_indications():
 
             indication_name_to_UMLS_mapping[indication_name.lower()] = umls_id
 
-
-    '''
-    # get drug indication links
+    # write drug names
+    print('Writing drug names to file ...')
     filename = 'drug_names'
     drug_name_list = list(set(drug_name_list))
     with open(file=path+filename, mode='w') as f:
         for drug in drug_name_list:
             if drug:
                 f.write(drug+'\n')
-    '''
+
+    # parse drug name to id mapping
+    print('Parsing drug name to id mapping ...')
+    filename = 'drug_name_to_ID_mapping'
+    drug_name_to_id_mapping = {}
+    with open(file=path+filename, mode='r') as f:
+        for line in f:
+            drug, pubchem_id = line.strip().split('\t')
+
+            if not pubchem_id or len(pubchem_id) >= 9:
+                continue
+
+            pubchem_id = 'CIDm' + (8-len(pubchem_id))*'0' + pubchem_id
+            drug_name_to_id_mapping[drug.lower()] = pubchem_id
+
+    mapped_drug_indications = [(drug_name_to_id_mapping[drug], umls_id) for drug, umls_id in drug_indication_links if drug in drug_name_to_id_mapping.keys()]
+    print('Num drug indication pairs:', len(mapped_drug_indications))
 
     # parse drug indication links
     yamanishi_path = '../data/Yamanishi_data/'
@@ -82,7 +102,7 @@ def parse_drug_indications():
     dii_matrix = np.array(dii_matrix)
     print('dii_matrix.shape', dii_matrix.shape)
 
-    return disease_list[disease_indices], dii_matrix[:, disease_indices]
+    return disease_list[disease_indices], dii_matrix[:, disease_indices], mapped_drug_indications
 
 def write_UMLS_NET_files():
     path_prefix = "../data/drug_indications/"
