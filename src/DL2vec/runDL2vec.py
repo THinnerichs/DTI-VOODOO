@@ -42,6 +42,7 @@ model=args.model
 outfile =args.outfile
 entity_list =args.entity_list
 num_workers = args.num_workers
+file_prefix = args.file_prefix
 
 if (ontology_file is '' ):
 	print ("\nError:Mandatory ontology file missing. For help, run: python runDL2Vec.py --help\n")
@@ -65,4 +66,4 @@ axiom_file = "axiomsorig.lst"
 G = generate_graph(association_file,axiom_file)
 
 
-gene_node_vector(G,entity_list,outfile, embedding_size, file_prefix=args.file_prefix, num_workers=num_workers)
+gene_node_vector(G,entity_list,outfile, embedding_size, file_prefix=file_prefix, num_workers=num_workers)
