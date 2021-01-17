@@ -62,7 +62,7 @@ class QuickProtFuncDTINetworkData:
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
         if config.yamanishi_test:
-            self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+            self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
