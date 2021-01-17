@@ -24,7 +24,7 @@ data_pairs = []
 
 
 
-def run_random_walks(G, nodes, num_walks=N_WALKS):
+def run_random_walks(G, nodes, num_walks=N_WALKS, file_prefix=''):
     print("now we start random walk")
 
     pairs = []
@@ -64,18 +64,18 @@ def run_random_walks(G, nodes, num_walks=N_WALKS):
             pairs.append(walk_accumulate)
         if count % 100 == 0:
             print("Done walks for", count, "nodes")
-    write_file(pairs)
+    write_file(pairs, file_prefix)
 
 
-def run_walk(nodes,G, num_workers=48):
+def run_walk(nodes,G, num_workers=48, file_prefix=''):
     global data_pairs
 
     number = num_workers
     length = len(nodes) // number
 
-    processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length])) for index
+    processes = [mp.Process(target=run_random_walks, args=(G, nodes[(index) * length:(index + 1) * length], N_WALKS, file_prefix)) for index
                  in range(number-1)]
-    processes.append(mp.Process(target=run_random_walks, args=(G, nodes[(number-1) * length:len(nodes) - 1])))
+    processes.append(mp.Process(target=run_random_walks, args=(G, nodes[(number-1) * length:len(nodes) - 1], N_WALKS, file_prefix)))
 
     for p in processes:
         p.start()
@@ -86,16 +86,16 @@ def run_walk(nodes,G, num_workers=48):
 
 
 
-def write_file(pair):
+def write_file(pair, file_prefix=''):
     with lock:
-        with open("walks.txt", "a") as fp:
+        with open(file_prefix + "walks.txt", "a") as fp:
             for p in pair:
                 for sub_p in p:
                     fp.write(str(sub_p)+" ")
                 fp.write("\n")
 
 
-def gene_node_vector(graph, entity_list,outfile, embedding_size, num_workers=48):
+def gene_node_vector(graph, entity_list,outfile, embedding_size, file_prefix='', num_workers=48):
     nodes_set=set()
     with open(entity_list,"r") as f:
         for line in f.readlines():
@@ -108,9 +108,9 @@ def gene_node_vector(graph, entity_list,outfile, embedding_size, num_workers=48)
 
     G = graph.subgraph(nodes_G)
     nodes= [n for n in nodes_set]
-    run_walk(nodes,G, num_workers=num_workers)
+    run_walk(nodes,G, num_workers=num_workers, file_prefix=file_prefix)
 
     print("start to train the word2vec models")
-    sentences=gensim.models.word2vec.LineSentence("walks.txt")
+    sentences=gensim.models.word2vec.LineSentence(file_prefix+"walks.txt")
     model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=embedding_size, window=10,iter=30,workers=num_workers)
     model.save(outfile)
