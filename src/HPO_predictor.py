@@ -186,8 +186,8 @@ class HPODTIDataBuilder:
             # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
             if self.config.include_indications:
-                # drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
-                drug_feature = self.drug_indication_embeddings[drug_index, :]
+                drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
+                # drug_feature = self.drug_indication_embeddings[drug_index, :]
             else:
                 drug_feature = self.drug_embeddings[drug_index, :]
             protein_feature = self.protein_embeddings[protein_index, :]
@@ -231,7 +231,7 @@ class HPOPredNet(nn.Module):
         # siamese network approach
         if self.include_indications:
             self.model = nn.Sequential(
-                nn.Linear(200, 256),
+                nn.Linear(400, 256),
                 nn.Dropout(0.5),
                 # nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
@@ -274,8 +274,8 @@ class HPOPredNet(nn.Module):
 
 
         if self.include_indications:
-            p1 = self.model(x[:,:200]).view(-1, 200)
-            d1 = self.model2(x[:,200:]).view(-1, 200)
+            p1 = self.model(x[:,:400]).view(-1, 200)
+            d1 = self.model2(x[:,400:]).view(-1, 200)
         else:
             p1 = self.model(x[:,:200]).view(-1, 200)
             d1 = self.model2(x[:,200:]).view(-1, 200)

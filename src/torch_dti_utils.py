@@ -75,6 +75,11 @@ class QuickProtFuncDTINetworkData:
 
                 self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
+        else:
+            if config.include_indications:
+                print("Drug indications can only be selected with yamanishi test for now.")
+                raise ValueError
+
         print(len(self.protein_list), "proteins present\n")
 
 
