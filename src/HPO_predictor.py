@@ -256,11 +256,11 @@ class HPOPredNet(nn.Module):
                 # nn.Sigmoid()
             )
         self.model2 = nn.Sequential(
-            nn.Linear(600, 256),
+            nn.Linear(600, 128),
             nn.Dropout(0.5),
-            nn.BatchNorm1d(256, affine=True),
+            nn.BatchNorm1d(128, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 200),
+            nn.Linear(128, 200),
             # nn.BatchNorm1d(200),
             # nn.Dropout(0.5),
             # nn.LeakyReLU(0.2, inplace=True),
