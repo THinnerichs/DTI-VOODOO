@@ -582,7 +582,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         PPI_x = self.conv1(PPI_x, PPI_edge_index)
         PPI_x = self.conv2(PPI_x, PPI_edge_index)
-        PPI_x = self.conv3(PPI_x, PPI_edge_index)
+        # PPI_x = self.conv3(PPI_x, PPI_edge_index)
         # PPI_x = self.conv4(PPI_x, PPI_edge_index)
         # PPI_x = self.conv5(PPI_x, PPI_edge_index)
         # PPI_x = PPI_x*2 -1
