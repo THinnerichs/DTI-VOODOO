@@ -45,16 +45,11 @@ def quickened_missing_target_predictor(config,
     # get full protein num
     num_drugs = network_data.num_drugs
     num_proteins = network_data.num_proteins
-    # num_drugs = len(np.array(DTI_data_preparation.get_drug_list(mode=config.mode)))
-    # num_proteins = config.num_proteins if config.num_proteins else len(np.array(DTI_data_preparation.get_human_prot_func_proteins()))
-
-    # num_proteins = config.num_proteins if config.num_proteins else 11499 # 11518
-    # num_drugs = 568 # 641
 
     # dataset is present in dimension (num_drugs * num_proteins)
 
     # generate indices for proteins
-    kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
+    kf = KFold(n_splits=config.num_folds, random_state=12, shuffle=True)
     X = np.zeros((num_proteins,1))
 
     # build for help matrix for indices
