@@ -496,7 +496,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
             raise ValueError
 
         state_dict_path = '../models/HPO_models/hpo_pred_fold_' + str(config.fold) + '_model'
-        self.HPO_model = HPOPredNet()
+        self.HPO_model = HPOPredNet(include_indications=self.config.include_indications)
         state_dict = torch.load(state_dict_path)
         from collections import OrderedDict
         new_state_dict = OrderedDict()
