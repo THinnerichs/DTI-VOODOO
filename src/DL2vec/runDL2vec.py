@@ -28,6 +28,7 @@ parser.add_argument("-num_workers", nargs="?", metavar="num workers", type=int, 
 
 parser.add_argument("-entity_list", nargs ="?", metavar ="the entity list that needs to generate the embedding", type=str, default="",
                     help =" the entity list in which each entity that need to start random walk and generate the embedding")
+parser.add_argument("-file_prefix", nargs ="?", metavar ="file prefix to distinguish walks.txt file", type=str, default="", help='File prefix to distingui walks.txt file')
 
 
 args = parser.parse_args()
@@ -53,7 +54,7 @@ if (outfile is ''):
 	sys.exit()
 
 if entity_list is "":
-    entity_list = association_file
+    sentity_list = association_file
 
 if (model != 'sg' and model != 'cbow'):
 	model ='sg'
@@ -64,4 +65,4 @@ axiom_file = "axiomsorig.lst"
 G = generate_graph(association_file,axiom_file)
 
 
-gene_node_vector(G,entity_list,outfile, embedding_size, num_workers=num_workers)
+gene_node_vector(G,entity_list,outfile, embedding_size, file_prefix=args.file_prefix, num_workers=num_workers)

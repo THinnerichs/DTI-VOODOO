@@ -151,10 +151,7 @@ def write_UMLS_NET_files():
     ent_filename = 'drug_indication_entity_list'
     print('Writing entitiy list...')
     with open(file=path_prefix + ent_filename, mode='w') as f:
-        for drug in drug_list:
-            if drug in phenomenet_drugs:
-                f.write(drug+'\n')
-        for drug in sharp_drug_list:
+        for drug in set(drug_list) & set(sharp_drug_list):
             if drug in phenomenet_drugs:
                 f.write(drug+'\n')
 

@@ -136,12 +136,10 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. Additionally, we presume the closed world assumption, that all drug-protein pairs without an interaction, do not have one eventually. We also do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond, thus leading to a binary classification task.\\
 
 \subsection{Datasets}
-The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched $\approx11000$ human proteins with over 170.000 links from STRING (\cite{STRINGv10}). For the drug-target interactions themselves, we fetched 
-137.000 links from STITCH database (\cite{STITCHv5}). As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
+The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched $\approx11000$ human proteins with over 170.000 links from STRING \citep{STRINGv10}. For the drug-target interactions themselves, we fetched 
+137.000 links from STITCH database \citep{STITCHv5}. As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
 For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
 Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
-
-We additionally obtained molecular structure based features for drugs from \textit{SmilesTransformer}\citep{SmilesTransformer} and proteins from \textit{DeepGOPlus}\citep{DeepGoPlus}.\\
 
 For comparative evaluation we used the gold standard dataset introduced by \citet{Yaminishi2008}, which includes both drug-target interaction pairs and side effects.\\ 
  
@@ -166,7 +164,10 @@ To assess each model, we computed the \textit{area under receiver operating char
 Avoiding validation overfitting, we eventually tested the best performing model on the Yamanishi dataset as presented and discussed. Furthermore, we compare our results on this very dataset with various other cutting edge approaches to DTI-prediction.\\
 
 \subsection{Model}
-In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each. In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. The overall structure of the ontology can be seen in Figure~\ref{fig:Onto}.\\
+In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each individually. Hence, we assemble rich molecular structure based features for drugs from \textit{SmilesTransformer}\citep{SmilesTransformer} and proteins from \textit{DeepGOPlus}\citep{DeepGoPlus}. \textit{SmilesTransformer} introduces an autoencoder, learning over the SMILES strings and thus the molecular organization of each drug in an unsupervised manner. On the other hand, we take advantage of the pretrained models of \textit{DeepGOPlus}, obtaining features from the proteins amino acid sequence, showing significant performance in the field of protein function prediction. Thus, both embeddings seem to suitably supplement the  following ontology based represenations.\\
+
+
+In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. The overall structure of the ontology can be seen in Figure~\ref{fig:Onto}.\\
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
@@ -180,9 +181,6 @@ As we wanted to learn from the similarity of drug side effects and protein pheno
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
 	\caption{Siamese network applied to molecular and DL2vec features, utilizing deep neural network transformations (DNNT). The similarity function $\otimes$ yields the similarity between both transformed embeddings e.g. by computing the cosine similarity.}\label{fig:SiameseNetwork}
 \end{figure}
-
-
-
 
 
 \subsubsection{Graph convolutional layers}
@@ -234,7 +232,7 @@ To find the best hyperparameter configuration for the proposed model we performe
 \section{Results}
 
 \subsection{High level description}
-To obtain a prediction for a given drug-protein pair, we first need to pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
+To obtain a prediction for a given drug-protein pair, we first build DL2vec representations for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.33\textwidth]{figures/full_model.png}}
@@ -244,9 +242,6 @@ To obtain a prediction for a given drug-protein pair, we first need to pretrain 
 
 
 
-
-
-g
 
 
 \subsection{Choosing a train-test splitting scheme}
