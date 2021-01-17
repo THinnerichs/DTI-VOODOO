@@ -233,13 +233,13 @@ class HPOPredNet(nn.Module):
             self.model = nn.Sequential(
                 nn.Linear(400, 256),
                 nn.Dropout(0.5),
-                # nn.BatchNorm1d(256),
+                nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
                 nn.Linear(256, 200),
-                # nn.Dropout(0.5),
-                # nn.BatchNorm1d(50),
-                # nn.LeakyReLU(0.2, inplace=True),
-                # nn.Linear(256, 1),
+                nn.Dropout(0.5),
+                nn.BatchNorm1d(200),
+                nn.LeakyReLU(0.2, inplace=True),
+                nn.Linear(200, 200),
                 # nn.Sigmoid()
             )
         else:
@@ -258,13 +258,13 @@ class HPOPredNet(nn.Module):
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
             nn.Dropout(0.5),
-            # nn.BatchNorm1d(256),
+            nn.BatchNorm1d(256),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
-            # nn.BatchNorm1d(50),
-            # nn.Dropout(0.5),
-            # nn.LeakyReLU(0.2, inplace=True),
-            # nn.Linear(256, 1),
+            nn.BatchNorm1d(200),
+            nn.Dropout(0.5),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(200, 200),
             # nn.Sigmoid()
         )
 
