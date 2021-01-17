@@ -44,7 +44,7 @@ class HPODTIDataBuilder:
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
         else:
-            self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+            self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             if config.include_indications:
                 print("Drug indications can only be selected with yamanishi test for now.")
                 raise ValueError
@@ -231,15 +231,15 @@ class HPOPredNet(nn.Module):
         # siamese network approach
         if self.include_indications:
             self.model = nn.Sequential(
-                nn.Linear(400, 256),
+                nn.Linear(400, 128),
                 nn.Dropout(0.5),
-                nn.BatchNorm1d(256),
+                nn.BatchNorm1d(128, affine=True),
                 nn.LeakyReLU(0.2, inplace=True),
-                nn.Linear(256, 200),
-                nn.Dropout(0.5),
-                nn.BatchNorm1d(200),
-                nn.LeakyReLU(0.2, inplace=True),
-                nn.Linear(200, 200),
+                nn.Linear(128, 200),
+                # nn.Dropout(0.5),
+                # nn.BatchNorm1d(200),
+                # nn.LeakyReLU(0.2, inplace=True),
+                # nn.Linear(200, 200),
                 # nn.Sigmoid()
             )
         else:
@@ -258,13 +258,13 @@ class HPOPredNet(nn.Module):
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
             nn.Dropout(0.5),
-            nn.BatchNorm1d(256),
+            nn.BatchNorm1d(256, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
-            nn.BatchNorm1d(200),
-            nn.Dropout(0.5),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(200, 200),
+            # nn.BatchNorm1d(200),
+            # nn.Dropout(0.5),
+            # nn.LeakyReLU(0.2, inplace=True),
+            # nn.Linear(200, 200),
             # nn.Sigmoid()
         )
 
