@@ -8,13 +8,6 @@ import math
 
 
 def dti_auroc(y_true, y_pred):
-    if y_pred.sum() == 0 or (1-y_pred).sum() == 0 or y_true.sum() == 0 or (1-y_true).sum()==0:
-        print(y_pred.shape)
-        print(y_true.shape)
-        print(y_pred.sum())
-        print(y_true.sum())
-        raise Exception
-        return 0.5
     return metrics.roc_auc_score(y_true, y_pred)
 
 def dti_auprc(y_true, y_pred):
