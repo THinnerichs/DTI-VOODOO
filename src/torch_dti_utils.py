@@ -141,20 +141,24 @@ class QuickProtFuncDTINetworkData:
         print("Finished.\n")
 
         DL2vec_path_prefix = '../data/PhenomeNET_data/'
+        drug_indication_prefix = '../data/drug_indications/'
 
         drug_model_filename = DL2vec_path_prefix + 'drug_embedding_model'
+        drug_indication_filename = drug_indication_prefix + 'embedding_model'
         uberon_model_filename = DL2vec_path_prefix + 'uberon_embedding_model'
         GO_model_filename = DL2vec_path_prefix + 'GO_embedding_model'
         MP_model_filename = DL2vec_path_prefix + 'MP_embedding_model'
 
         # load models
         drug_model = gensim.models.Word2Vec.load(drug_model_filename)
+        drug_indication_model = gensim.models.Word2Vec.load(drug_indication_filename)
         uberon_model = gensim.models.Word2Vec.load(uberon_model_filename)
         GO_model = gensim.models.Word2Vec.load(GO_model_filename)
         MP_model = gensim.models.Word2Vec.load(MP_model_filename)
 
         # Build wordvector dicts
         drug_model = drug_model.wv
+        drug_indication_embeddings = []
         uberon_model = uberon_model.wv
         GO_model = GO_model.wv
         MP_model = MP_model.wv
@@ -183,10 +187,16 @@ class QuickProtFuncDTINetworkData:
         for drug_id in self.drug_list:
             drug_embeddings.append((drug_model[drug_id]))
 
+            if config.include_indications:
+                drug_indication_embeddings.append((drug_indication_model[drug_id]))
+
         self.drug_embeddings = torch.Tensor(drug_embeddings)
         self.uberon_embeddings = torch.Tensor(uberon_embeddings)
         self.GO_embeddings = torch.Tensor(GO_embeddings)
         self.MP_embeddings = torch.Tensor(MP_embeddings)
+
+        if config.include_indications:
+            self.drug_indication_embeddings = torch.Tensor(drug_indication_embeddings)
 
         self.protein_embeddings = torch.cat([self.uberon_embeddings, self.GO_embeddings, self.MP_embeddings], dim=1)
 
@@ -209,7 +219,12 @@ class QuickProtFuncDTINetworkData:
                                   edge_attr=self.edge_attr,
                                   y=y)
 
-            full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
+            if self.config.include_indications:
+                full_PPI_graph.drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
+                # drug_feature = self.drug_indication_embeddings[drug_index, :]
+            else:
+                full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
+
             full_PPI_graph.drug_mol_feature = molecular_drug_feature
             full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
 

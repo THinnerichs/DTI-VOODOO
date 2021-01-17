@@ -435,6 +435,8 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
     def __init__(self, config, num_drugs, num_prots, num_features, conv_method, dropout=0.2):
         super(QuickTemplateNodeFeatureNet, self).__init__()
 
+        self.config = config
+
         self.num_drugs = num_drugs
         self.num_prots = num_prots
         self.num_features = num_features
@@ -550,7 +552,10 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
     def forward(self, PPI_data_object):
         # DDI_feature = PPI_data_object.DDI_features
         PPI_x, PPI_edge_index, PPI_batch, edge_attr = PPI_data_object.x, PPI_data_object.edge_index, PPI_data_object.batch, PPI_data_object.edge_attr
-        drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
+        if self.config.include_indications:
+            drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features*2)
+        else:
+            drug_feature = PPI_data_object.drug_feature.view(-1, self.num_features)
 
         batch_size = drug_feature.size(0)
 
