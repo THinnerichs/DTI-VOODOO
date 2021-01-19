@@ -237,7 +237,7 @@ def get_yamanishi_drug_list():
             drug_list.append(line.strip())
 
 
-    return_drug_list = np.array(list(zip(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list), drug_list)))
+    return_drug_list = list(zip(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list), drug_list))
 
     return return_drug_list
 
