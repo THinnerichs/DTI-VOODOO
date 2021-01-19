@@ -236,9 +236,10 @@ def get_yamanishi_drug_list():
         for line in f:
             drug_list.append(line.strip())
 
-    drug_list = np.array(list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list)))
 
-    return drug_list
+    return_drug_list = np.array(list(zip(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list), drug_list)))
+
+    return return_drug_list
 
 def get_yamanishi_drug_side_effects():
 
