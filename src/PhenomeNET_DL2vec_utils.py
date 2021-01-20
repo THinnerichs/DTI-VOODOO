@@ -168,11 +168,8 @@ def write_PhenomeNET_files(mode='all'):
 
     # parse drug HPO annotations and build updated drug list
     # filename = "drug_SIDER_HPO_annotations.csv"
-    print('Loading stereo to mono mapping...')
-    drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
 
     drug_list = []
-    missed_drugs = []
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
         UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()

@@ -295,7 +295,7 @@ def get_yamanishi_side_effect_annotations():
     return np.array(mapped_list)
 
 def get_UMLS_to_phenomeNET_mapping():
-    path = 'data/Yamanishi_data/'
+    path = '../data/Yamanishi_data/'
 
 # parse side effect HPO_term to name mapping
     mapping_dict = {}
