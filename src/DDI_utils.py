@@ -193,6 +193,22 @@ def get_merged_DDI_graph():
 
     return merged_graph
 
+def write_drugs_to_file():
+    in_filename = 'data/SIDER_data/drug_names.tsv'
+    out_filename = 'data/SIDER_data/drug_list.tsv'
+
+    drug_list = []
+    with open(file=in_filename, mode='r') as f:
+        for line in f:
+            drug, _ = line.strip().split('\t')
+            drug = drug[4:].lstrip('0')
+            drug_list.append(drug)
+
+    with open(file=out_filename, mode='w') as f:
+        for drug in drug_list:
+            f.write(drug+'\n')
+
+
 def get_drug_to_SMILES_dict():
     filename = '../data/STITCH_data/drug_smiles_mapping'
 
@@ -200,7 +216,10 @@ def get_drug_to_SMILES_dict():
     drug_to_smiles_dict = {}
     with open(file=filename, mode='r') as f:
         for line in f:
-            drug_id, drug_smiles_enc = line.strip().split('\t')
+            drug_id, drug_smiles_enc = line.split('\t')
+            drug_smiles_enc = drug_smiles_enc.strip()
+            if not drug_smiles_enc:
+                continue
             drug_id = 'CIDm' + (8-len(drug_id))*'0' + drug_id
             drug_to_smiles_dict[drug_id] = drug_smiles_enc.strip()
 
@@ -434,6 +453,5 @@ if __name__ == '__main__':
 
     # print(get_merged_DDI_graph().nodes())
 
-    # write_drug_to_SMILES_dict()
 
     pass

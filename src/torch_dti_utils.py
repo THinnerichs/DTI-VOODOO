@@ -45,7 +45,6 @@ class QuickProtFuncDTINetworkData:
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
 
 
-
         if config.include_mol_features:
             print("Building molecular features")
             # build drug features
@@ -142,7 +141,8 @@ class QuickProtFuncDTINetworkData:
 
         self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list, n=100))
 
-        self.drug_mol_encodings = torch.Tensor([self.drug_mol_encodings[drug] for drug in self.drug_list])
+        if config.include_mol_features:
+            self.drug_mol_encodings = torch.Tensor([self.drug_mol_encodings[drug] for drug in self.drug_list])
 
         print("Finished.\n")
 
@@ -231,8 +231,9 @@ class QuickProtFuncDTINetworkData:
             else:
                 full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
 
-            full_PPI_graph.drug_mol_feature = molecular_drug_feature
-            full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
+            if self.config.include_mol_features:
+                full_PPI_graph.drug_mol_feature = molecular_drug_feature
+                full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
 
             # full_PPI_graph.__num_nodes__ = self.num_proteins
 
