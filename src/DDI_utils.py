@@ -46,6 +46,11 @@ def write_STITCH_db_Pubchem_mapping_dict():
     with open(file=dict_filename+'.pkl', mode='wb') as f:
         pickle.dump(db_pubchem_mapping_dict, f, pickle.HIGHEST_PROTOCOL)
 
+def get_STITCH_db_Pubchem_mapping_dict():
+    dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
+    with open(file=dict_filename+'.pkl', mode='rb') as f:
+        return pickle.load(f)
+
 def get_dhimmel_db_to_Pubchem_mapping_dict():
     filename = '../data/DDI_utils/pubchem-mapping.tsv'
 
