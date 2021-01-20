@@ -314,7 +314,7 @@ def get_UMLS_to_phenomeNET_mapping():
 
     return mapping_dict
 
-def parse_SIDER():
+def parse_SIDER_se():
     stereo_mono_mapping = get_chemical_stereo_to_normal_mapping()
 
     path = '../data/SIDER_data/'
@@ -324,7 +324,7 @@ def parse_SIDER():
     drug_side_effect_links = []
     with open(file=path+filename, mode='r') as f:
         for line in f:
-            drug_stereo, drug, UMLS_term = line.strip().split('\t')[:3]
+            drug, drug_stereo, UMLS_term = line.strip().split('\t')[:3]
 
             drug = 'CIDm' + drug[4:]
             drug_side_effect_links.append((drug, UMLS_term))
@@ -343,6 +343,35 @@ def parse_SIDER():
 
     return drug_list, drug_side_effect_links
 
+def parse_SIDER_indications():
+    stereo_mono_mapping = get_chemical_stereo_to_normal_mapping()
+
+    path = 'data/SIDER_data/'
+
+    filename = 'meddra_all_indications.tsv'
+    drug_list = []
+    drug_indication_links = []
+    with open(file=path+filename, mode='r') as f:
+        for line in f:
+            split_line = line.strip().split('\t')
+
+
+            drug = 'CIDm' + drug[4:]
+            drug_side_effect_links.append((drug, UMLS_term))
+
+            drug_stereo = 'CIDs' + drug_stereo[4:]
+            drug_list.append(drug)
+            try:
+                drug_stereo = stereo_mono_mapping[drug_stereo]
+                drug_list.append(drug_stereo)
+                drug_side_effect_links.append((drug_stereo, UMLS_term))
+            except:
+                pass
+
+    drug_list = list(set(drug_list))
+    drug_side_effect_links = list(set(drug_side_effect_links))
+
+    return drug_list, drug_side_effect_links
 
 
 

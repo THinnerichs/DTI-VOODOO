@@ -173,7 +173,7 @@ def write_PhenomeNET_files(mode='all'):
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
         UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()
-        SIDER_drug_list, SIDER_drug_se_pairs = DDI_utils.parse_SIDER()
+        SIDER_drug_list, SIDER_drug_se_pairs = DDI_utils.parse_SIDER_se()
 
         for drug, se in SIDER_drug_se_pairs:
             if se in UMLS_to_phenomeNET_mapping.keys():
