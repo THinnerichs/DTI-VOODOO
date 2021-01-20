@@ -186,7 +186,7 @@ def write_PhenomeNET_files(mode='all'):
 
 
         drug_HPO_pairs = list(set(drug_HPO_pairs))
-        drug_list = list(set(drug_HPO_pairs))
+        drug_list = list(set(drug_list))
 
 
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
