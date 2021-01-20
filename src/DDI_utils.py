@@ -294,6 +294,21 @@ def get_yamanishi_side_effect_annotations():
 
     return np.array(mapped_list)
 
+def parse_SIDER():
+    path = '../data/SIDER_data/'
+
+    filename = 'meddra_all_se.tsv'
+    drug_list = []
+    drug_side_effect_links = []
+    with open(file=path+filename, mode='r') as f:
+        for line in f:
+            drug = line.strip().split('\t')[1]
+            drug = 'CIDm' + drug[4:]
+            drug_list.append(drug)
+
+    return drug_list
+
+
 
 
 
