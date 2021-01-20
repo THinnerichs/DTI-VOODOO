@@ -294,6 +294,26 @@ def get_yamanishi_side_effect_annotations():
 
     return np.array(mapped_list)
 
+def get_UMLS_to_phenomeNET_mapping():
+    path = 'data/Yamanishi_data/'
+
+# parse side effect HPO_term to name mapping
+    mapping_dict = {}
+    for db in ['hp','mp']:
+        filename = f'{db}_for_synonyms.obo'
+        with open(file=path+filename, mode='r') as f:
+
+            id = None
+            for line in f:
+                line = line.strip()
+                if line.startswith('id'):
+                    id = line.split(' ')[-1]
+                elif line.startswith('xref') and 'UMLS' in line:
+                    UMLS_id = line.split(':')[-1]
+                    mapping_dict[UMLS_id] = id
+
+    return mapping_dict
+
 def parse_SIDER():
     stereo_mono_mapping = get_chemical_stereo_to_normal_mapping()
 
@@ -304,15 +324,24 @@ def parse_SIDER():
     drug_side_effect_links = []
     with open(file=path+filename, mode='r') as f:
         for line in f:
-            drug_stereo, drug = line.strip().split('\t')[:2]
+            drug_stereo, drug, UMLS_term = line.strip().split('\t')[:3]
+
             drug = 'CIDm' + drug[4:]
+            drug_side_effect_links.append((drug, UMLS_term))
+
             drug_stereo = 'CIDs' + drug_stereo[4:]
             drug_list.append(drug)
             try:
-                drug_list.append(stereo_mono_mapping[drug_stereo])
+                drug_stereo = stereo_mono_mapping[drug_stereo]
+                drug_list.append(drug_stereo)
+                drug_side_effect_links.append((drug_stereo, UMLS_term))
             except:
                 pass
-    return drug_list
+
+    drug_list = list(set(drug_list))
+    drug_side_effect_links = list(set(drug_side_effect_links))
+
+    return drug_list, drug_side_effect_links
 
 
 

@@ -175,57 +175,15 @@ def write_PhenomeNET_files(mode='all'):
     missed_drugs = []
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
-        filename = 'drugpheno_query_results.tsv'
-        print('Parsing SIDER associations...')
-        missed_drugs_counter = 0
-        with open(file=path_prefix + filename, mode='r') as f:
-            # skip header
-            f.readline()
+        UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()
+        drug_list, drug_se_pairs = DDI_utils.parse_SIDER()
 
-            for line in f:
-                drug, HPO_term = line.strip().split('\t')
-                # map drugs from stereo to mono
-                try:
-                    drug_stereo_mapped = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
-                except:
-                    missed_drugs_counter += 1
-                    missed_drugs.append(drug)
-                    continue
-                drug = 'CIDm' + drug[1:]
-
-                HPO_term = onto_prefix.format(entity=HPO_term)
-
-                drug_list.append(drug)
-                drug_list.append(drug_stereo_mapped)
-                drug_HPO_pairs.append((drug, HPO_term))
-                drug_HPO_pairs.append((drug_stereo_mapped, HPO_term))
-        print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
-        print('Missed drugs from stereo/mono mapping:', len(set(missed_drugs)))
-
-        # load yamanishi drug-HP/MP pairs
-        yama_drug_list = DDI_utils.get_yamanishi_drug_list()
-        drug_side_effect_matrix = DDI_utils.get_yamanishi_drug_side_effects()
-        side_effect_annotations = DDI_utils.get_yamanishi_side_effect_annotations()
-
-        drug_side_effect_matrix = drug_side_effect_matrix[:, side_effect_annotations!=None]
-        drug_side_effect_matrix = drug_side_effect_matrix[yama_drug_list!= None, :]
-        side_effect_annotations = side_effect_annotations[side_effect_annotations!=None]
-        yama_drug_list = yama_drug_list[yama_drug_list!=None]
-
-        print('Yamanishi results:')
-        print(yama_drug_list.shape, drug_side_effect_matrix.shape, side_effect_annotations.shape)
-
-        for i, drug in enumerate(yama_drug_list):
-            for j, onto_term in enumerate(side_effect_annotations):
-                if drug_side_effect_matrix[i,j] == 1:
-                    drug_list.append(yama_drug_list[i])
-                    drug_HPO_pairs.append((drug, onto_prefix.format(entity=onto_term.replace(':', '_'))))
+        drug_HPO_pairs = [(drug, onto_prefix.format(se.replace(':','_'))) for drug, se in drug_se_pairs]
 
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num present drugs', len(drug_list))
 
     drug_HPO_pairs = list(set(drug_HPO_pairs))
-
 
     # parse GO and MP annotations for proteins and update protein list
     filename = "final_GO_ProteinID_human.txt"
