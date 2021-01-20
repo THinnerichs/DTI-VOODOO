@@ -291,6 +291,9 @@ def write_PhenomeNET_files(mode='all'):
     with open(file=path_prefix + filename, mode='w') as f:
         if mode =='drug' or mode=='all':
             for drug in drug_list:
+
+                if type(drug) == tuple:
+                    print(drug)
                 f.write(drug+'\n')
         if mode in ['GO','uberon', 'MP']:
             for protein in protein_list:
