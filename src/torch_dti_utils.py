@@ -27,7 +27,12 @@ class QuickProtFuncDTINetworkData:
         self.config = config
 
         print("Loading data ...")
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+        if config.yamanishi_test:
+            self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
+        else:
+            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+        print(len(self.drug_list), "drugs present")
+
         print(len(self.drug_list), "drugs present")
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
         # get protein lists for each ontology
@@ -64,11 +69,8 @@ class QuickProtFuncDTINetworkData:
         if config.yamanishi_test:
             self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
-            orig_drug_list = self.drug_list
             self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
 
-            print(set(self.drug_list) - set(orig_drug_list))
-            raise Exception
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
 
             if config.include_mol_features:
