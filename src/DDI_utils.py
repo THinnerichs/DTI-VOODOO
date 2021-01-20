@@ -88,11 +88,6 @@ def get_Yamanishi_db_to_PubChem_mapping_dict():
 
     return return_dict
 
-def get_STITCH_db_Pubchem_mapping_dict():
-    dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
-    with open(file=dict_filename+'.pkl', mode='rb') as f:
-        return pickle.load(f)
-
 def get_DDI_Boyce_graph():
 
     # db := drugbank
@@ -232,7 +227,8 @@ def get_chemical_stereo_to_normal_mapping():
         return pickle.load(f)
 
 def get_yamanishi_drug_list():
-    yamanishi_drug_mapping = get_Yamanishi_db_to_PubChem_mapping_dict()
+    # yamanishi_drug_mapping = get_Yamanishi_db_to_PubChem_mapping_dict()
+    yamanishi_drug_mapping = get_STITCH_db_Pubchem_mapping_dict()
 
     path = '../data/Yamanishi_data/'
 
@@ -241,10 +237,9 @@ def get_yamanishi_drug_list():
         for line in f:
             drug_list.append(line.strip())
 
+    drug_list = list(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list))
 
-    return_drug_list = list(zip(map(lambda d: yamanishi_drug_mapping.get(d, None), drug_list), drug_list))
-
-    return return_drug_list
+    return drug_list
 
 def get_yamanishi_drug_side_effects():
 
