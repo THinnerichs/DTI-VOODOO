@@ -173,14 +173,19 @@ def write_PhenomeNET_files(mode='all'):
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
         UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()
-        drug_list, drug_se_pairs = DDI_utils.parse_SIDER()
+        SIDER_drug_list, SIDER_drug_se_pairs = DDI_utils.parse_SIDER()
 
-        drug_HPO_pairs = [(drug, onto_prefix.format(se.replace(':','_'))) for drug, se in drug_se_pairs]
+        for drug, se in SIDER_drug_se_pairs:
+            if se in UMLS_to_phenomeNET_mapping.keys():
+                onto_term = onto_prefix.format(entity=UMLS_to_phenomeNET_mapping[se].replace(':','_'))
+                drug_list.append(drug)
+                drug_HPO_pairs.append((drug, onto_term))
 
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num present drugs', len(drug_list))
 
     drug_HPO_pairs = list(set(drug_HPO_pairs))
+    drug_list = list(set(drug_HPO_pairs))
 
     # parse GO and MP annotations for proteins and update protein list
     filename = "final_GO_ProteinID_human.txt"
