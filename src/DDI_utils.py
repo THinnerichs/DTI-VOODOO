@@ -344,7 +344,7 @@ def parse_SIDER_se():
     return drug_list, drug_side_effect_links
 
 def parse_SIDER_indications():
-    path = 'data/SIDER_data/'
+    path = '../data/SIDER_data/'
 
     filename = 'meddra_all_indications.tsv'
     drug_list = []
@@ -354,6 +354,8 @@ def parse_SIDER_indications():
             drug, UMLS_id, _, _, _, UMLS_id_synonym, _ = line.strip().split('\t')
 
             drug = 'CIDm' + drug[4:]
+
+            drug_list.append(drug)
             drug_indication_links.append((drug, UMLS_id))
             drug_indication_links.append((drug, UMLS_id_synonym))
 
