@@ -26,7 +26,10 @@ class HPODTIDataBuilder:
         self.config = config
 
         print("Loading data ...")
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+        if config.yamanishi_test:
+            self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
+        else:
+            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
 
         # get protein lists for each ontology

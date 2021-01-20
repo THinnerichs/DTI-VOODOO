@@ -41,6 +41,13 @@ def write_UMLS_NET_files():
     print(command)
 
 
+def get_UMLS_drug_list():
+    path_prefix = '../data/drug_indications/'
+    filename = 'UMLS_drug_list'
+    with open(file=path_prefix+filename+'.pkl', mode='rb') as f:
+        return pkl.load(f)
+
+
 def write_PhenomeNET_files(mode='all'):
     path_prefix = "../data/PhenomeNET_data/"
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
