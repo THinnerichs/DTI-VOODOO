@@ -181,11 +181,15 @@ def write_PhenomeNET_files(mode='all'):
                 drug_list.append(drug)
                 drug_HPO_pairs.append((drug, onto_term))
 
+                print('drug', drug)
+                print('se', se)
+
+        drug_HPO_pairs = list(set(drug_HPO_pairs))
+        drug_list = list(set(drug_HPO_pairs))
+
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num present drugs', len(drug_list))
 
-    drug_HPO_pairs = list(set(drug_HPO_pairs))
-    drug_list = list(set(drug_HPO_pairs))
 
     # parse GO and MP annotations for proteins and update protein list
     filename = "final_GO_ProteinID_human.txt"
