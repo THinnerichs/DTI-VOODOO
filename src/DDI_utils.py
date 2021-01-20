@@ -39,7 +39,7 @@ def write_STITCH_db_Pubchem_mapping_dict():
     with open(file=filename, mode='r') as f:
         for line in tqdm(f, total=num_lines):
             drug, stereo, alias, source = line.split('\t')
-            if alias.startswith('DB') and not alias.startswith('DB-'):
+            if alias.startswith('DB') and len(alias)>2 and alias[2].isdigit():
                 db_pubchem_mapping_dict[alias] = drug
 
     dict_filename = "../data/STITCH_data/STITCH_drugbank_pubchem_mapping_dict"
@@ -295,6 +295,8 @@ def get_yamanishi_side_effect_annotations():
     return np.array(mapped_list)
 
 def parse_SIDER():
+    stereo_mono_mapping = get_chemical_stereo_to_normal_mapping()
+
     path = '../data/SIDER_data/'
 
     filename = 'meddra_all_se.tsv'
@@ -302,10 +304,14 @@ def parse_SIDER():
     drug_side_effect_links = []
     with open(file=path+filename, mode='r') as f:
         for line in f:
-            drug = line.strip().split('\t')[1]
+            drug_stereo, drug = line.strip().split('\t')[:2]
             drug = 'CIDm' + drug[4:]
+            drug_stereo = 'CIDs' + drug_stereo[4:]
             drug_list.append(drug)
-
+            try:
+                drug_list.append(stereo_mono_mapping[drug_stereo])
+            except:
+                pass
     return drug_list
 
 
