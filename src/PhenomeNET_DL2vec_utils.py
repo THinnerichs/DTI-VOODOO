@@ -181,11 +181,13 @@ def write_PhenomeNET_files(mode='all'):
                 drug_list.append(drug)
                 drug_HPO_pairs.append((drug, onto_term))
 
-                print('drug', drug)
-                print('se', se)
+                if type(drug) != str:
+                    print(drug,onto_term)
+
 
         drug_HPO_pairs = list(set(drug_HPO_pairs))
         drug_list = list(set(drug_HPO_pairs))
+
 
         print('Num drug-HPO-pairs:', len(drug_HPO_pairs))
         print('Num present drugs', len(drug_list))
