@@ -102,29 +102,11 @@ def analyze_DTI_net_results():
     num_drugs, num_prots = dti_matrix.shape
 
 
-    ord = np.flip(np.argsort(zscores.flatten()))
-    label = dti_matrix.flatten()[ord]
-
-    p = label.sum()
-    n = len(label)-p
-
-    TP = np.cumsum(label)
-    PP = np.arange(len(label)) + 1
-
-    rocx = (PP - TP) / n
-    rocy = TP / p
-
-    print(metrics.auc(rocx, rocy))
-
-
-    noise = np.random.randn(708, 1512) * 0.001
-    zscores = zscores + noise
-
-    unique_values = np.unique(zscores[((0.0125<zscores) * (zscores<0.0135))])
-
-    y_pred = zscores>=0.015
+    y_pred = zscores>=0.5
     print(y_pred.sum(), 'auc:', dti_utils.dti_auroc(dti_matrix.flatten(), y_pred.flatten()),
-          'microauc:', dti_utils.micro_AUC_per_prot(dti_matrix.flatten(), y_pred.flatten(), num_drugs=num_drugs))
+          'microauc:', dti_utils.micro_AUC_per_prot(dti_matrix.flatten(), y_pred.flatten(), num_drugs=num_drugs),
+          'microauc:', dti_utils.micro_AUC_per_drug(dti_matrix.flatten(), y_pred.flatten(), num_drugs=num_drugs))
+
 
 def test_Yamanishi_AUC():
     path = '../data/Yamanishi_data/'
@@ -162,6 +144,7 @@ def test_Yamanishi_AUC():
 
 if __name__ == '__main__':
     analyze_DTI_net_results()
+    # test_Yamanishi_AUC()
     # write_predicted_DTIs()
 
 
