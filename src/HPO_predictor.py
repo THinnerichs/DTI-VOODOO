@@ -373,7 +373,7 @@ def siamese_drug_protein_network(config):
                     print('Train: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
-                          dti_utils.dti_auprc(train_labels, train_predictions),
+                          dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(train_labels, train_predictions),
                           dti_utils.dti_mcc(train_labels, train_predictions))#@TODO, file=f)
 
@@ -381,7 +381,7 @@ def siamese_drug_protein_network(config):
                     print('Test: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
-                          dti_utils.dti_auprc(test_labels, test_predictions),
+                          dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(test_labels, test_predictions),
                           dti_utils.dti_mcc(test_labels, test_predictions))#@TODO, file=f)
 

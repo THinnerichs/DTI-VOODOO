@@ -6,6 +6,9 @@ import DTI_data_preparation
 import DDI_utils
 import dti_utils
 
+
+import sklearn.metrics as metrics
+
 def write_predicted_DTIs(fold=3):
     filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_'+str(fold)+'_predictions.pkl'
 
@@ -87,8 +90,51 @@ def write_predicted_DTIs(fold=3):
                       str(driver_gene_dict[protein_to_gene_mapping[protein[5:]]][0]), file=f)
 
 
+def analyze_DTI_net_results():
+    path = '../data/Yamanishi_data/'
+    dti_matrix = np.loadtxt(path+'mat_drug_protein.txt')
+    print(dti_matrix.shape)
+    zscores = np.loadtxt(path+'Zscore.txt', delimiter=',')
+    print(zscores.shape)
+
+    print((dti_matrix.sum(axis=0)==0).sum())
+
+    raise Exception
+
+    print(zscores.max(), zscores.min())
+
+
+    zscores = zscores>0.0
+    ord = np.flip(np.argsort(zscores.flatten()))
+    label = dti_matrix.flatten()[ord]
+
+    p = label.sum()
+    n = len(label)-p
+
+    TP = np.cumsum(label)
+    PP = np.arange(len(label)) + 1
+
+    rocx = (PP - TP) / n
+    rocy = TP / p
+
+    print(metrics.auc(rocx, rocy))
+
+    raise Exception
+
+    noise = np.random.randn(708, 1512) * 0.001
+    zscores = zscores + noise
+
+    unique_values = np.unique(zscores[((0.0125<zscores) * (zscores<0.0135))])
+
+    for t in range(0, 100, 5):
+    # for i in range(2000, len(unique_values)-3000, 10):
+        # threshold = unique_values[i]
+        threshold = 0.8 - t/100
+        y_pred = zscores>=threshold
+        print(threshold, y_pred.sum(), 'auc:', dti_utils.dti_auroc(dti_matrix.flatten(), y_pred.flatten()))
+
 def test_Yamanishi_AUC():
-    path = 'data/Yamanishi_data/'
+    path = '../data/Yamanishi_data/'
     # parse dti matrix provided by https://github.com/luoyunan/DTINet/
     dti_matrix = []
     with open(file=path + 'mat_drug_protein.txt', mode='r') as f:
@@ -122,7 +168,8 @@ def test_Yamanishi_AUC():
 
 
 if __name__ == '__main__':
-    write_predicted_DTIs()
+    analyze_DTI_net_results()
+    # write_predicted_DTIs()
 
 
 
