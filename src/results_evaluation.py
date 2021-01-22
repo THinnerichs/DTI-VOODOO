@@ -97,14 +97,11 @@ def analyze_DTI_net_results():
     zscores = np.loadtxt(path+'Zscore.txt', delimiter=',')
     print(zscores.shape)
 
-    print((dti_matrix.sum(axis=0)==0).sum())
-
-    raise Exception
-
     print(zscores.max(), zscores.min())
 
+    num_drugs, num_prots = dti_matrix.shape
 
-    zscores = zscores>0.0
+
     ord = np.flip(np.argsort(zscores.flatten()))
     label = dti_matrix.flatten()[ord]
 
@@ -119,19 +116,15 @@ def analyze_DTI_net_results():
 
     print(metrics.auc(rocx, rocy))
 
-    raise Exception
 
     noise = np.random.randn(708, 1512) * 0.001
     zscores = zscores + noise
 
     unique_values = np.unique(zscores[((0.0125<zscores) * (zscores<0.0135))])
 
-    for t in range(0, 100, 5):
-    # for i in range(2000, len(unique_values)-3000, 10):
-        # threshold = unique_values[i]
-        threshold = 0.8 - t/100
-        y_pred = zscores>=threshold
-        print(threshold, y_pred.sum(), 'auc:', dti_utils.dti_auroc(dti_matrix.flatten(), y_pred.flatten()))
+    y_pred = zscores>=0.015
+    print(y_pred.sum(), 'auc:', dti_utils.dti_auroc(dti_matrix.flatten(), y_pred.flatten()),
+          'microauc:', dti_utils.micro_AUC_per_prot(dti_matrix.flatten(), y_pred.flatten(), num_drugs=num_drugs))
 
 def test_Yamanishi_AUC():
     path = '../data/Yamanishi_data/'
