@@ -4,6 +4,7 @@ import random
 
 import DTI_data_preparation
 import DDI_utils
+import dti_utils
 
 def write_predicted_DTIs(fold=3):
     filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_'+str(fold)+'_predictions.pkl'
@@ -84,6 +85,41 @@ def write_predicted_DTIs(fold=3):
             if drug in drug_list and protein in protein_list:
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
                       str(driver_gene_dict[protein_to_gene_mapping[protein[5:]]][0]), file=f)
+
+
+def test_Yamanishi_AUC():
+    path = 'data/Yamanishi_data/'
+    # parse dti matrix provided by https://github.com/luoyunan/DTINet/
+    dti_matrix = []
+    with open(file=path + 'mat_drug_protein.txt', mode='r') as f:
+        for line in f:
+            dti_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
+    dti_matrix = np.array(dti_matrix)
+    print('dti_matrix.shape', dti_matrix.shape)
+    print(dti_matrix[:, 0].sum())
+    print(dti_matrix.sum())
+
+    num_drugs, num_prots = dti_matrix.shape
+
+    sum_vec = dti_matrix.sum(axis=0)
+
+    print('sumvec:', sum_vec.shape, sum_vec[:20])
+
+    idx = sum_vec.argsort()
+
+    idx = np.flip(idx)
+
+    dti_matrix = dti_matrix.flatten()
+
+    for i in range(200, num_prots+1, 1):
+        y_pred = np.zeros((num_drugs, num_prots))
+        y_pred[:, idx[:i]] = 1
+        y_pred = y_pred.flatten()
+
+        print(f'i: {i}, ROCAUC: {dti_utils.dti_auroc(y_true=dti_matrix, y_pred=y_pred)}, '
+              f'microAUC: {dti_utils.micro_AUC_per_prot(y_true=dti_matrix, y_pred=y_pred, num_drugs=num_drugs)}, '
+              f'{dti_utils.micro_AUC_per_drug(dti_matrix, y_pred,num_drugs)}')
+
 
 if __name__ == '__main__':
     write_predicted_DTIs()

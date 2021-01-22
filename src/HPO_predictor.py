@@ -28,6 +28,9 @@ class HPODTIDataBuilder:
         print("Loading data ...")
         if config.yamanishi_test:
             self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
+            if config.include_indications:
+                indication_drug_list = set(PhenomeNET_DL2vec_utils.get_UMLS_drug_list())
+                self.drug_list = np.array(list(set(self.drug_list) & indication_drug_list))
         else:
             self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
