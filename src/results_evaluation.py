@@ -172,7 +172,7 @@ def test_Yamanishi_AUC():
 
         max_train_auroc = max_train_micro_auc = 0
         max_test_auroc = max_test_micro_auc = 0
-        for i in tqdm(range(0, int(num_prots / 2), 5)):
+        for i in tqdm(range(0, int(num_prots / 2), 2)):
             y_pred = np.zeros((num_drugs, num_prots))
             y_pred[:, idx[:i]] = 1
 
