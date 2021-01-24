@@ -2,12 +2,16 @@ import pickle
 import numpy as np
 import random
 
+from tqdm import tqdm
+
 import DTI_data_preparation
 import DDI_utils
 import dti_utils
 
-
 import sklearn.metrics as metrics
+from sklearn.model_selection import KFold
+
+
 
 def write_predicted_DTIs(fold=3):
     filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_'+str(fold)+'_predictions.pkl'
@@ -122,6 +126,7 @@ def test_Yamanishi_AUC():
 
     num_drugs, num_prots = dti_matrix.shape
 
+    '''
     sum_vec = dti_matrix.sum(axis=0)
 
     print('sumvec:', sum_vec.shape, sum_vec[:20])
@@ -133,6 +138,7 @@ def test_Yamanishi_AUC():
     dti_matrix = dti_matrix.flatten()
 
     for i in range(200, num_prots+1, 1):
+        continue
         y_pred = np.zeros((num_drugs, num_prots))
         y_pred[:, idx[:i]] = 1
         y_pred = y_pred.flatten()
@@ -140,11 +146,68 @@ def test_Yamanishi_AUC():
         print(f'i: {i}, ROCAUC: {dti_utils.dti_auroc(y_true=dti_matrix, y_pred=y_pred)}, '
               f'microAUC: {dti_utils.micro_AUC_per_prot(y_true=dti_matrix, y_pred=y_pred, num_drugs=num_drugs)}, '
               f'{dti_utils.micro_AUC_per_drug(dti_matrix, y_pred,num_drugs)}')
+    '''
+
+
+    kf = KFold(n_splits=5, random_state=12, shuffle=True)
+    X = np.zeros((num_drugs, 1))
+
+    train_aucs = []
+    train_micro_aucs = []
+    test_aucs = []
+    test_micro_aucs = []
+
+    for train_drug_indices, test_drug_indices in kf.split(X):
+        print(train_drug_indices.shape, test_drug_indices.shape)
+        y_train = dti_matrix[train_drug_indices, :]
+        y_test = dti_matrix[test_drug_indices, :]
+
+        sum_vec = y_train.sum(axis=0)
+
+        print('sumvec:', sum_vec.shape, sum_vec[:20])
+        idx = sum_vec.argsort()
+
+        idx = np.flip(idx)
+        y_train = y_train.flatten()
+
+        max_train_auroc = max_train_micro_auc = 0
+        max_test_auroc = max_test_micro_auc = 0
+        for i in tqdm(range(0, int(num_prots / 2), 5)):
+            y_pred = np.zeros((num_drugs, num_prots))
+            y_pred[:, idx[:i]] = 1
+
+            help_val = dti_utils.dti_auroc(y_true=y_train.flatten(), y_pred=y_pred[train_drug_indices, :].flatten())
+            max_train_auroc = help_val if help_val > max_train_auroc else max_train_auroc
+
+            help_val = dti_utils.micro_AUC_per_prot(y_true=y_train, y_pred=y_pred[train_drug_indices, :].flatten(), num_drugs=len(train_drug_indices))
+            max_train_micro_auc = help_val if help_val > max_train_micro_auc else max_train_micro_auc
+
+            help_val = dti_utils.dti_auroc(y_true=y_test.flatten(), y_pred=y_pred[test_drug_indices, :].flatten())
+            max_test_auroc = help_val if help_val > max_test_auroc else max_test_auroc
+
+            help_val = dti_utils.micro_AUC_per_prot(y_true=y_test, y_pred=y_pred[test_drug_indices, :].flatten(), num_drugs=len(test_drug_indices))
+            max_test_micro_auc = help_val if help_val > max_test_micro_auc else max_test_micro_auc
+
+        print(f'Train: ROCAUC {max_train_auroc}, '
+              f'microAUC: {max_train_micro_auc}, '
+              f'Test: ROCAUC {max_test_auroc}, '
+              f'microAUC: {max_test_micro_auc}')
+
+        train_aucs.append(max_train_auroc)
+        train_micro_aucs.append(max_train_micro_auc)
+        test_aucs.append(max_test_auroc)
+        test_micro_aucs.append(max_test_micro_auc)
+
+    for results in [train_aucs, train_micro_aucs, test_aucs, test_micro_aucs]:
+        results = np.array(results)
+        print(results.mean())
+
+
 
 
 if __name__ == '__main__':
-    analyze_DTI_net_results()
-    # test_Yamanishi_AUC()
+    # analyze_DTI_net_results()
+    test_Yamanishi_AUC()
     # write_predicted_DTIs()
 
 

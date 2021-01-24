@@ -30,6 +30,8 @@ def micro_AUC_per_prot(y_true, y_pred, num_drugs):
     num_prots = y_true.shape[1]
     prot_wise_auc = []
     for prot_index in range(num_prots):
+        if y_true[:, prot_index].sum() == 0:
+            pass
         prot_wise_auc.append(dti_auroc(y_true[:, prot_index], y_pred[:, prot_index]))
 
     prot_wise_auc = np.array(prot_wise_auc)
@@ -44,7 +46,7 @@ def micro_AUC_per_drug(y_true, y_pred, num_drugs):
     drug_wise_auc = []
     for drug_index in range(num_drugs):
         if y_true[drug_index, :].sum() == 0:
-            continue
+            pass
         drug_wise_auc.append(dti_auroc(y_true[drug_index, :], y_pred[drug_index, :]))
 
     drug_wise_auc = np.array(drug_wise_auc)
