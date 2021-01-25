@@ -241,7 +241,68 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
 \end{figure}
 
 
+\section{Findings}
 
+\subsection{Deification of our method}
+\begin{itemize}
+	\item we built protein function and ontology based features based on DL2vec
+	\item Ontology derived protein function focused features are highly predictive for dtis
+	\item We built a versatile template for various features to test localization on the PPI graph
+	\item normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
+	\item protein functions localize on the PPI graph, while molecular features don't
+	\item all AUROC in \% AUROC score on STITCH
+	
+	\begin{tabular}{|l|r|r|}
+		\hline
+		DNNT model&Without graph model&With graph model\\
+		\hline
+		MolPred&$69$&$69$\\
+		PhenomeNETPred&$88$&$92$\\
+		\hline
+		MolPred + PhenomeNETPred & $89$ & $93$\\
+		\hline
+	\end{tabular}
+	\item microAUC for MolPred + PhenomeNETPred on graph is about $93+-$
+	\item and on yamanishi dataset
+	
+	\begin{tabular}{|l|r|r|}
+		\hline
+		DNNT model&Without graph model&With graph model\\
+		\hline
+		PhenomeNETPred&$83$&$84$\\
+		\hline
+		MolPred + PhenomeNETPred & $83$ & $84.5$\\
+		\hline
+	\end{tabular}
+	\item MicroAUC is about $83$
+\end{itemize}
+
+\subsection{How to insult other methods}
+\begin{itemize}
+	\item Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
+	\item Running split over proteins is harder than, drug and drug protein pair split (see below table)
+	\item this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
+	\item using indications is like cheating, as not applicable for searching new drugs
+	\item drug indications are highly predictive for downstream tasks, but lack capability to differentiate highly related drugs/proteins
+	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+	
+	\begin{tabular}{|l|l|r|r|r|}
+		\hline
+		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+		\hline
+		DTINet&DP pairs&$91$&$84.1$&$67.2$\\
+		DTIGEMS+&DP pairs&$93$& $72.2$& $67.8$ \\
+		DTI-CDF&Proteins&$83$&$83$&$79$\\
+		GNN-DTI&&&&\\
+		\hline
+		MolTrans&&&&\\
+		GraphData&&&&\\
+		\hline
+	\end{tabular}
+	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
+	\item Yamanishi Dataset is only partially suitable, if everybody just derives a suitable subset (DTIGEMS)
+\end{itemize}
 
 
 \subsection{Choosing a train-test splitting scheme}
