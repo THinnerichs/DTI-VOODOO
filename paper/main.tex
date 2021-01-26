@@ -287,22 +287,34 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
 	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
 	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 	
-	\begin{tabular}{|l|l|r|r|r|}
+	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
 		\hline
 		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
 		\hline
 		DTINet&DP pairs&$91$&$84.1$&$67.2$\\
 		DTIGEMS+&DP pairs&$93$& $72.2$& $67.8$ \\
 		DTI-CDF&Proteins&$83$&$83$&$79$\\
-		GNN-DTI&&&&\\
-		\hline
-		MolTrans&&&&\\
-		GraphData&&&&\\
 		\hline
 	\end{tabular}
 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
 	\item Yamanishi Dataset is only partially suitable, if everybody just derives a suitable subset (DTIGEMS)
+	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
+
 \end{itemize}
+
+\begin{figure}[!tpb]%figure1
+	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
+		\hline
+		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+		\hline
+		DeepDTI&Drugs&$87.6$&$75.9$&$70.1$\\
+		DeepDTA&DP pairs&87.6&$76.7$&$69.4$\\
+		DeepConv-DTI&DP pairs&88.3&$76.6$&$73.0$\\
+		MolTrans&DP pairs&89.5&$77.0$&$74.0$\\
+		
+		\hline
+	\end{tabular}
+\end{figure}
 
 
 \subsection{Choosing a train-test splitting scheme}
