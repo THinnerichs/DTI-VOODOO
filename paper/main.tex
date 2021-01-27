@@ -345,7 +345,9 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
   because they target the same proteins by design leading to some
   trivial predictions; some proteins are more ``valuable'' targets due
   to their disease involvement (such as cancer, meaning more drugs are
-  developed for targeting those); }
+  developed for targeting those). If the aim is to find a drug for a
+  given protein, the challenge is to develop a training (and
+  evaluation) scheme that does not simply overfit to these biases.}
 
 In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
 
