@@ -133,11 +133,27 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 
 \section{Methods}
 \subsection{Problem Description}
-The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. Additionally, we presume the closed world assumption, that all drug-protein pairs without an interaction, do not have one eventually. We also do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond, thus leading to a binary classification task.\\
+The issue of predicting drug-target interactions can be described
+quite briefly: For a given drug and a given protein we want to
+determine whether those interact or not.  We do not differentiate
+between types of interaction such as activation and inhibition, and do
+not predict the strength of the interaction.  If we additionally make
+the closed world assumption, i.e., assume that our knowledge is
+complete and all drug--protein pairs without a known interaction do
+not interact, we can formulate the problem as a binary classification
+task.
+
 
 \subsection{Datasets}
-The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched $\approx11000$ human proteins with over 170.000 links from STRING \citep{STRINGv10}. For the drug-target interactions themselves, we fetched 
-137.000 links from STITCH database \citep{STITCHv5}. As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
+The data for the different parts of this model were obtained from
+various sources. Starting with the protein-protein interactions, we
+fetched $\approx 11000$\todo{precise number} human proteins with over 170.000 links from
+STRING \citep{STRINGv10}. For the drug-target interactions themselves,
+we fetched 137.000 links from STITCH database \citep{STITCHv5}. As
+both STRING and STITCH provide probability scores for each
+association, we filtered them as advised by a threshold of 700, thus
+only obtaining likely interactions.
+
 For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
 Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
 
@@ -297,7 +313,8 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
 		\hline
 	\end{tabular}
 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
-	\item Yamanishi Dataset is only partially suitable, if everybody just derives a suitable subset (DTIGEMS)
+	\item Yamanishi Dataset is only partially suitable \todo{for
+            comparing results}}, if everybody just derives a suitable subset (DTIGEMS)
 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
 
 \end{itemize}
