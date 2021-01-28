@@ -250,11 +250,21 @@ To find the best hyperparameter configuration for the proposed model we performe
 \subsection{High level description}
 Our aim is to develop and evaluate a computational model to predict
 drug--target interactions. Specifically, given a protein, we are
-interested in identifying the drugs that may target the protein, so as
-to reflect the case where a drug is desired to target a
-disease-associated protein. 
+interested in identifying the drugs that may target the protein; this
+scenario is motivated by the need to identify drugs that can target a
+specific protein that may be associated with a disease or abnormal
+phenotypes.
+Our aim is further to combine two different types of features:
+structural information based on protein structure and the 
 
-To obtain a prediction for a given drug-protein pair, we first build DL2vec representations for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
+To obtain a prediction for a given drug-protein pair\todo{should this
+  be about pairs, or rather something like ``given a protein, we aim
+  to find a drug...''? I.e., find a consistent way to separate
+  yourself language-wise from a naive prediction of pairs.}, we first
+build DL2vec representations\todo{In results: talk about what they are
+supposed to DO (``embeddings/representations of the phenotypes and
+functions...''), not how you implement them (you could use something
+else, for example).} for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.33\textwidth]{figures/full_model.png}}
