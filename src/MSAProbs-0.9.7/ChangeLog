@@ -1,9 +1,0 @@
-(1) 23 Aug, 2010	
-	Add an option "-num_threads" to allow uses to specify the number of
-	threads useda
-(2) 12 April, 2012
-	GCC 4.6 can successfully compile it. 
-
-(3) 3 July, 2012
-	Add a new option "-o" (or "--outfile") to allow users to specify the output file name.
-	By default, it will output to STDOUT
