@@ -15,8 +15,9 @@
 \firstpage{1}
 
 \subtitle{Subject Section}
+\newcommand{\name}{Voodoo }
 
-\title[short Title]{Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
+\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -296,6 +297,16 @@ Our aim is to develop and evaluate a computational model to predict
 drug--target interactions. Specifically, given a protein, we are
 interested in identifying the drugs that may target the protein; this
 scenario is motivated by the need to identify drugs that can target a
+
+\subsection{\name identifies drugs that target a protein}
+
+We developed \name as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name will identify and
+rank drugs that likely target this protein. \name combines two 
+types of features: structural information for drugs and proteins that
+can be used to determine if they may physically interact, and 
+
+This scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
 phenotypes.
 Our aim is further to combine two different types of features:
@@ -322,6 +333,15 @@ We now finish our baseline predictor $P_k$ by predicting all drugs to interact w
 	\end{cases}
 \end{equation*}
 with the only hyperparameter $k$. Note particularly, that the consequent prediction of $P_k$ is not dependent on the considered drug $d_i$, and will thus predict all drugs similarly for a given protein $p_j$. Subsequently, this naive predictor is not yielding any valuable information on the individual interactions with drugs for a given protein. Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
+
+To obtain a prediction for a given drug-protein pair\todo{should this
+  be about pairs, or rather something like ``given a protein, we aim
+  to find a drug...''? I.e., find a consistent way to separate
+  yourself language-wise from a naive prediction of pairs.}, we first
+build DL2vec representations\todo{In results: talk about what they are
+supposed to DO (``embeddings/representations of the phenotypes and
+functions...''), not how you implement them (you could use something
+else, for example).} for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
 
 \subsection{High level description}
 
