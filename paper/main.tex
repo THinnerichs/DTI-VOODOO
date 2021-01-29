@@ -15,8 +15,9 @@
 \firstpage{1}
 
 \subtitle{Subject Section}
+\newcommand{\name}{Voodoo }
 
-\title[short Title]{Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
+\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -247,15 +248,20 @@ To find the best hyperparameter configuration for the proposed model we performe
 
 \section{Results}
 
-\subsection{High level description}
-Our aim is to develop and evaluate a computational model to predict
-drug--target interactions. Specifically, given a protein, we are
-interested in identifying the drugs that may target the protein; this
-scenario is motivated by the need to identify drugs that can target a
+\subsection{\name identifies drugs that target a protein}
+
+We developed \name as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name will identify and
+rank drugs that likely target this protein. \name combines two 
+types of features: structural information for drugs and proteins that
+can be used to determine if they may physically interact, and 
+
+This scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
 phenotypes.
 Our aim is further to combine two different types of features:
 structural information based on protein structure and the 
+
 
 To obtain a prediction for a given drug-protein pair\todo{should this
   be about pairs, or rather something like ``given a protein, we aim
@@ -330,7 +336,7 @@ else, for example).} for both drugs and proteins over PhenomeNET, while also pre
 	\end{tabular}
 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
 	\item Yamanishi Dataset is only partially suitable \todo{for
-            comparing results}}, if everybody just derives a suitable subset (DTIGEMS)
+            comparing results}, if everybody just derives a suitable subset (DTIGEMS)
 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
 
 \end{itemize}
