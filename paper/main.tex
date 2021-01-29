@@ -133,11 +133,27 @@ Protein-protein interaction networks have shown great results in $\dots$(\cite{V
 
 \section{Methods}
 \subsection{Problem Description}
-The issue of predicting drug-target interactions can be described quite briefly: For a given drug and a given protein we want to forecast whether those interact or not. Additionally, we presume the closed world assumption, that all drug-protein pairs without an interaction, do not have one eventually. We also do not differentiate between activation and inhibition, and do not erect statements on the strength of the bond, thus leading to a binary classification task.\\
+The issue of predicting drug-target interactions can be described
+quite briefly: For a given drug and a given protein we want to
+determine whether those interact or not.  We do not differentiate
+between types of interaction such as activation and inhibition, and do
+not predict the strength of the interaction.  If we additionally make
+the closed world assumption, i.e., assume that our knowledge is
+complete and all drug--protein pairs without a known interaction do
+not interact, we can formulate the problem as a binary classification
+task.
+
 
 \subsection{Datasets}
-The data for the different parts of this model were obtained from various sources. Starting with the protein-protein interactions, we fetched $\approx11000$ human proteins with over 170.000 links from STRING \citep{STRINGv10}. For the drug-target interactions themselves, we fetched 
-137.000 links from STITCH database \citep{STITCHv5}. As both STRING and STITCH provide probability scores for each association, we filtered them as advised by a threshold of 700, thus only obtaining likely interactions.\\
+The data for the different parts of this model were obtained from
+various sources. Starting with the protein-protein interactions, we
+fetched $\approx 11000$\todo{precise number} human proteins with over 170.000 links from
+STRING \citep{STRINGv10}. For the drug-target interactions themselves,
+we fetched 137.000 links from STITCH database \citep{STITCHv5}. As
+both STRING and STITCH provide probability scores for each
+association, we filtered them as advised by a threshold of 700, thus
+only obtaining likely interactions.
+
 For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
 Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
 
@@ -232,7 +248,23 @@ To find the best hyperparameter configuration for the proposed model we performe
 \section{Results}
 
 \subsection{High level description}
-To obtain a prediction for a given drug-protein pair, we first build DL2vec representations for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
+Our aim is to develop and evaluate a computational model to predict
+drug--target interactions. Specifically, given a protein, we are
+interested in identifying the drugs that may target the protein; this
+scenario is motivated by the need to identify drugs that can target a
+specific protein that may be associated with a disease or abnormal
+phenotypes.
+Our aim is further to combine two different types of features:
+structural information based on protein structure and the 
+
+To obtain a prediction for a given drug-protein pair\todo{should this
+  be about pairs, or rather something like ``given a protein, we aim
+  to find a drug...''? I.e., find a consistent way to separate
+  yourself language-wise from a naive prediction of pairs.}, we first
+build DL2vec representations\todo{In results: talk about what they are
+supposed to DO (``embeddings/representations of the phenotypes and
+functions...''), not how you implement them (you could use something
+else, for example).} for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.33\textwidth]{figures/full_model.png}}
@@ -297,7 +329,8 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
 		\hline
 	\end{tabular}
 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
-	\item Yamanishi Dataset is only partially suitable, if everybody just derives a suitable subset (DTIGEMS)
+	\item Yamanishi Dataset is only partially suitable \todo{for
+            comparing results}}, if everybody just derives a suitable subset (DTIGEMS)
 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
 
 \end{itemize}
@@ -318,17 +351,34 @@ To obtain a prediction for a given drug-protein pair, we first build DL2vec repr
 
 
 \subsection{Choosing a train-test splitting scheme}
+
+\todo[inline]{List a number of general challenges first, then refer
+  back to them: very similar drugs are designed to target the same
+  proteins, minor variations, leading to a kind of ``hidden''
+  duplication of drugs in the training/testing set; some proteins act
+  like hubs and interact with many drugs (making them easy and
+  reliable predictors); shared indications of drugs are usually
+  because they target the same proteins by design leading to some
+  trivial predictions; some proteins are more ``valuable'' targets due
+  to their disease involvement (such as cancer, meaning more drugs are
+  developed for targeting those). If the aim is to find a drug for a
+  given protein, the challenge is to develop a training (and
+  evaluation) scheme that does not simply overfit to these biases.}
+
 In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
 
+\todo[inline]{Relate these to the issues listed above:}
 \begin{enumerate}
 	\item Build split over drugs
 	\item Build split over drug-target pairs
 	\item Build split over proteins
 \end{enumerate} 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous\todo{???} results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire\todo{evidence}. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse. \\
-The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.\\
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
+
+The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
+
 As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
 Thus, building splitting over proteins is the most challenging of the three options. \\
 
