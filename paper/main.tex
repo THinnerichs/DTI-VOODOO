@@ -187,7 +187,8 @@ In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ont
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
-	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}\label{fig:Onto}
+	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}
+	\label{fig:Onto}
 \end{figure}
 
 
@@ -195,7 +196,8 @@ As we wanted to learn from the similarity of drug side effects and protein pheno
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
-	\caption{Siamese network applied to molecular and DL2vec features, utilizing deep neural network transformations (DNNT). The similarity function $\otimes$ yields the similarity between both transformed embeddings e.g. by computing the cosine similarity.}\label{fig:SiameseNetwork}
+	\caption{Siamese network applied to molecular and DL2vec features, utilizing deep neural network transformations (DNNT). The similarity function $\otimes$ yields the similarity between both transformed embeddings e.g. by computing the cosine similarity.}
+	\label{fig:SiameseNetwork}
 \end{figure}
 
 
@@ -209,7 +211,7 @@ As described before, graph convolution has shown significant performance increas
 	\mathbf{\hat{D}}^{-1/2} \mathbf{X} \mathbf{\Theta}
 \end{equation}
 
-where for a given graph $G=(V,E)$, $\hat{A} = A + I$ denotes the adjacency matrix with added self-loops for each vertex, $D$ is described by $\hat{D}_{ii} = \sum_{j=0} \hat{A}_{ij}$, a diagonal matrix displaying the degree of each node, and $\Theta$ denotes the learnable weight matrix. Added self-loops enforce that each node representation is directly dependent on its own preceding one. Notably, the number of graph convolutional layers stacked equals the radius of relevant nodes for each vertex within the graph.\\
+where for a given graph $G=(V,E)$, $\hat{A} = A + I$ denotes the adjacency matrix with added self-loops for each vertex, $D$ is described by $\hat{D}_{ii} = \sum_{j=0} \hat{A}_{ij}$, a diagonal matrix displaying the degree of each node, and $\Theta$ denotes the learnable weight matrix. Added self-loops enforce that each node representation is directly dependent on its own preceding one. Notably, the number of graph convolutional layers stacked equals the radius of relevant nodes for each vertex within the graph. \\
 
 The update rule for each individual node is denoted by 
 
@@ -231,15 +233,17 @@ While in this initial formulation the node-wise update step is defined by the su
 \end{equation}
 
 where we will generally only consider $\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We will denote this generalized layer type as \textsc{GENConv}, following the notation of \citet{PytorchGeometric}.
-While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. Additionally, the authors revise the aggregation function by generalizing it, allowing more sophisticated weighting functions such as learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming signals for each vertex, substituting the previously mentioned averaging step. Hence, while \textsc{GCNConv} suffers from both vanishing gradients and signal fading for large scale, highly connected graphs, each propagation step in \textsc{GENConv} emphasizes strong signals with values close to $0$ and $1$. \\
+While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. Additionally, the authors revise the aggregation function by generalizing it, allowing more sophisticated weighting functions such as learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming signals for each vertex, substituting the previously mentioned averaging step. Hence, while \textsc{GCNConv} suffers from both vanishing gradients and signal fading for large scale, highly connected graphs, each propagation step in \textsc{GENConv} emphasizes strong signals with values close to $0$ and $1$. Note particularly, that the same convolutional filter and weight matrix are applied to and learned for all nodes simultaneously. Note additionally, that the resulting information hold no information on their own connectivity.\\
+
+\begin{figure}[!tpb]%figure1
+	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
+	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+	\label{fig:ResGraphConvBlocks}
+\end{figure}
 
 We employ another mechanism to avoid redundancy and fading signals in stacked graph convolutional networks, which was introduced by \citet{DeepGCN2019} and refined in \citet{DeeperGCN2020}. The authors propose a residual network architecture and normalization scheme, solving these issues in a variety of graph predicting tasks. This structure is depicted in Figure~\ref{fig:ResGraphConvBlocks} resulting in reusable residual blocks, which can be stacked multiple times, thereby not losing focus of each node neighbourhood. \\
 
- \begin{figure}[!tpb]%figure1
- 	\centerline{\includegraphics[width=0.2\textwidth]{figures/ResGraphConvBlocks.png}}
- 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
- 	\label{fig:ResGraphConvBlocks}
- \end{figure}
+
 
 \subsubsection{Hyperparameter tuning}
 To find the best hyperparameter configuration for the proposed model we performed a grid search, to find the most expressive and non-redundant representation. Therefor, we pretrained the bottom-up and the top-down model separately and aimed at best performing models w.r.t. previously described metrics. Embedding sizes, depth of the neural network, optimizer, learning rate and layer types were found from an extensive, manual grid search. 
@@ -247,7 +251,47 @@ To find the best hyperparameter configuration for the proposed model we performe
 
 \section{Results}
 
-\subsection{High level description}
+\subsection{Choosing a cross-validation splitting scheme}
+As in machine learning inference is derived from the underlying data, models and data are naturally and intrinsically linked. Thus, the more we understand about the pitfalls and biases within the data, the more we can try to bypass these difficulties. We will hereby abbreviate, e.g., a cross validation splitting scheme as \glqq split\grqq{} determining the train, validation and test subset of a given dataset. \\
+Especially within DTI prediction, one can observe elemental and basic skews \citep{Pahikkala2014}. (1.) Frequently, novel drugs are designed by altering non-functional components of a drug, leading to two and more very similar drugs, designed to target the same proteins (\textbf{CITATION?}). This bias can lead to \glqq hidden duplicates\grqq{} that can distribute among the train-test split, skewing the ultimate predictive performance. (2.) Additionally, within the realm of DTI prediction, some proteins, which we will denote as \textit{hub proteins}, have significantly more known interactions with drugs than others. In the considered subset of STITCH database, $5\%$ of the proteins had $40\%$ of the interactions, with similar biases for Yamanishi and Drugbank (\citet{Drugbank2007} and \citet{Drugbank2017}) datasets, making them easy and reliable predictors. (3.) The second distortion could be based on a publication bias for more \glqq valuable\grqq{} proteins due to their disease involvement, such as e.g., cancer, leading to more research and eventually more interacting drugs regarding those. Thus if we aim to find a drug for a given protein, the challenge is to develop a training and evaluation scheme, that does not simply overfit to those biases.\\
+
+In general, when concerning cross-validation splitting schemes for DTI prediction, there are the following three options:
+\begin{enumerate}
+	\item Build split over drugs
+	\item Build split over drug-target pairs
+	\item Build split over proteins
+\end{enumerate}
+where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
+The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. Thus, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions, while in the third scheme the number of interactions of the test proteins is not known. \\
+
+
+
+
+
+
+Considering the publications of the last 
+
+
+In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
+
+\todo[inline]{Relate these to the issues listed above:}
+\begin{enumerate}
+	\item Build split over drugs
+	\item Build split over drug-target pairs
+	\item Build split over proteins
+\end{enumerate} 
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous\todo{???} results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire\todo{evidence}. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
+
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
+
+The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
+
+As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
+Thus, building splitting over proteins is the most challenging of the three options. \\
+
+
+
+\subsection{Baseline model}
 Our aim is to develop and evaluate a computational model to predict
 drug--target interactions. Specifically, given a protein, we are
 interested in identifying the drugs that may target the protein; this
@@ -255,22 +299,50 @@ scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
 phenotypes.
 Our aim is further to combine two different types of features:
-structural information based on protein structure and the 
+structural information based on protein structure and molecular drug composition, and their respective observable characteristics. \\
 
-To obtain a prediction for a given drug-protein pair\todo{should this
-  be about pairs, or rather something like ``given a protein, we aim
-  to find a drug...''? I.e., find a consistent way to separate
-  yourself language-wise from a naive prediction of pairs.}, we first
-build DL2vec representations\todo{In results: talk about what they are
-supposed to DO (``embeddings/representations of the phenotypes and
-functions...''), not how you implement them (you could use something
-else, for example).} for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
+Before introducing the core of our eventual model, we propose a suitable naive baseline model in order to analyze and understand the existing approaches and this novel method for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
+\begin{equation*}
+	M_{ij} = \begin{cases}
+		1 & \text{if } (d_i, p_j)\in Int\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+describing for all drug--protein whether there is a known interaction or not. We now rank all proteins $p_j\in P$ descending by their number of drug interactors, characterized by 
+\begin{equation*}
+	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=0}^{|D|}M_{ij}
+\end{equation*}
+by summing over the columns of $M_{ij}$ and ranking these sums.
+We now finish our baseline predictor $P_k$ by predicting all drugs to interact with the top $k$ targets, denoted by $TopK(P)$ w.r.t. $M_{ij}$ from the previously introduced ranking, formalized by 
 
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=0.33\textwidth]{figures/full_model.png}}
+\begin{equation*}
+	P_k: D\times P \rightarrow \{0,1\} \text{ with } P_k: d_i, p_j \mapsto \begin{cases}
+		1 & \text{ if }p_j \in TopK(P)\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+with the only hyperparameter $k$. Note particularly, that the consequent prediction of $P_k$ is not dependent on the considered drug $d_i$, and will thus predict all drugs similarly for a given protein $p_j$. Subsequently, this naive predictor is not yielding any valuable information on the individual interactions with drugs for a given protein. Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
+
+\subsection{High level description}
+
+For a given protein, we want to find all suitable interacting drugs, \textbf{among a set of known drugs}.
+To obtain a prediction for a given drug-protein pair, we first
+build representations embodying both phenotypes and functions for both drugs and proteins, while also preparing structural, molecular representations, e.g., utilizing DL2vec over PhenomeNET and the prebuilt features from SMILES transformer and DeepGOPlus. Note that this approach can be easily generalized, profiting from other protein function and phenotype representation methods. \\ 
+Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers (DNNT) for both methods, and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture is depicted in Figure~\ref{fig:Fullmodel}.\\
+
+\begin{figure}[!tpb]
+	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
 	\caption{Full DTI prediction model based on the pretrained deep neural network transformers (DNNT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
 	\label{fig:Fullmodel}
 \end{figure}
+
+Through the very nature of the graph convolutional neural network, we build the transformed representation for all proteins in every forwarding step of the model. Note particularly, that the same convolutional filter and weight matrix are applied to and learned for all nodes simultaneously. By construction, for a single drug we can compute and predict all its interactors in a single run of the model, leading to significantly less computing time. 
+
+
+
+
+
+
 
 
 \section{Findings}
@@ -330,7 +402,7 @@ else, for example).} for both drugs and proteins over PhenomeNET, while also pre
 	\end{tabular}
 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
 	\item Yamanishi Dataset is only partially suitable \todo{for
-            comparing results}}, if everybody just derives a suitable subset (DTIGEMS)
+            comparing results}, if everybody just derives a suitable subset (DTIGEMS)
 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
 
 \end{itemize}
@@ -350,37 +422,6 @@ else, for example).} for both drugs and proteins over PhenomeNET, while also pre
 \end{figure}
 
 
-\subsection{Choosing a train-test splitting scheme}
-
-\todo[inline]{List a number of general challenges first, then refer
-  back to them: very similar drugs are designed to target the same
-  proteins, minor variations, leading to a kind of ``hidden''
-  duplication of drugs in the training/testing set; some proteins act
-  like hubs and interact with many drugs (making them easy and
-  reliable predictors); shared indications of drugs are usually
-  because they target the same proteins by design leading to some
-  trivial predictions; some proteins are more ``valuable'' targets due
-  to their disease involvement (such as cancer, meaning more drugs are
-  developed for targeting those). If the aim is to find a drug for a
-  given protein, the challenge is to develop a training (and
-  evaluation) scheme that does not simply overfit to these biases.}
-
-In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
-
-\todo[inline]{Relate these to the issues listed above:}
-\begin{enumerate}
-	\item Build split over drugs
-	\item Build split over drug-target pairs
-	\item Build split over proteins
-\end{enumerate} 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous\todo{???} results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire\todo{evidence}. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
-
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
-
-The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
-
-As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
-Thus, building splitting over proteins is the most challenging of the three options. \\
 
 \subsection{Tested hypotheses}
 

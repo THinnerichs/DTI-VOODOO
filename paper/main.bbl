@@ -208,6 +208,13 @@ Overington, J.~P., Al-Lazikani, B., and Hopkins, A.~L. (2006).
 \newblock How many drug targets are there?
 \newblock {\em Nature Reviews Drug Discovery\/}, {\bf 5}(12), 993--996.
 
+\bibitem[Pahikkala {\em et~al.}(2014)Pahikkala, Airola, Pietila, Shakyawar,
+  Szwajda, Tang, and Aittokallio]{Pahikkala2014}
+Pahikkala, T., Airola, A., Pietila, S., Shakyawar, S., Szwajda, A., Tang, J.,
+  and Aittokallio, T. (2014).
+\newblock Toward more realistic drug-target interaction predictions.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 16}(2), 325--337.
+
 \bibitem[Paszke {\em et~al.}(2019)Paszke, Gross, Massa, Lerer, Bradbury,
   Chanan, Killeen, Lin, Gimelshein, Antiga, Desmaison, Kopf, Yang, DeVito,
   Raison, Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala]{Pytorch}
@@ -284,5 +291,22 @@ Wang, C. and Kurgan, L. (2018).
 \newblock {Review and comparative assessment of similarity-based methods for
   prediction of drug–protein interactions in the druggable human proteome}.
 \newblock {\em Briefings in Bioinformatics\/}, {\bf 20}(6), 2066--2087.
+
+\bibitem[Wishart {\em et~al.}(2007)Wishart, Knox, Guo, Cheng, Shrivastava,
+  Tzur, Gautam, and Hassanali]{Drugbank2007}
+Wishart, D.~S., Knox, C., Guo, A.~C., Cheng, D., Shrivastava, S., Tzur, D.,
+  Gautam, B., and Hassanali, M. (2007).
+\newblock {DrugBank}: a knowledgebase for drugs, drug actions and drug targets.
+\newblock {\em Nucleic Acids Research\/}, {\bf 36}(suppl{\_}1), D901--D906.
+
+\bibitem[Wishart {\em et~al.}(2017)Wishart, Feunang, Guo, Lo, Marcu, Grant,
+  Sajed, Johnson, Li, Sayeeda, Assempour, Iynkkaran, Liu, Maciejewski, Gale,
+  Wilson, Chin, Cummings, Le, Pon, Knox, and Wilson]{Drugbank2017}
+Wishart, D.~S., Feunang, Y.~D., Guo, A.~C., Lo, E.~J., Marcu, A., Grant, J.~R.,
+  Sajed, T., Johnson, D., Li, C., Sayeeda, Z., Assempour, N., Iynkkaran, I.,
+  Liu, Y., Maciejewski, A., Gale, N., Wilson, A., Chin, L., Cummings, R., Le,
+  D., Pon, A., Knox, C., and Wilson, M. (2017).
+\newblock {DrugBank} 5.0: a major update to the {DrugBank} database for 2018.
+\newblock {\em Nucleic Acids Research\/}, {\bf 46}(D1), D1074--D1082.
 
 \end{thebibliography}

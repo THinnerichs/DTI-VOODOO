@@ -120,13 +120,25 @@ def test_Yamanishi_AUC():
         for line in f:
             dti_matrix.append(list(map(int, list(line.strip().replace(' ', '')))))
     dti_matrix = np.array(dti_matrix)
+
+    '''
+    path = '../results/DTIGEMS/'
+    filename = path + 'ic_admat_dgc.txt'
+
+    dti_matrix = np.genfromtxt(filename, delimiter='\t', dtype=str)
+    dti_matrix = dti_matrix[1:, :][:, 1:]
+    dti_matrix = dti_matrix.astype(np.int)
+    '''
     print('dti_matrix.shape', dti_matrix.shape)
-    print(dti_matrix[:, 0].sum())
+
     print(dti_matrix.sum())
+
+    print((dti_matrix.sum(axis=1)==0).sum())
+
+    raise Exception
 
     num_drugs, num_prots = dti_matrix.shape
 
-    '''
     sum_vec = dti_matrix.sum(axis=0)
 
     print('sumvec:', sum_vec.shape, sum_vec[:20])
@@ -137,8 +149,7 @@ def test_Yamanishi_AUC():
 
     dti_matrix = dti_matrix.flatten()
 
-    for i in range(200, num_prots+1, 1):
-        continue
+    for i in range(0, num_prots+1, 1):
         y_pred = np.zeros((num_drugs, num_prots))
         y_pred[:, idx[:i]] = 1
         y_pred = y_pred.flatten()
@@ -146,10 +157,10 @@ def test_Yamanishi_AUC():
         print(f'i: {i}, ROCAUC: {dti_utils.dti_auroc(y_true=dti_matrix, y_pred=y_pred)}, '
               f'microAUC: {dti_utils.micro_AUC_per_prot(y_true=dti_matrix, y_pred=y_pred, num_drugs=num_drugs)}, '
               f'{dti_utils.micro_AUC_per_drug(dti_matrix, y_pred,num_drugs)}')
-    '''
 
+    return
 
-    kf = KFold(n_splits=5, random_state=12, shuffle=True)
+    kf = KFold(n_splits=5, random_state=42, shuffle=True)
     X = np.zeros((num_drugs, 1))
 
     train_aucs = []

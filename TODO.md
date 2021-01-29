@@ -319,4 +319,10 @@ Discussion:
 - conclusion (summary)
           
 
+- Points from How to lie with compuatational predictive models
+  - Better understanding models helps better understanding of the biological model
+  - The more aware we are what the pitfalls of model validations are, the better we can at least do what is possible, which in the medium term will be of benefit for the field, science as a whole, and ultimately society
+  - data and model are intrinsically linked
+  - motivate baseline method
+
 

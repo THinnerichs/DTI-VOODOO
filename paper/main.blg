@@ -11,45 +11,45 @@ Warning--empty journal in GCNConv
 Warning--empty journal in APPNPConv
 Warning--empty journal in Resnik1995
 Warning--empty journal in GATConv
-You've used 33 entries,
+You've used 36 entries,
             2378 wiz_defined-function locations,
-            727 strings with 16067 characters,
-and the built_in function-call counts, 23644 in all, are:
-= -- 1483
-> -- 2842
+            747 strings with 16997 characters,
+and the built_in function-call counts, 25986 in all, are:
+= -- 1645
+> -- 3094
 < -- 9
-+ -- 913
-- -- 904
-* -- 2694
-:= -- 4626
-add.period$ -- 130
-call.type$ -- 33
-change.case$ -- 204
-chr.to.int$ -- 32
-cite$ -- 40
-duplicate$ -- 602
-empty$ -- 932
-format.name$ -- 949
-if$ -- 4274
++ -- 993
+- -- 984
+* -- 2971
+:= -- 5064
+add.period$ -- 145
+call.type$ -- 36
+change.case$ -- 222
+chr.to.int$ -- 35
+cite$ -- 43
+duplicate$ -- 662
+empty$ -- 1040
+format.name$ -- 1032
+if$ -- 4704
 int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 26
-newline$ -- 154
-num.names$ -- 134
-pop$ -- 248
+missing$ -- 29
+newline$ -- 169
+num.names$ -- 146
+pop$ -- 266
 preamble$ -- 1
-purify$ -- 204
+purify$ -- 222
 quote$ -- 0
-skip$ -- 407
+skip$ -- 443
 stack$ -- 0
-substring$ -- 876
-swap$ -- 103
+substring$ -- 1011
+swap$ -- 115
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 297
+type$ -- 324
 warning$ -- 7
-while$ -- 130
+while$ -- 145
 width$ -- 0
-write$ -- 387
+write$ -- 426
 (There were 8 warnings)
