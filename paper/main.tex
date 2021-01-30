@@ -400,13 +400,10 @@ The aim of \name is to predict candidate drugs that target a given
 protein; the challenge is to develop a training and evaluation scheme
 that does not simply overfit to the inherent biases in training and
 testing data.
+In general, when performing cross-validation for DTI prediction, the
+options are to split over drug--target pairs, split over drugs, and
+split over proteins.
 
-In general, when concerning cross-validation splitting schemes for DTI prediction, there are the following three options:
-\begin{enumerate}
-	\item Build split over drugs
-	\item Build split over drug-target pairs
-	\item Build split over proteins
-\end{enumerate}
 where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
 The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. Thus, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions, while in the third scheme the number of interactions of the test proteins is not known. \\
 
