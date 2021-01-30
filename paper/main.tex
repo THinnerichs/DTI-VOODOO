@@ -365,22 +365,59 @@ using an extensive, manual grid search. \todo[inline]{Specify range of
 \section{Results}
 
 \subsection{Choosing a cross-validation splitting scheme}
-As in machine learning inference is derived from the underlying data, models and data are naturally and intrinsically linked. Thus, the more we understand about the pitfalls and biases within the data, the more we can try to bypass these difficulties. We will hereby abbreviate, e.g., a cross validation splitting scheme as \glqq split\grqq{} determining the train, validation and test subset of a given dataset. \\
-Especially within DTI prediction, one can observe elemental and basic skews \citep{Pahikkala2014}. (1.) Frequently, novel drugs are designed by altering non-functional components of a drug, leading to two and more very similar drugs, designed to target the same proteins (\textbf{CITATION?}). This bias can lead to \glqq hidden duplicates\grqq{} that can distribute among the train-test split, skewing the ultimate predictive performance. (2.) Additionally, within the realm of DTI prediction, some proteins, which we will denote as \textit{hub proteins}, have significantly more known interactions with drugs than others. In the considered subset of STITCH database, $5\%$ of the proteins had $40\%$ of the interactions, with similar biases for Yamanishi and Drugbank (\citet{Drugbank2007} and \citet{Drugbank2017}) datasets, making them easy and reliable predictors. (3.) The second distortion could be based on a publication bias for more \glqq valuable\grqq{} proteins due to their disease involvement, such as e.g., cancer, leading to more research and eventually more interacting drugs regarding those. Thus if we aim to find a drug for a given protein, the challenge is to develop a training and evaluation scheme, that does not simply overfit to those biases.\\
 
-In general, when concerning cross-validation splitting schemes for DTI prediction, there are the following three options:
+% As in machine learning inference is derived from the underlying data,
+% models and data are naturally and intrinsically linked. Thus, the more
+% we understand about the pitfalls and biases within the data, the more
+% we can try to bypass these difficulties. We will hereby abbreviate,
+% e.g., a cross validation splitting scheme as \glqq split\grqq{}
+% determining the train, validation and test subset of a given dataset.
+
+Within DTI prediction, one can observe basic biases resulting from the
+underlying datasets \citep{Pahikkala2014}. First, novel drugs are
+often designed by altering non-functional components of a drug,
+leading to two and more very similar drugs designed to target the same
+proteins \cite{Overington2006}. This can lead to a bias when it leads
+to \glqq hidden duplicates\grqq{} that can distribute among the
+train--test split, resulting in a better (measured) predictive
+performance than would be expected when the model is applied to
+genuinely unknown interactions. Second, some proteins (which we will
+denote as \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$
+of the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank datasets
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins can often increase predictive performance while again
+not reflecting the actual performance when applied to a new protein
+(e.g., a protein for which no interactions are known). This bias in
+the number of drugs targeting certain proteins may be the result of
+study bias where more \glqq valuable\grqq{} proteins have more drugs
+designed to target them due to their involvement in more common
+diseases (or diseases for which drugs can be more profitably
+marketed).
+
+\todo[inline]{Likely discussion:}
+The aim of \name is to predict candidate drugs that target a given
+protein; the challenge is to develop a training and evaluation scheme
+that does not simply overfit to the inherent biases in training and
+testing data.
+In general, when performing cross-validation for DTI prediction, the
+options are to split over 
 \begin{enumerate}
-	\item Build split over drugs
-	\item Build split over drug-target pairs
-	\item Build split over proteins
+	\item split over drugs,
+	\item split over drug--target pairs, or
+	\item split over proteins
 \end{enumerate}
-where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
+where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. They that at least parts of the interactions are not seen during training and evaluate either how well targets are predicted for unseen drugs or unseen proteins. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
+
+\todo[inline]{Likely discussion:}
 The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. The second most prevalent arrangement is the split over drugs, while only close to none is aiming on a protein split.  However, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions for a single protein, while in the third scheme the number of interactions of the test proteins is not known. 
 
 Assuming a hypothetical, perfectly generalizing model built upon an unbiased dataset, this very model would yield similar performances for all three splitting schemes, not overfitting on the known structures. On the other hand, for a hypothetical entirely overfitting model, trained on a highly biased dataset, this model would show substantial deviations from the original performance over another split. \\
 We emphasize, that all real-world models are prone to some sort of overfitting, and unknown, deviant entities in both validation and testing set will likely lead to some sort of performance gap for relevant metrics. However, a large disparity may hint the biases stated above.
 
 Hence, we will perform a cross-validation over proteins for the training and prediction phase of our model, despite predicting per protein is rather counter-intuitive as there only limited drug-targets \citep{Overington2006}, and thus novel drugs are more likely to arise than novel targets. Yet, we aim to find all interacting drugs for existing targets motivating our split choice even further.
+
 
 \subsection{MicroAUC}
 Continuing this line, we propose the well known metric \textit{MicroAUC} for a better evaluation for this purpose. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels and prediction $l,y:D\times P \rightarrow \{0,1\}$  as 
@@ -410,7 +447,7 @@ This scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
 phenotypes.
 Our aim is further to combine two different types of features:
-structural information based on protein structure and molecular drug composition, and their respective observable characteristics. \\
+structural information based on protein structure and molecular drug composition, and their respective observable characteristics.
 
 
 \subsection{Baseline model}
