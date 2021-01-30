@@ -164,49 +164,20 @@ Eventually, we only considered proteins that had at least one link in either STI
 
 \subsection{Evaluation and metrics}
 
-\todo[inline]{First part is not about evaluation but optimization
-  objectives, should go in the Model section:}
-As the number of drug-targets are sparsely given w.r.t.\todo{no
-  acronyms} to the number of both drugs and proteins considered, the
-resulting training, validation and testing datasets are highly
-imbalanced. As there are only $~22.000$\todo{exact number} links in
-the considered subset the ratio
+To assess each model, we compute a variety of common metrics for binary classification. As the datasets are highly imbalanced, we chose the \textit{area under receiver operating characteristic}-score (AUROC) on training, validation and testing split. Therefor, we calculated the true positive rate (TPR), false positive rate (FPR) and precision score. We will further compute true positives (TP), false positives (FP), false negatives (FN) and finally true negatives (TN). 
+We calculate the ROC by plotting the TPR against the FPR for various threshold settings for the model predictions. We eventually calculate the area under ROC curve utilizing trapezoidal approximations. We will refer to this measure as $MacroAUC$.
+
+In contrast we also calculate the $MicroAUC$ score. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels and prediction $l,y:D\times P \rightarrow \{0,1\}$  as 
 \begin{equation*}
-	\frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
+	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
 \end{equation*}
-consequently needing compensation in the computed loss function and
-appropriate metrics for the evaluation.
 
-Therefore, we weighted all positive drug-protein pair samples with
-this ratio by introducing the following loss function w.r.t.\todo{no
-  acronym} to binary cross-entropy:
-\begin{equation}
-	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
-\end{equation}
-for given prediction $x$ and target $y$. We average this loss among
-all drug-protein pairs in the training set, leading to a stable
-environment for the used optimizing scheme \textit{Adam}
-\citep{Adam2014}. We implemented a 5-fold cross validation among the
-proteins as justified in the results section. Furthermore, we used
-early stopping to detect plateaus in the training process.
-
-\todo[inline]{This needs to be more elaborate: add the micro- vs
-  macro-averages here (formulas)}
-To assess each model, we computed the \textit{area under receiver
-  operating characteristic}-score (AUROC), \textit{F1-score} (F1) and
-\textit{Matthews correlation coefficient} (MCC) for each considered
-hyperparameter configuration setting.
-
-\todo[inline]{Remove from here:}
-Avoiding validation overfitting, we eventually tested the best
-performing model on the Yamanishi dataset as presented and
-discussed. Furthermore, we compare our results on this very dataset
-with various other cutting edge approaches to DTI-prediction.
+Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. 
 
 
 \subsection{Model}
+Before introducing the models core components, we will clarify the previously mentioned notions of top-down and bottom-up. We will refer to features and methods, starting from the observable characteristics of either drug or protein inferring the likely molecular mechanisms as top-down. On the other hand, bottom-up refers to approaches deducing from even finer molecular properties, such as single functional groups or amino acid sequences for drugs and proteins, respectively. 
 
-\todo[inline]{Introduce the notion of top-down and bottom-up:}
 In order to build a method that incorporates both top-down and
 bottom-up features, we first created a model for each
 individually. Hence, we assemble rich molecular structure based
@@ -239,29 +210,37 @@ structure of the ontology can be seen in Figure~\ref{fig:Onto}.
 \end{figure}
 
 
-As we wanted to learn from the similarity of drug side effects and
+\subsubsection{Siamese neural networks and modular learnable feature transformation}
+As we want to learn from the similarity of drug side effects and
 protein phenotypes we opted for a deep siamese network approach, hence
 learning a high-dimensional embedding emphasizing this identity by
-forcing a maximal cosine similarity between these embeddings. On the
-other hand we built a deep neural network for the molecular structure
-based features, also benefiting from the siamese network
-architecture. Therefore, the precomputed embeddings are run through a
-deep neural network transformation (DNNT) which also reduces the
+forcing a similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features, also benefiting from the siamese network
+architecture. Computing the similarity between two representations, allows for a variety of different methods.
+However, we decided for the cosine similarity measure being invariant to scaling.
+
+Therefore, the precomputed embeddings are run through a
+regular, neural learnable feature transformation (LFT) network, which also reduces the
 eventual representation size for drugs and proteins separately. An
 example structure for both types of features can be found in
-Figure~\ref{fig:SiameseNetwork}.
+Figure~\ref{fig:SiameseNetwork}. 
+
+While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we emphasize the versatility of this approach, as both ontology and molecular feature for both drugs and proteins are reduced to similar dimensionality. This allows for a high amount of modularity and different experimental setups by plugging different kinds of features into the model. Additionally, these pretrained features can be used for a variety of other tasks. Additionally, the ontology LFT can be reused for a variety of DL2vec based features with respect to other ontologies and hypotheses. We hereby followed the results of \textit{DL2vec}, indicating that utilizing the activation function $\sigma := \mathrm{LeakyReLU}$ leads to performance increase.
+
+
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
 	\caption{Siamese network applied to molecular and DL2vec
-          features, utilizing deep neural network transformations
-          (DNNT). The similarity function $\otimes$ yields the
+          features, utilizing deep learnable feature transformations
+          (LFT). The similarity function $\otimes$ yields the
           similarity between both transformed embeddings e.g. by
           computing the cosine similarity.}
 	\label{fig:SiameseNetwork}
 \end{figure}
 
-1
+
+
+
 \subsubsection{Graph convolutional layers}
 These molecular and ontology based sub-models were added to a larger
 graph convolutional model, based on the protein-protein interaction
@@ -351,6 +330,27 @@ thereby not losing focus of each node neighbourhood.
 
 
 \subsubsection{Hyperparameter tuning}
+As the number of drug-targets are sparsely given with respect to the number of both drugs and proteins considered, the resulting training, validation and testing datasets are highly
+imbalanced. As there are only $22.336$ links in
+the considered subset the ratio
+\begin{equation*}
+	\frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
+\end{equation*}
+consequently needing compensation in the computed loss function and
+appropriate metrics for the evaluation.
+
+Therefore, we weighted all positive drug-protein pair samples with
+this ratio by introducing the following loss function with respect to binary cross-entropy:
+\begin{equation}
+	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
+\end{equation}
+for given prediction $x$ and target $y$. We average this loss among
+all drug-protein pairs in the training set, leading to a stable
+environment for the used optimizing scheme \textit{Adam}
+\citep{Adam2014}. We implemented a 5-fold cross validation among the
+proteins as justified in the results section. Furthermore, we used
+early stopping to detect plateaus in the training process.
+
 To find the best hyperparameter configuration for the proposed model
 we performed a grid search to find the most expressive and
 non-redundant representation. We pretrained the bottom-up and the
@@ -436,7 +436,7 @@ other protein function and phenotype representation methods.
 
 \begin{figure}[!tpb]
 	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
-	\caption{Full DTI prediction model based on the pretrained deep neural network transformers (DNNT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
+	\caption{Full DTI prediction model based on the pretrained learnable feature transformations (LFT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
 	\label{fig:Fullmodel}
 \end{figure}
 
@@ -468,14 +468,15 @@ We emphasize, that all real-world models are prone to some sort of overfitting, 
 
 Hence, we will perform a cross-validation over proteins for the training and prediction phase of our model, despite predicting per protein is rather counter-intuitive as there only limited drug-targets \citep{Overington2006}, and thus novel drugs are more likely to arise than novel targets. Yet, we aim to find all interacting drugs for existing targets motivating our split choice even further.
 
+\subsection{Experiments}
+In this section we will present the results of \name 
+
+
 
 \subsection{MicroAUC}
-Continuing this line, we propose the well known metric \textit{MicroAUC} for a better evaluation for this purpose. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels and prediction $l,y:D\times P \rightarrow \{0,1\}$  as 
-\begin{equation*}
-	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
-\end{equation*}
+Continuing this line, we propose the well known metric \textit{MicroAUC} for a better evaluation for this purpose. 
 
-Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. Note further that both are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are only plausible for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
+Note further that both are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are only plausible for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
 
 
 \subsection{Baseline model}
