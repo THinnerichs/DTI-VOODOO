@@ -172,7 +172,7 @@ In contrast we also calculate the $MicroAUC$ score. For given lists $D, P$ of dr
 	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
 \end{equation*}
 
-Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. 
+Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. Additionally, the $MicroAUC$ score may not be defined as, in some datasets some targets or drugs, respectively, do not have any interactions, leading to an infeasible $TPR$ and an undefined $AUROC$ score for that entity. For those entities we impute the $MicroAUC$ linearly, by using the accuracy for this subset. 
 
 
 \subsection{Model}
@@ -409,6 +409,7 @@ from the SMILES transformer \cite{SmilesTransformer} and representations of prot
 amino acid sequences from DeepGOPlus \cite{DeepGoPlus}.
 \name learns representations of drug effects and protein functions
 using the ontology-based machine learning method DL2Vec \cite{DL2vec2020}.
+When combining ontology and molecular features with or without the graph model, we concatenate both protein features and both drugs features, before plugging them into the graph or the similarity computation. 
 
 We use two Siamese neural networks to combine the molecular
 and phenotype representations of drugs and proteins,
@@ -427,6 +428,7 @@ The overall architecture is depicted in Figure~\ref{fig:Fullmodel}.
 
 % For a given protein, we want to find all suitable interacting drugs, \textbf{among a set of known drugs}.
 %To obtain a prediction for a given drug-protein pair,
+If 
 
 
 
@@ -468,19 +470,46 @@ We emphasize, that all real-world models are prone to some sort of overfitting, 
 
 Hence, we will perform a cross-validation over proteins for the training and prediction phase of our model, despite predicting per protein is rather counter-intuitive as there only limited drug-targets \citep{Overington2006}, and thus novel drugs are more likely to arise than novel targets. Yet, we aim to find all interacting drugs for existing targets motivating our split choice even further.
 
-\subsection{Experiments}
-In this section we will present the results of \name 
-
-
-
 \subsection{MicroAUC}
-Continuing this line, we propose the well known metric \textit{MicroAUC} for a better evaluation for this purpose. 
+Continuing this line, we apply the well metric \textit{MicroAUC} for a better evaluation for this purpose. Note, that both $MicroAUC_p$ and $MicroAUC_d$, as introduced in the previous chapter, are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are most plausible and valuable for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
 
-Note further that both are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are only plausible for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
+\subsection{Experiments}
+In this section we will present the results of \name on both STITCH and Yamanishi benchmark dataset, omitting any kind of comparison for now. We trained, validated and finally tested all considered models on STITCH dataset using a 5-fold cross-validation over a protein split, as reasoned and substantiated previously. We only evaluated the best performing model, with respect to \textit{AUROC} and $MicroAUC_p$, on the Yamanishi benchmark dataset. 
+We will hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. As depicted in Figure \ref{tab:STITCHresults}, \textit{OntoPred} is showing significantly better performance on STITCH, while also only \textit{OntoPred} shows significant performance increase when adding \textit{GENConv} graph convolutional neural layers over the PPI graph. However, graph convolutional neural layers such as \textit{GCNConv} and \textit{GENConv}, especially when incorporated into the proposed \textit{ResGraphConv} blocks, add a lot of learnable parameters to the network, leading to more expressive power. This may lead to better performance, while deceiving, whether the respective features actually localize on the PPI graph. 
+
+To eliminate these options we rebuild the graph model, whilst removing all graph convolutional neural layers in the residual blocks. This pruned network, with no information on the protein--protein interactions, reached very similarly results, as the original \textit{OntoPred} model. Secondly, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
+
+As this performance increase is quite significant, we \textbf{conclude that protein function does localize while molecular features do not (BETTER FORMULATION)}. ...
+
+\begin{figure}[!tpb]
+	\centerline{\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
+		\hline
+		STITCH results&\multicolumn{4}{c|}{PPI graph}\\
+		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
+		&AUROC&Micro $AUC_p$&AUROC&Micro $AUC_p$\\
+		\hline
+		MolPred&$0.69$&$0.65$&$0.69$&$0.67$\\
+		\hline
+		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$\\
+		\hline
+		MolPred + OntoPred & $0.89$ & $0.90$&$0.93$&$0.94$\\
+		\hline
+		\hline
+		Yamanishi results&\multicolumn{4}{c|}{PPI graph}\\
+		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
+		&AUROC&Micro AUC&AUROC&Micro AUC\\
+		\hline
+		MolPred + OntoPred & $0.83$ & $0.82$&$0.84$&$0.84$\\
+		\hline
+	\end{tabular}}
+	\caption{Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. MolPred and OntoPred are the predictors for molecular and ontology based features, respectively. }
+	\label{tab:STITCHresults}
+\end{figure}
+
 
 
 \subsection{Baseline model}
-Before introducing the core of our eventual model, we propose a suitable naive baseline model in order to analyze and understand the existing approaches and this novel method for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
+Before comparing \name to other methods, we propose a suitable naive baseline model in order to analyze and understand existing approaches and \name for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
 \begin{equation*}
 	M_{ij} = \begin{cases}
 		1 & \text{if } (d_i, p_j)\in Int\\
@@ -489,7 +518,7 @@ Before introducing the core of our eventual model, we propose a suitable naive b
 \end{equation*}
 describing for all drug--protein whether there is a known interaction or not. We now rank all proteins $p_j\in P$ descending by their number of drug interactors, characterized by 
 \begin{equation*}
-	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=0}^{|D|}M_{ij}
+	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=1}^{|D|}M_{ij}
 \end{equation*}
 by summing over the columns of $M_{ij}$ and ranking these sums.
 We now finish our baseline predictor $P_k$ by predicting all drugs to interact with the top $k$ targets, denoted by $TopK(P)$ w.r.t. $M_{ij}$ from the previously introduced ranking, formalized by 
@@ -502,6 +531,20 @@ We now finish our baseline predictor $P_k$ by predicting all drugs to interact w
 \end{equation*}
 with the only hyperparameter $k$. Note particularly, that the consequent prediction of $P_k$ is not dependent on the considered drug $d_i$, and will thus predict all drugs similarly for a given protein $p_j$. Subsequently, this naive predictor is not yielding any valuable information on the individual interactions with drugs for a given protein. Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
+We evaluate this naive predictor on both STITCH and Yamanishi dataset, performing a 5-fold cross-validation over both drugs and drug--protein pairs. Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. For each fold, we gradually increase $k$, eventually saving the best performance for each fold. The corresponding AUROC scores are summarized in the following table: \\
+
+\centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|}
+	\hline
+	Dataset&\multicolumn{2}{c|}{Splitting scheme}\\
+	&DT pairs&Drugs\\
+	\hline
+	STITCH & ?? & ??\\
+	\hline
+	Yamanishi & $0.88$&$0.85$\\ 
+	\hline
+\end{tabular}}
+\vspace{0.5cm}
+This baseline predictor shows remarkable performance on both datasets, that 
 
 
 
@@ -550,7 +593,7 @@ with the only hyperparameter $k$. Note particularly, that the consequent predict
 	\item Running split over proteins is harder than, drug and drug protein pair split (see below table)
 	\item this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
 	\item using indications is like cheating, as not applicable for searching new drugs
-	\item drug indications are highly predictive for downstream tasks, but lack capability to differentiate highly related drugs/proteins
+	\item drug indications are highly predictive for downstream tasks, but lack capability to differentiate highly related[!tpb] drugs/proteins
 	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
 	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 	
