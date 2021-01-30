@@ -365,8 +365,41 @@ using an extensive, manual grid search. \todo[inline]{Specify range of
 \section{Results}
 
 \subsection{Choosing a cross-validation splitting scheme}
-As in machine learning inference is derived from the underlying data, models and data are naturally and intrinsically linked. Thus, the more we understand about the pitfalls and biases within the data, the more we can try to bypass these difficulties. We will hereby abbreviate, e.g., a cross validation splitting scheme as \glqq split\grqq{} determining the train, validation and test subset of a given dataset. \\
-Especially within DTI prediction, one can observe elemental and basic skews \citep{Pahikkala2014}. (1.) Frequently, novel drugs are designed by altering non-functional components of a drug, leading to two and more very similar drugs, designed to target the same proteins (\textbf{CITATION?}). This bias can lead to \glqq hidden duplicates\grqq{} that can distribute among the train-test split, skewing the ultimate predictive performance. (2.) Additionally, within the realm of DTI prediction, some proteins, which we will denote as \textit{hub proteins}, have significantly more known interactions with drugs than others. In the considered subset of STITCH database, $5\%$ of the proteins had $40\%$ of the interactions, with similar biases for Yamanishi and Drugbank (\citet{Drugbank2007} and \citet{Drugbank2017}) datasets, making them easy and reliable predictors. (3.) The second distortion could be based on a publication bias for more \glqq valuable\grqq{} proteins due to their disease involvement, such as e.g., cancer, leading to more research and eventually more interacting drugs regarding those. Thus if we aim to find a drug for a given protein, the challenge is to develop a training and evaluation scheme, that does not simply overfit to those biases.\\
+
+% As in machine learning inference is derived from the underlying data,
+% models and data are naturally and intrinsically linked. Thus, the more
+% we understand about the pitfalls and biases within the data, the more
+% we can try to bypass these difficulties. We will hereby abbreviate,
+% e.g., a cross validation splitting scheme as \glqq split\grqq{}
+% determining the train, validation and test subset of a given dataset.
+
+Within DTI prediction, one can observe basic biases resulting from the
+underlying datasets \citep{Pahikkala2014}. First, novel drugs are
+often designed by altering non-functional components of a drug,
+leading to two and more very similar drugs designed to target the same
+proteins \cite{Overington2006}. This can lead to a bias when it leads
+to \glqq hidden duplicates\grqq{} that can distribute among the
+train--test split, resulting in a better (measured) predictive
+performance than would be expected when the model is applied to
+genuinely unknown interactions. Second, some proteins (which we will
+denote as \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$
+of the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank datasets
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins can often increase predictive performance while again
+not reflecting the actual performance when applied to a new protein
+(e.g., a protein for which no interactions are known). This bias in
+the number of drugs targeting certain proteins may be the result of
+study bias where more \glqq valuable\grqq{} proteins have more drugs
+designed to target them due to their involvement in more common
+diseases (or diseases for which drugs can be more profitably
+marketed).
+
+The aim of \name is to predict candidate drugs that target a given
+protein; the challenge is to develop a training and evaluation scheme
+that does not simply overfit to the inherent biases in training and
+testing data.
 
 In general, when concerning cross-validation splitting schemes for DTI prediction, there are the following three options:
 \begin{enumerate}
@@ -422,7 +455,7 @@ This scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
 phenotypes.
 Our aim is further to combine two different types of features:
-structural information based on protein structure and molecular drug composition, and their respective observable characteristics. \\
+structural information based on protein structure and molecular drug composition, and their respective observable characteristics.
 
 Before introducing the core of our eventual model, we propose a suitable naive baseline model in order to analyze and understand the existing approaches and this novel method for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
 \begin{equation*}
