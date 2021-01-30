@@ -261,7 +261,7 @@ Figure~\ref{fig:SiameseNetwork}.
 	\label{fig:SiameseNetwork}
 \end{figure}
 
-
+1
 \subsubsection{Graph convolutional layers}
 These molecular and ontology based sub-models were added to a larger
 graph convolutional model, based on the protein-protein interaction
@@ -388,12 +388,11 @@ Continuing this line, we propose the well known metric \textit{MicroAUC} for a b
 	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
 \end{equation*}
 
-Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. Furthermore, 
+Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. Note further that both are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are only plausible for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
 
 
 
 
-\subsection{Baseline model}
 Our aim is to develop and evaluate a computational model to predict
 drug--target interactions. Specifically, given a protein, we are
 interested in identifying the drugs that may target the protein; this
@@ -413,6 +412,8 @@ phenotypes.
 Our aim is further to combine two different types of features:
 structural information based on protein structure and molecular drug composition, and their respective observable characteristics. \\
 
+
+\subsection{Baseline model}
 Before introducing the core of our eventual model, we propose a suitable naive baseline model in order to analyze and understand the existing approaches and this novel method for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
 \begin{equation*}
 	M_{ij} = \begin{cases}
