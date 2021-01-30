@@ -397,6 +397,55 @@ designed to target them due to their involvement in more common
 diseases (or diseases for which drugs can be more profitably
 marketed).
 
+We developed \name as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name will identify and
+rank known drugs that likely target this protein. \name combines two 
+types of features: structural information for drugs and proteins that
+can be used to determine if they may physically interact, and
+information about drug effects that may localize on an interaction
+network.
+As structural features, \name uses structural representations of drugs
+from the SMILES transformer \cite{SmilesTransformer} and representations of protein
+amino acid sequences from DeepGOPlus \cite{DeepGoPlus}.
+\name learns representations of drug effects and protein functions
+using the ontology-based machine learning method DL2Vec \cite{DL2vec2020}.
+
+We use two Siamese neural networks to combine the molecular
+and phenotype representations of drugs and proteins,
+% and
+% ontology features, yielding the deep neural network transformers
+% (DNNT) for both methods, and both drugs and proteins,
+% individually. 
+and add these to a protein interaction network as node features.
+% neural network in which nodes representing interactions
+% between proteins as node features, 
+We then train this model in an end-to-end manner. % Notably, like in the
+% pretraining phase, we rely on siamese neural networks, enforcing
+% similar representations for fitting drug-protein pairs. 
+The overall architecture is depicted in Figure~\ref{fig:Fullmodel}.
+
+
+% For a given protein, we want to find all suitable interacting drugs, \textbf{among a set of known drugs}.
+%To obtain a prediction for a given drug-protein pair,
+
+
+
+Note that this approach can be easily generalized, profiting from
+other protein function and phenotype representation methods.
+
+
+\begin{figure}[!tpb]
+	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
+	\caption{Full DTI prediction model based on the pretrained deep neural network transformers (DNNT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
+	\label{fig:Fullmodel}
+\end{figure}
+
+Through the very nature of the graph convolutional neural network, we build the transformed representation for all proteins in every forwarding step of the model. Note particularly, that the same convolutional filter and weight matrix are applied to and learned for all nodes simultaneously. By construction, for a single drug we can compute and predict all its interactors in a single run of the model, leading to significantly less computing time. 
+
+
+
+\subsection{\name identifies drugs that target a protein}
+
 \todo[inline]{Likely discussion:}
 The aim of \name is to predict candidate drugs that target a given
 protein; the challenge is to develop a training and evaluation scheme
@@ -409,10 +458,10 @@ options are to split over
 	\item split over drug--target pairs, or
 	\item split over proteins
 \end{enumerate}
-where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. They that at least parts of the interactions are not seen during training and evaluate either how well targets are predicted for unseen drugs or unseen proteins. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
+where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. They ensure that at least parts of the interactions are not seen during training and evaluate either how well targets are predicted for unseen drugs or unseen proteins. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
 
 \todo[inline]{Likely discussion:}
-The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. The second most prevalent arrangement is the split over drugs, while only close to none is aiming on a protein split.  However, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions for a single protein, while in the third scheme the number of interactions of the test proteins is not known. 
+The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. The second most prevalent arrangement is the split over drugs, while only close to none is aiming on a protein split.  However, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second bias, as only in these cases the model may overfit on the number of existing interactions for a single protein, while in the third scheme the number of interactions of the test proteins is entirely unknown during training process. 
 
 Assuming a hypothetical, perfectly generalizing model built upon an unbiased dataset, this very model would yield similar performances for all three splitting schemes, not overfitting on the known structures. On the other hand, for a hypothetical entirely overfitting model, trained on a highly biased dataset, this model would show substantial deviations from the original performance over another split. \\
 We emphasize, that all real-world models are prone to some sort of overfitting, and unknown, deviant entities in both validation and testing set will likely lead to some sort of performance gap for relevant metrics. However, a large disparity may hint the biases stated above.
@@ -427,30 +476,6 @@ Continuing this line, we propose the well known metric \textit{MicroAUC} for a b
 \end{equation*}
 
 Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. Note further that both are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are only plausible for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
-
-
-
-
-Our aim is to develop and evaluate a computational model to predict
-drug--target interactions. Specifically, given a protein, we are
-interested in identifying the drugs that may target the protein; this
-scenario is motivated by the need to identify drugs that can target a
-
-\subsection{\name identifies drugs that target a protein}
-
-We developed \name as a computational model to predict drug--target
-interactions. Specifically, given a protein, \name will identify and
-rank drugs that likely target this protein. \name combines two 
-types of features: structural information for drugs and proteins that
-can be used to determine if they may physically interact, and
-information about drug effects that may localize on an interaction
-network.
-
-This scenario is motivated by the need to identify drugs that can target a
-specific protein that may be associated with a disease or abnormal
-phenotypes.
-Our aim is further to combine two different types of features:
-structural information based on protein structure and molecular drug composition, and their respective observable characteristics.
 
 
 \subsection{Baseline model}
@@ -475,31 +500,6 @@ We now finish our baseline predictor $P_k$ by predicting all drugs to interact w
 	\end{cases}
 \end{equation*}
 with the only hyperparameter $k$. Note particularly, that the consequent prediction of $P_k$ is not dependent on the considered drug $d_i$, and will thus predict all drugs similarly for a given protein $p_j$. Subsequently, this naive predictor is not yielding any valuable information on the individual interactions with drugs for a given protein. Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
-
-To obtain a prediction for a given drug-protein pair\todo{should this
-  be about pairs, or rather something like ``given a protein, we aim
-  to find a drug...''? I.e., find a consistent way to separate
-  yourself language-wise from a naive prediction of pairs.}, we first
-build DL2vec representations\todo{In results: talk about what they are
-supposed to DO (``embeddings/representations of the phenotypes and
-functions...''), not how you implement them (you could use something
-else, for example).} for both drugs and proteins over PhenomeNET, while also preparing structural, molecular representations. Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers for both methods and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture can be seen in Figure~\ref{fig:Fullmodel}.
-
-\subsection{High level description}
-
-For a given protein, we want to find all suitable interacting drugs, \textbf{among a set of known drugs}.
-To obtain a prediction for a given drug-protein pair, we first
-build representations embodying both phenotypes and functions for both drugs and proteins, while also preparing structural, molecular representations, e.g., utilizing DL2vec over PhenomeNET and the prebuilt features from SMILES transformer and DeepGOPlus. Note that this approach can be easily generalized, profiting from other protein function and phenotype representation methods. \\ 
-Hence, we pretrain the siamese networks for both molecular and ontology features, yielding the deep neural network transformers (DNNT) for both methods, and both drugs and proteins, individually. These embeddings are now added to the graph neural network as node features, where we start an end-to-end learning and training process. Notably, like in the pretraining phase, we rely on siamese neural networks, enforcing similar representations for fitting drug-protein pairs. The overall architecture is depicted in Figure~\ref{fig:Fullmodel}.\\
-
-\begin{figure}[!tpb]
-	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
-	\caption{Full DTI prediction model based on the pretrained deep neural network transformers (DNNT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
-	\label{fig:Fullmodel}
-\end{figure}
-
-Through the very nature of the graph convolutional neural network, we build the transformed representation for all proteins in every forwarding step of the model. Note particularly, that the same convolutional filter and weight matrix are applied to and learned for all nodes simultaneously. By construction, for a single drug we can compute and predict all its interactors in a single run of the model, leading to significantly less computing time. 
-
 
 
 
