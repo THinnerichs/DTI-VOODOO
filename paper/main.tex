@@ -163,28 +163,74 @@ For comparative evaluation we used the gold standard dataset introduced by \cite
 Eventually, we only considered proteins that had at least one link in either STITCH or STRING, and drugs with at least one side effect and one existing target. Thus, the intersection between these resources yielded 1160 drugs and 6680 human proteins for the training phase. We provide links to and methods for the necessary data in the provided Github repository.\\
 
 \subsection{Evaluation and metrics}
-As the number of drug-targets are sparsely given w.r.t. to the number of both drugs and proteins considered, the resulting training, validation and testing datasets are highly imbalanced. As there are only $~22.000$ links in the considered subset the ratio
+
+\todo[inline]{First part is not about evaluation but optimization
+  objectives, should go in the Model section:}
+As the number of drug-targets are sparsely given w.r.t.\todo{no
+  acronyms} to the number of both drugs and proteins considered, the
+resulting training, validation and testing datasets are highly
+imbalanced. As there are only $~22.000$\todo{exact number} links in
+the considered subset the ratio
 \begin{equation*}
 	\frac{\#dti\_links}{\#drugs \cdot \#proteins} \approx 360,
 \end{equation*}
+consequently needing compensation in the computed loss function and
+appropriate metrics for the evaluation.
 
-consequently needing compensation in the computed loss function and appropriate metrics for the evaluation.\\
-
-On that account, we weighted all positive drug-protein pair samples with this ratio by introducing the following loss function w.r.t. to binary cross-entropy:
+Therefore, we weighted all positive drug-protein pair samples with
+this ratio by introducing the following loss function w.r.t.\todo{no
+  acronym} to binary cross-entropy:
 \begin{equation}
 	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
 \end{equation}
-for given prediction $x$ and target $y$. We average this loss among all drug-protein pairs in the training set, leading to a stable environment for the used optimizing scheme \textit{Adam} \citep{Adam2014}. We implemented a 5-fold cross validation among the proteins as justified in the results section. Furthermore, we  used early stopping to detect plateaus in the training process. \\
+for given prediction $x$ and target $y$. We average this loss among
+all drug-protein pairs in the training set, leading to a stable
+environment for the used optimizing scheme \textit{Adam}
+\citep{Adam2014}. We implemented a 5-fold cross validation among the
+proteins as justified in the results section. Furthermore, we used
+early stopping to detect plateaus in the training process.
 
-To assess each model, we computed the \textit{area under receiver operating characteristic}-score (AUROC), \textit{F1-score} (F1) and \textit{Matthews correlation coefficient} (MCC) for each considered hyperparameter configuration setting.\\
+\todo[inline]{This needs to be more elaborate: add the micro- vs
+  macro-averages here (formulas)}
+To assess each model, we computed the \textit{area under receiver
+  operating characteristic}-score (AUROC), \textit{F1-score} (F1) and
+\textit{Matthews correlation coefficient} (MCC) for each considered
+hyperparameter configuration setting.
 
-Avoiding validation overfitting, we eventually tested the best performing model on the Yamanishi dataset as presented and discussed. Furthermore, we compare our results on this very dataset with various other cutting edge approaches to DTI-prediction.\\
+\todo[inline]{Remove from here:}
+Avoiding validation overfitting, we eventually tested the best
+performing model on the Yamanishi dataset as presented and
+discussed. Furthermore, we compare our results on this very dataset
+with various other cutting edge approaches to DTI-prediction.
+
 
 \subsection{Model}
-In order to build a method that incorporates both top-down and bottom-up features, we first created a model for each individually. Hence, we assemble rich molecular structure based features for drugs from \textit{SmilesTransformer}\citep{SmilesTransformer} and proteins from \textit{DeepGOPlus}\citep{DeepGoPlus}. \textit{SmilesTransformer} introduces an autoencoder, learning over the SMILES strings and thus the molecular organization of each drug in an unsupervised manner. On the other hand, we take advantage of the pretrained models of \textit{DeepGOPlus}, obtaining features from the proteins amino acid sequence, showing significant performance in the field of protein function prediction. Thus, both embeddings seem to suitably supplement the  following ontology based represenations.\\
+
+\todo[inline]{Introduce the notion of top-down and bottom-up:}
+In order to build a method that incorporates both top-down and
+bottom-up features, we first created a model for each
+individually. Hence, we assemble rich molecular structure based
+features for drugs from
+\textit{SmilesTransformer} \citep{SmilesTransformer} and proteins from
+\textit{DeepGOPlus} \citep{DeepGoPlus}. \textit{SmilesTransformer}
+introduces an autoencoder, learning over the SMILES strings and thus
+the molecular organization of each drug in an unsupervised manner. On
+the other hand, we take advantage of the pretrained models of
+\textit{DeepGOPlus}, obtaining features from the proteins amino acid
+sequence, showing significant performance in the field of protein
+function prediction. Thus, both embeddings seem to suitably supplement
+the following ontology based representations.
 
 
-In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ontology based representations. Hereby, DL2vec constructs a graph by introducing vertices and edges for each ontology class and axiom, respectively, followed by random walks starting from each entity. These walks are eventually learned on using a Word2vec \citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood focused representations for each entity, which has shown great results for representing protein function and phenotypes. The overall structure of the ontology can be seen in Figure~\ref{fig:Onto}.\\
+In the top-down section, we used \textit{DL2vec} \citep{DL2vec2020} to
+obtain ontology based representations. DL2vec constructs a graph by
+introducing vertices and edges for each ontology class and axiom,
+respectively, followed by random walks starting from each
+entity. These walks are eventually learned on using a Word2vec
+\citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood
+focused representations for each entity, which has shown great results
+for representing protein function and phenotypes. The overall
+structure of the ontology can be seen in Figure~\ref{fig:Onto}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
@@ -193,38 +239,76 @@ In the top-down section, we used \textit{DL2vec}\citep{DL2vec2020} to obtain ont
 \end{figure}
 
 
-As we wanted to learn from the similarity of drug side effects and protein phenotypes we opted for a deep siamese network approach, hence learning a high-dimensional embedding emphasizing this identity by forcing a maximal cosine similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features, also benefiting from the siamese network architecture. Therefore, the precomputed embeddings are run through a deep neural network transformation (DNNT) which also reduces the eventual representation size for drugs and proteins separately. An example structure for both types of features can be found in Figure~\ref{fig:SiameseNetwork}.\\
+As we wanted to learn from the similarity of drug side effects and
+protein phenotypes we opted for a deep siamese network approach, hence
+learning a high-dimensional embedding emphasizing this identity by
+forcing a maximal cosine similarity between these embeddings. On the
+other hand we built a deep neural network for the molecular structure
+based features, also benefiting from the siamese network
+architecture. Therefore, the precomputed embeddings are run through a
+deep neural network transformation (DNNT) which also reduces the
+eventual representation size for drugs and proteins separately. An
+example structure for both types of features can be found in
+Figure~\ref{fig:SiameseNetwork}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
-	\caption{Siamese network applied to molecular and DL2vec features, utilizing deep neural network transformations (DNNT). The similarity function $\otimes$ yields the similarity between both transformed embeddings e.g. by computing the cosine similarity.}
+	\caption{Siamese network applied to molecular and DL2vec
+          features, utilizing deep neural network transformations
+          (DNNT). The similarity function $\otimes$ yields the
+          similarity between both transformed embeddings e.g. by
+          computing the cosine similarity.}
 	\label{fig:SiameseNetwork}
 \end{figure}
 
 
 \subsubsection{Graph convolutional layers}
-These molecular and ontology based sub-models were added to a larger graph convolutional model, based on the protein-protein interaction (PPI) graph. The PPI dataset is represented by a graph $G=(V,E)$, where each protein is represented by a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$ symbolizes an interaction between two proteins. Additionally, we introduce mapping $x:V\rightarrow\mathbb{R}^{d}$ projecting each vertex $v$ to its node feature $x_v = x(v)$, where $d$ denotes the dimensionality of the node features. \\
+These molecular and ontology based sub-models were added to a larger
+graph convolutional model, based on the protein-protein interaction
+(PPI) graph. The PPI dataset is represented by a graph $G=(V,E)$,
+where each protein is represented by a vertex $v\in V$, and each edge
+$e\in E\subseteq V\times V$ symbolizes an interaction between two
+proteins. Additionally, we introduce mapping
+$x:V\rightarrow\mathbb{R}^{d}$ projecting each vertex $v$ to its node
+feature $x_v = x(v)$, where $d$ denotes the dimensionality of the node
+features.
  
-As described before, graph convolution has shown significant performance increase in a variety of tasks. While there are various methods out there we will only introduce the most basic one here. A graph convolutional layer w.r.t. \citet{GCNConv} hereby consists of a learnable weight matrix followed by an aggregation step, formalized by
-
+As described before, graph convolution has shown significant
+performance increase in a variety of tasks. While there are various
+methods out there we will only introduce the most basic one here. A
+graph convolutional layer \citet{GCNConv} consists of a
+learnable weight matrix followed by an aggregation step, formalized by
 \begin{equation}
 	\mathbf{X}^{\prime} = \mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
 	\mathbf{\hat{D}}^{-1/2} \mathbf{X} \mathbf{\Theta}
 \end{equation}
+where for a given graph $G=(V,E)$, $\hat{A} = A + I$ denotes the
+adjacency matrix with added self-loops for each vertex, $D$ is
+described by $\hat{D}_{ii} = \sum_{j=0} \hat{A}_{ij}$, a diagonal
+matrix displaying the degree of each node, and $\Theta$ denotes the
+learnable weight matrix. Added self-loops enforce that each node
+representation is directly dependent on its own preceding
+one. Notably, the number of graph convolutional layers stacked equals
+the radius of relevant nodes for each vertex within the graph.
 
-where for a given graph $G=(V,E)$, $\hat{A} = A + I$ denotes the adjacency matrix with added self-loops for each vertex, $D$ is described by $\hat{D}_{ii} = \sum_{j=0} \hat{A}_{ij}$, a diagonal matrix displaying the degree of each node, and $\Theta$ denotes the learnable weight matrix. Added self-loops enforce that each node representation is directly dependent on its own preceding one. Notably, the number of graph convolutional layers stacked equals the radius of relevant nodes for each vertex within the graph. \\
-
-The update rule for each individual node is denoted by 
-
+The update rule for each individual node is
 \begin{equation}
 	\mathbf{x}^{\prime}_i = \mathbf{\Theta} \sum^{N}_{j}
 	\frac{1}{\sqrt{\hat{d}_j \hat{d}_i}} \mathbf{x}_j
 \end{equation}
+where both $\hat{d}_i, \hat{d}_j$ are dependent on the edge weights
+$e_{ij}$ of the graph. With simple, single-valued edge weights such as
+$e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to
+$d_i$, i.e., the degree of each vertex $i$. We denote this type of
+graph convolutional neural layers with \textsc{GCNConv}.
 
-where both $\hat{d}_i, \hat{d}_j$ are dependent on the edge weights $e_{ij}$ of the graph. With simple, single valued edge weights such as $e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to $d_i$, i.e. the degree of each vertex $i$. We will denote this type of graph convolutional neural layers with \textsc{GCNConv}. \\
 
-While in this initial formulation the node-wise update step is defined by the sum over all neighbouring node representations, we are able to alter this formulation for a more sophisticated message passing scheme. As described we are able to rearrange the order of activation function $\sigma$, aggregation $\mathrm{AGG}$ and linear neural layer $\mathrm{MLP}$ with this formulation as proposed by \citet{GENConv2020}:
-
+While in this initial formulation the node-wise update step is defined
+by the sum over all neighbouring node representations, we are able to
+alter this formulation to another message passing scheme.  We are able
+to rearrange the order of activation function $\sigma$, aggregation
+$\mathrm{AGG}$ and linear neural layer $\mathrm{MLP}$ with this
+formulation as proposed by \citet{GENConv2020}:
 \begin{equation}
 	\mathbf{x}_i^{\prime} = \mathrm{MLP} \left( \mathbf{x}_i +
 	\mathrm{AGG} \left( \left\{
@@ -232,9 +316,23 @@ While in this initial formulation the node-wise update step is defined by the su
 	: j \in \mathcal{N}(i) \right\} \right)
 	\right)
 \end{equation}
-
-where we will generally only consider $\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We will denote this generalized layer type as \textsc{GENConv}, following the notation of \citet{PytorchGeometric}.
-While the reordering is merely import for numerical stability, the authors claim that this alteration of the original formulation eases the vanishing gradient problem for deeper convolutional networks. Additionally, the authors revise the aggregation function by generalizing it, allowing more sophisticated weighting functions such as learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming signals for each vertex, substituting the previously mentioned averaging step. Hence, while \textsc{GCNConv} suffers from both vanishing gradients and signal fading for large scale, highly connected graphs, each propagation step in \textsc{GENConv} emphasizes strong signals with values close to $0$ and $1$. Note particularly, that the same convolutional filter and weight matrix are applied to and learned for all nodes simultaneously. Note additionally, that the resulting information hold no information on their own connectivity.\\
+where we will generally only consider
+$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We will denote
+this generalized layer type as \textsc{GENConv}, following the
+notation of \citet{PytorchGeometric}.  While the reordering is mainly
+import for numerical stability, this alteration also addresses the
+vanishing gradient problem for deeper convolutional networks
+\cite{GENConv2020}. Additionally, we can also generalize the
+aggregation function to allow different weighting functions such as
+learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming
+signals for each vertex, substituting the averaging step in
+\textsc{GCNConv}. Hence, while \textsc{GCNConv} suffers from both
+vanishing gradients and signal fading for large scale, highly
+connected graphs, each propagation step in \textsc{GENConv} emphasizes
+signals with values close to $0$ and $1$. The same convolutional
+filter and weight matrix are applied to and learned for all nodes
+simultaneously, and the resulting information\todo{Which information?
+  Specify} hold no information on their own connectivity.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
