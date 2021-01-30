@@ -364,7 +364,9 @@ using an extensive, manual grid search. \todo[inline]{Specify range of
 
 \section{Results}
 
-\subsection{Choosing a cross-validation splitting scheme}
+\subsection{\name: computational model to identify drugs that target a
+  protein}
+
 
 % As in machine learning inference is derived from the underlying data,
 % models and data are naturally and intrinsically linked. Thus, the more
@@ -396,6 +398,19 @@ designed to target them due to their involvement in more common
 diseases (or diseases for which drugs can be more profitably
 marketed).
 
+We developed \name as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name will identify and
+rank drugs that likely target this protein. \name combines two 
+types of features: structural information for drugs and proteins that
+can be used to determine if they may physically interact, and
+information about drug effects that may localize on an interaction
+network.
+
+
+
+
+
+
 \todo[inline]{Likely discussion:}
 The aim of \name is to predict candidate drugs that target a given
 protein; the challenge is to develop a training and evaluation scheme
@@ -422,44 +437,26 @@ overfit on the number of existing interactions, while in the third
 scheme the number of interactions of the test proteins is not known.
 
 
-In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
+% In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
 
-\todo[inline]{Relate these to the issues listed above:}
-\begin{enumerate}
-	\item Build split over drugs
-	\item Build split over drug-target pairs
-	\item Build split over proteins
-\end{enumerate} 
+% \todo[inline]{Relate these to the issues listed above:}
+% \begin{enumerate}
+% 	\item Build split over drugs
+% 	\item Build split over drug-target pairs
+% 	\item Build split over proteins
+% \end{enumerate} 
 In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous\todo{???} results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire\todo{evidence}. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
+In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}% , CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
 
-The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
+% The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
 
 As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
 Thus, building splitting over proteins is the most challenging of the three options. \\
 
 
 
-\subsection{Baseline model}
-Our aim is to develop and evaluate a computational model to predict
-drug--target interactions. Specifically, given a protein, we are
-interested in identifying the drugs that may target the protein; this
-scenario is motivated by the need to identify drugs that can target a
 
-\subsection{\name identifies drugs that target a protein}
-
-We developed \name as a computational model to predict drug--target
-interactions. Specifically, given a protein, \name will identify and
-rank drugs that likely target this protein. \name combines two 
-types of features: structural information for drugs and proteins that
-can be used to determine if they may physically interact, and 
-
-This scenario is motivated by the need to identify drugs that can target a
-specific protein that may be associated with a disease or abnormal
-phenotypes.
-Our aim is further to combine two different types of features:
-structural information based on protein structure and molecular drug composition, and their respective observable characteristics.
 
 Before introducing the core of our eventual model, we propose a suitable naive baseline model in order to analyze and understand the existing approaches and this novel method for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
 \begin{equation*}
@@ -513,6 +510,12 @@ Through the very nature of the graph convolutional neural network, we build the 
 
 
 
+
+\subsection{Baseline model}
+Our aim is to develop and evaluate a computational model to predict
+drug--target interactions. Specifically, given a protein, we are
+interested in identifying the drugs that may target the protein; this
+scenario is motivated by the need to identify drugs that can target a
 
 \section{Findings}
 
