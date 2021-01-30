@@ -165,7 +165,7 @@ Eventually, we only considered proteins that had at least one link in either STI
 \subsection{Evaluation and metrics}
 As the number of drug-targets are sparsely given w.r.t. to the number of both drugs and proteins considered, the resulting training, validation and testing datasets are highly imbalanced. As there are only $~22.000$ links in the considered subset the ratio
 \begin{equation*}
-	\frac{\#dti\_links}{\#drugs \cdot \#proteins} \approx 360,
+	\frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
 \end{equation*}
 
 consequently needing compensation in the computed loss function and appropriate metrics for the evaluation.\\
@@ -263,32 +263,21 @@ In general, when concerning cross-validation splitting schemes for DTI predictio
 	\item Build split over proteins
 \end{enumerate}
 where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
-The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. Thus, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions, while in the third scheme the number of interactions of the test proteins is not known. \\
+The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. The second most prevalent arrangement is the split over drugs, while only close to none is aiming on a protein split.  However, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions for a single protein, while in the third scheme the number of interactions of the test proteins is not known. 
 
+Assuming a hypothetical, perfectly generalizing model built upon an unbiased dataset, this very model would yield similar performances for all three splitting schemes, not overfitting on the known structures. On the other hand, for a hypothetical entirely overfitting model, trained on a highly biased dataset, this model would show substantial deviations from the original performance over another split. \\
+We emphasize, that all real-world models are prone to some sort of overfitting, and unknown, deviant entities in both validation and testing set will likely lead to some sort of performance gap for relevant metrics. However, a large disparity may hint the biases stated above.
 
+Hence, we will perform a cross-validation over proteins for the training and prediction phase of our model, despite predicting per protein is rather counter-intuitive as there only limited drug-targets \citep{Overington2006}, and thus novel drugs are more likely to arise than novel targets. Yet, we aim to find all interacting drugs for existing targets motivating our split choice even further.
 
+\subsection{MicroAUC}
+Continuing this line, we propose the well known metric \textit{MicroAUC} for a better evaluation for this purpose. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels and prediction $l,y:D\times P \rightarrow \{0,1\}$  as 
+\begin{equation*}
+	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
+\end{equation*}
 
+Note that drugs and proteins can be interchanged in this formulation, which we will denote with $MicroAUC_p$ and $MicroAUC_d$, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. Furthermore, 
 
-
-Considering the publications of the last 
-
-
-In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
-
-\todo[inline]{Relate these to the issues listed above:}
-\begin{enumerate}
-	\item Build split over drugs
-	\item Build split over drug-target pairs
-	\item Build split over proteins
-\end{enumerate} 
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). As there are hopefully many more drugs to discover, the drug split scheme both emphasizes the drug repurposing idea, by applying unseen compounds to existing targets, but also benefits from more complicated drug representations, leading to tremendous\todo{???} results. This performance gain is based on minor variations among large groups of pharmaceuticals, that are easy to acquire\todo{evidence}. The second scheme has knowledge on all drugs and all proteins, and is thus prone to overfitting and the same development bias. Eventually, as there only limited drug-targets \citep{Overington2006}, predicting per protein is rather counter-intuitive. As it is hard to generalize over proteins representations, we aim at reaching similar performances for both drug and protein splitting schemes. \\
-
-In general, recent works do perform their split over the drugs or drug-target pairs (\cite{Survey2018}, CITATION). The first is more relevant for novel drugs, as it is much more likely to test a new compound than a innovative protein. However, it lies in the very nature of the used datasets, making the prediction for new drugs much easier. Thus, drugs are often built by minor variations of existing drugs, thus leading to no deviations in the functional group of that very compound (CITATION/EXAMPLE). When distributed over both train and test split, the models do not perform inductive inference and generalize, but rather implement transductive inference by just predicting the recently seen structures. Hence, when entirely new molecules are seen, the models perform much worse
-
-The same applies to splits of drug-target pairs, as all drugs were already seen, and novelty cannot be coped with.
-
-As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
-Thus, building splitting over proteins is the most challenging of the three options. \\
 
 
 
