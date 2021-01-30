@@ -364,7 +364,8 @@ using an extensive, manual grid search. \todo[inline]{Specify range of
 
 \section{Results}
 
-\subsection{Choosing a cross-validation splitting scheme}
+\subsection{\name: computational model to identify drugs that target a
+	protein}
 
 % As in machine learning inference is derived from the underlying data,
 % models and data are naturally and intrinsically linked. Thus, the more
@@ -441,7 +442,9 @@ We developed \name as a computational model to predict drug--target
 interactions. Specifically, given a protein, \name will identify and
 rank drugs that likely target this protein. \name combines two 
 types of features: structural information for drugs and proteins that
-can be used to determine if they may physically interact, and 
+can be used to determine if they may physically interact, and
+information about drug effects that may localize on an interaction
+network.
 
 This scenario is motivated by the need to identify drugs that can target a
 specific protein that may be associated with a disease or abnormal
