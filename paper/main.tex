@@ -340,12 +340,26 @@ simultaneously, and the resulting information\todo{Which information?
 	\label{fig:ResGraphConvBlocks}
 \end{figure}
 
-We employ another mechanism to avoid redundancy and fading signals in stacked graph convolutional networks, which was introduced by \citet{DeepGCN2019} and refined in \citet{DeeperGCN2020}. The authors propose a residual network architecture and normalization scheme, solving these issues in a variety of graph predicting tasks. This structure is depicted in Figure~\ref{fig:ResGraphConvBlocks} resulting in reusable residual blocks, which can be stacked multiple times, thereby not losing focus of each node neighbourhood. \\
+We employ another mechanism to avoid redundancy and fading signals in
+stacked graph convolutional networks, which was introduced by
+\citet{DeepGCN2019} and refined in \citet{DeeperGCN2020}. The authors
+propose a residual network architecture and normalization scheme. This
+structure is depicted in Figure~\ref{fig:ResGraphConvBlocks} resulting
+in reusable residual blocks, which can be stacked multiple times,
+thereby not losing focus of each node neighbourhood.
 
 
 
 \subsubsection{Hyperparameter tuning}
-To find the best hyperparameter configuration for the proposed model we performed a grid search, to find the most expressive and non-redundant representation. Therefor, we pretrained the bottom-up and the top-down model separately and aimed at best performing models w.r.t. previously described metrics. Embedding sizes, depth of the neural network, optimizer, learning rate and layer types were found from an extensive, manual grid search. 
+To find the best hyperparameter configuration for the proposed model
+we performed a grid search to find the most expressive and
+non-redundant representation. We pretrained the bottom-up and the
+top-down model separately and aimed at best performing models
+w.r.t. previously described metrics. We optimized embedding sizes,
+depth of the neural network, optimizer, learning rate and layer types
+using an extensive, manual grid search. \todo[inline]{Specify range of
+  values searched here; even better if you have the intermediate
+  results and can put them here (better: in the supplement).}
 
 
 \section{Results}
