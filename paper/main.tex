@@ -396,23 +396,30 @@ designed to target them due to their involvement in more common
 diseases (or diseases for which drugs can be more profitably
 marketed).
 
+\todo[inline]{Likely discussion:}
 The aim of \name is to predict candidate drugs that target a given
 protein; the challenge is to develop a training and evaluation scheme
 that does not simply overfit to the inherent biases in training and
 testing data.
 In general, when performing cross-validation for DTI prediction, the
 options are to split over drug--target pairs, split over drugs, and
-split over proteins.
+split over proteins; the last two options ensure that at least parts
+of the interactions are not seen during training and evaluate either
+how well targets are predicted for unseen drugs or unseen proteins.
 
-where the first and third option concern splitting drugs and proteins, respectively, into train, validation and test sets, and arranging the corresponding drug-target interactions. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. \\
-The most common scheme for DTI prediction is the split over drug-target pairs \citep{Survey2018}, where likely all drugs and targets of the validation and testing phase have already occurred in the training phase, as part of other drug-target pairs. Thus, the first and second splitting scheme are exposed to the first dataset bias and are hence more likely vulnerable to transductive inference by just predicting recently seen structures, rather than implementing inductive inference and generalizing over the drug representations. Second, these two strategies are more susceptible to the second and third bias, as only in these cases the model may overfit on the number of existing interactions, while in the third scheme the number of interactions of the test proteins is not known. \\
-
-
-
-
-
-
-Considering the publications of the last 
+\todo[inline]{Likely discussion:}
+The most common scheme for DTI prediction is the split over
+drug--target pairs \citep{Survey2018}, where likely all drugs and
+targets of the validation and testing phase have already occurred in
+the training phase, as part of other drug-target pairs. Thus, the
+first and second splitting scheme are exposed to the first dataset
+bias and are hence more likely vulnerable to transductive inference by
+just predicting recently seen structures, rather than implementing
+inductive inference and generalizing over the drug
+representations. Second, these two strategies are more susceptible to
+the second and third bias, as only in these cases the model may
+overfit on the number of existing interactions, while in the third
+scheme the number of interactions of the test proteins is not known.
 
 
 In general, drug-target interaction prediction is the task of accurately predicting, whether for a given drug and a given protein there is a biological interaction within the target organism. Hereby, different training and prediction schemes lead to divergent expressiveness of the resulting model. However, when building the train-test split over compound-protein pairs for building the actual model, there are the following three options:
