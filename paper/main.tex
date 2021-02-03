@@ -128,7 +128,12 @@ may give a hint on common targeted pathways. As an additional compound
 feature we will use semantic side effect similarity, which we will
 discuss later on\todo{Generally, try to avoid pointers to ``later''.}.
 
-Protein-protein interaction networks have shown great results in $\dots$(\cite{Vazquez2003}, \cite{Ackerman2019}) in granting context for molecular system biology. However, these contexts were never applied to the problem of drug-target-interaction prediction. Thus we formalized our hypotheses over these interaction graphs and will test them in the following chapters.
+Protein-protein interaction networks have shown great results in
+$\dots$(\cite{Vazquez2003}, \cite{Ackerman2019}) in granting context
+for molecular system biology. However, these contexts were never
+applied to the problem of drug-target-interaction prediction. Thus we
+formalized our hypotheses over these interaction graphs and will test
+them in the following chapters.
 
 \enlargethispage{12pt}
 
@@ -212,17 +217,23 @@ structure of the ontology can be seen in Figure~\ref{fig:Onto}.
 
 \subsubsection{Siamese neural networks and modular learnable feature transformation}
 As we want to learn from the similarity of drug side effects and
-protein phenotypes we opted for a deep siamese network approach, hence
-learning a high-dimensional embedding emphasizing this identity by
-forcing a similarity between these embeddings. On the other hand we built a deep neural network for the molecular structure based features, also benefiting from the siamese network
-architecture. Computing the similarity between two representations, allows for a variety of different methods.
-However, we decided for the cosine similarity measure being invariant to scaling.
+protein phenotypes, we use a deep Siamese neural network.
+A Siamese neural network aims to learn a similarity between two
+embeddings.
 
-Therefore, the precomputed embeddings are run through a
-regular, neural learnable feature transformation (LFT) network, which also reduces the
-eventual representation size for drugs and proteins separately. An
-example structure for both types of features can be found in
-Figure~\ref{fig:SiameseNetwork}. 
+learning a high-dimensional embedding emphasizing this identity by
+forcing a similarity between these embeddings. On the other hand we
+built a deep neural network for the molecular structure based
+features, also benefiting from the siamese network
+architecture. Computing the similarity between two representations,
+allows for a variety of different methods.  However, we decided for
+the cosine similarity measure being invariant to scaling.
+
+Therefore, the precomputed embeddings are run through a regular,
+neural learnable feature transformation (LFT) network, which also
+reduces the eventual representation size for drugs and proteins
+separately. An example structure for both types of features can be
+found in Figure~\ref{fig:SiameseNetwork}.
 
 While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we emphasize the versatility of this approach, as both ontology and molecular feature for both drugs and proteins are reduced to similar dimensionality. This allows for a high amount of modularity and different experimental setups by plugging different kinds of features into the model. Additionally, these pretrained features can be used for a variety of other tasks. Additionally, the ontology LFT can be reused for a variety of DL2vec based features with respect to other ontologies and hypotheses. We hereby followed the results of \textit{DL2vec}, indicating that utilizing the activation function $\sigma := \mathrm{LeakyReLU}$ leads to performance increase.
 
