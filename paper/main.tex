@@ -229,7 +229,8 @@ graph.
 \todo[inline]{Looking at the code, I wonder if what is implemented is
   actually a Siamese ANN; it does not look as if the weights are
   shared between the two networks, so looks more like a twin or
-  half-twin network?}
+  half-twin network? Siamese would be sim(f(e1),f(e2)) but the
+  implementation seems to be sim(f(e1), g(e2)).}
 
 As we want to learn from the similarity of drug side effects and
 protein phenotypes, we use a deep Siamese neural network with
