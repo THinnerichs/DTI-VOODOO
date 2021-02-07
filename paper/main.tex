@@ -559,16 +559,29 @@ We find that the model using ontology-based features
   and p value? otherwise remove} better performance on STITCH compared
 to using only molecular features. We also observe that only the model
 using ontology-based features results in significantly\todo{p-val}
-increased performance when incorporating the PPI graph, demonstrating
-that these features localize on the PPI network whereas the molecular
-features do not.
+increased performance when incorporating the PPI graph.  This increase
+can be observed with different graph neural network
+architectures\todo{data not in the table}. While the {\em GCNConv} and
+{\em GENConv} architecture already shows an improvement, the
+\textit{ResGraphConv} blocks add a large amount of additional
+learnable parameters to the network, leading to more expressive
+power. To test whether the improvement is due to the number of
+learnable parameters added or the result of better exploiting the
+information about PPIs, we experiment with a graph model in which all
+graph convolutional neural layers in the residual blocks are
+removed\todo{is this still a graph model?}. This pruned network, with
+no information on the protein--protein interactions, reached very
+similarly results as the original \textit{OntoPred} model\todo{data
+  not shown; and details missing from Methods} and showed no
+improvement.
 
+\todo[inline]{Not clear, need to reformulate:}
+Furthermore, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
 
-, while also only \textit{OntoPred} shows significant performance increase when adding \textit{GENConv} graph convolutional neural layers over the PPI graph. However, graph convolutional neural layers such as \textit{GCNConv} and \textit{GENConv}, especially when incorporated into the proposed \textit{ResGraphConv} blocks, add a lot of learnable parameters to the network, leading to more expressive power. This may lead to better performance, while deceiving, whether the respective features actually localize on the PPI graph. 
+As the inclusion of graph information significantly\todo{p val}
+increases performance, we conclude that information about protein
+functions localizes on the graph while molecular features do not.
 
-To eliminate these options we rebuild the graph model, whilst removing all graph convolutional neural layers in the residual blocks. This pruned network, with no information on the protein--protein interactions, reached very similarly results, as the original \textit{OntoPred} model. Secondly, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
-
-As this performance increase is quite significant, we \textbf{conclude that protein function does localize while molecular features do not (BETTER FORMULATION)}. ...
 
 
 
