@@ -226,18 +226,25 @@ graph.
 
 \subsubsection{Siamese neural networks and modular learnable feature transformation}
 
+\todo[inline]{Looking at the code, I wonder if what is implemented is
+  actually a Siamese ANN; it does not look as if the weights are
+  shared between the two networks, so looks more like a twin or
+  half-twin network?}
+
 As we want to learn from the similarity of drug side effects and
-protein phenotypes, we use a deep Siamese neural network.
+protein phenotypes, we use a deep Siamese neural network with
+a contrastive loss using cosine similarity.
 A Siamese neural network aims to learn a similarity between two
 embeddings.
 
-learning a high-dimensional embedding emphasizing this identity by
-forcing a similarity between these embeddings. On the other hand we
-built a deep neural network for the molecular structure based
-features, also benefiting from the siamese network
-architecture. Computing the similarity between two representations,
-allows for a variety of different methods.  However, we decided for
-the cosine similarity measure being invariant to scaling.
+% learning a high-dimensional embedding emphasizing this identity by
+% forcing a similarity between these embeddings. On the other hand we
+% built a deep neural network for the molecular structure based
+% features, also benefiting from the siamese network
+% architecture. Computing the similarity between two representations,
+% allows for a variety of different methods.  
+% However, we decided for
+% the cosine similarity measure being invariant to scaling.
 
 Therefore, the precomputed embeddings are run through a regular,
 neural learnable feature transformation (LFT) network, which also
