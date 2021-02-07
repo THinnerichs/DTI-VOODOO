@@ -154,7 +154,7 @@ task.
 We obtain a dataset consisting of $\approx 11000$\todo{precise number}
 human proteins with over 170.000\todo{exact number} links from STRING
 \citep{STRINGv10}. For the drug-target interactions, we
-fetched 137,000\todo{precise}} links from the STITCH database
+fetched 137,000\todo{precise} links from the STITCH database
 \citep{STITCHv5}. As both STRING and STITCH provide confidence scores
 for each association, we filtered them as advised by a threshold of
 $700$, therefore retaining only high-confidence interactions.
@@ -202,16 +202,21 @@ molecular organization of each drug in an unsupervised manner.
 sequences which are useful to predict protein function.
 % Thus, both embeddings seem to suitably supplement
 % the following ontology based representations.
-In the top-down section, we used \textit{DL2vec} \citep{DL2vec2020} to
-obtain ontology based representations. DL2vec constructs a graph by
-introducing vertices and edges for each ontology class and axiom,
-respectively, followed by random walks starting from each
-entity. These walks are eventually learned on using a Word2vec
-\citep{Word2vec2013} model. Thus, we pick up rich, neighbourhood
-focused representations for each entity, which has shown great results
-for representing protein function and phenotypes. The overall
-structure of the ontology can be seen in Figure~\ref{fig:Onto}.
 
+As phenotypes and functions are encoded through ontologies, we use
+DL2Vec \citep{DL2vec2020} to obtain ontology based representations for
+use as top-down features. DL2vec constructs a graph by introducing
+nodes for each ontology class and edges for ontology axioms, followed
+by random walks starting from each node in the graph. These walks are
+encoded using a Word2vec \citep{Word2vec2013} model. Therefore, DL2Vec
+generates representations that can encode drug effects or protein
+functions while preserving their semantic neighbourhood within that
+graph.
+
+% The overall structure of the ontology can be seen in
+% Figure~\ref{fig:Onto}.
+
+\todo[inline]{Consider supplement, or combine with other figures.}
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
 	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}
