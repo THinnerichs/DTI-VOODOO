@@ -151,17 +151,23 @@ task.
 
 
 \subsection{Datasets}
-The data for the different parts of this model were obtained from
-various sources. Starting with the protein-protein interactions, we
-fetched $\approx 11000$\todo{precise number} human proteins with over 170.000 links from
-STRING \citep{STRINGv10}. For the drug-target interactions themselves,
-we fetched 137.000 links from STITCH database \citep{STITCHv5}. As
-both STRING and STITCH provide probability scores for each
-association, we filtered them as advised by a threshold of 700, thus
-only obtaining likely interactions.
+We obtain a dataset consisting of $\approx 11000$\todo{precise number}
+human proteins with over 170.000\todo{exact number} links from STRING
+\citep{STRINGv10}. For the drug-target interactions, we
+fetched 137,000\todo{precise}} links from the STITCH database
+\citep{STITCHv5}. As both STRING and STITCH provide confidence scores
+for each association, we filtered them as advised by a threshold of
+$700$, therefore retaining only high-confidence interactions.
 
-For the ontology segment we utilized PhenomeNET \citep{PhenomeNET2011}, a collection of various ontologies such as Human Phenotype Ontology \citep{HPO2018}, Gene Ontology (\citet{GOoriginal2000} \citet{GOrecent2020}), Mammalian Phenotype Ontology \citep{MP2009} and numerous others. \todo{which ontologies to cite}
-Side effects and their links to drugs were obtained Side Effect Resource (SIDER)\citep{SIDER} and structured according MedDRA database \citep{MedDRA}. They were mapped to PhenomeNET with aid of \textit{Phenomebrowser.net}, which provides a SPARQL query endpoint for the mentioned resources. \\
+We utilize the PhenomeNET ontology \citep{PhenomeNET2011}, an ontology
+integrating ontologies such as the Human Phenotype Ontology
+\citep{HPO2018}, Gene Ontology \cite{GOoriginal2000, GOrecent2020},
+Mammalian Phenotype Ontology \citep{MP2009} and several others.
+We obtained side effects and their links to drugs from SIDER
+\citep{SIDER}; SIDER contains side effects encoded using identifiers
+from the MedDRA database \citep{MedDRA}. We mapped side effects to the
+PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
+provides a SPARQL query endpoint for the mentioned resources.
 
 For comparative evaluation we used the gold standard dataset introduced by \citet{Yaminishi2008}, which includes both drug-target interaction pairs and side effects.\\ 
  
