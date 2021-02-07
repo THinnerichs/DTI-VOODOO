@@ -478,34 +478,22 @@ sequences from DeepGOPlus \cite{DeepGoPlus}.  \name learns
 representations of drug effects and protein functions using the
 ontology-based machine learning method DL2Vec \cite{DL2vec2020}.
 
+\todo[inline]{Move to methods:}
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph or the similarity
 computation.
 
-We use two Siamese neural networks to combine the molecular
-and phenotype representations of drugs and proteins,
-% and
-% ontology features, yielding the deep neural network transformers
-% (DNNT) for both methods, and both drugs and proteins,
-% individually. 
-and add these to a protein interaction network as node features.
-% neural network in which nodes representing interactions
-% between proteins as node features, 
-We then train this model in an end-to-end manner. % Notably, like in the
-% pretraining phase, we rely on siamese neural networks, enforcing
-% similar representations for fitting drug-protein pairs. 
-The overall architecture is depicted in Figure~\ref{fig:Fullmodel}.
+We use two Siamese neural networks to combine the molecular and
+phenotype representations of drugs and proteins, and add these to a
+protein interaction network as node labels.  We then train this model
+in an end-to-end manner using a graph neural network architecture.
+The overall workflow\todo{make sure it's a workflow} is depicted in
+Figure~\ref{fig:Fullmodel}.
 
 
-% For a given protein, we want to find all suitable interacting drugs, \textbf{among a set of known drugs}.
-%To obtain a prediction for a given drug-protein pair,
-If 
-
-
-
-Note that this approach can be easily generalized, profiting from
-other protein function and phenotype representation methods.
+% Note that this approach can be easily generalized, profiting from
+% other protein function and phenotype representation methods.
 
 
 \begin{figure}[!tpb]
