@@ -181,23 +181,27 @@ introduced by \citet{Yaminishi2008} \todo[inline]{consisting of XXXX
   interactions between XXX drugs and XXX protein targets}.
  
 \subsection{Model}
-Before introducing the models core components, we will clarify the previously mentioned notions of top-down and bottom-up. We will refer to features and methods, starting from the observable characteristics of either drug or protein inferring the likely molecular mechanisms as top-down. On the other hand, bottom-up refers to approaches deducing from even finer molecular properties, such as single functional groups or amino acid sequences for drugs and proteins, respectively. 
 
-In order to build a method that incorporates both top-down and
-bottom-up features, we first created a model for each
-individually. Hence, we assemble rich molecular structure based
-features for drugs from
-\textit{SmilesTransformer} \citep{SmilesTransformer} and proteins from
-\textit{DeepGOPlus} \citep{DeepGoPlus}. \textit{SmilesTransformer}
-introduces an autoencoder, learning over the SMILES strings and thus
-the molecular organization of each drug in an unsupervised manner. On
-the other hand, we take advantage of the pretrained models of
-\textit{DeepGOPlus}, obtaining features from the proteins amino acid
-sequence, showing significant performance in the field of protein
-function prediction. Thus, both embeddings seem to suitably supplement
-the following ontology based representations.
-
-
+Our model combines ``top-down'' and ``bottom-up'' information for
+drug--target identification. We consider an approach to be
+``top-down'' when observable characteristics of either a drug (such as
+a drug effect) or protein (such as a protein function, or phenotypes
+resulting from a loss of function) are used to provide information
+about a molecular mechanisms; we consider an approach ``bottom-up''
+when structural or other molecular information is used to determine a
+mechanism.  In order to build a method that incorporates both top-down
+and bottom-up features, we first create a model for each type of
+feature separately.  As features for the bottom-up model, we use
+features derived from molecular structures of drugs from the
+\textit{SmilesTransformer} \citep{SmilesTransformer} and molecular
+features for proteins from \textit{DeepGOPlus}
+\citep{DeepGoPlus}. \textit{SmilesTransformer} introduces an
+autoencoder, learning over the SMILES strings and therefore the
+molecular organization of each drug in an unsupervised manner. 
+\textit{DeepGOPlus} provides  features derived from protein amino acid
+sequences which are useful to predict protein function.
+% Thus, both embeddings seem to suitably supplement
+% the following ontology based representations.
 In the top-down section, we used \textit{DL2vec} \citep{DL2vec2020} to
 obtain ontology based representations. DL2vec constructs a graph by
 introducing vertices and edges for each ontology class and axiom,
@@ -216,6 +220,7 @@ structure of the ontology can be seen in Figure~\ref{fig:Onto}.
 
 
 \subsubsection{Siamese neural networks and modular learnable feature transformation}
+
 As we want to learn from the similarity of drug side effects and
 protein phenotypes, we use a deep Siamese neural network.
 A Siamese neural network aims to learn a similarity between two
