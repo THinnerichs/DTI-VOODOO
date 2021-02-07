@@ -502,28 +502,6 @@ Figure~\ref{fig:Fullmodel}.
 	\label{fig:Fullmodel}
 \end{figure}
 
-We first perform a cross-validation over proteins and validate our
-results. Cross-validation over proteins aims to evaluate how the model
-performs when tasked to identify drugs that may target a ``novel''
-protein, i.e., one not seen during training.
-\todo[inline]{Describe/add the CV results here.}
-
-Second, we use the model trained on STITCH and evaluate the model on
-the Yamanishi benchmark dataset\todo{This needs another sentence
-  stating how you made sure there was no overlap in data.}.
-
-We trained, validated and finally tested all considered models on the
-STITCH dataset using a 5-fold cross-validation over a protein
-split; we then selected the best-performing models (with respect to
-\textit{AUROC} and $MicroAUC_p$) and evaluate them on the Yamanishi
-benchmark dataset.
-
-We will hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. As depicted in Figure \ref{tab:STITCHresults}, \textit{OntoPred} is showing significantly better performance on STITCH, while also only \textit{OntoPred} shows significant performance increase when adding \textit{GENConv} graph convolutional neural layers over the PPI graph. However, graph convolutional neural layers such as \textit{GCNConv} and \textit{GENConv}, especially when incorporated into the proposed \textit{ResGraphConv} blocks, add a lot of learnable parameters to the network, leading to more expressive power. This may lead to better performance, while deceiving, whether the respective features actually localize on the PPI graph. 
-
-To eliminate these options we rebuild the graph model, whilst removing all graph convolutional neural layers in the residual blocks. This pruned network, with no information on the protein--protein interactions, reached very similarly results, as the original \textit{OntoPred} model. Secondly, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
-
-As this performance increase is quite significant, we \textbf{conclude that protein function does localize while molecular features do not (BETTER FORMULATION)}. ...
-
 \begin{figure}[!tpb]
 	\centerline{\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
 		\hline
@@ -548,6 +526,50 @@ As this performance increase is quite significant, we \textbf{conclude that prot
 	\caption{Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. MolPred and OntoPred are the predictors for molecular and ontology based features, respectively. }
 	\label{tab:STITCHresults}
 \end{figure}
+
+We first perform a cross-validation over proteins and validate our
+results. Cross-validation over proteins aims to evaluate how the model
+performs when tasked to identify drugs that may target a ``novel''
+protein, i.e., one not seen during training.
+\todo[inline]{Describe/add the CV results here.}
+
+Second, we use the model trained on STITCH and evaluate the model on
+the Yamanishi benchmark dataset\todo{This needs another sentence
+  stating how you made sure there was no overlap in data.}.
+
+We trained, validated and finally tested all considered models on the
+STITCH dataset using a 5-fold cross-validation over a protein
+split; we then selected the best-performing models (with respect to
+\textit{AUROC} and $MicroAUC_p$) and evaluate them on the Yamanishi
+benchmark dataset. To evaluate the influence of the different
+features separately, and determine whether they ``localize'' on the
+PPI graph (and therefore can be exploited successfully by the graph
+neural networks), we train and evaluate models with different types of
+features, and with and without inclusion of the PPI graph,
+separately.
+Table \ref{tab:STITCHresults} shows the results.
+
+\todo[inline]{Move to caption of table.}
+We will hereby denote the molecular feature based predictor with
+\textit{MolPred}, while abbreviating the ontology based, top-down
+predictor with \textit{OntoPred}.
+
+We find that the model using ontology-based features
+(\textit{OntoPred}) is showing significantly\todo{significance test
+  and p value? otherwise remove} better performance on STITCH compared
+to using only molecular features. We also observe that only the model
+using ontology-based features results in significantly\todo{p-val}
+increased performance when incorporating the PPI graph, demonstrating
+that these features localize on the PPI network whereas the molecular
+features do not.
+
+
+, while also only \textit{OntoPred} shows significant performance increase when adding \textit{GENConv} graph convolutional neural layers over the PPI graph. However, graph convolutional neural layers such as \textit{GCNConv} and \textit{GENConv}, especially when incorporated into the proposed \textit{ResGraphConv} blocks, add a lot of learnable parameters to the network, leading to more expressive power. This may lead to better performance, while deceiving, whether the respective features actually localize on the PPI graph. 
+
+To eliminate these options we rebuild the graph model, whilst removing all graph convolutional neural layers in the residual blocks. This pruned network, with no information on the protein--protein interactions, reached very similarly results, as the original \textit{OntoPred} model. Secondly, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
+
+As this performance increase is quite significant, we \textbf{conclude that protein function does localize while molecular features do not (BETTER FORMULATION)}. ...
+
 
 
 
