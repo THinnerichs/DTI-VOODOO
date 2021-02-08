@@ -537,6 +537,7 @@ Second, we use the model trained on STITCH and evaluate the model on
 the Yamanishi benchmark dataset\todo{This needs another sentence
   stating how you made sure there was no overlap in data.}.
 
+\todo[inline]{Maybe remove microAUC here, introduce in next section?}
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein
 split; we then selected the best-performing models (with respect to
@@ -593,6 +594,113 @@ functions localizes on the graph while molecular features do not.
 % than novel targets. Yet, we aim to find all interacting drugs for
 % existing targets motivating our split choice even further.
 
+
+
+
+\subsection{Protein-centric evaluation}
+The goal of \name is to find candidate drugs that target a specific
+protein; however, our evaluation does not evaluate this application
+but rather how \name would perform in finding plausible drug--target
+interactions among all possible interactions. To provide a better
+estimate on how \name performs for individual protein targets, we use
+micro-averages between proteins and compute the \textit{MicroAUC};
+micro-averages average the performance (true and false positive rates)
+per protein instead of across all drug--protein pairs.
+
+% Note, that both $MicroAUC_p$ and $MicroAUC_d$, as introduced in the previous chapter, are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are most plausible and valuable for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
+
+
+% \subsection{Baseline model}
+Furthermore, we hypothesize that some of the predictions made by our
+model are the result of the biases in drug--target interaction
+datasets. We design a ``na\"ive'' baseline model that predicts the
+same list of proteins for each drugs based on the number of
+known drug--target interactions for a protein. Formally, given lists
+$D$ and $P$ of drugs and proteins and a set of known interactions
+$\mathcal{I} := \{(d_i, p_i) \}$, we construct an interaction matrix
+$M_{int}\in\{0,1\}^{|D|\times|P|}$ with
+\begin{equation*}
+	M_{ij} = \begin{cases}
+		1 & \text{if } (d_i, p_j)\in \mathcal{I}\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+describing for all drug--protein pairs whether there is a known
+interaction or not. We now rank all proteins $p_j\in P$ descending by
+their number of drug interactors by summing over the columns of
+$M_{ij}$ and ranking these sums:
+\begin{equation*}
+	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=1}^{|D|}M_{ij}
+\end{equation*}
+Our ``na\"ive'' predictor $P_k$  predicts all drugs to interact with
+the top $k$ targets
+% , denoted by $Top_k(P)$ 
+with respect to
+% $M_{ij}$ from
+the introduced ranking:
+\begin{equation*}
+	P_k: D\times P \rightarrow \{0,1\} \text{ with } P_k: d_i, p_j \mapsto \begin{cases}
+		1 & \text{ if }p_j \in Top_{k}(P)\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+with the only hyperparameter $k$.
+The prediction $P_k$ is not dependent on the drug $d_i$ and will
+predict the same ranked list of drugs for a given protein $p_j$;
+consequently, this na\"ive predictor does not predict any useful
+information about interactions between drugs and proteins.
+% Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
+
+We evaluate this naive predictor on both STITCH and Yamanishi dataset, first running on the whole dataset followed by a 5-fold cross-validation (CV) over both drugs and drug--protein pairs. Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. For each fold, we gradually increase $k$, eventually saving the best performance for each fold. The corresponding AUROC scores are summarized in the following table: \\
+
+\centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+	\hline
+	Dataset&\multicolumn{3}{c|}{Splitting scheme}\\
+	&Whole&DT pairs&Drugs\\
+	\hline
+	STITCH& $0.76$& $0.70$ & $0.73$\\
+	\hline
+	Yamanishi& $0.88$& $0.84$&$0.85$\\ 
+	\hline
+\end{tabular}}
+\vspace{0.5cm}
+The baseline predictor shows diverging performances on both datasets with remarkable results on the Yamanishi benchmark. As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
+
+\subsection{Comparison}
+
+In this section we will compare \name with the described baseline method and various other cutting-edge models. We therefor evaluate all models on their recommended splitting scheme choice, hyperparameters and fold amoung for cross-validation, measuring their respective AUROC score. We eventually assess each model, by performing a protein-wise cross-validation determining (macro) AUROC and $MicroAUC_p$. For this we allow stratification for the training process, but not for the validation and testing phase, as real world scenarios are rather imbalanced. This however, only impacts the not considered area under precision recall curve (AUPRC) and not the Macro AUROC score, while also supporting the expressiveness of $MicroAUC_p$ with more data points.
+
+For our comparison we chose the best performing methods for drug--target interaction prediction evaluating on the Yamanishi benchmark dataset. These state-of-the-art methods approaches include  DTIGEMS+ \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed superior results in comparison to numerous works. Furthermore, we added DTINet \cite{DTINet2017}, which lays the foundation for a number of methods, such as NeoDTI \cite{NeoDTI2019}, with similar methodology. 
+
+The results of this first analysis are summarized in the upper part of Figure \ref{tab:Results}. 
+
+
+
+
+\begin{figure}[!tpb]%figure1
+	
+	\centerline{\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+		\hline
+		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
+		\hline
+		DTINet&DP pairs&$0.91$&$0.84$&$0.67$\\
+		DTIGEMS+&DP pairs&$0.93$& $0.72$& $0.68$ \\
+		DTI-CDF&Proteins&$0.86$&$0.85$&$0.79$\\
+		\hline
+		\hline
+		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
+		\hline
+		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
+		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
+		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
+		MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
+		\hline
+	\end{tabular}}
+	\caption{Test}
+	\label{tab:Results}
+\end{figure}
 
 
 
@@ -662,86 +770,7 @@ relevant metrics. However, a large disparity may hint the biases
 stated above.
 
 
-\subsection{MicroAUC}
-Continuing this line, we apply the well metric \textit{MicroAUC} for a better evaluation for this purpose. Note, that both $MicroAUC_p$ and $MicroAUC_d$, as introduced in the previous chapter, are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are most plausible and valuable for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
 
-\subsection{Experiments}
-
-
-
-\subsection{Baseline model}
-Before comparing \name to other methods, we propose a suitable naive baseline model in order to analyze and understand existing approaches and \name for drug target interaction prediction. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, we construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with 
-\begin{equation*}
-	M_{ij} = \begin{cases}
-		1 & \text{if } (d_i, p_j)\in Int\\
-		0 & otherwise
-	\end{cases}
-\end{equation*}
-describing for all drug--protein whether there is a known interaction or not. We now rank all proteins $p_j\in P$ descending by their number of drug interactors, characterized by 
-\begin{equation*}
-	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=1}^{|D|}M_{ij}
-\end{equation*}
-by summing over the columns of $M_{ij}$ and ranking these sums.
-We now finish our baseline predictor $P_k$ by predicting all drugs to interact with the top $k$ targets, denoted by $TopK(P)$ w.r.t. $M_{ij}$ from the previously introduced ranking, formalized by 
-
-\begin{equation*}
-	P_k: D\times P \rightarrow \{0,1\} \text{ with } P_k: d_i, p_j \mapsto \begin{cases}
-		1 & \text{ if }p_j \in TopK(P)\\
-		0 & otherwise
-	\end{cases}
-\end{equation*}
-with the only hyperparameter $k$. Note particularly, that the consequent prediction of $P_k$ is not dependent on the considered drug $d_i$, and will thus predict all drugs similarly for a given protein $p_j$. Subsequently, this naive predictor is not yielding any valuable information on the individual interactions with drugs for a given protein. Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
-
-We evaluate this naive predictor on both STITCH and Yamanishi dataset, first running on the whole dataset followed by a 5-fold cross-validation (CV) over both drugs and drug--protein pairs. Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. For each fold, we gradually increase $k$, eventually saving the best performance for each fold. The corresponding AUROC scores are summarized in the following table: \\
-
-\centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-	\hline
-	Dataset&\multicolumn{3}{c|}{Splitting scheme}\\
-	&Whole&DT pairs&Drugs\\
-	\hline
-	STITCH& $0.76$& $0.70$ & $0.73$\\
-	\hline
-	Yamanishi& $0.88$& $0.84$&$0.85$\\ 
-	\hline
-\end{tabular}}
-\vspace{0.5cm}
-The baseline predictor shows diverging performances on both datasets with remarkable results on the Yamanishi benchmark. As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
-
-\subsection{Comparison}
-
-In this section we will compare \name with the described baseline method and various other cutting-edge models. We therefor evaluate all models on their recommended splitting scheme choice, hyperparameters and fold amoung for cross-validation, measuring their respective AUROC score. We eventually assess each model, by performing a protein-wise cross-validation determining (macro) AUROC and $MicroAUC_p$. For this we allow stratification for the training process, but not for the validation and testing phase, as real world scenarios are rather imbalanced. This however, only impacts the not considered area under precision recall curve (AUPRC) and not the Macro AUROC score, while also supporting the expressiveness of $MicroAUC_p$ with more data points.
-
-For our comparison we chose the best performing methods for drug--target interaction prediction evaluating on the Yamanishi benchmark dataset. These state-of-the-art methods approaches include  DTIGEMS+ \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed superior results in comparison to numerous works. Furthermore, we added DTINet \cite{DTINet2017}, which lays the foundation for a number of methods, such as NeoDTI \cite{NeoDTI2019}, with similar methodology. 
-
-The results of this first analysis are summarized in the upper part of Figure \ref{tab:Results}. 
-
-
-
-
-\begin{figure}[!tpb]%figure1
-	
-	\centerline{\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
-		\hline
-		DTINet&DP pairs&$0.91$&$0.84$&$0.67$\\
-		DTIGEMS+&DP pairs&$0.93$& $0.72$& $0.68$ \\
-		DTI-CDF&Proteins&$0.86$&$0.85$&$0.79$\\
-		\hline
-		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
-		\hline
-		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
-		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
-		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
-		MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
-		\hline
-	\end{tabular}}
-	\caption{Test}
-	\label{tab:Results}
-\end{figure}
 
 \section{Findings}
 
