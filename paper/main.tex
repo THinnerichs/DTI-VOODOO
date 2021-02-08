@@ -671,13 +671,36 @@ and drug split, we obtain \todo[inline]{merge table results in
 	\hline
 \end{tabular}}
 
-The baseline predictor shows diverging performances on both datasets with remarkable results on the Yamanishi benchmark. As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
+The baseline predictor shows significantly\todo{p-val} higher
+performance than a random classifier on both datasets, with better
+results on the Yamanishi benchmark. 
+
+For comparison with the state of the art methods, we chose the best
+performing methods for drug--target interaction prediction that were
+previously evaluated on the Yamanishi benchmark dataset. These
+state-of-the-art methods approaches include  DTIGEMS+
+\cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed
+superior results in comparison to numerous works. Furthermore, we
+added DTINet \cite{DTINet2017} as method for comparison which has been
+used to develop a number of methods such as NeoDTI \cite{NeoDTI2019}
+with similar methodology.
+
+We evaluate all models on their recommended splitting scheme choice,
+hyperparameters and fold among for cross-validation, measuring their
+respective AUROC score. We eventually assess each model, by performing
+a protein-wise cross-validation determining (macro) AUROC and
+$MicroAUC_p$. For this we allow stratification for the training
+process, but not for the validation and testing phase, as real world
+scenarios are rather imbalanced. This however, only impacts the not
+considered area under precision recall curve (AUPRC) and not the Macro
+AUROC score, while also supporting the expressiveness of $MicroAUC_p$
+with more data points.
+
+%As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
 
 \subsection{Comparison}
 
-In this section we will compare \name with the described baseline method and various other cutting-edge models. We therefor evaluate all models on their recommended splitting scheme choice, hyperparameters and fold amoung for cross-validation, measuring their respective AUROC score. We eventually assess each model, by performing a protein-wise cross-validation determining (macro) AUROC and $MicroAUC_p$. For this we allow stratification for the training process, but not for the validation and testing phase, as real world scenarios are rather imbalanced. This however, only impacts the not considered area under precision recall curve (AUPRC) and not the Macro AUROC score, while also supporting the expressiveness of $MicroAUC_p$ with more data points.
 
-For our comparison we chose the best performing methods for drug--target interaction prediction evaluating on the Yamanishi benchmark dataset. These state-of-the-art methods approaches include  DTIGEMS+ \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed superior results in comparison to numerous works. Furthermore, we added DTINet \cite{DTINet2017}, which lays the foundation for a number of methods, such as NeoDTI \cite{NeoDTI2019}, with similar methodology. 
 
 The results of this first analysis are summarized in the upper part of Figure \ref{tab:Results}. 
 
