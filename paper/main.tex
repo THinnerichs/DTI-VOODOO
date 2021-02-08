@@ -651,7 +651,14 @@ consequently, this na\"ive predictor does not predict any useful
 information about interactions between drugs and proteins.
 % Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
-We evaluate this naive predictor on both STITCH and Yamanishi dataset, first running on the whole dataset followed by a 5-fold cross-validation (CV) over both drugs and drug--protein pairs. Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. For each fold, we gradually increase $k$, eventually saving the best performance for each fold. The corresponding AUROC scores are summarized in the following table: \\
+We apply this naive predictor on both the STITCH and Yamanishi
+datasets, using the full dataset as well as 5-fold cross-validation
+over drugs and drug--protein pairs.
+% Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. 
+For each fold, we gradually increase $k$, eventually saving the best
+performance for each fold. Using the full dataset, drug--target split,
+and drug split, we obtain \todo[inline]{merge table results in
+  text}\todo{are these micro or macro AUC?}.
 
 \centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 	\hline
@@ -663,7 +670,7 @@ We evaluate this naive predictor on both STITCH and Yamanishi dataset, first run
 	Yamanishi& $0.88$& $0.84$&$0.85$\\ 
 	\hline
 \end{tabular}}
-\vspace{0.5cm}
+
 The baseline predictor shows diverging performances on both datasets with remarkable results on the Yamanishi benchmark. As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
 
 \subsection{Comparison}
