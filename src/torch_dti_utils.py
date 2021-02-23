@@ -19,7 +19,6 @@ import PPI_utils
 import PhenomeNET_DL2vec_utils
 
 
-
 class QuickProtFuncDTINetworkData:
     def __init__(self, config):
         self.config = config
@@ -315,24 +314,6 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
 
         y = torch.Tensor(np.array([graph_data.y.numpy() for graph_data in data])).float().to(output.device)
 
-        '''
-        help_mask = np.around(np.array(y.to('cpu')) * train_mask).astype(np.int)
-        for i in range(help_mask.shape[0]):
-            # determine number of positive samples per drug/graph
-            num_choices = help_mask.sum(axis=1)[i]
-            # choose num_choices indices from num_proteins samples (masked by train_mask) without replacement and set their entries to 1 in help mask
-            indices = np.arange(help_mask.shape[1])[help_mask[i,:]==0]
-            help_mask[i,np.random.choice(indices, num_choices, replace=False)] = 1
-        '''
-
-
-        # print('y.size', y[:, train_mask].size())
-        # print('output.size', output[:, train_mask].size())
-
-        pos_weights = torch.Tensor([neg_to_pos_ratio]) # * 0.75
-
-        # print('check', output.min(), output.max(), y.min(), y.max())
-
         # my implementation of BCELoss
         output = torch.clamp(output, min=1e-7, max=1 - 1e-7)
 
@@ -355,7 +336,6 @@ def quick_train(config, model, device, train_loader, optimizer, epoch, neg_to_po
             sys.stdout.flush()
     return return_loss
 
-
 def predicting(model, device, loader):
     model.eval()
     total_preds = torch.Tensor()
@@ -368,7 +348,7 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
-    return total_labels.round().numpy().flatten(), total_preds.numpy().round().flatten()
+    return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
 
 def quick_predicting(model, device, loader, round=True):
     model.eval()

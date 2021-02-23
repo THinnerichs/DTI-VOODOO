@@ -84,42 +84,6 @@ class MolecularDTIDataBuilder:
     def __len__(self):
         return self.num_drugs * self.num_proteins
 
-'''
-class MolecularAminoacidMolPredDTI_DataBuilder:
-    def __init__(self, num_proteins=None, drug_mode='trfm'):
-        print('Loading data...')
-        self.drug_list = np.array(DTI_data_preparation.get_drug_list())
-        print(len(self.drug_list), ' drugs present.')
-        self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())
-        print(len(self.protein_list), ' proteins present.')
-
-
-        self.protein_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
-
-        y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list)
-        y_dti_data = y_dti_data.reshape((len(self.protein_list), len(self.drug_list)))
-        self.y_dti_data = np.transpose(y_dti_data)
-
-        # calculate dimenions of data
-        self.num_proteins = len(self.protein_list)
-        self.num_drugs = len(self.drug_list)
-        print('Done.\n')
-
-    def get(self, indices):
-        return_list = []
-        for index in tqdm(indices):
-            drug_index = index // self.num_proteins
-            protein_index = index % self.num_proteins
-
-            drug_encoding = self.drug_encodings[drug_index, :]
-            protein_encoding = self.protein_encodings[protein_index, :]
-
-            y = int(self.y_dti_data[drug_index, protein_index])
-            return_list.append((torch.cat([protein_encoding, drug_encoding], 0), y))
-        return return_list
-'''
-
-
 class MolecularDTIDataset(data.Dataset):
     def __init__(self, data):
         super(MolecularDTIDataset, self).__init__()
@@ -242,5 +206,5 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
 
-    return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
+    return total_labels.round().numpy().flatten(),total_preds.numpy().flatten()
 

@@ -70,27 +70,6 @@ class HPODTIDataBuilder:
 
     def build_data(self, config):
 
-
-        # print('Building edge feature attributes ...')
-        # forward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node1, node2 in list(self.PPI_graph.edges())]
-        # backward_edge_feature_list = [1-self.PPI_graph[node1][node2]['score']/1000 for node2, node1 in list(self.PPI_graph.edges())]
-        # self.edge_attr = torch.tensor(forward_edge_feature_list + backward_edge_feature_list, dtype=torch.float)# .view(-1,1)
-        # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
-
-
-        # DDI data
-        # print("Loading DDI features ...")
-        # self.DDI_features = DTI_data_preparation.get_DDI_feature_list(self.drug_list)
-        # add self-interactions for better performance
-        # self.DDI_features[np.identity(self.num_drugs)==1] = 1
-        # print(self.DDI_features.shape)
-
-        # SemSim data
-        # print("Loading semantic similarity data ...")
-        # self.semsim_feature_matrix = DTI_data_preparation.get_side_effect_similarity_feature_list(self.drug_list)
-        # print(self.semsim_feature_matrix[np.identity(self.num_drugs)==1])
-        # print('semsim.shape', self.semsim_feature_matrix.shape)
-
         # DTI data
         if not config.yamanishi_test:
             print("Loading DTI links ...")
@@ -101,15 +80,6 @@ class HPODTIDataBuilder:
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
-
-        # self.drug_features = DTI_data_preparation.get_DL2vec_features(self.drug_list)
-        # self.protein_features = DTI_data_preparation.get_DL2vec_features(self.protein_list)
-        # additional
-        # self.degree_features = DTI_data_preparation.get_protein_degree_percentile(self.protein_list, n=100)
-
-        # self.num_PPI_features = self.drug_features.shape[1]*2 # + 100
-
-        # print('feature shape', self.drug_features.shape, self.protein_features.shape)
 
         DL2vec_path_prefix = '../data/PhenomeNET_data/'
         drug_indication_prefix = '../data/drug_indications/'
@@ -140,7 +110,6 @@ class HPODTIDataBuilder:
         GO_embeddings = []
         MP_embeddings = []
         for protein in self.protein_list:
-            # organism, protein_id = protein.strip().split('.')
             protein_id = protein
 
             if protein_id in uberon_model.vocab.keys():
@@ -186,9 +155,6 @@ class HPODTIDataBuilder:
             # build protein mask
 
             y = int(self.y_dti_data[drug_index, protein_index])
-
-            # feature_array = torch.tensor(self.feature_matrix[drug_index, :], dtype=torch.float).view(-1, 1)
-            # feature_array = torch.tensor(self.y_dti_data[drug_index, :], dtype=torch.float).view(-1,1)
 
             if self.config.include_indications:
                 drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
@@ -250,7 +216,7 @@ class HPOPredNet(nn.Module):
         else:
             self.model = nn.Sequential(
                 nn.Linear(200, 256),
-                # nn.Dropout(0.2),
+                nn.Dropout(0.2),
                 # nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
                 nn.Linear(256, 200),
@@ -262,8 +228,8 @@ class HPOPredNet(nn.Module):
             )
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
-            # nn.Dropout(0.5),
-            # nn.BatchNorm1d(128, affine=True),
+            nn.Dropout(0.5),
+            nn.BatchNorm1d(128, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
             # nn.BatchNorm1d(200),
@@ -305,7 +271,7 @@ def siamese_drug_protein_network(config):
     dti_data = HPODTIDataBuilder(config)
 
     # generate indices for proteins
-    kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
+    kf = KFold(n_splits=config.num_folds, random_state=12, shuffle=True)
     X = np.zeros((dti_data.num_proteins, 1))
 
     # build for help matrix for indices
@@ -370,19 +336,19 @@ def siamese_drug_protein_network(config):
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
                     print('Train: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(train_labels, train_predictions.round()),
+                          metrics.accuracy_score(train_labels, train_predictions),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(train_labels, train_predictions.round()),
-                          dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
+                          dti_utils.dti_f1_score(train_labels, train_predictions),
+                          dti_utils.dti_mcc(train_labels, train_predictions))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(test_labels, test_predictions.round()),
+                          metrics.accuracy_score(test_labels, test_predictions),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(test_labels, test_predictions.round()),
-                          dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
+                          dti_utils.dti_f1_score(test_labels, test_predictions),
+                          dti_utils.dti_mcc(test_labels, test_predictions))#@TODO, file=f)
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, metrics.average_precision_score, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]
