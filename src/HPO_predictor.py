@@ -171,7 +171,7 @@ class HPODTIDataBuilder:
         return data_list
 
     def __len__(self):
-        return self.num_drugs
+        return self.num_drugs * self.num_proteins
 
 class DTIGraphDataset(data.Dataset):
     def __init__(self, data_list):
@@ -216,7 +216,7 @@ class HPOPredNet(nn.Module):
         else:
             self.model = nn.Sequential(
                 nn.Linear(200, 256),
-                nn.Dropout(0.2),
+                # nn.Dropout(0.2),
                 # nn.BatchNorm1d(256),
                 nn.LeakyReLU(0.2, inplace=True),
                 nn.Linear(256, 200),
@@ -228,8 +228,8 @@ class HPOPredNet(nn.Module):
             )
         self.model2 = nn.Sequential(
             nn.Linear(600, 256),
-            nn.Dropout(0.5),
-            nn.BatchNorm1d(128, affine=True),
+            # nn.Dropout(0.5),
+            nn.BatchNorm1d(256, affine=True),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(256, 200),
             # nn.BatchNorm1d(200),
@@ -271,7 +271,7 @@ def siamese_drug_protein_network(config):
     dti_data = HPODTIDataBuilder(config)
 
     # generate indices for proteins
-    kf = KFold(n_splits=config.num_folds, random_state=12, shuffle=True)
+    kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
     X = np.zeros((dti_data.num_proteins, 1))
 
     # build for help matrix for indices
