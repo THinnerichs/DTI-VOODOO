@@ -369,7 +369,7 @@ def siamese_drug_protein_network(config):
                 file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
-                    print('Train: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
+                    print('Train: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions.round()),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
@@ -377,7 +377,7 @@ def siamese_drug_protein_network(config):
                           dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
-                    print('Test: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
+                    print('Test: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
