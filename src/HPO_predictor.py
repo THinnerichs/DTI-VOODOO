@@ -42,7 +42,6 @@ class HPODTIDataBuilder:
 
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
-        # self.protein_list = np.array(DTI_data_preparation.get_human_PhenomeNET_proteins())#[:config.num_proteins]
 
         if config.yamanishi_test:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
@@ -371,19 +370,19 @@ def siamese_drug_protein_network(config):
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
                     print('Train: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
-                          metrics.accuracy_score(train_labels, train_predictions),
+                          metrics.accuracy_score(train_labels, train_predictions.round()),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(train_labels, train_predictions),
-                          dti_utils.dti_mcc(train_labels, train_predictions))#@TODO, file=f)
+                          dti_utils.dti_f1_score(train_labels, train_predictions.round()),
+                          dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test: Acc, ROC_AUC, AUPR, f1, matthews_corrcoef',
-                          metrics.accuracy_score(test_labels, test_predictions),
+                          metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(test_labels, test_predictions),
-                          dti_utils.dti_mcc(test_labels, test_predictions))#@TODO, file=f)
+                          dti_utils.dti_f1_score(test_labels, test_predictions.round()),
+                          dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
 
                     metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, metrics.average_precision_score, dti_utils.dti_f1_score,
                                          metrics.matthews_corrcoef]

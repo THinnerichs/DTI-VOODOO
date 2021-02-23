@@ -17,8 +17,6 @@ import pickle
 import DTI_data_preparation
 import PPI_utils
 import PhenomeNET_DL2vec_utils
-from protein_function_utils import ProteinFunctionDTIDataBuilder
-
 
 
 
@@ -370,7 +368,7 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             y = torch.Tensor([graph_data.y for graph_data in data])
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
-    return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
+    return total_labels.round().numpy().flatten(), total_preds.numpy().flatten()
 
 def quick_predicting(model, device, loader, round=True):
     model.eval()
