@@ -507,7 +507,12 @@ network architecture.  The overall workflow\todo{make sure it's a
 
 \begin{figure}[!tpb]
 	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
-	\caption{Full DTI prediction model based on the pretrained learnable feature transformations (LFT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
+	\caption{Full DTI prediction model based on the pretrained
+          learnable feature transformations (LFT) for either molecular
+          structure or ontology based features. The transformed
+          protein representations are added to each corresponded
+          protein as node features for the graph convolutional
+          steps.}
 	\label{fig:Fullmodel}
 \end{figure}
 
@@ -536,15 +541,19 @@ network architecture.  The overall workflow\todo{make sure it's a
 	\label{tab:STITCHresults}
 \end{figure}
 
-We first perform a cross-validation over proteins and validate our
-results. Cross-validation over proteins aims to evaluate how the model
-performs when tasked to identify drugs that may target a ``novel''
-protein, i.e., one not seen during training.
-\todo[inline]{Describe/add the CV results here.}
+We evaluate our model's ability to identify drug--target interactions
+using different approaches and datasets.  First, we perform a
+cross-validation over proteins and validate our results. A
+cross-validation over proteins aims to evaluate how the model performs
+when tasked to identify drugs that may target a ``novel'' protein,
+i.e., one not seen during training, or a protein for which a drug that
+targets it should be predicted.  \todo[inline]{Describe/add the CV
+  results here.}
 
-Second, we use the model trained on STITCH and evaluate the model on
-the Yamanishi benchmark dataset\todo{This needs another sentence
-  stating how you made sure there was no overlap in data.}.
+Our model is trained on the STITCH database. We use the model trained
+on STITCH and evaluate the model on the Yamanishi benchmark
+dataset\todo{This needs another sentence stating how you made sure
+  there was no overlap in data.}.
 
 \todo[inline]{Maybe remove microAUC here, introduce in next section?}
 We trained, validated and finally tested all considered models on the
