@@ -442,6 +442,7 @@ accuracy for this subset.
 % e.g., a cross validation splitting scheme as \glqq split\grqq{}
 % determining the train, validation and test subset of a given dataset.
 
+\todo[inline]{Introduction}
 Within DTI prediction, there are potential biases resulting from the
 underlying datasets \citep{Pahikkala2014}. First, novel drugs are
 often designed by altering non-functional components of a drug,
@@ -451,32 +452,34 @@ leads to hidden duplicates that can distribute among the train/test
 split, resulting in a better (measured) predictive performance than
 would be expected when the model is applied to identify drugs that
 target a protein for which no drugs yet exist. Second, some proteins
-(which we will denote as \textit{hub proteins}) have significantly
-more known interactions with drugs than others. In the STITCH
-database, $5\%$ of the proteins have $40\%$ of the interactions, and
-similar distributions are present in the Yamanishi and Drugbank
-datasets \cite{Drugbank2007, Drugbank2017} datasets; preferentially
-predicting these proteins may increase predictive performance while
-again not reflecting the actual performance when applied to a new
-protein (e.g., a protein for which no interactions are known). These
-differences in the number of drugs targeting certain proteins may be
-the result of study bias where more ``valuable'' proteins have more
-drugs designed to target them due to their involvement in more common
-diseases (or diseases for which drugs can be more profitably
-marketed).
+(which we call \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$ of
+the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins may increase predictive performance while not
+reflecting the actual performance when applied to a new protein (e.g.,
+a protein for which no interactions are known). These differences in
+the number of drugs targeting certain proteins may be the result of
+study bias where more ``valuable'' proteins have more drugs designed
+to target them due to their involvement in more common diseases (or
+diseases for which drugs can be more profitably marketed).
 
 We developed \name as a computational model to predict drug--target
 interactions. Specifically, given a protein, \name will identify and
-rank known drugs that likely target this protein. \name combines two
-types of features: structural information for drugs and proteins that
-can be used to determine if they may physically interact, and
-information about drug effects that may localize on an interaction
-network.  As structural features, \name uses structural
-representations of drugs from the SMILES transformer
+rank drugs that likely target this protein. \name combines two types
+of features: structural information for drugs and proteins that can be
+used to determine if the drug and protein physically interact, and
+information about phenotypic effects of drugs and changes in protein
+function that may ``localize'' on an interaction network (i.e.,
+neighboring nodes will share some of these features or be
+phenotypically similar).  As structural features, \name uses
+structural representations of drugs from the SMILES transformer
 \cite{SmilesTransformer} and representations of protein amino acid
 sequences from DeepGOPlus \cite{DeepGoPlus}.  \name learns
 representations of drug effects and protein functions using the
-ontology-based machine learning method DL2Vec \cite{DL2vec2020}.
+ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
+ontology-based annotations of drugs and proteins.
 
 \todo[inline]{Move to methods:}
 When combining ontology and molecular features with or without the
@@ -485,11 +488,17 @@ features, before plugging them into the graph or the similarity
 computation.
 
 We use two Siamese neural networks to combine the molecular and
-phenotype representations of drugs and proteins, and add these to a
-protein interaction network as node labels.  We then train this model
-in an end-to-end manner using a graph neural network architecture.
-The overall workflow\todo{make sure it's a workflow} is depicted in
-Figure~\ref{fig:Fullmodel}.
+phenotype representations of drugs and proteins. Siamese neural
+networks are used to learn a kind of similarity between the molecular
+and phenotype representations. We add these similarities to a protein
+interaction network as node labels; for each drug, proteins receive
+two features (from the molecular and phenotype similarities of the
+drug to the protein).
+\todo[inline]{There is a missing sentence here explaining the graph
+  neural network, output, etc.}
+We then train this model in an end-to-end manner using a graph neural
+network architecture.  The overall workflow\todo{make sure it's a
+  workflow} is depicted in Figure~\ref{fig:Fullmodel}.
 
 
 % Note that this approach can be easily generalized, profiting from
