@@ -17,7 +17,7 @@
 \subtitle{Subject Section}
 \newcommand{\name}{Voodoo }
 
-\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
+\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}git
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -299,7 +299,7 @@ representation is directly dependent on its own preceding one. The
 number of graph convolutional layers stacked equals the radius of
 relevant nodes for each vertex within the graph.
 
-The update rule for each individual node is
+The update rule for each individual node is given by a message passing scheme formalized by
 \begin{equation}
 	\mathbf{x}^{\prime}_i = \mathbf{\Theta} \sum^{N}_{j}
 	\frac{1}{\sqrt{\hat{d}_j \hat{d}_i}} \mathbf{x}_j
@@ -362,7 +362,12 @@ The structure is depicted in Figure~\ref{fig:ResGraphConvBlocks}.
 	\label{fig:FullModelAllLayers}
 \end{figure}
 
-
+\subsubsection{title}
+Combining half-twin and graph convolutional neural networks, we map all protein representations to the respective node features, initializing the graph convolutional update steps. The resulting representations are used for a similarity prediction similar to the models presented in figure ~\ref{fig:HalfTwinNetwork}.  
+When combining ontology and molecular features with or without the
+graph model, we concatenate both protein features and both drugs
+features, before plugging them into the graph for the similarity
+computation. A more in-depth image of the overall architecture, combining both feature types is depicted in figure ~\ref{fig:FullModelAllLayers}. 
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the number of
@@ -440,6 +445,7 @@ $AUROC$ score for that entity. For those entities we impute the $MicroAUC$ inter
 % e.g., a cross validation splitting scheme as \glqq split\grqq{}
 % determining the train, validation and test subset of a given dataset.
 
+\todo[inline]{Introduction}
 Within DTI prediction, there are potential biases resulting from the
 underlying datasets \citep{Pahikkala2014}. First, novel drugs are
 often designed by altering non-functional components of a drug,
@@ -449,63 +455,59 @@ leads to hidden duplicates that can distribute among the train/test
 split, resulting in a better (measured) predictive performance than
 would be expected when the model is applied to identify drugs that
 target a protein for which no drugs yet exist. Second, some proteins
-(which we will denote as \textit{hub proteins}) have significantly
-more known interactions with drugs than others. In the STITCH
-database, $5\%$ of the proteins have $40\%$ of the interactions, and
-similar distributions are present in the Yamanishi and Drugbank
-datasets \cite{Drugbank2007, Drugbank2017} datasets; preferentially
-predicting these proteins may increase predictive performance while
-again not reflecting the actual performance when applied to a new
-protein (e.g., a protein for which no interactions are known). These
-differences in the number of drugs targeting certain proteins may be
-the result of study bias where more ``valuable'' proteins have more
-drugs designed to target them due to their involvement in more common
-diseases (or diseases for which drugs can be more profitably
-marketed).
+(which we call \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$ of
+the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins may increase predictive performance while not
+reflecting the actual performance when applied to a new protein (e.g.,
+a protein for which no interactions are known). These differences in
+the number of drugs targeting certain proteins may be the result of
+study bias where more ``valuable'' proteins have more drugs designed
+to target them due to their involvement in more common diseases (or
+diseases for which drugs can be more profitably marketed).
 
 We developed \name as a computational model to predict drug--target
 interactions. Specifically, given a protein, \name will identify and
-rank known drugs that likely target this protein. \name combines two
-types of features: structural information for drugs and proteins that
-can be used to determine if they may physically interact, and
-information about drug effects that may localize on an interaction
-network.  As structural features, \name uses structural
-representations of drugs from the SMILES transformer
+rank drugs that likely target this protein. \name combines two types
+of features: structural information for drugs and proteins that can be
+used to determine if the drug and protein physically interact, and
+information about phenotypic effects of drugs and changes in protein
+function that may ``localize'' on an interaction network (i.e.,
+neighboring nodes will share some of these features or be
+phenotypically similar).  As structural features, \name uses
+structural representations of drugs from the SMILES transformer
 \cite{SmilesTransformer} and representations of protein amino acid
 sequences from DeepGOPlus \cite{DeepGoPlus}.  \name learns
 representations of drug effects and protein functions using the
-ontology-based machine learning method DL2Vec \cite{DL2vec2020}.
+ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
+ontology-based annotations of drugs and proteins.
 
-\todo[inline]{Move to methods:}
-When combining ontology and molecular features with or without the
-graph model, we concatenate both protein features and both drugs
-features, before plugging them into the graph or the similarity
-computation.
-
-We use two half-twin neural networks to combine the molecular and
-phenotype representations of drugs and proteins, and add these to a
-protein interaction network as node labels.  We then train this model
-in an end-to-end manner using a graph neural network architecture.
-The overall workflow\todo{make sure it's a workflow} is depicted in
-Figure~\ref{fig:Fullmodel}.
-
+We construct a PPI graph with proteins as nodes and protein-protein interactions as edges, mapping the protein features to each target as node features. \name then propagates information among the PPI network utilizing graph convolutional steps, calculating the similarity of drug and protein representation, and thus eventually predicting whether there is an interaction. The full workflow scheme is depicted in figure~\ref{fig:ModelWorkflow}
 
 % Note that this approach can be easily generalized, profiting from
 % other protein function and phenotype representation methods.
 
 
 \begin{figure}[!tpb]
-	\centerline{\includegraphics[width=0.45\textwidth]{figures/full_model.png}}
-	\caption{Full DTI prediction model based on the pretrained learnable feature transformations (LFT) for either molecular structure or ontology based features. The transformed protein representations are added to each corresponded protein as node features for the graph convolutional steps. }
-	\label{fig:Fullmodel}
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/model_workflow.png}
+	\caption{Full DTI prediction model based on the pretrained
+          learnable feature transformations (LFT) for either molecular
+          structure or ontology based features. The transformed
+          protein representations are added to each corresponded
+          protein as node features for the graph convolutional
+          steps.}
+	\label{fig:ModelWorkflow}
 \end{figure}
 
-\begin{figure}[!tpb]
-	\centerline{\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
+\begin{table}[!tpb]
+	\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
 		\hline
 		STITCH results&\multicolumn{4}{c|}{PPI graph}\\
 		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
-		&AUROC&Micro $AUC_p$&AUROC&Micro $AUC_p$\\
+		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$\\
 		\hline
 		MolPred&$0.69$&$0.65$&$0.69$&$0.67$\\
 		\hline
@@ -516,69 +518,83 @@ Figure~\ref{fig:Fullmodel}.
 		\hline
 		Yamanishi results&\multicolumn{4}{c|}{PPI graph}\\
 		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
-		&AUROC&Micro AUC&AUROC&Micro $AUC_p$\\
+		&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
 		MolPred + OntoPred & $0.83$ & $0.82$&$0.84$&$0.84$\\
 		\hline
-	\end{tabular}}
-	\caption{Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. MolPred and OntoPred are the predictors for molecular and ontology based features, respectively. }
+	\end{tabular} \medskip
+
+	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+		\hline
+		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+		\hline
+		DTINet&DP pairs&$0.91$&$0.84$&$0.67$\\
+		DTIGEMS+&DP pairs&$0.93$& $0.72$& $0.68$ \\
+		DTI-CDF&Proteins&$0.86$&$0.85$&$0.79$\\
+		\hline
+		\hline
+		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+		\hline
+		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
+		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
+		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
+		MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
+		\hline
+	\end{tabular}\\
+	
+	\caption{Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. MolPred and OntoPred are the predictors for molecular and ontology based features, respectively. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}.}
 	\label{tab:STITCHresults}
-\end{figure}
+\end{table}
 
-We first perform a cross-validation over proteins and validate our
-results. Cross-validation over proteins aims to evaluate how the model
-performs when tasked to identify drugs that may target a ``novel''
-protein, i.e., one not seen during training.
+We evaluate our model's ability to identify drug--target interactions
+using different approaches and datasets. First, we perform a
+cross-validation over proteins and validate our results. A
+cross-validation over proteins aims to evaluate how the model performs
+when tasked to identify drugs that may target a ``novel'' protein,
+i.e., one not seen during training, or a protein for which a drug that
+targets it should be predicted. 
+
 \todo[inline]{Describe/add the CV results here.}
-
-Second, we use the model trained on STITCH and evaluate the model on
-the Yamanishi benchmark dataset\todo{This needs another sentence
-  stating how you made sure there was no overlap in data.}.
-
-\todo[inline]{Maybe remove microAUC here, introduce in next section?}
+\begin{itemize}
+	\item 
+\end{itemize}
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein
 split; we then selected the best-performing models (with respect to
-\textit{AUROC} and $MicroAUC_p$) and evaluate them on the Yamanishi
-benchmark dataset. To evaluate the influence of the different
+\textit{AUROC/MacroAUC} and $MicroAUC_p$) and evaluate them on in 5-fold protein split cross validation on the Yamanishi benchmark dataset to avoid validation overfitting and yield more realistic testing results. To evaluate the influence of the different
 features separately, and determine whether they ``localize'' on the
 PPI graph (and therefore can be exploited successfully by the graph
 neural networks), we train and evaluate models with different types of
 features, and with and without inclusion of the PPI graph,
-separately.
-Table \ref{tab:STITCHresults} shows the results.
+separately, comparing the molecular (MolPred) and phenotype based (OntoPred) predictor and a combination of both, concatenating both features.
+Table \ref{tab:STITCHresults} shows the results of these experiments.
 
-\todo[inline]{Move to caption of table.}
-We will hereby denote the molecular feature based predictor with
-\textit{MolPred}, while abbreviating the ontology based, top-down
-predictor with \textit{OntoPred}.
 
 We find that the model using ontology-based features
-(\textit{OntoPred}) is showing significantly\todo{significance test
-  and p value? otherwise remove} better performance on STITCH compared
+(\textit{OntoPred}) is showing better performance on STITCH compared
 to using only molecular features. We also observe that only the model
-using ontology-based features results in significantly\todo{p-val}
-increased performance when incorporating the PPI graph.  This increase
+using ontology-based features results in
+increased performance when incorporating the PPI graph. This increase
 can be observed with different graph neural network
-architectures\todo{data not in the table}. While the {\em GCNConv} and
-{\em GENConv} architecture already shows an improvement, the
+architectures and configurations. While the {\em GCNConv} and
+{\em GENConv} architecture already shows some minor improvement, the
 \textit{ResGraphConv} blocks add a large amount of additional
 learnable parameters to the network, leading to more expressive
 power. To test whether the improvement is due to the number of
 learnable parameters added or the result of better exploiting the
 information about PPIs, we experiment with a graph model in which all
 graph convolutional neural layers in the residual blocks are
-removed\todo{is this still a graph model?}. This pruned network, with
+removed, resulting in a non--graph model. This pruned network, with
 no information on the protein--protein interactions, reached very
-similarly results as the original \textit{OntoPred} model\todo{data
+similar results to the original \textit{OntoPred} model\todo{data
   not shown; and details missing from Methods} and showed no
 improvement.
 
-\todo[inline]{Not clear, need to reformulate:}
-Furthermore, when substituting the original \textit{GENConv} layers with \textit{GCNConv} or other related layers in the graph convolutional step of the ResGraphConv blocks, this model would achieve once again no significant performance gain in comparison to the plain \textit{OntoPred} one. This performance increase was only noticeable for \textit{GENConv} layers. The discrepancy of \textit{GENConv} and \textit{GCNConv} may be founded in numerical stability and fading signals, as described in the introduction of both methods. 
+Furthermore, these major improvements are only provided by the \textit{GENConv} graph convolution scheme as part of the ResGraphConv blocks, as \textit{GCNConv} and other related graph convolutional methods fail to achieve any gain in comparison to the plain \textit{OntoPred} performance even when combined with the residual blocks. The discrepancy of {\em GENConv} and other graph convolutional methods may be founded in numerical stability and fading signals, as described in the introduction of the {\em GENConv} method.  
 
-As the inclusion of graph information significantly\todo{p val}
-increases performance, we conclude that information about protein
+As the inclusion of graph information increases performance, we conclude that information about protein
 functions localizes on the graph while molecular features do not.
 
 
@@ -645,38 +661,25 @@ the introduced ranking:
 with the only hyperparameter $k$.
 The prediction $P_k$ is not dependent on the drug $d_i$ and will
 predict the same ranked list of drugs for a given protein $p_j$;
-consequently, this na\"ive predictor does not predict any useful
-information about interactions between drugs and proteins.
+consequently, this na\"ive predictor will not predict any useful
+information about interactions between drugs and proteins, but allows
+us to estimate the effect of potential biases in our evaluation
+dataset.
 % Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
 We apply this naive predictor on both the STITCH and Yamanishi
 datasets, using the full dataset as well as 5-fold cross-validation
 over drugs and drug--protein pairs.
-% Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. 
-For each fold, we gradually increase $k$, eventually saving the best
+Note, that this baseline predictor is not applicable for a protein split CV, as the number of interactions for each protein in the validation set is unknown. 
+For each fold, we gradually increase $k$ to determine the best
 performance for each fold. Using the full dataset, drug--target split,
-and drug split, we obtain \todo[inline]{merge table results in
-  text}\todo{are these micro or macro AUC?}.
+and drug split, we obtain the following MacroAUC/AUROC score results. For STITCH database we obtain a performance of $0.76$ on the whole dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the drug splitting scheme. While these results are fairly moderate, on Yamanishi dataset we yield MacroAUC scores of $0.88$, $0.84$ and $0.85$, for total dataset, DT pair split and drug split, respectively. 
 
-\centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-	\hline
-	Dataset&\multicolumn{3}{c|}{Splitting scheme}\\
-	&Whole&DT pairs&Drugs\\
-	\hline
-	STITCH& $0.76$& $0.70$ & $0.73$\\
-	\hline
-	Yamanishi& $0.88$& $0.84$&$0.85$\\ 
-	\hline
-\end{tabular}}
-
-The baseline predictor shows significantly\todo{p-val} higher
-performance than a random classifier on both datasets, with better
-results on the Yamanishi benchmark. 
+The na\"ive predictor shows great performance on Yamanishi dataset, with substantial gain in comparison to a random predictor on both datasets. In the following we will denote this nai\"ve predictor as a baseline predictor correlating its performance to state of the art models and \name.
 
 For comparison with the state of the art methods, we chose the best
 performing methods for drug--target interaction prediction that were
-previously evaluated on the Yamanishi benchmark dataset. These
-state-of-the-art methods approaches include  DTIGEMS+
+previously evaluated on the Yamanishi benchmark dataset. These methods include DTIGEMS+
 \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed
 superior results in comparison to numerous works. Furthermore, we
 added DTINet \cite{DTINet2017} as method for comparison which has been
@@ -686,13 +689,13 @@ with similar methodology.
 We evaluate all models on their recommended splitting scheme choice,
 hyperparameters and folds in cross-validation, measuring their
 respective AUROC. We further evaluate each model by performing a
-protein-wise cross-validation determining (macro) AUROC and
+protein-wise cross-validation determining Macro AUC/AUROC score and
 $MicroAUC_p$. For this evaluation we allow stratification for the
 training process but not for the validation and testing phase as
-real world applications of these models would have to deal with
+real world applications of these models would have to deal with possibly
 imbalanced data.
 
-\todo[inline]{Merge the tables; add \name model to table to allow
+\todo[inline]{ add \name model to table to allow
   DIRECT comparison:}
 The results of the analysis are summarized in the upper part of Figure
 \ref{tab:Results}.
@@ -703,25 +706,7 @@ We find that...\todo[inline]{summarize key findings from Table.}
 \todo[inline]{Replace/merge table:}
 \begin{figure}[!tpb]%figure1
 	
-	\centerline{\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
-		\hline
-		DTINet&DP pairs&$0.91$&$0.84$&$0.67$\\
-		DTIGEMS+&DP pairs&$0.93$& $0.72$& $0.68$ \\
-		DTI-CDF&Proteins&$0.86$&$0.85$&$0.79$\\
-		\hline
-		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&AUROC score&AUROC score&Micro $AUC_p$\\
-		\hline
-		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
-		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
-		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
-		MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
-		\hline
-	\end{tabular}}
+	\centerline{}
 	\caption{Test}
 	\label{tab:Results}
 \end{figure}
