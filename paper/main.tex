@@ -665,18 +665,20 @@ the introduced ranking:
 with the only hyperparameter $k$.
 The prediction $P_k$ is not dependent on the drug $d_i$ and will
 predict the same ranked list of drugs for a given protein $p_j$;
-consequently, this na\"ive predictor does not predict any useful
-information about interactions between drugs and proteins.
+consequently, this na\"ive predictor will not predict any useful
+information about interactions between drugs and proteins, but allows
+us to estimate the effect of potential biases in our evaluation
+dataset.
 % Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
 We apply this naive predictor on both the STITCH and Yamanishi
 datasets, using the full dataset as well as 5-fold cross-validation
 over drugs and drug--protein pairs.
 % Note, that this baseline predictor is not applicable for a protein split CV, as the amount of interactions is unknown. 
-For each fold, we gradually increase $k$, eventually saving the best
+For each fold, we gradually increase $k$ to determine the best
 performance for each fold. Using the full dataset, drug--target split,
 and drug split, we obtain \todo[inline]{merge table results in
-  text}\todo{are these micro or macro AUC?}.
+  text}\todo{are these micro or macro AUC? Add to caption!}.
 
 \centerline{\begin{tabular}{|l|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 	\hline
