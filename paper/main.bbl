@@ -101,6 +101,14 @@ Chen, J., Althagafi, A., and Hoehndorf, R. (2020).
   site of expression.
 \newblock {\em Bioinformatics\/}.
 
+\bibitem[Chu {\em et~al.}(2019)Chu, Kaushik, Wang, Wang, Zhang, Shan, Salahub,
+  Xiong, and Wei]{DTI-CDF2019}
+Chu, Y., Kaushik, A.~C., Wang, X., Wang, W., Zhang, Y., Shan, X., Salahub,
+  D.~R., Xiong, Y., and Wei, D.-Q. (2019).
+\newblock {DTI}-{CDF}: a cascade deep forest model towards the prediction of
+  drug-target interactions based on hybrid features.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 22}(1), 451--462.
+
 \bibitem[Defferrard {\em et~al.}(2016)Defferrard, Bresson, and
   Vandergheynst]{ChebConv}
 Defferrard, M., Bresson, X., and Vandergheynst, P. (2016).
@@ -192,6 +200,13 @@ Li, G., Xiong, C., Thabet, A., and Ghanem, B. (2020a).
 Li, G., Xiong, C., Thabet, A., and Ghanem, B. (2020b).
 \newblock Deepergcn: All you need to train deeper gcns.
 
+\bibitem[Luo {\em et~al.}(2017)Luo, Zhao, Zhou, Yang, Zhang, Kuang, Peng, Chen,
+  and Zeng]{DTINet2017}
+Luo, Y., Zhao, X., Zhou, J., Yang, J., Zhang, Y., Kuang, W., Peng, J., Chen,
+  L., and Zeng, J. (2017).
+\newblock A network integration approach for drug-target interaction prediction
+  and computational drug repositioning from heterogeneous information.
+
 \bibitem[Mikolov {\em et~al.}(2013)Mikolov, Chen, Corrado, and
   Dean]{Word2vec2013}
 Mikolov, T., Chen, K., Corrado, G., and Dean, J. (2013).
@@ -269,6 +284,14 @@ Szklarczyk, D., Santos, A., von Mering, C., Jensen, L.~J., Bork, P., and Kuhn,
   networks with tissue and affinity data.
 \newblock {\em Nucleic Acids Research\/}, {\bf 44}(D1), D380--D384.
 
+\bibitem[Thafar {\em et~al.}(2020)Thafar, Olayan, Ashoor, Albaradei, Bajic,
+  Gao, Gojobori, and Essack]{DTIGEMS2020}
+Thafar, M.~A., Olayan, R.~S., Ashoor, H., Albaradei, S., Bajic, V.~B., Gao, X.,
+  Gojobori, T., and Essack, M. (2020).
+\newblock {DTiGEMS}: drug-target interaction prediction using graph embedding,
+  graph mining, and similarity-based techniques.
+\newblock {\em Journal of Cheminformatics\/}, {\bf 12}(1).
+
 \bibitem[Vazquez {\em et~al.}(2003)Vazquez, Flammini, Maritan, and
   Vespignani]{Vazquez2003}
 Vazquez, A., Flammini, A., Maritan, A., and Vespignani, A. (2003).
@@ -285,6 +308,13 @@ Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., and Bengio,
 \bibitem[Verma {\em et~al.}(2017)Verma, Boyer, and Verbeek]{FeaStConv}
 Verma, N., Boyer, E., and Verbeek, J. (2017).
 \newblock Feastnet: Feature-steered graph convolutions for 3d shape analysis.
+
+\bibitem[Wan {\em et~al.}(2019)Wan, Hong, Xiao, Jiang, and Zeng]{NeoDTI2019}
+Wan, F., Hong, L., Xiao, A., Jiang, T., and Zeng, J. (2019).
+\newblock {NeoDTI}: neural integration of neighbor information from a
+  heterogeneous network for discovering new drug{\textendash}target
+  interactions.
+\newblock {\em Bioinformatics\/}, {\bf 35}(1), 104--111.
 
 \bibitem[Wang and Kurgan(2018)Wang and Kurgan]{Survey2018}
 Wang, C. and Kurgan, L. (2018).

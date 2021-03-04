@@ -324,7 +324,7 @@ Discussion:
   - The more aware we are what the pitfalls of model validations are, the better we can at least do what is possible, which in the medium term will be of benefit for the field, science as a whole, and ultimately society
   - data and model are intrinsically linked
   - motivate baseline method
-
+e
 - publication bias towards overengineering drug representation
 
 
@@ -348,5 +348,31 @@ The same applies to splits of drug-target pairs, as all drugs were already seen,
 
 As mentioned in the introduction it is quite difficult to learn suitable features from proteins. In general, attempts search for motifs in the protein sequences under usage of convolutional neural networks and filters, which is more suitable for tasks like protein function prediction, than for for drug-target interaction prediction, and lack a more in-depth hypothesis on the protein side, while investing in refined drug features. \\
 Thus, building splitting over proteins is the most challenging of the three options. \\
+
+## Robert 04.03.2021
+- 
+
+- Zahlen 
+- update figures for LFT
+- technical details into methods 
+- mention drug specific labeling in methods
+- rewrite methods 
+  - what to learn from table 
+
+- that is my evaluation
+    - explain columns and rows from table 
+    - WHY did I do it like this 
+  - that is table (\begin table)
+  - we learn that
+- put 3 tables into one 
+  - best results in bold
+- into 3.2. end of first paragraph: why chose MicroAUC over MacroAUC
+- why do compare them and what is the result? 
+
+
+1 two twin networks for both phenotype and morlecular feature 
+2 map to each node
+3 convolution step
+4 ranking (whether there is an interaction)
 
 

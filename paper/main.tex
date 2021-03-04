@@ -151,10 +151,9 @@ task.
 
 
 \subsection{Datasets}
-We obtain a dataset consisting of $\approx 11000$\todo{precise number}
-human proteins with over 170.000\todo{exact number} links from STRING
+We obtain a dataset consisting of 12884 human proteins with over 340627 links from STRING
 \citep{STRINGv10}. For the drug-target interactions, we
-fetched 137,000\todo{precise} links from the STITCH database
+fetched 229870 links from the STITCH database
 \citep{STITCHv5}. As both STRING and STITCH provide confidence scores
 for each association, we filtered them as advised by a threshold of
 $700$, therefore retaining only high-confidence interactions.
@@ -172,13 +171,11 @@ provides a SPARQL query endpoint for the mentioned resources.
 We only use proteins in our analysis that have at least one link in
 either STITCH or STRING, and drugs with at least one side effect and
 one existing target. Therefore, the intersection between these
-resources yields 1,160 drugs and 6,680 human proteins for the training
-phase. We provide links to and methods for obtaining and processing
+resources yields 1,428 drugs and 7,368 human proteins with 32212 interaction links for the training phase. We provide links to and methods for obtaining and processing
 the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
-introduced by \citet{Yaminishi2008} \todo[inline]{consisting of XXXX
-  interactions between XXX drugs and XXX protein targets}.
+introduced by \citet{Yaminishi2008} consisting of 1923 interactions between 708 drugs and 1512 proteins.
  
 \subsection{Model}
 
@@ -224,18 +221,19 @@ graph.
 \end{figure}
 
 
-\subsubsection{Siamese neural networks and modular learnable feature transformation}
+\subsubsection{Half-twin neural networks and modular learnable feature transformation}
 
 \todo[inline]{Looking at the code, I wonder if what is implemented is
-  actually a Siamese ANN; it does not look as if the weights are
+  actually a 
+   ANN; it does not look as if the weights are
   shared between the two networks, so looks more like a twin or
   half-twin network? Siamese would be sim(f(e1),f(e2)) but the
   implementation seems to be sim(f(e1), g(e2)).}
 
 As we want to learn from the similarity of drug side effects and
-protein phenotypes, we use a deep Siamese neural network with
+protein phenotypes, we use a deep half-twin neural network with
 a contrastive loss using cosine similarity.
-A Siamese neural network aims to learn a similarity between two
+A half-twin neural network aims to learn a similarity between two
 embeddings.
 
 % learning a high-dimensional embedding emphasizing this identity by
@@ -251,7 +249,7 @@ Therefore, the precomputed embeddings are run through a regular,
 neural learnable feature transformation (LFT) network, which also
 reduces the eventual representation size for drugs and proteins
 separately. An example structure for both types of features can be
-found in Figure~\ref{fig:SiameseNetwork}.
+found in Figure~\ref{fig:HalfTwinNetwork}.
 
 While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we emphasize the versatility of this approach, as both ontology and molecular feature for both drugs and proteins are reduced to similar dimensionality. This allows for a high amount of modularity and different experimental setups by plugging different kinds of features into the model. Additionally, these pretrained features can be used for a variety of other tasks. Additionally, the ontology LFT can be reused for a variety of DL2vec based features with respect to other ontologies and hypotheses. We hereby followed the results of \textit{DL2vec}, indicating that utilizing the activation function $\sigma := \mathrm{LeakyReLU}$ leads to performance increase.
 
@@ -259,12 +257,12 @@ While a regular deep neural network, denoted by LFT, for feature space reduction
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
-	\caption{Siamese network applied to molecular and DL2vec
+	\caption{Half-twin network applied to molecular and DL2vec
           features, utilizing deep learnable feature transformations
           (LFT). The similarity function $\otimes$ yields the
           similarity between both transformed embeddings e.g. by
           computing the cosine similarity.}
-	\label{fig:SiameseNetwork}
+	\label{fig:HalfTwinNetwork}
 \end{figure}
 
 
@@ -358,6 +356,12 @@ The structure is depicted in Figure~\ref{fig:ResGraphConvBlocks}.
 \end{figure}
 
 
+\begin{figure}[!tpb]%figure1
+	\centerline{\includegraphics[width=1\columnwidth]{figures/full_model_all_layers.png}}
+	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+	\label{fig:FullModelAllLayers}
+\end{figure}
+
 
 
 \subsubsection{Hyperparameter tuning}
@@ -365,9 +369,10 @@ As the number of drug-targets are sparse with respect to the number of
 both drugs and proteins considered, the training, validation and
 testing datasets are imbalanced. As there are only $22,336$ links in
 the considered subset the ratio
-\begin{equation*}
-	\frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
-\end{equation*}
+\begin{equation}
+	w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
+	\label{weight}
+\end{equation}
 consequently needing compensation in the computed loss function and
 appropriate metrics for the evaluation.
 
@@ -377,12 +382,12 @@ binary cross-entropy:
 \begin{equation}
 	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
 \end{equation}
-for a given prediction $x$ and target $y$. We average this loss among
+for a given prediction $x$ and target $y$, and positive weight $w$ defined by equation \eqref{weight}. We average this loss among
 all drug-protein pairs in the training set, leading to a stable
 environment for the used optimizing scheme \textit{Adam}
-\citep{Adam2014}. We implemented a 5-fold cross validation among the
-proteins. Furthermore, we used early stopping to detect plateaus in
-the training process.
+\citep{Adam2014}. We implemented a 5-fold cross validation split among the
+proteins. Furthermore, we used early stopping in
+the training process for optima detection.
 
 To find the best hyperparameter configuration for the proposed model
 we performed a grid search to find the most expressive and
@@ -390,9 +395,7 @@ non-redundant representation. We pretrained the bottom-up and the
 top-down model separately and aimed at best performing models
 with respect to our evaluation metrics. We optimized embedding sizes,
 depth of the neural network, optimizer, learning rate and layer types
-using an extensive, manual grid search. \todo[inline]{Specify range of
-  values searched here; even better if you have the intermediate
-  results and can put them here (better: in the supplement).}
+using an extensive, manual grid search, Starting from na\"ive, shallow feature transformations with an embedding size of 10, we scaled the network up to residual structures with up to 10 hidden layers leading to embeddings of size 4000, testing different network widths and learning rates for each configuration. 
 
 \subsection{Evaluation and metrics}
 
@@ -404,29 +407,24 @@ the area under the receiver operating characteristic curve
 % precision score. We will further compute true positives (TP), false
 % positives (FP), false negatives (FN) and finally true negatives (TN).
 
-\todo[inline]{Needs a statement on how the PAIRS are ranked here and
-  TPR/FPR is calculated based on the ranks of the DT-PAIRS.}
 We calculate the AUROC by computing true positive rate at various
 false positive rate thresholds and using trapezoidal approximations to
 estimate the area under the curve. We refer to this measure as
 $MacroAUC$.
 
 \todo[inline]{For RH: check this again later:}
-In contrast we also calculate the $MicroAUC$ score. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels and prediction $l,y:D\times P \rightarrow \{0,1\}$  as 
+In contrast we also calculate the $MicroAUC$ score. For given lists $D, P$ of drugs and proteins, respectively, and a set of known interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated as the average per entity (macro) \textit{AUROC} score. With respect to proteins, this can be formalized for given labels $l:D\times P \rightarrow \{0,1\}$ and predictions $y:D\times P \rightarrow [0,1]$  as 
 \begin{equation*}
 	MicroAUC_p := \underset{p\in P}{mean}\left(\left\{ \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\}) \right\}\right)
 \end{equation*}
 
-Drugs and proteins can be interchanged in this formulation, and we
-refer to the different measures as a protein-centric microAUC
+Drugs and proteins can be interchanged in this formulation, while we
+refer to the different measures as protein-centric microAUC
 ($MicroAUC_p$) and a drug-centric microAUC
 ($MicroAUC_d$). Additionally, the $MicroAUC$ score may not be defined
-as, in some datasets some targets or drugs, respectively, do not have
-any interactions, leading to an infeasible $TPR$ and an undefined
-$AUROC$ score for that entity.
-\todo[inline]{Don't understand this, can you add the formula:} For
-those entities we impute the $MicroAUC$ linearly, by using the
-accuracy for this subset.
+as in some datasets some targets or drugs, respectively, do not have
+any interactions, leading to an infeasible $TPR=0$ for all thresholds and an undefined
+$AUROC$ score for that entity. For those entities we impute the $MicroAUC$ interpolating linearly, by using the accuracy for this subset.
 
 
 
@@ -484,7 +482,7 @@ graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph or the similarity
 computation.
 
-We use two Siamese neural networks to combine the molecular and
+We use two half-twin neural networks to combine the molecular and
 phenotype representations of drugs and proteins, and add these to a
 protein interaction network as node labels.  We then train this model
 in an end-to-end manner using a graph neural network architecture.
