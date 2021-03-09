@@ -556,10 +556,6 @@ when tasked to identify drugs that may target a ``novel'' protein,
 i.e., one not seen during training, or a protein for which a drug that
 targets it should be predicted. 
 
-\todo[inline]{Describe/add the CV results here.}
-\begin{itemize}
-	\item 
-\end{itemize}
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein
 split; we then selected the best-performing models (with respect to
@@ -575,21 +571,19 @@ Table \ref{tab:STITCHresults} shows the results of these experiments.
 We find that the model using ontology-based features
 (\textit{OntoPred}) is showing better performance on STITCH compared
 to using only molecular features. We also observe that only the model
-using ontology-based features results in
-increased performance when incorporating the PPI graph. This increase
-can be observed with different graph neural network
-architectures and configurations. While the {\em GCNConv} and
-{\em GENConv} architecture already shows some minor improvement, the
-\textit{ResGraphConv} blocks add a large amount of additional
-learnable parameters to the network, leading to more expressive
-power. To test whether the improvement is due to the number of
-learnable parameters added or the result of better exploiting the
+using ontology-based features results in increased performance when
+incorporating the PPI graph. This increase can be observed with
+different graph neural network architectures and configurations. While
+the {\em GCNConv} and {\em GENConv} architecture already shows some
+minor improvement, the \textit{ResGraphConv} blocks add a large amount
+of additional learnable parameters to the network, leading to more
+expressive power. To test whether the improvement is due to the number
+of learnable parameters added or the result of better exploiting the
 information about PPIs, we experiment with a graph model in which all
-graph convolutional neural layers in the residual blocks are
-removed, resulting in a non--graph model. This pruned network, with
-no information on the protein--protein interactions, reached very
-similar results to the original \textit{OntoPred} model\todo{data
-  not shown; and details missing from Methods} and showed no
+graph convolutional neural layers in the residual blocks are removed,
+resulting in a non--graph model. This pruned network, with no
+information on the protein--protein interactions, reached very similar
+results to the original \textit{OntoPred} model and showed no
 improvement.
 
 Furthermore, these major improvements are only provided by the \textit{GENConv} graph convolution scheme as part of the ResGraphConv blocks, as \textit{GCNConv} and other related graph convolutional methods fail to achieve any gain in comparison to the plain \textit{OntoPred} performance even when combined with the residual blocks. The discrepancy of {\em GENConv} and other graph convolutional methods may be founded in numerical stability and fading signals, as described in the introduction of the {\em GENConv} method.  
