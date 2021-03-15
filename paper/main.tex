@@ -17,7 +17,7 @@
 \subtitle{Subject Section}
 \newcommand{\name}{Voodoo }
 
-\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}git
+\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -505,7 +505,7 @@ We construct a PPI graph with proteins as nodes and protein-protein interactions
 \begin{table}[!tpb]
 	\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
 		\hline
-		STITCH results&\multicolumn{4}{c|}{PPI graph}\\
+		(a) STITCH results&\multicolumn{4}{c|}{PPI graph}\\
 		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
 		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$\\
 		\hline
@@ -513,28 +513,30 @@ We construct a PPI graph with proteins as nodes and protein-protein interactions
 		\hline
 		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$\\
 		\hline
-		MolPred + OntoPred & $0.89$ & $0.90$&$0.93$&$0.94$\\
+		\name (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$\\
 		\hline
 		\hline
-		Yamanishi results&\multicolumn{4}{c|}{PPI graph}\\
+		(b) Yamanishi results&\multicolumn{4}{c|}{PPI graph}\\
 		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
 		&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
-		MolPred + OntoPred & $0.83$ & $0.82$&$0.84$&$0.84$\\
+		\name (MolPred + OntoPred) & $0.83$ & $0.82$&$0.84$&$0.84$\\
 		\hline
 	\end{tabular} \medskip
 
 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		(c) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
 		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
-		DTINet&DP pairs&$0.91$&$0.84$&$0.67$\\
-		DTIGEMS+&DP pairs&$0.93$& $0.72$& $0.68$ \\
-		DTI-CDF&Proteins&$0.86$&$0.85$&$0.79$\\
+		Naive predictor&DP pairs&$0.85$& --&--\\
+		DTINet&DP pairs&$0.91$&$0.74$&$0.67$\\
+		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
+		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
+		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
 		\hline
 		\hline
-		Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		(d) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
 		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
 		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
@@ -544,8 +546,8 @@ We construct a PPI graph with proteins as nodes and protein-protein interactions
 		\hline
 	\end{tabular}\\
 	
-	\caption{Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. MolPred and OntoPred are the predictors for molecular and ontology based features, respectively. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}.}
-	\label{tab:STITCHresults}
+	\caption{(a) + (b) Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
+	\label{tab:Results}
 \end{table}
 
 We evaluate our model's ability to identify drug--target interactions
@@ -565,7 +567,7 @@ PPI graph (and therefore can be exploited successfully by the graph
 neural networks), we train and evaluate models with different types of
 features, and with and without inclusion of the PPI graph,
 separately, comparing the molecular (MolPred) and phenotype based (OntoPred) predictor and a combination of both, concatenating both features.
-Table \ref{tab:STITCHresults} shows the results of these experiments.
+Table \ref{tab:Results} (a)+(b) shows the results of these experiments.
 
 
 We find that the model using ontology-based features
@@ -669,7 +671,7 @@ For each fold, we gradually increase $k$ to determine the best
 performance for each fold. Using the full dataset, drug--target split,
 and drug split, we obtain the following MacroAUC/AUROC score results. For STITCH database we obtain a performance of $0.76$ on the whole dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the drug splitting scheme. While these results are fairly moderate, on Yamanishi dataset we yield MacroAUC scores of $0.88$, $0.84$ and $0.85$, for total dataset, DT pair split and drug split, respectively. 
 
-The na\"ive predictor shows great performance on Yamanishi dataset, with substantial gain in comparison to a random predictor on both datasets. In the following we will denote this nai\"ve predictor as a baseline predictor correlating its performance to state of the art models and \name.
+The na\"ive predictor shows great performance on Yamanishi dataset, with substantial gain in comparison to a random predictor on both datasets. In the following, we will utilize this nai\"ve predictor as baseline predictor correlating its performance to state of the art models and \name.
 
 For comparison with the state of the art methods, we chose the best
 performing methods for drug--target interaction prediction that were
@@ -689,6 +691,10 @@ training process but not for the validation and testing phase as
 real world applications of these models would have to deal with possibly
 imbalanced data.
 
+The results of this analysis are summarized in part (c) of Table \ref{tab:Results}, calculating the performance of all considered methods over their original splitting scheme and over a protein split. We find that, first the majority of approaches evaluate over a drug--protein splitting scheme, while second, the highest performances on Yamanishi dataset are yielded over the drug--target pairs splitting scheme, with a noticeable gap to the methods performing their splits over proteins. Further, when evaluating the same methods over a protein split, we find a substantial performance divergence in comparison to their original splitting scheme. The authors of DTI-CDF evaluate their method on all three splitting schemes underlining this point. While \name provides comparable performance to DTI-CDF, it yields considerably better with respect to $MicroAUC_p$. 
+
+As we were quite surprised about the MacroAUC discrepancy between the splitting schemes, we evaluated other cutting edge drug--target interaction and drug--target affinity prediction methods, training and evaluating on other datasets. Following the results of MolTrans (\textbf{CITATION}), we reevaluated DeepDTI (\textbf{CITATION}), DeepDTA (\textbf{CITATION}), DeepConv-DTI (\textbf{CITATION}) and MolTrans itself on BioSnap (\textbf{CITATION}) over a protein split, as shown in part (d) of Table \ref{tab:Results}. The authors of MolTrans evaluated all considered methods over the drug--target pair and the protein split, which we were able to reproduce with (d), showing once more a substantial divergence. However, we additionally computed the $MicroAUC_p$ score for all considered methods, leading to comparable scores as for the Yamanishi evaluated methods. 
+
 \todo[inline]{ add \name model to table to allow
   DIRECT comparison:}
 The results of the analysis are summarized in the upper part of Figure
@@ -698,12 +704,6 @@ We find that...\todo[inline]{summarize key findings from Table.}
 
 
 \todo[inline]{Replace/merge table:}
-\begin{figure}[!tpb]%figure1
-	
-	\centerline{}
-	\caption{Test}
-	\label{tab:Results}
-\end{figure}
 
 \todo[inline]{Discussion:}
 The lack of stratification, only impacts the not
@@ -771,7 +771,7 @@ proteins is entirely unknown during training process.
 \todo[inline]{Likely discussion:}
 Assuming a hypothetical, perfectly generalizing model built upon an
 unbiased dataset, this very model would yield similar performances for
-all three splitting schemes, not overfitting on the known
+all three , not overfitting on the known
 structures. On the other hand, for a hypothetical entirely overfitting
 model, trained on a highly biased dataset, this model would show
 substantial deviations from the original performance over another
