@@ -376,3 +376,6 @@ Thus, building splitting over proteins is the most challenging of the three opti
 4 ranking (whether there is an interaction)
 
 
+- include results on DTA stuff
+- cite MolTrans
+- counter of results table in \ref 
