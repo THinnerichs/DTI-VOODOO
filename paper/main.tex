@@ -119,6 +119,32 @@ for the considered drug-target pair. The latter is not suitable for
 predictions on novel or unseen compounds, as e.g., data on side
 effects or its impact on diseases is seldom given for novel drugs.
 
+
+\todo[inline]{Introduction}
+Within DTI prediction, there are potential biases resulting from the
+underlying datasets \citep{Pahikkala2014}. First, novel drugs are
+often designed by altering non-functional components of a drug,
+leading to two and more very similar drugs designed to target the same
+proteins \cite{Overington2006}. This can result in a bias when it
+leads to hidden duplicates that can distribute among the train/test
+split, resulting in a better (measured) predictive performance than
+would be expected when the model is applied to identify drugs that
+target a protein for which no drugs yet exist. Second, some proteins
+(which we call \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$ of
+the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins may increase predictive performance while not
+reflecting the actual performance when applied to a new protein (e.g.,
+a protein for which no interactions are known). These differences in
+the number of drugs targeting certain proteins may be the result of
+study bias where more ``valuable'' proteins have more drugs designed
+to target them due to their involvement in more common diseases (or
+diseases for which drugs can be more profitably marketed).
+
+
+
 In order to design such a feature for proteins and drugs,
 respectively, we make use of the interaction networks for both
 proteins and compounds. Drug-drug interaction networks were introduced
@@ -445,29 +471,6 @@ $AUROC$ score for that entity. For those entities we impute the $MicroAUC$ inter
 % e.g., a cross validation splitting scheme as \glqq split\grqq{}
 % determining the train, validation and test subset of a given dataset.
 
-\todo[inline]{Introduction}
-Within DTI prediction, there are potential biases resulting from the
-underlying datasets \citep{Pahikkala2014}. First, novel drugs are
-often designed by altering non-functional components of a drug,
-leading to two and more very similar drugs designed to target the same
-proteins \cite{Overington2006}. This can result in a bias when it
-leads to hidden duplicates that can distribute among the train/test
-split, resulting in a better (measured) predictive performance than
-would be expected when the model is applied to identify drugs that
-target a protein for which no drugs yet exist. Second, some proteins
-(which we call \textit{hub proteins}) have significantly more known
-interactions with drugs than others. In the STITCH database, $5\%$ of
-the proteins have $40\%$ of the interactions, and similar
-distributions are present in the Yamanishi and Drugbank
-\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
-these proteins may increase predictive performance while not
-reflecting the actual performance when applied to a new protein (e.g.,
-a protein for which no interactions are known). These differences in
-the number of drugs targeting certain proteins may be the result of
-study bias where more ``valuable'' proteins have more drugs designed
-to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed).
-
 We developed \name as a computational model to predict drug--target
 interactions. Specifically, given a protein, \name will identify and
 rank drugs that likely target this protein. \name combines two types
@@ -475,7 +478,7 @@ of features: structural information for drugs and proteins that can be
 used to determine if the drug and protein physically interact, and
 information about phenotypic effects of drugs and changes in protein
 function that may ``localize'' on an interaction network (i.e.,
-neighboring nodes will share some of these features or be
+neighboring nodes will share some of these features or are
 phenotypically similar).  As structural features, \name uses
 structural representations of drugs from the SMILES transformer
 \cite{SmilesTransformer} and representations of protein amino acid
@@ -484,7 +487,13 @@ representations of drug effects and protein functions using the
 ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
 ontology-based annotations of drugs and proteins.
 
-We construct a PPI graph with proteins as nodes and protein-protein interactions as edges, mapping the protein features to each target as node features. \name then propagates information among the PPI network utilizing graph convolutional steps, calculating the similarity of drug and protein representation, and thus eventually predicting whether there is an interaction. The full workflow scheme is depicted in figure~\ref{fig:ModelWorkflow}
+We construct a PPI graph with proteins as nodes and protein-protein
+interactions as edges, mapping the protein features to each target as
+node features. \name then propagates information among the PPI network
+utilizing graph convolutional steps, calculating the similarity of
+drug and protein representation, and thus eventually predicting
+whether there is an interaction. The full workflow scheme is depicted
+in figure~\ref{fig:ModelWorkflow}
 
 % Note that this approach can be easily generalized, profiting from
 % other protein function and phenotype representation methods.
