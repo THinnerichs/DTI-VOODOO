@@ -250,34 +250,34 @@ graph.
 \subsubsection{Half-twin neural networks and modular learnable feature transformation}
 
 \todo[inline]{Looking at the code, I wonder if what is implemented is
-  actually a 
-   ANN; it does not look as if the weights are
-  shared between the two networks, so looks more like a twin or
-  half-twin network? Siamese would be sim(f(e1),f(e2)) but the
-  implementation seems to be sim(f(e1), g(e2)).}
+  actually a ANN; it does not look as if the weights are shared
+  between the two networks, so looks more like a twin or half-twin
+  network? Siamese would be sim(f(e1),f(e2)) but the implementation
+  seems to be sim(f(e1), g(e2)).}
 
 As we want to learn from the similarity of drug side effects and
-protein phenotypes, we use a deep half-twin neural network with
-a contrastive loss using cosine similarity.
-A half-twin neural network aims to learn a similarity between two
-embeddings.
-
-% learning a high-dimensional embedding emphasizing this identity by
-% forcing a similarity between these embeddings. On the other hand we
-% built a deep neural network for the molecular structure based
-% features, also benefiting from the siamese network
-% architecture. Computing the similarity between two representations,
-% allows for a variety of different methods.  
-% However, we decided for
-% the cosine similarity measure being invariant to scaling.
-
-Therefore, the precomputed embeddings are run through a regular,
-neural learnable feature transformation (LFT) network, which also
-reduces the eventual representation size for drugs and proteins
-separately. An example structure for both types of features can be
-found in Figure~\ref{fig:HalfTwinNetwork}.
-
-While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we emphasize the versatility of this approach, as both ontology and molecular feature for both drugs and proteins are reduced to similar dimensionality. This allows for a high amount of modularity and different experimental setups by plugging different kinds of features into the model. Additionally, these pretrained features can be used for a variety of other tasks. Additionally, the ontology LFT can be reused for a variety of DL2vec based features with respect to other ontologies and hypotheses. We hereby followed the results of \textit{DL2vec}, indicating that utilizing the activation function $\sigma := \mathrm{LeakyReLU}$ leads to performance increase.
+protein phenotypes, we use a deep half-twin neural network with a
+contrastive loss using cosine similarity.  A half-twin neural network
+aims to learn a similarity between two embeddings of the same
+dimension.  The precomputed embeddings are first processed by a
+learnable feature transformation (LFT) network, a fully connected
+neural network layer which takes as input an embedding and outputs a
+representation of a particular size. An example structure for both
+types of features can be found in Figure~\ref{fig:HalfTwinNetwork}. We
+use this LFT to reduce the eventual representation size for drugs and
+proteins separately.
+% While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we
+The use of an LFT enables flexible experimentation as both ontology
+and molecular feature for both drugs and proteins are reduced to
+similar dimensionality for varying sizes of inputs; this allows for a
+high amount of modularity across different experimental setups by
+adding different kinds of features into the model. Additionally, the
+generated features can be used for a variety of other tasks; for
+example, the ontology LFT can be reused for a variety of DL2vec-based
+features with respect to other ontologies and hypotheses. We follow
+the results of \textit{DL2vec} showing that the activation function
+$\sigma := \mathrm{LeakyReLU}$ leads to improved performance compared
+to other activation functions.
 
 
 
