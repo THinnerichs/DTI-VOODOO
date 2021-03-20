@@ -789,6 +789,14 @@ with more data points.
 
 \section{Discussion}
 
+\subsection{``Bottom-up'' and ``top-down'' prediction of drug-target interactions}
+
+What features localize on graph? Molecular interactions based on
+structure not likely -- only possible to find binding sites to other
+proteins.
+
+Phenotype-based features localize...
+
 
 \todo[inline]{Methods:}
 Through the very nature of the graph convolutional neural network, we
@@ -800,8 +808,37 @@ compute and predict all its interactors in a single run of the model,
 leading to significantly less computing time.
 
 
+using indications is like cheating, as not applicable for searching new drugs
 
-%\subsection{\name identifies drugs that target a protein}
+drug indications are highly predictive for downstream tasks, but lack capability to differentiate highly related drugs/proteins
+
+we built protein function and ontology based features based on DL2vec
+
+Ontology derived protein function focused features are highly predictive for dtis
+
+We built a versatile template for various features to test localization on the PPI graph
+
+normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
+
+protein functions localize on the PPI graph, while molecular features don't
+
+
+molecular features work for all (most?) drugs, top-down features only
+for those that have a side-effect profile
+
+
+\subsection{Evaluating drug--target interaction predictions}
+
+Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
+
+Running split over proteins is harder than, drug and drug protein pair split (see below table)
+
+this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
+
+Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+
+microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+
 
 \todo[inline]{Likely discussion:}
 The aim of \name is to predict candidate drugs that target a given
@@ -855,18 +892,41 @@ testing set will likely lead to some sort of performance gap for
 relevant metrics. However, a large disparity may hint the biases
 stated above.
 
+A naive predictor (ranking proteins) and predict each drug similarly
+achieves cutting edge performance ($87.5$ AUROC for whole dataset,
+$85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No
+prot focused microAUC possible. $\rightarrow$ hub proteins
+
+Yamanishi Dataset is only partially suitable for comparing results, if
+everybody just derives a suitable subset (DTIGEMS)
+
+This also applies to drug target affinity prediction. We were hereby
+able to roughly reproduce the results from MolTrans (Bioinformatics)
+on BioSnap
+
+
+%\subsection{Features to use in predicting drug targets}
 
 
 
-%\section{Findings}
+
+
+%\subsection{\name identifies drugs that target a protein}
+
+
+
+
+\subsection{Conclusions}
+
+Evaluating DTI predictions is non-trivial due to numerous biases in
+the training and evaluation datasets.
+
+Combining bottom-up and top-down features improves state of the art.
+
+
 
 \subsection{Deification of our method}
 \begin{itemize}
-	\item we built protein function and ontology based features based on DL2vec
-	\item Ontology derived protein function focused features are highly predictive for dtis
-	\item We built a versatile template for various features to test localization on the PPI graph
-	\item normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
-	\item protein functions localize on the PPI graph, while molecular features don't
 	\item all AUROC in \% AUROC score on STITCH
 	
 	\begin{tabular}{|l|r|r|}
@@ -896,11 +956,6 @@ stated above.
 
 \subsection{How to insult other methods}
 \begin{itemize}
-	\item Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
-	\item Running split over proteins is harder than, drug and drug protein pair split (see below table)
-	\item this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
-	\item using indications is like cheating, as not applicable for searching new drugs
-	\item drug indications are highly predictive for downstream tasks, but lack capability to differentiate highly related drugs/proteins
 	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
 	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 	
