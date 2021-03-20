@@ -735,7 +735,19 @@ training process but not for the validation and testing phase as real
 world applications of these models would have to deal with possibly
 imbalanced data.
 
-The results of this analysis are summarized in part (c) of Table \ref{tab:Results}, calculating the performance of all considered methods over their original splitting scheme and over a protein split. We find that, first the majority of approaches evaluate over a drug--protein splitting scheme, while second, the highest performances on Yamanishi dataset are yielded over the drug--target pairs splitting scheme, with a noticeable gap to the methods performing their splits over proteins. Further, when evaluating the same methods over a protein split, we find a substantial performance divergence in comparison to their original splitting scheme. The authors of DTI-CDF evaluate their method on all three splitting schemes underlining this point. While \name provides comparable performance to DTI-CDF, it yields considerably better with respect to $MicroAUC_p$. 
+The results of our experiments are summarized in part (c) of Table
+\ref{tab:Results}; we calculated the performance of all compared
+methods over their original splitting scheme and over a protein
+split. First, we find that there is a large difference in performance
+when evaluating over a drug--target pair split compared to a
+protein split, with generally higher performance achieved when using
+the drug--target pair split.
+Second, when evaluating the same methods over a protein split, we find
+a substantial performance difference in comparison to the splitting
+scheme used in the original evaluation of each method. DTI-CDF was
+originally evaluated on all three splitting schemes underlining this
+point \cite{}. While \name provides comparable performance to DTI-CDF,
+it yields considerably better results with respect to $MicroAUC_p$.
 
 As we were quite surprised about the MacroAUC discrepancy between the splitting schemes, we evaluated other cutting edge drug--target interaction and drug--target affinity prediction methods, training and evaluating on other datasets. Following the results of MolTrans (\textbf{CITATION}), we reevaluated DeepDTI (\textbf{CITATION}), DeepDTA (\textbf{CITATION}), DeepConv-DTI (\textbf{CITATION}) and MolTrans itself on BioSnap (\textbf{CITATION}) over a protein split, as shown in part (d) of Table \ref{tab:Results}. The authors of MolTrans evaluated all considered methods over the drug--target pair and the protein split, which we were able to reproduce with (d), showing once more a substantial divergence. However, we additionally computed the $MicroAUC_p$ score for all considered methods, leading to comparable scores as for the Yamanishi evaluated methods. 
 
