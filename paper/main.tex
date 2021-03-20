@@ -431,7 +431,7 @@ leading to embeddings of size $4000$, testing different network widths
 and learning rates for each configuration.
 
 \subsection{Evaluation and metrics}
-
+\label{sec:evaluation}
 To assess each model, we compute a variety of common metrics for
 binary classification. As the datasets are highly imbalanced, we use
 the area under the receiver operating characteristic curve
@@ -499,13 +499,13 @@ representations of drug effects and protein functions using the
 ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
 ontology-based annotations of drugs and proteins.
 
-We construct a PPI graph with proteins as nodes and protein-protein
+We construct a graph with proteins as nodes and protein-protein
 interactions as edges, mapping the protein features to each target as
 node features. \name then propagates information among the PPI network
-utilizing graph convolutional steps, calculating the similarity of
-drug and protein representation, and thus eventually predicting
-whether there is an interaction. The full workflow scheme is depicted
-in figure~\ref{fig:ModelWorkflow}
+utilizing graph convolutional steps, calculates the similarity of drug
+and protein representations, and predicts whether there is an
+interaction. The full workflow scheme is depicted in
+figure~\ref{fig:ModelWorkflow}
 
 % Note that this approach can be easily generalized, profiting from
 % other protein function and phenotype representation methods.
@@ -580,16 +580,20 @@ i.e., one not seen during training, or a protein for which a drug that
 targets it should be predicted. 
 
 We trained, validated and finally tested all considered models on the
-STITCH dataset using a 5-fold cross-validation over a protein
-split; we then selected the best-performing models (with respect to
-\textit{AUROC/MacroAUC} and $MicroAUC_p$) and evaluate them on in 5-fold protein split cross validation on the Yamanishi benchmark dataset to avoid validation overfitting and yield more realistic testing results. To evaluate the influence of the different
-features separately, and determine whether they ``localize'' on the
-PPI graph (and therefore can be exploited successfully by the graph
-neural networks), we train and evaluate models with different types of
-features, and with and without inclusion of the PPI graph,
-separately, comparing the molecular (MolPred) and phenotype based (OntoPred) predictor and a combination of both, concatenating both features.
-Table \ref{tab:Results} (a)+(b) shows the results of these experiments.
-
+STITCH dataset using a 5-fold cross-validation over a protein split;
+we then selected the best-performing models (with respect to
+\textit{MacroAUC} and $MicroAUC_p$, see Section \ref{sec:evaluation})
+and evaluate them in a 5-fold protein-split cross-validation on the
+Yamanishi benchmark dataset to avoid validation overfitting and yield
+more realistic testing results. To evaluate the influence of the
+different features separately, and to determine whether they
+``localize'' on the PPI graph (and therefore can be exploited
+successfully by the graph neural networks), we train and evaluate
+models with different types of features, and with and without
+inclusion of the PPI graph, separately. We comparing the molecular
+(MolPred) and phenotype-based (OntoPred) prediction model, and a
+combination of both when concatenating both types of features.  Table
+\ref{tab:Results} (a)+(b) shows the results of these experiments.
 
 We find that the model using ontology-based features
 (\textit{OntoPred}) is showing better performance on STITCH compared
