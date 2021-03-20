@@ -647,9 +647,12 @@ protein; however, our evaluation does not evaluate this application
 but rather how \name would perform in finding plausible drug--target
 interactions among all possible interactions. To provide a better
 estimate on how \name performs for individual protein targets, we use
-micro-averages between proteins and compute the \textit{MicroAUC};
-micro-averages average the performance (true and false positive rates)
-per protein instead of across all drug--protein pairs.
+micro-averages between proteins and compute the \textit{MicroAUC} (see
+Section \ref{sec:evaluation}); micro-averages average the performance
+(true and false positive rates) per protein instead of across all
+drug--protein pairs, and can therefore better estimate how \name
+performs when tasked with finding a drug that targets a specific
+protein.
 
 % Note, that both $MicroAUC_p$ and $MicroAUC_d$, as introduced in the previous chapter, are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are most plausible and valuable for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
 
@@ -657,12 +660,14 @@ per protein instead of across all drug--protein pairs.
 % \subsection{Baseline model}
 Furthermore, we hypothesize that some of the predictions made by our
 model are the result of the biases in drug--target interaction
-datasets. We design a ``na\"ive'' baseline model that predicts the
-same list of proteins for each drugs based on the number of
-known drug--target interactions for a protein. Formally, given lists
-$D$ and $P$ of drugs and proteins and a set of known interactions
-$\mathcal{I} := \{(d_i, p_i) \}$, we construct an interaction matrix
-$M_{int}\in\{0,1\}^{|D|\times|P|}$ with
+datasets where hub proteins may have a large number of interactions,
+or certain drugs interact with many proteins, and these may be easier
+to predict than others. We design a ``na\"ive'' baseline model that
+predicts the same list of proteins for each drug based only on the
+number of known drug--target interactions for a protein. Formally,
+given lists $D$ and $P$ of drugs and proteins and a set of known
+interactions $\mathcal{I} := \{(d_i, p_i) \}$, we construct an
+interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with
 \begin{equation*}
 	M_{ij} = \begin{cases}
 		1 & \text{if } (d_i, p_j)\in \mathcal{I}\\
@@ -676,12 +681,8 @@ $M_{ij}$ and ranking these sums:
 \begin{equation*}
 	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=1}^{|D|}M_{ij}
 \end{equation*}
-Our ``na\"ive'' predictor $P_k$  predicts all drugs to interact with
-the top $k$ targets
-% , denoted by $Top_k(P)$ 
-with respect to
-% $M_{ij}$ from
-the introduced ranking:
+Our ``na\"ive'' predictor $P_k$ predicts all drugs to interact with
+the top $k$ targets with respect to the introduced ranking:
 \begin{equation*}
 	P_k: D\times P \rightarrow \{0,1\} \text{ with } P_k: d_i, p_j \mapsto \begin{cases}
 		1 & \text{ if }p_j \in Top_{k}(P)\\
@@ -689,40 +690,49 @@ the introduced ranking:
 	\end{cases}
 \end{equation*}
 with the only hyperparameter $k$.
+
 The prediction $P_k$ is not dependent on the drug $d_i$ and will
-predict the same ranked list of drugs for a given protein $p_j$;
-consequently, this na\"ive predictor will not predict any useful
-information about interactions between drugs and proteins, but allows
-us to estimate the effect of potential biases in our evaluation
-dataset.
+predict the same ranked list of drugs for all proteins; consequently,
+this na\"ive predictor will not predict any useful information about
+interactions between drugs and proteins, but allows us to estimate the
+effect of potential biases in our evaluation dataset.
 % Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
-We apply this naive predictor on both the STITCH and Yamanishi
-datasets, using the full dataset as well as 5-fold cross-validation
-over drugs and drug--protein pairs.
-Note, that this baseline predictor is not applicable for a protein split CV, as the number of interactions for each protein in the validation set is unknown. 
-For each fold, we gradually increase $k$ to determine the best
+Our na\"ive predictor is not applicable for a protein split
+cross-validation as the number of interactions for each protein in the
+validation set is unknown.  We apply this naive predictor on both the
+STITCH and Yamanishi datasets, using the full dataset as well as
+5-fold cross-validation over drugs as well as over drug--protein
+pairs.  For each fold, we gradually increase $k$ to determine the best
 performance for each fold. Using the full dataset, drug--target split,
-and drug split, we obtain the following MacroAUC/AUROC score results. For STITCH database we obtain a performance of $0.76$ on the whole dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the drug splitting scheme. While these results are fairly moderate, on Yamanishi dataset we yield MacroAUC scores of $0.88$, $0.84$ and $0.85$, for total dataset, DT pair split and drug split, respectively. 
-
-The na\"ive predictor shows great performance on Yamanishi dataset, with substantial gain in comparison to a random predictor on both datasets. In the following, we will utilize this nai\"ve predictor as baseline predictor correlating its performance to state of the art models and \name.
+and drug split, we obtain the following MacroAUC results: for the
+STITCH database, we obtain a performance of $0.76$ on the whole
+dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the
+drug splitting scheme; on the Yamanishi dataset, we obtain MacroAUC
+scores of $0.88$, $0.84$ and $0.85$, for the total dataset,
+drug--target pair and drug split, respectively.  The na\"ive predictor
+shows higher performance on the Yamanishi dataset than on STITCH, and
+a substantial gain in comparison to an expected random predictor on
+both datasets. In the following, we utilize this nai\"ve predictor as
+baseline to compare its performance to state of the art models and
+\name.
 
 For comparison with the state of the art methods, we chose the best
 performing methods for drug--target interaction prediction that were
-previously evaluated on the Yamanishi benchmark dataset. These methods include DTIGEMS+
-\cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}, which have showed
-superior results in comparison to numerous works. Furthermore, we
-added DTINet \cite{DTINet2017} as method for comparison which has been
-used to develop a number of methods such as NeoDTI \cite{NeoDTI2019}
-with similar methodology.
+previously evaluated on the Yamanishi benchmark dataset. These methods
+include DTIGEMS+ \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}
+which have showed superior results in comparison to numerous
+works. Furthermore, we added DTINet \cite{DTINet2017} as method for
+comparison which has been used to develop a number of methods such as
+NeoDTI \cite{NeoDTI2019} with similar methodology.
 
 We evaluate all models on their recommended splitting scheme choice,
 hyperparameters and folds in cross-validation, measuring their
 respective AUROC. We further evaluate each model by performing a
-protein-wise cross-validation determining Macro AUC/AUROC score and
-$MicroAUC_p$. For this evaluation we allow stratification for the
-training process but not for the validation and testing phase as
-real world applications of these models would have to deal with possibly
+protein-wise cross-validation determining the MacroAUC and
+$MicroAUC_p$. For this evaluation, we allow stratification for the
+training process but not for the validation and testing phase as real
+world applications of these models would have to deal with possibly
 imbalanced data.
 
 The results of this analysis are summarized in part (c) of Table \ref{tab:Results}, calculating the performance of all considered methods over their original splitting scheme and over a protein split. We find that, first the majority of approaches evaluate over a drug--protein splitting scheme, while second, the highest performances on Yamanishi dataset are yielded over the drug--target pairs splitting scheme, with a noticeable gap to the methods performing their splits over proteins. Further, when evaluating the same methods over a protein split, we find a substantial performance divergence in comparison to their original splitting scheme. The authors of DTI-CDF evaluate their method on all three splitting schemes underlining this point. While \name provides comparable performance to DTI-CDF, it yields considerably better with respect to $MicroAUC_p$. 
