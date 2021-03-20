@@ -916,119 +916,131 @@ on BioSnap
 
 
 
-\subsection{Conclusions}
+\section{Conclusions}
+
+For the bottom-up approach we build a model that only relies on
+molecular features, which we will discuss in more detail in the
+following methods chapter. For the combination of both approaches we
+now attach the predictions to the protein-protein interaction graph as
+node features for future graph learning steps. In this graph we tried
+to find both patterns and regions for each drug that could be of
+interest through application of different graph convolutional layers,
+which in return represent the feature for each protein. Representing
+the drug we take the drug-drug interaction graph and the semantic
+similarity over side effects which we will explain in the following
+paragraphs.
+
+Combining bottom-up and top-down features improves state of the art.
 
 Evaluating DTI predictions is non-trivial due to numerous biases in
 the training and evaluation datasets.
 
-Combining bottom-up and top-down features improves state of the art.
 
 
 
-\subsection{Deification of our method}
-\begin{itemize}
-	\item all AUROC in \% AUROC score on STITCH
+% \subsection{Deification of our method}
+% \begin{itemize}
+% 	\item all AUROC in \% AUROC score on STITCH
 	
-	\begin{tabular}{|l|r|r|}
-		\hline
-		DNNT model&Without graph model&With graph model\\
-		\hline
-		MolPred&$69$&$69$\\
-		PhenomeNETPred&$88$&$92$\\
-		\hline
-		MolPred + PhenomeNETPred & $89$ & $93$\\
-		\hline
-	\end{tabular}
-	\item microAUC for MolPred + PhenomeNETPred on graph is about $93+-$
-	\item and on yamanishi dataset
+% 	\begin{tabular}{|l|r|r|}
+% 		\hline
+% 		DNNT model&Without graph model&With graph model\\
+% 		\hline
+% 		MolPred&$69$&$69$\\
+% 		PhenomeNETPred&$88$&$92$\\
+% 		\hline
+% 		MolPred + PhenomeNETPred & $89$ & $93$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item microAUC for MolPred + PhenomeNETPred on graph is about $93+-$
+% 	\item and on yamanishi dataset
 	
-	\begin{tabular}{|l|r|r|}
-		\hline
-		DNNT model&Without graph model&With graph model\\
-		\hline
-		PhenomeNETPred&$83$&$84$\\
-		\hline
-		MolPred + PhenomeNETPred & $83$ & $84.5$\\
-		\hline
-	\end{tabular}
-	\item MicroAUC is about $83$
-\end{itemize}
+% 	\begin{tabular}{|l|r|r|}
+% 		\hline
+% 		DNNT model&Without graph model&With graph model\\
+% 		\hline
+% 		PhenomeNETPred&$83$&$84$\\
+% 		\hline
+% 		MolPred + PhenomeNETPred & $83$ & $84.5$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item MicroAUC is about $83$
+% \end{itemize}
 
-\subsection{How to insult other methods}
-\begin{itemize}
-	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
-	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+% \subsection{How to insult other methods}
+% \begin{itemize}
+% 	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+% 	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 	
-	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
-		\hline
-		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
-		\hline
-		DTINet&DP pairs&$91$&$84.1$&$67.2$\\
-		DTIGEMS+&DP pairs&$93$& $72.2$& $67.8$ \\
-		DTI-CDF&Proteins&$83$&$83$&$79$\\
-		\hline
-	\end{tabular}
-	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
-	\item Yamanishi Dataset is only partially suitable \todo{for
-            comparing results}, if everybody just derives a suitable subset (DTIGEMS)
-	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
+% 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
+% 		\hline
+% 		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+% 		\hline
+% 		DTINet&DP pairs&$91$&$84.1$&$67.2$\\
+% 		DTIGEMS+&DP pairs&$93$& $72.2$& $67.8$ \\
+% 		DTI-CDF&Proteins&$83$&$83$&$79$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
+% 	\item Yamanishi Dataset is only partially suitable \todo{for
+%             comparing results}, if everybody just derives a suitable subset (DTIGEMS)
+% 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
 
-\end{itemize}
+% \end{itemize}
 
-\begin{figure}[!tpb]%figure1
-	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
-		\hline
-		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
-		\hline
-		DeepDTI&Drugs&$87.6$&$75.9$&$70.1$\\
-		DeepDTA&DP pairs&87.6&$76.7$&$69.4$\\
-		DeepConv-DTI&DP pairs&88.3&$76.6$&$73.0$\\
-		MolTrans&DP pairs&89.5&$77.0$&$74.0$\\
+% \begin{figure}[!tpb]%figure1
+% 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
+% 		\hline
+% 		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+% 		\hline
+% 		DeepDTI&Drugs&$87.6$&$75.9$&$70.1$\\
+% 		DeepDTA&DP pairs&87.6&$76.7$&$69.4$\\
+% 		DeepConv-DTI&DP pairs&88.3&$76.6$&$73.0$\\
+% 		MolTrans&DP pairs&89.5&$77.0$&$74.0$\\
 		
-		\hline
-	\end{tabular}
-\end{figure}
+% 		\hline
+% 	\end{tabular}
+% \end{figure}
 
 
 
-\subsection{Tested hypotheses}
+% \subsection{Tested hypotheses}
 
-In this work we are testing the following hypotheses:
-\begin{enumerate}
-	\item Can we build a model that outperforms state of the art approaches, combining top-down and bottom-up approaches?
-	\item Are interaction networks sufficient to improve the performance of simple molecular predictors?
-\end{enumerate}
-We will test the first hypothesis by building a model that takes both top-down and bottom-up features into account. Thus, we propose a novel approach to combine those mutual exclusive attempts, through the usage of interaction networks, similarity and molecular features. Additionally, we test the latter by building a simple molecular DTI predictor and enhance it under usage of the interaction networks.\\
+% In this work we are testing the following hypotheses:
+% \begin{enumerate}
+% 	\item Can we build a model that outperforms state of the art approaches, combining top-down and bottom-up approaches?
+% 	\item Are interaction networks sufficient to improve the performance of simple molecular predictors?
+% \end{enumerate}
+% We will test the first hypothesis by building a model that takes both top-down and bottom-up features into account. Thus, we propose a novel approach to combine those mutual exclusive attempts, through the usage of interaction networks, similarity and molecular features. Additionally, we test the latter by building a simple molecular DTI predictor and enhance it under usage of the interaction networks.\\
 
-For the bottom-up approach we build a model that only relies on molecular features, which we will discuss in more detail in the following methods chapter. For the combination of both approaches we now attach the predictions to the protein-protein interaction graph as node features for future graph learning steps. In this graph we tried to find both patterns and regions for each drug that could be of interest through application of different graph convolutional layers, which in return represent the feature for each protein. Representing the drug we take the drug-drug interaction graph and the semantic similarity over side effects which we will explain in the following paragraphs.
 
-\section{Methods}
+% \section{Methods}
 
-\subsection{Models}
-The used model consists of two separate models, that help to fuse together the two methods:
-\begin{enumerate}
-	\item The molecular predictor
-	\item The interaction network based predictor
-\end{enumerate}
-We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from \textit{SMILES transformer} (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (see Figure~\ref{fig:01}) with few fully connected. \\
-The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair, the nodes of the PPI graph now hold bottom-up features, which can now be processed by the graph learning algorithms. \\
-The PPI graph is processed by different graph convolutional layers, that may underline the importance of either patterns or regions within the graph, to obtain a feature vector for the wanted node. In contrast to learning over whole graphs we perform node classification within the graph. These layers are either graph convolutional layers, that learn a certain kernel over the graph, or attention based. Different layers of both and other types such as were tested.  \\
-The drug-drug interaction features are retrieved by choosing the corresponding row in the adjacency matrix of the graph, thus leading to quite simple features. \\
-For the semantic similarity feature, that once again represents a top-down attribute, we artificially link each drug to its corresponding side effects in the MedDRA hierarchy. Concerning this hierarchy, drug-drug similarity is computed by the Resnik similarity (\cite{Resnik1995}). For the given compound we take the corresponding row of this symmetric similarity matrix. \\
+% \subsection{Models}
+% The used model consists of two separate models, that help to fuse together the two methods:
+% \begin{enumerate}
+% 	\item The molecular predictor
+% 	\item The interaction network based predictor
+% \end{enumerate}
+% We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from \textit{SMILES transformer} (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (see Figure~\ref{fig:01}) with few fully connected. \\
+% The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair, the nodes of the PPI graph now hold bottom-up features, which can now be processed by the graph learning algorithms. \\
+% The PPI graph is processed by different graph convolutional layers, that may underline the importance of either patterns or regions within the graph, to obtain a feature vector for the wanted node. In contrast to learning over whole graphs we perform node classification within the graph. These layers are either graph convolutional layers, that learn a certain kernel over the graph, or attention based. Different layers of both and other types such as were tested.  \\
+% The drug-drug interaction features are retrieved by choosing the corresponding row in the adjacency matrix of the graph, thus leading to quite simple features. \\
+% For the semantic similarity feature, that once again represents a top-down attribute, we artificially link each drug to its corresponding side effects in the MedDRA hierarchy. Concerning this hierarchy, drug-drug similarity is computed by the Resnik similarity (\cite{Resnik1995}). For the given compound we take the corresponding row of this symmetric similarity matrix. \\
 
-Thereby, we concatenate these three features together and funnel them into another deep neural network as depicted in figure \ref{fig:02}. This network finally yields our prediction. We hereby perform splits over both drugs and proteins, in order to test and show the discrepancy and increasing difficulty.\\ Implementation was done in PyTorch (\cite{Pytorch}) and is available on Github under \href{github.com/thinnerichs/KAUST-dti-metabol}{github.com/thinnerichs/KAUST-dti-metabol}. Graph learning methods were build with help of PyTorch-Geometric (\cite{PytorchGeometric}), a geometric deep learning extension library for PyTorch, that recently got a lot of attention in the machine learning community. This library gives the potential to use many state of the art graph learning mechanisms, such as plain but effective graph convolution (\citet{GCNConv}), Chebychev kernels (\cite{ChebConv}), ARMA kernels (\cite{ARMAConv}), translation-invariant operators (\cite{FeaStConv}), attention mechanisms (\cite{GATConv}), random walks (\cite{APPNPConv}) and mixtures of the latter two (\cite{SAGEConv}). The performance of these various layer types were tested for this particular problem, as discussed in the results section.
+% Thereby, we concatenate these three features together and funnel them into another deep neural network as depicted in figure \ref{fig:02}. This network finally yields our prediction. We hereby perform splits over both drugs and proteins, in order to test and show the discrepancy and increasing difficulty.\\ Implementation was done in PyTorch (\cite{Pytorch}) and is available on Github under \href{github.com/thinnerichs/KAUST-dti-metabol}{github.com/thinnerichs/KAUST-dti-metabol}. Graph learning methods were build with help of PyTorch-Geometric (\cite{PytorchGeometric}), a geometric deep learning extension library for PyTorch, that recently got a lot of attention in the machine learning community. This library gives the potential to use many state of the art graph learning mechanisms, such as plain but effective graph convolution (\citet{GCNConv}), Chebychev kernels (\cite{ChebConv}), ARMA kernels (\cite{ARMAConv}), translation-invariant operators (\cite{FeaStConv}), attention mechanisms (\cite{GATConv}), random walks (\cite{APPNPConv}) and mixtures of the latter two (\cite{SAGEConv}). The performance of these various layer types were tested for this particular problem, as discussed in the results section.
 
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=0.4\textwidth]{figures/MolecularPredictor.png}}
-	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:MolPred}
-\end{figure}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.4\textwidth]{figures/MolecularPredictor.png}}
+% 	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:MolPred}
+% \end{figure}
 
-\begin{figure}[!tpb]%figure2
-\centerline{\includegraphics[width=0.4\textwidth]{figures/InteractionNetwork.png}}
-\caption{Deep neural network that predicts based on drug-drug interaction features and semantic similarity features over side effects for drugs, and graph convolution over protein-protein interaction networks for proteins. Protein and drug features are represented by blue and red, respectively.}\label{fig:02}
-\end{figure}
+% \begin{figure}[!tpb]%figure2
+% \centerline{\includegraphics[width=0.4\textwidth]{figures/InteractionNetwork.png}}
+% \caption{Deep neural network that predicts based on drug-drug interaction features and semantic similarity features over side effects for drugs, and graph convolution over protein-protein interaction networks for proteins. Protein and drug features are represented by blue and red, respectively.}\label{fig:02}
+% \end{figure}
 
-\section{Discussion}
+%\section{Discussion}
 
 
 
