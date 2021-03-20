@@ -608,15 +608,24 @@ expressive power. To test whether the improvement is due to the number
 of learnable parameters added or the result of better exploiting the
 information about PPIs, we experiment with a graph model in which all
 graph convolutional neural layers in the residual blocks are removed,
-resulting in a non--graph model. This pruned network, with no
+resulting in a model with similar parameters but without the ability
+to use graph-based information. This pruned network, with no
 information on the protein--protein interactions, reached very similar
 results to the original \textit{OntoPred} model and showed no
 improvement.
 
-Furthermore, these major improvements are only provided by the \textit{GENConv} graph convolution scheme as part of the ResGraphConv blocks, as \textit{GCNConv} and other related graph convolutional methods fail to achieve any gain in comparison to the plain \textit{OntoPred} performance even when combined with the residual blocks. The discrepancy of {\em GENConv} and other graph convolutional methods may be founded in numerical stability and fading signals, as described in the introduction of the {\em GENConv} method.  
-
-As the inclusion of graph information increases performance, we conclude that information about protein
-functions localizes on the graph while molecular features do not.
+The improvements when including the graph are only provided by the
+\textit{GENConv} graph convolution scheme which includes the
+ResGraphConv blocks; \textit{GCNConv} and other graph
+convolutional methods fail to achieve any gain in comparison to the
+plain \textit{OntoPred} performance even when combined with the
+residual blocks. The discrepancy between {\em GENConv} and other graph
+convolutional methods may be the result of numerical instability and
+fading signals \cite{}.
+Nevertheless, our results demonstrate that the inclusion of graph
+information increases performance when ontology-based features are
+used, which allows us to conclude that information about protein
+functions localizes on the graph whereas molecular features do not.
 
 
 
