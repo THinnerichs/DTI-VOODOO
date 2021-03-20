@@ -165,21 +165,18 @@ them in the following chapters.
 
 \section{Methods}
 \subsection{Problem Description}
-The issue of predicting drug-target interactions can be described
-quite briefly: For a given drug and a given protein we want to
-determine whether those interact or not.  We do not differentiate
-between types of interaction such as activation and inhibition, and do
-not predict the strength of the interaction.  If we additionally make
-the closed world assumption, i.e., assume that our knowledge is
-complete and all drug--protein pairs without a known interaction do
-not interact, we can formulate the problem as a binary classification
-task.
-
+\name aims to solve the following problem: for a given drug and a
+given protein we want to determine whether those interact or not.  We
+do not differentiate between types of interaction such as activation
+and inhibition, and do not predict the strength of the interaction.
+If we additionally assume that our knowledge is complete and all
+drug--protein pairs without a known interaction do not interact, we
+can formulate the problem as a binary classification task.
 
 \subsection{Datasets}
-We obtain a dataset consisting of 12884 human proteins with over 340627 links from STRING
-\citep{STRINGv10}. For the drug-target interactions, we
-fetched 229870 links from the STITCH database
+We obtain a dataset consisting of 12,884 human proteins with over
+340627 links from STRING \citep{STRINGv10}. For the drug-target
+interactions, we use 229,870 links from the STITCH database
 \citep{STITCHv5}. As both STRING and STITCH provide confidence scores
 for each association, we filtered them as advised by a threshold of
 $700$, therefore retaining only high-confidence interactions.
@@ -197,11 +194,13 @@ provides a SPARQL query endpoint for the mentioned resources.
 We only use proteins in our analysis that have at least one link in
 either STITCH or STRING, and drugs with at least one side effect and
 one existing target. Therefore, the intersection between these
-resources yields 1,428 drugs and 7,368 human proteins with 32212 interaction links for the training phase. We provide links to and methods for obtaining and processing
-the necessary data on Github.
+resources yields 1,428 drugs and 7,368 human proteins with 32,212
+interactions for the training phase. We provide links to and methods
+for obtaining and processing the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
-introduced by \citet{Yaminishi2008} consisting of 1923 interactions between 708 drugs and 1512 proteins.
+introduced by \citet{Yaminishi2008} consisting of 1,923 interactions
+between 708 drugs and 1,512 proteins.
  
 \subsection{Model}
 
@@ -221,7 +220,7 @@ features for proteins from \textit{DeepGOPlus}
 \citep{DeepGoPlus}. \textit{SmilesTransformer} introduces an
 autoencoder, learning over the SMILES strings and therefore the
 molecular organization of each drug in an unsupervised manner. 
-\textit{DeepGOPlus} provides  features derived from protein amino acid
+\textit{DeepGOPlus} provides features derived from protein amino acid
 sequences which are useful to predict protein function.
 % Thus, both embeddings seem to suitably supplement
 % the following ontology based representations.
@@ -247,39 +246,32 @@ graph.
 \end{figure}
 
 
-\subsubsection{Half-twin neural networks and modular learnable feature transformation}
-
-\todo[inline]{Looking at the code, I wonder if what is implemented is
-  actually a ANN; it does not look as if the weights are shared
-  between the two networks, so looks more like a twin or half-twin
-  network? Siamese would be sim(f(e1),f(e2)) but the implementation
-  seems to be sim(f(e1), g(e2)).}
+\subsubsection{Half-twin neural networks and feature transformation}
 
 As we want to learn from the similarity of drug side effects and
 protein phenotypes, we use a deep half-twin neural network with a
 contrastive loss using cosine similarity.  A half-twin neural network
 aims to learn a similarity between two embeddings of the same
-dimension.  The precomputed embeddings are first processed by a
-learnable feature transformation (LFT) network, a fully connected
-neural network layer which takes as input an embedding and outputs a
-representation of a particular size. An example structure for both
-types of features can be found in Figure~\ref{fig:HalfTwinNetwork}. We
-use this LFT to reduce the eventual representation size for drugs and
+dimension.  The precomputed embeddings may have different
+dimensionality and we first process them using a learnable feature
+transformation (LFT) network, i.e., a fully connected neural network
+layer which takes as input an embedding and outputs a representation
+of a particular size. An example structure for both types of features
+can be found in Figure~\ref{fig:HalfTwinNetwork}. We use this LFT to
+reduce the representation size of the embeddings for drugs and
 proteins separately.
 % While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we
 The use of an LFT enables flexible experimentation as both ontology
 and molecular feature for both drugs and proteins are reduced to
-similar dimensionality for varying sizes of inputs; this allows for a
+the same dimensionality for varying sizes of inputs; this allows for a
 high amount of modularity across different experimental setups by
 adding different kinds of features into the model. Additionally, the
-generated features can be used for a variety of other tasks; for
-example, the ontology LFT can be reused for a variety of DL2vec-based
-features with respect to other ontologies and hypotheses. We follow
-the results of \textit{DL2vec} showing that the activation function
-$\sigma := \mathrm{LeakyReLU}$ leads to improved performance compared
-to other activation functions.
-
-
+generated features may be used for other tasks. % ; for
+% example, the ontology LFT can be reused for a variety of DL2vec-based
+% features with respect to other ontologies and hypotheses
+We follow the results of \textit{DL2vec} \cite{} and use as
+activation function $\sigma := \mathrm{LeakyReLU}$ which leads to
+improved performance compared to other activation functions.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
@@ -310,7 +302,7 @@ features.
 % As described before, graph convolution has shown significant
 % performance increase in a variety of tasks. While there are various
 % methods out there we will only introduce the most basic one here. 
-A graph convolutional layer \citet{GCNConv} consists of a learnable
+A graph convolutional layer \cite{GCNConv} consists of a learnable
 weight matrix followed by an aggregation step, formalized by
 \begin{equation}
 	\mathbf{X}^{\prime} = \mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
@@ -389,11 +381,17 @@ The structure is depicted in Figure~\ref{fig:ResGraphConvBlocks}.
 \end{figure}
 
 \subsubsection{title}
-Combining half-twin and graph convolutional neural networks, we map all protein representations to the respective node features, initializing the graph convolutional update steps. The resulting representations are used for a similarity prediction similar to the models presented in figure ~\ref{fig:HalfTwinNetwork}.  
+Combining half-twin and graph convolutional neural networks, we map
+all protein representations to the respective node features,
+initializing the graph convolutional update steps. The resulting
+representations are used for a similarity prediction similar to the
+models presented in figure ~\ref{fig:HalfTwinNetwork}.
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph for the similarity
-computation. A more in-depth image of the overall architecture, combining both feature types is depicted in figure ~\ref{fig:FullModelAllLayers}. 
+computation. A more in-depth image of the overall architecture,
+combining both feature types is depicted in figure
+~\ref{fig:FullModelAllLayers}.
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the number of
@@ -413,12 +411,13 @@ binary cross-entropy:
 \begin{equation}
 	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
 \end{equation}
-for a given prediction $x$ and target $y$, and positive weight $w$ defined by equation \eqref{weight}. We average this loss among
-all drug-protein pairs in the training set, leading to a stable
-environment for the used optimizing scheme \textit{Adam}
-\citep{Adam2014}. We implemented a 5-fold cross validation split among the
-proteins. Furthermore, we used early stopping in
-the training process for optima detection.
+for a given prediction $x$ and target $y$, and positive weight $w$
+defined by equation \eqref{weight}. We average this loss among all
+drug-protein pairs in the training set, leading to a stable
+environment for the \textit{Adam} optimization algorithm
+\citep{Adam2014}. We implemented a 5-fold cross validation split among
+the proteins. Furthermore, we used early stopping in the training
+process.
 
 To find the best hyperparameter configuration for the proposed model
 we performed a grid search to find the most expressive and
