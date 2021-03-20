@@ -378,12 +378,13 @@ in Figure~\ref{fig:ResGraphConvBlocks}.
 	\label{fig:FullModelAllLayers}
 \end{figure}
 
-\subsubsection{title}
+\subsubsection{Combined prediction model}
 Combining half-twin and graph convolutional neural networks, we map
-all protein representations to the respective node features,
+all protein representations to their respective node features,
 initializing the graph convolutional update steps. The resulting
-representations are used for a similarity prediction similar to the
-models presented in figure ~\ref{fig:HalfTwinNetwork}.
+representations are used for a similarity prediction similar
+to\todo{Similar, or identical to? Needs to describe the exact model
+  used} the models presented in figure ~\ref{fig:HalfTwinNetwork}.
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph for the similarity
@@ -400,11 +401,11 @@ the considered subset the ratio
 	w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
 	\label{weight}
 \end{equation}
-consequently needing compensation in the computed loss function and
-appropriate metrics for the evaluation.
+and consequently needs to be compensated in the computed loss function
+and appropriate metrics for the evaluation.
 
-Therefore, we weighted all positive drug-protein pair samples with
-this ratio by introducing the following loss function with respect to
+Therefore, we weight all positive drug-protein pair samples with this
+ratio by introducing the following loss function with respect to 
 binary cross-entropy:
 \begin{equation}
 	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
@@ -417,13 +418,17 @@ environment for the \textit{Adam} optimization algorithm
 the proteins. Furthermore, we used early stopping in the training
 process.
 
-To find the best hyperparameter configuration for the proposed model
+To find the best hyperparameter configuration for the proposed model,
 we performed a grid search to find the most expressive and
 non-redundant representation. We pretrained the bottom-up and the
 top-down model separately and aimed at best performing models
 with respect to our evaluation metrics. We optimized embedding sizes,
 depth of the neural network, optimizer, learning rate and layer types
-using an extensive, manual grid search, Starting from na\"ive, shallow feature transformations with an embedding size of 10, we scaled the network up to residual structures with up to 10 hidden layers leading to embeddings of size 4000, testing different network widths and learning rates for each configuration. 
+using an extensive, manual grid search. Starting from na\"ive, shallow
+feature transformations with an embedding size of $10$, we scaled the
+network up to residual structures with up to $10$ hidden layers
+leading to embeddings of size $4000$, testing different network widths
+and learning rates for each configuration.
 
 \subsection{Evaluation and metrics}
 
