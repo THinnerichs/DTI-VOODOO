@@ -288,16 +288,15 @@ improved performance compared to other activation functions.
 
 \subsubsection{Graph convolutional layers}
 
-We included these molecular and ontology-based sub-models with a
-larger graph convolutional model. The graph underlying the graph
-convolutional neural network is based on the protein--protein
-interaction (PPI) graph. The PPI dataset is represented by a graph
-$G=(V,E)$, where each protein is represented by a vertex $v\in V$, and
-each edge $e\in E\subseteq V\times V$ symbolizes an interaction
-between two proteins. Additionally, we introduce a mapping
-$x:V\rightarrow\mathbb{R}^{d}$ projecting each vertex $v$ to its node
-feature $x_v := x(v)$, where $d$ denotes the dimensionality of the node
-features.
+We include these molecular and ontology-based sub-models within a
+graph neural network (GNN). The graph underlying the GNN is based on
+the protein--protein interaction (PPI) graph. The PPI dataset is
+represented by a graph $G=(V,E)$, where each protein is represented by
+a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$
+represents an interaction between two proteins. Additionally, we
+introduce a mapping $x:V\rightarrow\mathbb{R}^{d}$ projecting each
+vertex $v$ to its node feature $x_v := x(v)$, where $d$ denotes the
+dimensionality of the node features.
  
 % As described before, graph convolution has shown significant
 % performance increase in a variety of tasks. While there are various
@@ -317,7 +316,8 @@ representation is directly dependent on its own preceding one. The
 number of graph convolutional layers stacked equals the radius of
 relevant nodes for each vertex within the graph.
 
-The update rule for each individual node is given by a message passing scheme formalized by
+The update rule for each node is given by a message passing scheme
+formalized by
 \begin{equation}
 	\mathbf{x}^{\prime}_i = \mathbf{\Theta} \sum^{N}_{j}
 	\frac{1}{\sqrt{\hat{d}_j \hat{d}_i}} \mathbf{x}_j
