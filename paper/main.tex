@@ -749,7 +749,21 @@ originally evaluated on all three splitting schemes underlining this
 point \cite{}. While \name provides comparable performance to DTI-CDF,
 it yields considerably better results with respect to $MicroAUC_p$.
 
-As we were quite surprised about the MacroAUC discrepancy between the splitting schemes, we evaluated other cutting edge drug--target interaction and drug--target affinity prediction methods, training and evaluating on other datasets. Following the results of MolTrans (\textbf{CITATION}), we reevaluated DeepDTI (\textbf{CITATION}), DeepDTA (\textbf{CITATION}), DeepConv-DTI (\textbf{CITATION}) and MolTrans itself on BioSnap (\textbf{CITATION}) over a protein split, as shown in part (d) of Table \ref{tab:Results}. The authors of MolTrans evaluated all considered methods over the drug--target pair and the protein split, which we were able to reproduce with (d), showing once more a substantial divergence. However, we additionally computed the $MicroAUC_p$ score for all considered methods, leading to comparable scores as for the Yamanishi evaluated methods. 
+As the difference in performance with different splitting schemes is
+quite striking, we evaluated additional drug--target interaction and
+drug--target affinity prediction methods that were trained and
+evaluation on other datasets.  Following the results of MolTrans
+(\textbf{CITATION}), we reevaluated DeepDTI (\textbf{CITATION}),
+DeepDTA (\textbf{CITATION}), DeepConv-DTI (\textbf{CITATION}) and
+MolTrans itself on BioSnap\todo{What is that? Is it in methods?}
+(\textbf{CITATION}) over a protein split, as shown in part (d) of
+Table \ref{tab:Results}. The authors of MolTrans evaluated all
+considered methods over the drug--target pair and the protein split;
+we were able to reproduce the results (Table \ref{tab:Results} (d)),
+showing a substantial difference based on the splitting scheme. We
+additionally computed the $MicroAUC_p$ score for all considered
+methods, leading to comparable\todo{are the datasets comparable?}
+scores as for the results obtained on the Yamanishi dataset.
 
 \todo[inline]{ add \name model to table to allow
   DIRECT comparison:}
