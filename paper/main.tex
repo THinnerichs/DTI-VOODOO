@@ -328,11 +328,11 @@ $e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to
 $d_i$, i.e., the degree of each vertex $i$. We denote this type of
 graph convolutional neural layers with \textsc{GCNConv}.
 
-While in this initial formulation the node-wise update step is defined
-by the sum over all neighbouring node representations, we are able to
-alter this formulation to another message passing scheme.  We are able
-to rearrange the order of activation function $\sigma$, aggregation
-$\mathrm{AGG}$ and linear neural layer $\mathrm{MLP}$ with this
+While in this initial formulation of a GCNConv the node-wise update
+step is defined by the sum over all neighbouring node representations,
+we can alter this formulation to other message passing schemes.  We
+can rearrange the order of activation function $\sigma$, aggregation
+$\mathrm{AGG}$, and linear neural layer $\mathrm{MLP}$ with this
 formulation as proposed by \citet{GENConv2020}:
 \begin{equation}
 	\mathbf{x}_i^{\prime} = \mathrm{MLP} \left( \mathbf{x}_i +
@@ -341,9 +341,9 @@ formulation as proposed by \citet{GENConv2020}:
 	: j \in \mathcal{N}(i) \right\} \right)
 	\right)
 \end{equation}
-where we will generally only consider
-$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We will denote
-this generalized layer type as \textsc{GENConv}, following the
+where we only consider
+$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We denote
+this generalized layer type as \textsc{GENConv} following the
 notation of PyTorch Geometric \cite{PytorchGeometric}.  While the
 reordering is mainly import for numerical stability, this alteration
 also addresses the vanishing gradient problem for deeper convolutional
@@ -352,7 +352,7 @@ aggregation function to allow different weighting functions such as
 learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming
 signals for each vertex, substituting the averaging step in
 \textsc{GCNConv}. Hence, while \textsc{GCNConv} suffers from both
-vanishing gradients and signal fading for large scale, highly
+vanishing gradients and signal fading for large scale and highly
 connected graphs, each propagation step in \textsc{GENConv} emphasizes
 signals with values close to $0$ and $1$. The same convolutional
 filter and weight matrix are applied to and learned for all nodes
@@ -361,11 +361,9 @@ simultaneously. % , and the resulting information\todo{Which information?
 We further employ another mechanism to avoid redundancy and fading
 signals in stacked graph convolutional networks, using residual
 connections and a normalization scheme \cite{DeepGCN2019,
-  DeeperGCN2020}.
-The residual blocks are reusable and can be stacked multiple times. %, thereby not losing focus of each node neighbourhood.
-\todo[inline]{Needs a clearer outline/description/figure of YOUR model
-structure.}
-The structure is depicted in Figure~\ref{fig:ResGraphConvBlocks}.
+  DeeperGCN2020}.  The residual blocks are reusable and can be stacked
+multiple times. The structure of the GNN architecture we use is shown
+in Figure~\ref{fig:ResGraphConvBlocks}.
 
 \begin{figure}[!tpb]%figure1
 	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
