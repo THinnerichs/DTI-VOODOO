@@ -583,18 +583,20 @@ targets it should be predicted.
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
 we then selected the best-performing models (with respect to
-\textit{MacroAUC} and $MicroAUC_p$, see Section \ref{sec:evaluation})
-and evaluate them in a 5-fold protein-split cross-validation on the
-Yamanishi benchmark dataset to avoid validation overfitting and yield
-more realistic testing results. To evaluate the influence of the
-different features separately, and to determine whether they
-``localize'' on the PPI graph (and therefore can be exploited
-successfully by the graph neural networks), we train and evaluate
-models with different types of features, and with and without
-inclusion of the PPI graph, separately. We comparing the molecular
-(MolPred) and phenotype-based (OntoPred) prediction model, and a
-combination of both when concatenating both types of features.  Table
-\ref{tab:Results} (a)+(b) shows the results of these experiments.
+\textit{MacroAUC} and $MicroAUC_p$\todo{which is it, macro or micro?},
+see Section \ref{sec:evaluation}) and evaluate them in a 5-fold
+protein-split cross-validation on the Yamanishi benchmark dataset to
+avoid validation overfitting and yield more realistic testing
+results. To evaluate the influence of the different features
+separately, and to determine whether they ``localize'' on the PPI
+graph (and therefore can be exploited successfully by the graph neural
+networks), we train and evaluate models with different types of
+features, and with and without inclusion of the PPI graph,
+separately. We comparing the molecular (MolPred) and phenotype-based
+(OntoPred) prediction model, and a combination of both where we
+concatenate both types of features.  Table
+\ref{tab:Results}\todo{check -- not currently in the table} shows the
+results of these experiments.
 
 We find that the model using ontology-based features
 (\textit{OntoPred}) is showing better performance on STITCH compared
@@ -603,35 +605,33 @@ using ontology-based features results in increased performance when
 incorporating the PPI graph. This increase can be observed with
 different graph neural network architectures and configurations. While
 the {\em GCNConv} and {\em GENConv} architecture already shows some
-minor improvement, the \textit{ResGraphConv} blocks add a large amount
-of additional learnable parameters to the network, leading to more
-expressive power. To test whether the improvement is due to the number
-of learnable parameters added or the result of better exploiting the
-information about PPIs, we experiment with a graph model in which all
-graph convolutional neural layers in the residual blocks are removed,
-resulting in a model with similar parameters but without the ability
-to use graph-based information. This pruned network, with no
-information on the protein--protein interactions, reached very similar
-results to the original \textit{OntoPred} model and showed no
-improvement.
+minor improvement, the use of \textit{ResGraphConv} results in larger
+performance improvements.  {\em ResGraphConv} blocks add a large
+amount of additional learnable parameters to the network, leading to
+more expressive power. To test whether the observed improvement is due
+to the number of learnable parameters added or the result of better
+exploiting the information about PPIs, we experiment with a graph
+model in which all graph convolutional neural layers in the residual
+blocks are removed, resulting in a model with similar parameters but
+without the ability to use graph-based information. This pruned
+network, with no information on the protein--protein interactions,
+reached very similar results to the original \textit{OntoPred} model
+and showed no improvement.
 
 The improvements when including the graph are only provided by the
 \textit{GENConv} graph convolution scheme which includes the
-ResGraphConv blocks; \textit{GCNConv} and other graph
+{\em ResGraphConv} blocks; \textit{GCNConv} and other graph
 convolutional methods fail to achieve any gain in comparison to the
 plain \textit{OntoPred} performance even when combined with the
 residual blocks. The discrepancy between {\em GENConv} and other graph
 convolutional methods may be the result of numerical instability and
 fading signals \cite{}.
-Nevertheless, our results demonstrate that the inclusion of graph
-information increases performance when ontology-based features are
-used, which allows us to conclude that information about protein
-functions localizes on the graph whereas molecular features do not.
 
-
-
-
-
+Our results demonstrate that the inclusion of graph information
+can increase performance when ontology-based features are used but not
+when molecular features are used alone. This observation allows us to
+conclude that information about protein functions localizes on the
+graph whereas molecular features do not.
 
 % despite predicting per protein is
 % rather counter-intuitive as there only limited drug-targets
@@ -644,17 +644,17 @@ functions localizes on the graph whereas molecular features do not.
 
 \subsection{Protein-centric evaluation}
 The goal of \name is to find candidate drugs that target a specific
-protein; however, so far, we do not evaluate this application
-but rather how \name would perform in finding plausible drug--target
-interactions among all possible interactions. This evaluation does not
+protein; however, so far, we do not evaluate this application but
+rather how \name would perform in finding plausible drug--target
+interactions among all possible interactions (since we use the
+MacroAUC as our main evaluation measure). This evaluation does not
 correspond to the application of \name in finding drugs that target a
-specific protein.
-To provide a better
-estimate on how \name performs for individual protein targets, we use
-micro-averages between proteins and compute the \textit{MicroAUC} (see
-Section \ref{sec:evaluation}); micro-averages average the performance
-(true and false positive rates) per protein instead of across all
-drug--protein pairs, and can therefore better estimate how \name
+specific protein.  To provide a better estimate on how \name performs
+for individual protein targets, we use micro-averages between proteins
+and compute the \textit{MicroAUC} (see Section \ref{sec:evaluation});
+to determine {\em MicroAUC}, we average the performance (true and
+false positive rates) per protein instead of across all drug--protein
+pairs; the resulting measure can therefore better estimate how \name
 performs when tasked with finding a drug that targets a specific
 protein.
 
