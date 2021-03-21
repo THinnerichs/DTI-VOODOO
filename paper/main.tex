@@ -780,8 +780,8 @@ drug--target pair and the protein split; we were able to reproduce the
 results (Table \ref{tab:Results} (d))\todo{check table}, showing a
 substantial difference based on the splitting scheme. We additionally
 computed the $MicroAUC_p$ score for all considered methods, leading to
-comparable\todo{are the datasets comparable?} scores as for the
-results obtained on the Yamanishi dataset.
+evaluation results that are comparable\todo{are the datasets
+  comparable?} to the ones obtained on the Yaminishi dataset.
 
 \todo[inline]{ add \name model to table to allow
   DIRECT comparison:}
@@ -793,11 +793,6 @@ We find that...\todo[inline]{summarize key findings from Table.}
 
 \todo[inline]{Replace/merge table:}
 
-\todo[inline]{Discussion:}
-The lack of stratification, only impacts the not
-considered area under precision recall curve (AUPRC) and not the Macro
-AUROC score, while also supporting the expressiveness of $MicroAUC_p$
-with more data points.
 
 %As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
 
@@ -807,6 +802,21 @@ with more data points.
 \section{Discussion}
 
 \subsection{``Bottom-up'' and ``top-down'' prediction of drug-target interactions}
+
+There are many computational methods to predict drug--target
+interactions. They can broadly be grouped in two types; the first,
+which we refer to as ``bottom-up'' approaches, start from molecular
+information about a drug and protein and predict an interaction based
+on their molecular properties; the second, which we refer to as
+``top-down'' approaches, start from observable characteristics of an
+organism and infer drug--target interactions as the putative molecular
+mechanisms that explain these observations; many top-down approaches
+follow methods similar to those used in reverse genetics \cite{}.
+
+Another view on these two approaches is as direct and indirect ways to
+predict drug--target interactions. Molecular information can be used
+to directly determine whether two molecules have the ability to
+interact, 
 
 What features localize on graph? Molecular interactions based on
 structure not likely -- only possible to find binding sites to other
@@ -925,6 +935,11 @@ on BioSnap
 %\subsection{Features to use in predicting drug targets}
 
 
+\todo[inline]{Discussion:}
+The lack of stratification, only impacts the not
+considered area under precision recall curve (AUPRC) and not the Macro
+AUROC score, while also supporting the expressiveness of $MicroAUC_p$
+with more data points.
 
 
 
