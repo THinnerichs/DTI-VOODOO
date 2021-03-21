@@ -700,20 +700,25 @@ with the only hyperparameter $k$.
 
 The prediction $P_k$ is not dependent on the drug $d_i$ and will
 predict the same ranked list of drugs for all proteins; consequently,
-this na\"ive predictor will not predict any useful information about
-interactions between drugs and proteins, but allows us to estimate the
-effect of potential biases in our evaluation dataset.
+this na\"ive predictor does not rely on any biological features and
+will not predict any novel information about interactions between
+drugs and proteins; the na\"ive predictor only exploits imbalances in
+the evaluation set to make predictions that may perform
+well. % but allows us to estimate the effect of potential
+% biases in our evaluation dataset.
 % Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
 
-Our na\"ive predictor is not applicable for a protein split
-cross-validation as the number of interactions for each protein in the
-validation set is unknown.  We apply this naive predictor on both the
-STITCH and Yamanishi datasets, using the full dataset as well as
-5-fold cross-validation over drugs as well as over drug--protein
-pairs.  For each fold, we gradually increase $k$ to determine the best
-performance for each fold. Using the full dataset, drug--target split,
-and drug split, we obtain the following MacroAUC results: for the
-STITCH database, we obtain a performance of $0.76$ on the whole
+The way in which we formulated the na\"ive predictor, it is not
+applicable for a protein split cross-validation as the number of
+interactions for each protein in the validation set is unknown.  We
+apply this naive predictor on both the STITCH and Yamanishi datasets,
+using the full datasets as well as a 5-fold cross-validation over
+drugs and over drug--protein pairs to compare the prediction results
+directly to \name.  For each fold, we gradually increase $k$ to
+determine the best performance for each fold. Using the full dataset,
+drug--target split, and drug split, we obtain the following MacroAUC
+results\todo[inline]{Put in Results table, then remove from here}: for
+the STITCH database, we obtain a performance of $0.76$ on the whole
 dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the
 drug splitting scheme; on the Yamanishi dataset, we obtain MacroAUC
 scores of $0.88$, $0.84$ and $0.85$, for the total dataset,
@@ -737,40 +742,46 @@ We evaluate all models on their recommended splitting scheme choice,
 hyperparameters and folds in cross-validation, measuring their
 respective AUROC. We further evaluate each model by performing a
 protein-wise cross-validation determining the MacroAUC and
-$MicroAUC_p$. For this evaluation, we allow stratification for the
-training process but not for the validation and testing phase as real
-world applications of these models would have to deal with possibly
+$MicroAUC_p$. For this evaluation, we allow
+stratification\todo{Stratification may not be the right word here; do
+  you mean ``sub-sampling of negatives''?} for the training process
+but not for the validation and testing phase as real world
+applications of these models would have to deal with possibly
 imbalanced data.
 
 The results of our experiments are summarized in part (c) of Table
-\ref{tab:Results}; we calculated the performance of all compared
-methods over their original splitting scheme and over a protein
-split. First, we find that there is a large difference in performance
-when evaluating over a drug--target pair split compared to a
-protein split, with generally higher performance achieved when using
-the drug--target pair split.
-Second, when evaluating the same methods over a protein split, we find
-a substantial performance difference in comparison to the splitting
+\ref{tab:Results}\todo{Check after restructure}; we calculated the
+performance of all compared methods over their original splitting
+scheme and over a protein split. We find that there is a large
+difference in performance when evaluating over a drug--target pair
+split compared to a protein split, with generally higher performance
+achieved when using the drug--target pair split.  Second, when
+evaluating the same methods over a protein split, we find a
+substantial performance difference in comparison to the splitting
 scheme used in the original evaluation of each method. DTI-CDF was
 originally evaluated on all three splitting schemes underlining this
-point \cite{}. While \name provides comparable performance to DTI-CDF,
-it yields considerably better results with respect to $MicroAUC_p$.
+point \cite{}. While \name provides comparable performance to the
+na\"ive predictor and DTI-CDF in terms of MacroAUC, it yields
+considerably better results with respect to $\textrm{MicroAUC}_p$. We
+also find that methods that are trained using a protein split
+generally result in higher $\textrm{MicroAUC}_p$ than methods trained
+using a drug--target pair split.
 
 As the difference in performance with different splitting schemes is
-quite striking, we evaluated additional drug--target interaction and
-drug--target affinity prediction methods that were trained and
+quite large, we further evaluated additional drug--target interaction
+and drug--target affinity prediction methods that were trained and
 evaluation on other datasets.  Following the results of MolTrans
-(\textbf{CITATION}), we reevaluated DeepDTI (\textbf{CITATION}),
-DeepDTA (\textbf{CITATION}), DeepConv-DTI (\textbf{CITATION}) and
-MolTrans itself on BioSnap\todo{What is that? Is it in methods?}
-(\textbf{CITATION}) over a protein split, as shown in part (d) of
-Table \ref{tab:Results}. The authors of MolTrans evaluated all
-considered methods over the drug--target pair and the protein split;
-we were able to reproduce the results (Table \ref{tab:Results} (d)),
-showing a substantial difference based on the splitting scheme. We
-additionally computed the $MicroAUC_p$ score for all considered
-methods, leading to comparable\todo{are the datasets comparable?}
-scores as for the results obtained on the Yamanishi dataset.
+\cite{}\todo{add}, we reevaluated DeepDTI \cite{}\todo{add}, DeepDTA
+\cite{}, DeepConv-DTI \cite{} and MolTrans itself on BioSnap\todo{What
+  is that? Is it described in methods?}  \cite{} over a protein split,
+as shown in part (d) of Table \ref{tab:Results}\todo{check table}. The
+authors of MolTrans evaluated all considered methods over the
+drug--target pair and the protein split; we were able to reproduce the
+results (Table \ref{tab:Results} (d))\todo{check table}, showing a
+substantial difference based on the splitting scheme. We additionally
+computed the $MicroAUC_p$ score for all considered methods, leading to
+comparable\todo{are the datasets comparable?} scores as for the
+results obtained on the Yamanishi dataset.
 
 \todo[inline]{ add \name model to table to allow
   DIRECT comparison:}
