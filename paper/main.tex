@@ -662,11 +662,14 @@ protein.
 
 
 % \subsection{Baseline model}
-Furthermore, we hypothesize that some of the predictions made by our
-model are the result of the biases in drug--target interaction
-datasets where hub proteins may have a large number of interactions,
-or certain drugs interact with many proteins, and these may be easier
-to predict than others. We design a ``na\"ive'' baseline model that
+Furthermore, we hypothesize that it may be possible to exploit biases
+in drug--target interactions to achieve relatively high prediction
+performance without obtaining a biologically meaningful signal.
+For example, hub proteins may have a large number of interactions,
+or certain drugs interact with many proteins, and preferentially
+predicting these interactions may increase predictive performance even
+in the absence of any biological features.
+To test this hypothesis, we design a ``na\"ive'' baseline model that
 predicts the same list of proteins for each drug based only on the
 number of known drug--target interactions for a protein. Formally,
 given lists $D$ and $P$ of drugs and proteins and a set of known
