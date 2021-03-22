@@ -379,3 +379,12 @@ Thus, building splitting over proteins is the most challenging of the three opti
 - include results on DTA stuff
 - cite MolTrans
 - counter of results table in \ref 
+
+## Robert 20.03.2021
+
+- naive predictor and \name on Biosnap
+- finalize introduction -> see Robert chat
+
+- end of introduction
+  - bring in Survey2018
+

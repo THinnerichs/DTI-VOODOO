@@ -45,14 +45,12 @@ online.}
 \maketitle
 \section{Introduction}
 
-\cite{Survey2018}\\
 In history, traditional remedies, that were known for their medicinal
 properties lead to drugs by extraction of the functional
 ingredients. Alternatively, characteristics and features of potential
 drugs were detected by accident like in the case of penicillin. More
 recently, biological drug targets can be found \textit{in silico}
 through discovery of suitable computational predictors.
-
 
 The challenge of accurately predicting drug-target-interactions (DTI)
 has shown its importance in the fields of drug repurposing and
@@ -67,9 +65,7 @@ With the rapidly growing field of machine learning approaches and
 their application to bioscientifical problems in the realm of
 bioinformatics, different kinds of data, such as long DNA sequences
 could be utilized for feature generation, while rapid advances were
-made. Almost all state of the art models for drug-target-interaction
-prediction were based on the usage of neural networks with increasing
-size.\todo{Needs ref, or reformulate}
+made. 
 
 Only recently, the technique of graph learning was introduced by
 \citet{GCNConv} through graph convolution algorithms, and improved and
@@ -78,10 +74,52 @@ attention mechanisms \cite{GATConv}, random walks \cite{APPNPConv},
 and mixtures of both \cite{SAGEConv}. While based on diverse systems,
 they can be relevant for testing distinct hypothesis for given
 graphs. While convolutional filters are suitable for finding patterns
-among the the given graph, attention mechanisms are more relevant for
+among the given graph, attention mechanisms are more relevant for
 discovery of important regions within. Lately, graph learning
 approaches found application for computing compound representations
 for DTI prediction.
+
+These approaches can be classified into top-down and bottom-up methods. Top-down or network approaches hereby start form the observable, phenotypical characteristics, such as side-effects, associated diseases and indications represented by knowledge graphs or ontologies, induced by a drug and infer targets based on the likely molecular mechanisms that result in these phenotypes. On the other hand, bottom-up approaches start from molecular features, such as molecular structure, molecular fingerprints, secondary structure and contact predictions and others, deriving predictions from suitable correlations between these features. 
+
+However, both bottom--up and top--down approaches to drug--target interaction prediction contain some limitations that are not solvable within themselves. Generally, it is very challenging for bottom-up methods to accurately predict, whether there a structure is binding to a protein, as not only molecular structure, but also binding sites and molecular forces are crucial for accurate prediction. Thus, finding similarities for dissimilar drugs affecting the same targets is problematic but crucial. Furthermore, phenotypic features contain relevant information for DTI prediction \cite{Campillos2008} that are complementary to knowledge gained from molecular properties. While bottom-up representations possibly contain all information needed for accurate DTI prediction, we rely on indirect information for better generalization. Contrary, top-down approaches lack the ability to spot and cope with small differences within the molecular drug structure, thus both incapable to predict on novel entities and derive similarity from structural correlation.
+
+In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
+However, only few applied this context to the task of DTI prediction in humans. The method of graph convolutional neural networks has been applied successfully to PPI networks \cite{Zitnik2017}, granting valuable information for medical diagnostics, closely related to phenotypic information.
+
+Eventually, we further address potential biases and skews within DTI prediction datasets. \todo[inline]{Introduction}
+Within DTI prediction, there are potential biases resulting from the
+underlying datasets \citep{Pahikkala2014}. First, novel drugs are
+often designed by altering non-functional components of a drug,
+leading to two and more very similar drugs designed to target the same
+proteins \cite{Overington2006}. This can result in a bias when it
+leads to hidden duplicates that can distribute among the train/test
+split, resulting in a better (measured) predictive performance than
+would be expected when the model is applied to identify drugs that
+target a protein for which no drugs yet exist. Second, some proteins
+(which we call \textit{hub proteins}) have significantly more known
+interactions with drugs than others. In the STITCH database, $5\%$ of
+the proteins have $40\%$ of the interactions, and similar
+distributions are present in the Yamanishi and Drugbank
+\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+these proteins may increase predictive performance while not
+reflecting the actual performance when applied to a new protein (e.g.,
+a protein for which no interactions are known). These differences in
+the number of drugs targeting certain proteins may be the result of
+study bias where more ``valuable'' proteins have more drugs designed
+to target them due to their involvement in more common diseases (or
+diseases for which drugs can be more profitably marketed).
+
+\cite{Survey2018}\\
+
+
+
+
+
+Almost all state of the art models for drug-target-interaction
+prediction were based on the usage of neural networks with increasing
+size.\todo{Needs ref, or reformulate}
+
+
 
 Approaches on this rather sophisticated\todo{Try to avoid}
 problem\todo{Need to state the problem clearly here or at end of prev
@@ -175,7 +213,7 @@ resources yields 1,428 drugs and 7,368 human proteins with 32212 interaction lin
 the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
-introduced by \citet{Yaminishi2008} consisting of 1923 interactions between 708 drugs and 1512 proteins.
+introduced by \citet{Yamanishi2008} consisting of 1923 interactions between 708 drugs and 1512 proteins.
  
 \subsection{Model}
 
@@ -373,12 +411,12 @@ computation. A more in-depth image of the overall architecture, combining both f
 As the number of drug-targets are sparse with respect to the number of
 both drugs and proteins considered, the training, validation and
 testing datasets are imbalanced. As there are only $22,336$ links in
-the considered subset the ratio
+the considered STITCH subset, the ratio
 \begin{equation}
 	w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
 	\label{weight}
 \end{equation}
-consequently needing compensation in the computed loss function and
+consequently needs suitable compensation in the computed loss function and
 appropriate metrics for the evaluation.
 
 Therefore, we weighted all positive drug-protein pair samples with
@@ -444,29 +482,6 @@ $AUROC$ score for that entity. For those entities we impute the $MicroAUC$ inter
 % we can try to bypass these difficulties. We will hereby abbreviate,
 % e.g., a cross validation splitting scheme as \glqq split\grqq{}
 % determining the train, validation and test subset of a given dataset.
-
-\todo[inline]{Introduction}
-Within DTI prediction, there are potential biases resulting from the
-underlying datasets \citep{Pahikkala2014}. First, novel drugs are
-often designed by altering non-functional components of a drug,
-leading to two and more very similar drugs designed to target the same
-proteins \cite{Overington2006}. This can result in a bias when it
-leads to hidden duplicates that can distribute among the train/test
-split, resulting in a better (measured) predictive performance than
-would be expected when the model is applied to identify drugs that
-target a protein for which no drugs yet exist. Second, some proteins
-(which we call \textit{hub proteins}) have significantly more known
-interactions with drugs than others. In the STITCH database, $5\%$ of
-the proteins have $40\%$ of the interactions, and similar
-distributions are present in the Yamanishi and Drugbank
-\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
-these proteins may increase predictive performance while not
-reflecting the actual performance when applied to a new protein (e.g.,
-a protein for which no interactions are known). These differences in
-the number of drugs targeting certain proteins may be the result of
-study bias where more ``valuable'' proteins have more drugs designed
-to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed).
 
 We developed \name as a computational model to predict drug--target
 interactions. Specifically, given a protein, \name will identify and
