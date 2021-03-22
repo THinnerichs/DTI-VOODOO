@@ -388,3 +388,7 @@ Thus, building splitting over proteins is the most challenging of the three opti
 - end of introduction
   - bring in Survey2018
 
+- Table side by side with multicolumn
+- citations for MolTrans etc
+- introduce BioSnap in methods
+- splitting options into methods

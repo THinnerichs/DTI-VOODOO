@@ -235,13 +235,149 @@ def test_Yamanishi_AUC():
         results = np.array(results)
         print(results.mean())
 
+def parse_BioSnap():
+    path = 'data/BioSnap_data/'
 
+    train_file = 'train.csv'
+    val_file = 'val.csv'
+    test_file = 'test.csv'
+
+    full_list = []
+    for file in [train_file, val_file, test_file]:
+        print(f'Parsing {path+file}')
+        with open(file=path+file, mode='r') as f:
+            f.readline()
+            for i, line in enumerate(f):
+                full_list.append(line.strip().split(','))
+    full_table = np.array(full_list)
+
+    '''
+    train_table = np.genfromtxt(path+train_file, delimiter=',', dtype=np.str)[1:,:]
+    val_table = np.loadtxt(path+val_file, delimiter=',', dtype=np.str)[1:,:]
+    test_table = np.loadtxt(path+test_file, delimiter=',', dtype=np.str)[1,:]
+
+    full_table = np.vstack((train_table, val_table, test_table))
+    '''
+
+    DB_drug_list = list(set(full_table[:, 3]))
+    gene_list = list(set(full_table[:,4]))
+
+    with open(file=path+'BioSnap_DB_drug_list', mode='w') as f:
+        for drug in DB_drug_list:
+            print(drug, file=f)
+    with open(file=path+'BioSnap_gene_list', mode='w') as f:
+        for gene in gene_list:
+            print(gene, file=f)
+
+    print('num drugs, num genes:', len(DB_drug_list), len(gene_list))
+
+    dti_matrix = np.zeros((len(DB_drug_list), len(gene_list)))
+
+    for i in tqdm(range(full_table.shape[0])):
+        drug, gene, label = full_table[i,3:6]
+
+        drug_index = DB_drug_list.index(drug)
+        gene_index = gene_list.index(gene)
+        label = float(label)
+
+        dti_matrix[drug_index, gene_index] = label
+
+    print(dti_matrix.sum(), dti_matrix.shape)
+
+    print(f'Number of genes with at least one interactor {(dti_matrix.sum(axis=0)>0).sum()}')
+
+    # Naive predictor over DT pairs:
+    num_drugs, num_prots = dti_matrix.shape
+
+    sum_vec = dti_matrix.sum(axis=0)
+
+    print('sumvec:', sum_vec.shape, sum_vec[:20])
+
+    idx = sum_vec.argsort()
+
+    idx = np.flip(idx)
+
+    dti_matrix = dti_matrix.flatten()
+
+    for i in range(0, num_prots, 10):
+        y_pred = np.zeros((num_drugs, num_prots))
+        y_pred[:, idx[:i]] = 1
+        y_pred = y_pred.flatten()
+
+        print(f'i: {i}, ROCAUC: {dti_utils.dti_auroc(y_true=dti_matrix, y_pred=y_pred)}, '
+              f'microAUC: {dti_utils.micro_AUC_per_prot(y_true=dti_matrix, y_pred=y_pred, num_drugs=num_drugs)}, '
+              f'{dti_utils.micro_AUC_per_drug(dti_matrix, y_pred, num_drugs)}')
+
+def naive_predictor_pair_split(dti_matrix):
+    kf = KFold(n_splits=5, random_state=42, shuffle=False)
+
+    num_drugs, num_prots = dti_matrix.shape
+    X = np.arange(num_drugs * num_prots)
+
+    train_aucs = []
+    train_micro_aucs = []
+    test_aucs = []
+    test_micro_aucs = []
+
+    for train_indices, test_indices in kf.split(X):
+        print(train_indices.shape, test_indices.shape)
+        y_train = np.zeros(num_drugs * num_prots)
+        y_train[train_indices] = dti_matrix.flatten()[train_indices]
+        y_train = y_train.reshape((num_drugs, num_prots))
+
+        y_test = np.zeros(num_drugs * num_prots)
+        y_test[test_indices] = dti_matrix.flatten()[test_indices]
+
+        sum_vec = y_train.sum(axis=0)
+
+        idx = sum_vec.argsort()
+
+        idx = np.flip(idx)
+        y_train = y_train.flatten()
+        y_test = y_test.flatten()
+
+        max_train_auroc = max_train_micro_auc = 0
+        max_test_auroc = max_test_micro_auc = 0
+        for i in tqdm(range(0, int(num_prots / 2), 2)):
+            y_pred = np.zeros((num_drugs, num_prots))
+            y_pred[:, idx[:i]] = 1
+            y_pred = y_pred.flatten()
+
+            # help_val = dti_utils.dti_auroc(y_true=y_train.flatten(), y_pred=y_pred[train_drug_indices, :].flatten())
+            help_val = dti_utils.dti_auroc(y_true=y_train[train_indices], y_pred=y_pred[train_indices])
+            max_train_auroc = help_val if help_val > max_train_auroc else max_train_auroc
+
+            help_val = dti_utils.micro_AUC_per_prot_DT_pairs(y_true=y_train, y_pred=y_pred, num_drugs=num_drugs, indices=train_indices)
+            max_train_micro_auc = help_val if help_val > max_train_micro_auc else max_train_micro_auc
+
+            help_val = dti_utils.dti_auroc(y_true=y_test[test_indices], y_pred=y_pred[test_indices].flatten())
+            max_test_auroc = help_val if help_val > max_test_auroc else max_test_auroc
+
+            help_val = dti_utils.micro_AUC_per_prot_DT_pairs(y_true=y_test, y_pred=y_pred, num_drugs=num_drugs, indices=test_indices)
+            max_test_micro_auc = help_val if help_val > max_test_micro_auc else max_test_micro_auc
+
+        print(f'Train: ROCAUC {max_train_auroc}, '
+              f'microAUC: {max_train_micro_auc}, '
+              f'Test: ROCAUC {max_test_auroc}, '
+              f'microAUC: {max_test_micro_auc}'
+              )
+
+        train_aucs.append(max_train_auroc)
+        # train_micro_aucs.append(max_train_micro_auc)
+        test_aucs.append(max_test_auroc)
+        # test_micro_aucs.append(max_test_micro_auc)
+
+    for results in [train_aucs, train_micro_aucs, test_aucs, test_micro_aucs]:
+        results = np.array(results)
+        print(results.mean())
 
 
 if __name__ == '__main__':
     # analyze_DTI_net_results()
-    test_Yamanishi_AUC()
+    # test_Yamanishi_AUC()
     # write_predicted_DTIs()
+
+    parse_BioSnap()
 
 
 
