@@ -80,20 +80,16 @@ Ashburner, M., Ball, C.~A., Blake, J.~A., Botstein, D., Butler, H., Cherry,
 \newblock Gene ontology: tool for the unification of biology.
 \newblock {\em Nature Genetics\/}, {\bf 25}(1), 25--29.
 
-\bibitem[Ayvaz {\em et~al.}(2015)Ayvaz, Horn, Hassanzadeh, Zhu, Stan,
-  Tatonetti, Vilar, Brochhausen, Samwald, Rastegar-Mojarad, Dumontier, and
-  Boyce]{Boyce2015}
-Ayvaz, S., Horn, J., Hassanzadeh, O., Zhu, Q., Stan, J., Tatonetti, N.~P.,
-  Vilar, S., Brochhausen, M., Samwald, M., Rastegar-Mojarad, M., Dumontier, M.,
-  and Boyce, R.~D. (2015).
-\newblock Toward a complete dataset of drug{\textendash}drug interaction
-  information from publicly available sources.
-\newblock {\em Journal of Biomedical Informatics\/}, {\bf 55}, 206--217.
-
 \bibitem[Bianchi {\em et~al.}(2019)Bianchi, Grattarola, Alippi, and
   Livi]{ARMAConv}
 Bianchi, F.~M., Grattarola, D., Alippi, C., and Livi, L. (2019).
 \newblock Graph neural networks with convolutional arma filters.
+
+\bibitem[Campillos {\em et~al.}(2008)Campillos, Kuhn, Gavin, Jensen, and
+  Bork]{Campillos2008}
+Campillos, M., Kuhn, M., Gavin, A.-C., Jensen, L.~J., and Bork, P. (2008).
+\newblock Drug target identification using side-effect similarity.
+\newblock {\em Science\/}, {\bf 321}(5886), 263--266.
 
 \bibitem[Chen {\em et~al.}(2020)Chen, Althagafi, and Hoehndorf]{DL2vec2020}
 Chen, J., Althagafi, A., and Hoehndorf, R. (2020).
@@ -135,6 +131,12 @@ Hoehndorf, R., Schofield, P.~N., and Gkoutos, G.~V. (2011).
 Honda, S., Shi, S., and Ueda, H.~R. (2019).
 \newblock Smiles transformer: Pre-trained molecular fingerprint for low data
   drug discovery.
+
+\bibitem[Huang {\em et~al.}(2020)Huang, Xiao, Glass, and Sun]{MolTrans2020}
+Huang, K., Xiao, C., Glass, L.~M., and Sun, J. (2020).
+\newblock {MolTrans}: Molecular interaction transformer for
+  drug{\textendash}target interaction prediction.
+\newblock {\em Bioinformatics\/}.
 
 \bibitem[Kingma and Ba(2014)Kingma and Ba]{Adam2014}
 Kingma, D.~P. and Ba, J. (2014).
@@ -188,6 +190,12 @@ Kulmanov, M. and Hoehndorf, R. (2019).
 \newblock {DeepGOPlus}: improved protein function prediction from sequence.
 \newblock {\em Bioinformatics\/}.
 
+\bibitem[Lee {\em et~al.}(2019)Lee, Keum, and Nam]{DeepConvDTI2019}
+Lee, I., Keum, J., and Nam, H. (2019).
+\newblock {DeepConv}-{DTI}: Prediction of drug-target interactions via deep
+  learning with convolution on protein sequences.
+\newblock {\em {PLOS} Computational Biology\/}, {\bf 15}(6), e1007129.
+
 \bibitem[Li {\em et~al.}(2019)Li, Müller, Thabet, and Ghanem]{DeepGCN2019}
 Li, G., Müller, M., Thabet, A., and Ghanem, B. (2019).
 \newblock Deepgcns: Can gcns go as deep as cnns?
@@ -223,41 +231,18 @@ Overington, J.~P., Al-Lazikani, B., and Hopkins, A.~L. (2006).
 \newblock How many drug targets are there?
 \newblock {\em Nature Reviews Drug Discovery\/}, {\bf 5}(12), 993--996.
 
+\bibitem[\"{O}zt\"{u}rk {\em et~al.}(2018)\"{O}zt\"{u}rk, \"{O}zg\"{u}r, and
+  Ozkirimli]{DeepDTA2018}
+\"{O}zt\"{u}rk, H., \"{O}zg\"{u}r, A., and Ozkirimli, E. (2018).
+\newblock {DeepDTA}: deep drug{\textendash}target binding affinity prediction.
+\newblock {\em Bioinformatics\/}, {\bf 34}(17), i821--i829.
+
 \bibitem[Pahikkala {\em et~al.}(2014)Pahikkala, Airola, Pietila, Shakyawar,
   Szwajda, Tang, and Aittokallio]{Pahikkala2014}
 Pahikkala, T., Airola, A., Pietila, S., Shakyawar, S., Szwajda, A., Tang, J.,
   and Aittokallio, T. (2014).
 \newblock Toward more realistic drug-target interaction predictions.
 \newblock {\em Briefings in Bioinformatics\/}, {\bf 16}(2), 325--337.
-
-\bibitem[Paszke {\em et~al.}(2019)Paszke, Gross, Massa, Lerer, Bradbury,
-  Chanan, Killeen, Lin, Gimelshein, Antiga, Desmaison, Kopf, Yang, DeVito,
-  Raison, Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala]{Pytorch}
-Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., Killeen,
-  T., Lin, Z., Gimelshein, N., Antiga, L., Desmaison, A., Kopf, A., Yang, E.,
-  DeVito, Z., Raison, M., Tejani, A., Chilamkurthy, S., Steiner, B., Fang, L.,
-  Bai, J., and Chintala, S. (2019).
-\newblock Pytorch: An imperative style, high-performance deep learning library.
-\newblock In H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d\textquotesingle
-  Alch\'{e}-Buc, E.~Fox, and R.~Garnett, editors, {\em Advances in Neural
-  Information Processing Systems 32\/}, pages 8024--8035. Curran Associates,
-  Inc.
-
-\bibitem[Resnik(1995)Resnik]{Resnik1995}
-Resnik, P. (1995).
-\newblock Using information content to evaluate semantic similarity in a
-  taxonomy.
-
-\bibitem[Scheife {\em et~al.}(2015)Scheife, Hines, Boyce, Chung, Momper,
-  Sommer, Abernethy, Horn, Sklar, Wong, Jones, Brown, Grizzle, Comes, Wilkins,
-  Borst, Wittie, and Malone]{Scheife2015}
-Scheife, R.~T., Hines, L.~E., Boyce, R.~D., Chung, S.~P., Momper, J.~D.,
-  Sommer, C.~D., Abernethy, D.~R., Horn, J.~R., Sklar, S.~J., Wong, S.~K.,
-  Jones, G., Brown, M.~L., Grizzle, A.~J., Comes, S., Wilkins, T.~L., Borst,
-  C., Wittie, M.~A., and Malone, D.~C. (2015).
-\newblock Consensus recommendations for systematic evaluation of
-  drug{\textendash}drug interaction evidence for clinical decision support.
-\newblock {\em Drug Safety\/}, {\bf 38}(2), 197--206.
 
 \bibitem[Smith and Eppig(2009)Smith and Eppig]{MP2009}
 Smith, C.~L. and Eppig, J.~T. (2009).
@@ -267,11 +252,11 @@ Smith, C.~L. and Eppig, J.~T. (2009).
   Medicine\/}, {\bf 1}(3), 390--399.
 
 \bibitem[Szklarczyk {\em et~al.}(2014)Szklarczyk, Franceschini, Wyder,
-  Forslund, Heller, Huerta-Cepas, Simonovic, Roth, Santos, Tsafou, Kuhn, Bork,
+  Forslund, Heller, Huerta-Cepas, Simonovic, Roth, Santos, Tsafou, Kuhn, Peer,
   Jensen, and von Mering]{STRINGv10}
 Szklarczyk, D., Franceschini, A., Wyder, S., Forslund, K., Heller, D.,
   Huerta-Cepas, J., Simonovic, M., Roth, A., Santos, A., Tsafou, K.~P., Kuhn,
-  M., Bork, P., Jensen, L.~J., and von Mering, C. (2014).
+  M., Peer, Jensen, L.~J., and von Mering, C. (2014).
 \newblock {STRING} v10: protein{\textendash}protein interaction networks,
   integrated over the tree of life.
 \newblock {\em Nucleic Acids Research\/}, {\bf 43}(D1), D447--D452.
@@ -305,10 +290,6 @@ Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., and Bengio,
   Y. (2017).
 \newblock Graph attention networks.
 
-\bibitem[Verma {\em et~al.}(2017)Verma, Boyer, and Verbeek]{FeaStConv}
-Verma, N., Boyer, E., and Verbeek, J. (2017).
-\newblock Feastnet: Feature-steered graph convolutions for 3d shape analysis.
-
 \bibitem[Wan {\em et~al.}(2019)Wan, Hong, Xiao, Jiang, and Zeng]{NeoDTI2019}
 Wan, F., Hong, L., Xiao, A., Jiang, T., and Zeng, J. (2019).
 \newblock {NeoDTI}: neural integration of neighbor information from a
@@ -321,6 +302,12 @@ Wang, C. and Kurgan, L. (2018).
 \newblock {Review and comparative assessment of similarity-based methods for
   prediction of drug–protein interactions in the druggable human proteome}.
 \newblock {\em Briefings in Bioinformatics\/}, {\bf 20}(6), 2066--2087.
+
+\bibitem[Wen {\em et~al.}(2017)Wen, Zhang, Niu, Sha, Yang, Yun, and
+  Lu]{DeepDTI2017}
+Wen, M., Zhang, Z., Niu, S., Sha, H., Yang, R., Yun, Y., and Lu, H. (2017).
+\newblock Deep-learning-based drug{\textendash}target interaction prediction.
+\newblock {\em Journal of Proteome Research\/}, {\bf 16}(4), 1401--1409.
 
 \bibitem[Wishart {\em et~al.}(2007)Wishart, Knox, Guo, Cheng, Shrivastava,
   Tzur, Gautam, and Hassanali]{Drugbank2007}
@@ -338,5 +325,10 @@ Wishart, D.~S., Feunang, Y.~D., Guo, A.~C., Lo, E.~J., Marcu, A., Grant, J.~R.,
   D., Pon, A., Knox, C., and Wilson, M. (2017).
 \newblock {DrugBank} 5.0: a major update to the {DrugBank} database for 2018.
 \newblock {\em Nucleic Acids Research\/}, {\bf 46}(D1), D1074--D1082.
+
+\bibitem[Zitnik and Leskovec(2017)Zitnik and Leskovec]{Zitnik2017}
+Zitnik, M. and Leskovec, J. (2017).
+\newblock Predicting multicellular function through multi-layer tissue
+  networks.
 
 \end{thebibliography}

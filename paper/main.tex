@@ -107,97 +107,9 @@ a protein for which no interactions are known). These differences in
 the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed).
+diseases for which drugs can be more profitably marketed). This may affect common \cite{Survey2018} cross-validation splitting schemes, that allow exploitation of these biases within DTI prediction.
 
-\cite{Survey2018}\\
-
-
-
-
-
-Almost all state of the art models for drug-target-interaction
-prediction were based on the usage of neural networks with increasing
-size.\todo{Needs ref, or reformulate}
-
-
-
-Approaches on this rather sophisticated\todo{Try to avoid}
-problem\todo{Need to state the problem clearly here or at end of prev
-  paragraph} can divided into top-down or network approaches
-(\textbf{CITATION}), and bottom-up or molecular approaches
-(\textbf{CITATION}). Top-down approaches take advantage of other data
-such as diseases (CITATION), side effects, knowledge graphs or
-ontologies, in order to learn representations for both compound and
-protein. \todo[inline]{We call these approaches ``top-down'' because
-  they start with the observable characteristics induced by a drug and
-  infer the targets based on the likely molecular mechanisms that
-  result in these phenotypes.} On the other hand, bottom-up approaches
-attempt to learn from chemical properties of proteins or drugs to
-infer candidate drug--target interactions. For drugs, molecular
-structure (CITATION GraphDTA), molecular fingerprints, similarity to
-other drugs (See Bioinf Survey), and other molecular features may be
-used. On the protein side, secondary structure prediction (CITATION),
-contact prediction (CITATION), or simply\todo{Don't use ``simply''.}
-convolution over the amino acid sequences can be used to obtain a
-feature representation for a given proteins. However, both bottom-up
-and top-down approaches to drug--target interaction prediction
-\todo[inline]{replace: ``contain and share some problems'' with
-  something like ``have some limitations''} that are not solvable within
-themselves.
-\todo[inline]{Following is not sufficiently precise; here, you need to
-clearly state the challenges faced by both approaches, ideally with
-references.}
-Thus, bottom-up approaches share the lack of ability to
-generalize, which we will show in later sections, and usually focus on
-engineering sophisticated features for the drugs, while neglecting to
-formulate meaningful features on the protein side. Top-down approaches
-lack the ability to spot small differences to cope with small
-differences within the drug structure and rely heavily on given data
-for the considered drug-target pair. The latter is not suitable for
-predictions on novel or unseen compounds, as e.g., data on side
-effects or its impact on diseases is seldom given for novel drugs.
-
-
-\todo[inline]{Introduction}
-Within DTI prediction, there are potential biases resulting from the
-underlying datasets \citep{Pahikkala2014}. First, novel drugs are
-often designed by altering non-functional components of a drug,
-leading to two and more very similar drugs designed to target the same
-proteins \cite{Overington2006}. This can result in a bias when it
-leads to hidden duplicates that can distribute among the train/test
-split, resulting in a better (measured) predictive performance than
-would be expected when the model is applied to identify drugs that
-target a protein for which no drugs yet exist. Second, some proteins
-(which we call \textit{hub proteins}) have significantly more known
-interactions with drugs than others. In the STITCH database, $5\%$ of
-the proteins have $40\%$ of the interactions, and similar
-distributions are present in the Yamanishi and Drugbank
-\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
-these proteins may increase predictive performance while not
-reflecting the actual performance when applied to a new protein (e.g.,
-a protein for which no interactions are known). These differences in
-the number of drugs targeting certain proteins may be the result of
-study bias where more ``valuable'' proteins have more drugs designed
-to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed).
-
-
-
-In order to design such a feature for proteins and drugs,
-respectively, we make use of the interaction networks for both
-proteins and compounds. Drug-drug interaction networks were introduced
-and standardized by \citet{Boyce2015} and have been used for clinical
-decision support \cite{Scheife2015}. Drug-drug interaction networks
-may give a hint on common targeted pathways. As an additional compound
-feature we will use semantic side effect similarity, which we will
-discuss later on\todo{Generally, try to avoid pointers to ``later''.}.
-
-Protein-protein interaction networks have shown great results in
-$\dots$(\cite{Vazquez2003}, \cite{Ackerman2019}) in granting context
-for molecular system biology. However, these contexts were never
-applied to the problem of drug-target-interaction prediction. Thus we
-formalized our hypotheses over these interaction graphs and will test
-them in the following chapters.
+\todo[inline]{Somehow smooth this transition}
 
 \enlargethispage{12pt}
 
@@ -420,15 +332,13 @@ in Figure~\ref{fig:ResGraphConvBlocks}.
 Combining half-twin and graph convolutional neural networks, we map
 all protein representations to their respective node features,
 initializing the graph convolutional update steps. The resulting
-representations are used for a similarity prediction similar
-to\todo{Similar, or identical to? Needs to describe the exact model
-  used} the models presented in figure ~\ref{fig:HalfTwinNetwork}.
+representations are used for a similarity prediction as presented in figure ~\ref{fig:HalfTwinNetwork}. 
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
-features, before plugging them into the graph for the similarity
-computation. A more in-depth image of the overall architecture,
-combining both feature types is depicted in figure
-~\ref{fig:FullModelAllLayers}.
+features, before plugging them into the graph model for the similarity
+computation. A more in-depth image of the overall and final architecture,
+combining both feature types, is depicted in figure
+~\ref{fig:FullModelAllLayers}. Here the original representations are transformed by LFTs and then run through a stack (here with height 3) of residual graph convolutional blocks.
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the number of
@@ -492,20 +402,29 @@ for protein-centric score, this can be formalized as: given labels
 $l:D\times P \rightarrow \{0,1\}$ and predictions $y:D\times P
 \rightarrow [0,1]$, we define
 \begin{equation*}
-  \textrm{MicroAUC}_p := \underset{p\in P}{mean}\left(\left\{
+  \textrm{MicroAUC}'_p(l,y) := \underset{p\in P}{mean}\left(\left\{
       \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\})
     \right\}\right)
 \end{equation*}
 
-Drugs and proteins can be interchanged in this formulation, and we
-refer to the different measures as protein-centric microAUC
-($MicroAUC_p$) and a drug-centric microAUC ($MicroAUC_d$). In some
-cases, the $MicroAUC$ score may not be defined because in some
+In some cases, the $MicroAUC'$ score may not be defined as in some
 datasets some proteins or drugs have no interactions, leading to an
 infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
 for that entity. For those entities, we impute the $MicroAUC$
 interpolating linearly, by using the accuracy for this
-subset\todo{Last sentence not clear, can you give the formula instead?}.
+subset:
+
+\begin{equation*}
+	\textrm{MicroAUC}_p(l,y) := 
+	\begin{cases}
+		MicroAUC'_p(l,y) & \text{if }\sum_{d_i\in D}l(d_i,p)\neq0\\
+		Accuracy(l,y)&otherwise
+	\end{cases}
+\end{equation*}
+
+Note that drugs and proteins can be interchanged in this formulation, and we
+refer to the different measures as protein-centric microAUC
+($MicroAUC_p$) and a drug-centric microAUC ($MicroAUC_d$).
 
 
 
@@ -563,24 +482,19 @@ figure~\ref{fig:ModelWorkflow}
 
 \begin{table*}[!tpb]
   \centering
-	\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
+	\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
 		\hline
-		(a) STITCH results&\multicolumn{4}{c|}{PPI graph}\\
-		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
-		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$\\
+		&\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
 		\hline
-		MolPred&$0.69$&$0.65$&$0.69$&$0.67$\\
+		\name results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
+		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
+		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
-		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$\\
+		MolPred&$0.69$&$0.65$&$0.69$&$0.67$&$0.66$&$0.67$&$0.66$&$0.64$\\
 		\hline
-		\name (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$\\
+		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
 		\hline
-		\hline
-		(b) Yamanishi results&\multicolumn{4}{c|}{PPI graph}\\
-		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
-		&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
-		\hline
-		\name (MolPred + OntoPred) & $0.83$ & $0.82$&$0.84$&$0.84$\\
+		\name (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
 		\hline
 	\end{tabular} \medskip
 
@@ -620,8 +534,7 @@ targets it should be predicted.
 
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
-we then selected the best-performing models (with respect to
-\textit{MacroAUC} and $MicroAUC_p$\todo{which is it, macro or micro?},
+we then selected the best-performing models (with respect to $MicroAUC_p$,
 see Section \ref{sec:evaluation}) and evaluate them in a 5-fold
 protein-split cross-validation on the Yamanishi benchmark dataset to
 avoid validation overfitting and yield more realistic testing
@@ -781,8 +694,7 @@ hyperparameters and folds in cross-validation, measuring their
 respective AUROC. We further evaluate each model by performing a
 protein-wise cross-validation determining the MacroAUC and
 $MicroAUC_p$. For this evaluation, we allow
-stratification\todo{Stratification may not be the right word here; do
-  you mean ``sub-sampling of negatives''?} for the training process
+sub-sampling of negatives for the training process
 but not for the validation and testing phase as real world
 applications of these models would have to deal with possibly
 imbalanced data.
@@ -809,8 +721,8 @@ As the difference in performance with different splitting schemes is
 quite large, we further evaluated additional drug--target interaction
 and drug--target affinity prediction methods that were trained and
 evaluation on other datasets.  Following the results of MolTrans
-\cite{}\todo{add}, we reevaluated DeepDTI \cite{}\todo{add}, DeepDTA
-\cite{}, DeepConv-DTI \cite{} and MolTrans itself on BioSnap\todo{What
+\cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017}, DeepDTA
+\cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019} and MolTrans itself on BioSnap\todo{What
   is that? Is it described in methods?}  \cite{} over a protein split,
 as shown in part (d) of Table \ref{tab:Results}\todo{check table}. The
 authors of MolTrans evaluated all considered methods over the
