@@ -79,7 +79,7 @@ class HPODTIDataBuilder:
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
                                                        mode=config.mode)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
-        print(self.y_dti_data.shape)
+        print(self.y_dti_data.shape, self.y_dti_data.sum())
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
         epsilon = 0.00001
