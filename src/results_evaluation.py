@@ -286,6 +286,8 @@ def parse_BioSnap():
 
     print(f'Number of genes with at least one interactor {(dti_matrix.sum(axis=0)>0).sum()}')
 
+    naive_predictor_pair_split(dti_matrix=dti_matrix)
+
     # Naive predictor over DT pairs:
     num_drugs, num_prots = dti_matrix.shape
 
@@ -363,9 +365,9 @@ def naive_predictor_pair_split(dti_matrix):
               )
 
         train_aucs.append(max_train_auroc)
-        # train_micro_aucs.append(max_train_micro_auc)
+        train_micro_aucs.append(max_train_micro_auc)
         test_aucs.append(max_test_auroc)
-        # test_micro_aucs.append(max_test_micro_auc)
+        test_micro_aucs.append(max_test_micro_auc)
 
     for results in [train_aucs, train_micro_aucs, test_aucs, test_micro_aucs]:
         results = np.array(results)
