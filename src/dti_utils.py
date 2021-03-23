@@ -51,11 +51,11 @@ def micro_AUC_per_prot_DT_pairs(y_true, y_pred, num_drugs, indices):
 
     # collect all interactors for each protein w.r.t. indices
     for index in indices:
-        print(index, len(prot_wise_index_list), index%num_drugs, num_prots)
+        print(index, len(prot_wise_index_list))
         prot_wise_index_list[index%num_drugs].append(index)
 
     for prot_index in range(num_prots):
-        if prot_wise_index_list:
+        if prot_wise_index_list[prot_index]:
             pair_indices = np.array(prot_wise_index_list[prot_index])
             prot_y_true = y_true.flatten()[pair_indices]
             prot_y_pred = y_pred.flatten()[pair_indices]

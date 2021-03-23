@@ -26,7 +26,7 @@ class HPODTIDataBuilder:
         self.config = config
 
         print("Loading data ...")
-        if config.yamanishi_test:
+        if config.yamanishi_test or config.biosnap_test:
             self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
             if config.include_indications:
                 indication_drug_list = set(PhenomeNET_DL2vec_utils.get_UMLS_drug_list())
@@ -43,13 +43,16 @@ class HPODTIDataBuilder:
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
 
-        if config.yamanishi_test:
+        if config.yamanishi_test or config.biosnap_test:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
-            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+            if config.yamanishi_test:
+                self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+            elif config.biosnap_test:
+                self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
         else:
-            self.protein_list = np.array(list(set(PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             if config.include_indications:
                 print("Drug indications can only be selected with yamanishi test for now.")
                 raise ValueError
@@ -71,7 +74,7 @@ class HPODTIDataBuilder:
     def build_data(self, config):
 
         # DTI data
-        if not config.yamanishi_test:
+        if not config.yamanishi_test and not config.biosnap_test:
             print("Loading DTI links ...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
                                                        mode=config.mode)
@@ -428,6 +431,7 @@ if __name__ == '__main__':
     parser.add_argument("--fold", type=int, default=3)
 
     parser.add_argument("--yamanishi_test", action='store_true')
+    parser.add_argument("--biosnap_test", action='store_true')
     parser.add_argument("--include_indications", action='store_true')
 
     config = parser.parse_args()

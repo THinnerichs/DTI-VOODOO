@@ -236,7 +236,7 @@ def test_Yamanishi_AUC():
         print(results.mean())
 
 def parse_BioSnap():
-    path = 'data/BioSnap_data/'
+    path = '../data/BioSnap_data/'
 
     train_file = 'train.csv'
     val_file = 'val.csv'
@@ -311,6 +311,9 @@ def parse_BioSnap():
               f'{dti_utils.micro_AUC_per_drug(dti_matrix, y_pred, num_drugs)}')
 
 def naive_predictor_pair_split(dti_matrix):
+    # naive predictor on DT pair data
+    # note that the specific micro_AUC computation needed, is extremely slow.
+
     kf = KFold(n_splits=5, random_state=42, shuffle=False)
 
     num_drugs, num_prots = dti_matrix.shape

@@ -48,7 +48,7 @@ def get_UMLS_drug_list():
         return pkl.load(f)
 
 
-def write_PhenomeNET_files(mode='all'):
+def write_PhenomeNET_files(mode='all', include_indications=False):
     path_prefix = "../data/PhenomeNET_data/"
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
 

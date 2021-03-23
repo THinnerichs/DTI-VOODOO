@@ -24,13 +24,12 @@ class QuickProtFuncDTINetworkData:
         self.config = config
 
         print("Loading data ...")
-        if config.yamanishi_test:
+        if config.yamanishi_test or config.biosnap_test:
             self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
         else:
             self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
         print(len(self.drug_list), "drugs present")
 
-        print(len(self.drug_list), "drugs present")
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
         # get protein lists for each ontology
         uberon_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='uberon')
@@ -40,7 +39,6 @@ class QuickProtFuncDTINetworkData:
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
         self.PPI_graph = PPI_utils.get_PPI_graph(min_score=config.PPI_min_score)
         self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
-
 
         if config.include_mol_features:
             print("Building molecular features")
@@ -62,11 +60,13 @@ class QuickProtFuncDTINetworkData:
             self.protein_mol_encodings = torch.Tensor([protein_to_feature_dict[protein] for protein in self.protein_list])
 
             print(len(self.protein_list), "proteins present with mol_pred_intersection.\n")
-        if config.yamanishi_test:
+        if config.yamanishi_test or config.biosnap_test:
             self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             print("Loading Yamanishi data ...")
-            self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
-
+            if config.yamanishi_test:
+                self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
+            elif config.biosnap_test:
+                self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             print(self.drug_list.shape, self.y_dti_data.shape, self.protein_list.shape)
 
             if config.include_mol_features:
@@ -118,7 +118,7 @@ class QuickProtFuncDTINetworkData:
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
         # DTI data
-        if not config.yamanishi_test:
+        if not config.yamanishi_test and not config.biosnapt_test:
             print("Loading DTI links ...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))

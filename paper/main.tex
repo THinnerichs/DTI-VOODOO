@@ -513,6 +513,7 @@ figure~\ref{fig:ModelWorkflow}
 		(d) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
 		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
+		Naive predictor&DP pairs&$0.79$&-- &--\\
 		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
 		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
 		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
@@ -820,6 +821,12 @@ normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ nee
 
 molecular features work for all (most?) drugs, top-down features only
 for those that have a side-effect profile
+
+\begin{itemize}
+	\item \name comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
+	\times prots = 5500 \times 3000 $, while only 
+	$\approx$ 1000 drugs have Sider Annotation, and 
+\end{itemize}
 
 
 \subsection{Evaluating drug--target interaction predictions}

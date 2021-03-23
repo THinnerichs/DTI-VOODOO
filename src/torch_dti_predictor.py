@@ -229,6 +229,7 @@ if __name__ == '__main__':
     parser.add_argument("--include_mol_features", action='store_true')
 
     parser.add_argument("--yamanishi_test", action='store_true')
+    parser.add_argument("--biosnap_test", action='store_true')
     parser.add_argument("--include_indications", action='store_true')
 
 

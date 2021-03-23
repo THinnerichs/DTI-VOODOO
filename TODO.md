@@ -380,15 +380,15 @@ Thus, building splitting over proteins is the most challenging of the three opti
 - cite MolTrans
 - counter of results table in \ref 
 
-## Robert 20.03.2021
+## Robert 23.03.2021
 
 - naive predictor and \name on Biosnap
 - finalize introduction -> see Robert chat
 
-- end of introduction
-  - bring in Survey2018
-
 - Table side by side with multicolumn
-- citations for MolTrans etc
 - introduce BioSnap in methods
 - splitting options into methods
+
+- add option to DL2vec preparation
+  - mapping by name
+  - mapping from ali
