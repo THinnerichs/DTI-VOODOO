@@ -456,6 +456,8 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
 
         dti_matrix[drug_index, gene_index] = label
 
+    dti_matrix = dti_matrix.round()
+
     print(f'dti_matrix: {dti_matrix.sum()} interactions, shape: {dti_matrix.shape}')
 
     drug_list = list(map(lambda d: drug_mapping.get(d, None), drug_list))
