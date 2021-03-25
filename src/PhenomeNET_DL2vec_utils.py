@@ -48,7 +48,7 @@ def get_UMLS_drug_list():
         return pkl.load(f)
 
 
-def write_PhenomeNET_files(mode='all', include_indications=False):
+def write_PhenomeNET_files(mode='all', yamanishi_test=False):
     path_prefix = "../data/PhenomeNET_data/"
     onto_prefix = "<http://purl.obolibrary.org/obo/{entity}>"
 
@@ -59,17 +59,44 @@ def write_PhenomeNET_files(mode='all', include_indications=False):
     drug_list = []
     drug_HPO_pairs = []
     if mode=='drug' or mode=='all':
-        UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()
-        SIDER_drug_list, SIDER_drug_se_pairs = DDI_utils.parse_SIDER_se()
+        if yamanishi_test:
+            UMLS_to_phenomeNET_mapping = DDI_utils.get_UMLS_to_phenomeNET_mapping()
+            SIDER_drug_list, SIDER_drug_se_pairs = DDI_utils.parse_SIDER_se()
 
-        for drug, se in SIDER_drug_se_pairs:
-            if se in UMLS_to_phenomeNET_mapping.keys():
-                onto_term = onto_prefix.format(entity=UMLS_to_phenomeNET_mapping[se].replace(':','_'))
-                drug_list.append(drug)
-                drug_HPO_pairs.append((drug, onto_term))
+            for drug, se in SIDER_drug_se_pairs:
+                if se in UMLS_to_phenomeNET_mapping.keys():
+                    onto_term = onto_prefix.format(entity=UMLS_to_phenomeNET_mapping[se].replace(':','_'))
+                    drug_list.append(drug)
+                    drug_HPO_pairs.append((drug, onto_term))
 
-                if type(drug) != str:
-                    print(drug,onto_term)
+                    if type(drug) != str:
+                        print(drug,onto_term)
+        else:
+            filename = 'drugpheno_query_results.tsv'
+            drug_stereo_to_mono_mapping = DDI_utils.get_chemical_stereo_to_normal_mapping()
+
+            print('Parsing SIDER associations...')
+            missed_drugs_counter = 0
+            with open(file=path_prefix + filename, mode='r') as f:
+                # skip header
+                f.readline()
+
+                for line in f:
+                    drug, HPO_term = line.strip().split('\t')
+                    # map drugs from stereo to mono
+                    if drug.startswith('0'):
+                        drug = 'CIDm' + drug[1:]
+                    else:
+                        try:
+                            drug = drug_stereo_to_mono_mapping['CIDs' + drug[1:]]
+                        except:
+                            missed_drugs_counter += 1
+                            continue
+
+                    HPO_term = onto_prefix.format(entity=HPO_term)
+
+                    drug_list.append(drug)
+                    drug_HPO_pairs.append((drug, HPO_term))
 
 
         drug_HPO_pairs = list(set(drug_HPO_pairs))
@@ -182,7 +209,7 @@ def write_PhenomeNET_files(mode='all', include_indications=False):
                 if type(drug) == tuple:
                     print(drug)
                 f.write(drug+'\n')
-        if mode in ['GO','uberon', 'MP']:
+        if mode in ['GO','uberon', 'MP', 'all']:
             for protein in protein_list:
                 f.write(protein+'\n')
 
