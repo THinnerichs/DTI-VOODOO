@@ -2,7 +2,7 @@
 \usepackage[english]{babel}
 \copyrightyear{2015} \pubyear{2015}
 \usepackage{natbib}
-\bibliographystyle{natbib.bst}
+\bibliographystyle{natbib}
 
 
 \access{Advance Access Publication Date: Day Month Year}
@@ -15,9 +15,9 @@
 \firstpage{1}
 
 \subtitle{Subject Section}
-\newcommand{\name}{Voodoo }
+\newcommand{\name}{Voodoo}
 
-\title[short Title]{\name: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
+\title[\name{}]{\name{}: Combining Bottom-up and top-down approaches through graph learning over interaction networks for drug-target-interaction prediction}
 \author[Sample \textit{et~al}.]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert Hoehndorf\,$^{\text{\sfb 2}}$}
 \address{$^{\text{\sf 1}}$Department, Institution, City, Post Code, Country and \\
 $^{\text{\sf 2}}$Department, Institution, City, Post Code,
@@ -115,7 +115,7 @@ diseases for which drugs can be more profitably marketed). This may affect commo
 
 \section{Methods}
 \subsection{Problem Description}
-\name aims to solve the following problem: for a given drug and a
+\name{} aims to solve the following problem: for a given drug and a
 given protein we want to determine whether those interact or not.  We
 do not differentiate between types of interaction such as activation
 and inhibition, and do not predict the strength of the interaction.
@@ -430,7 +430,7 @@ refer to the different measures as protein-centric microAUC
 
 \section{Results}
 
-\subsection{\name: computational model to identify drugs that target a
+\subsection{\name{}: computational model to identify drugs that target a
   protein}
 
 % As in machine learning inference is derived from the underlying data,
@@ -440,25 +440,25 @@ refer to the different measures as protein-centric microAUC
 % e.g., a cross validation splitting scheme as \glqq split\grqq{}
 % determining the train, validation and test subset of a given dataset.
 
-We developed \name as a computational model to predict drug--target
-interactions. Specifically, given a protein, \name will identify and
-rank drugs that likely target this protein. \name combines two types
+We developed \name{} as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name{} will identify and
+rank drugs that likely target this protein. \name{} combines two types
 of features: structural information for drugs and proteins that can be
 used to determine if the drug and protein physically interact, and
 information about phenotypic effects of drugs and changes in protein
 function that may ``localize'' on an interaction network (i.e.,
 neighboring nodes will share some of these features or are
-phenotypically similar).  As structural features, \name uses
+phenotypically similar).  As structural features, \name{} uses
 structural representations of drugs from the SMILES transformer
 \cite{SmilesTransformer} and representations of protein amino acid
-sequences from DeepGOPlus \cite{DeepGoPlus}.  \name learns
+sequences from DeepGOPlus \cite{DeepGoPlus}.  \name{} learns
 representations of drug effects and protein functions using the
 ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
 ontology-based annotations of drugs and proteins.
 
 We construct a graph with proteins as nodes and protein-protein
 interactions as edges, mapping the protein features to each target as
-node features. \name then propagates information among the PPI network
+node features. \name{} then propagates information among the PPI network
 utilizing graph convolutional steps, calculates the similarity of drug
 and protein representations, and predicts whether there is an
 interaction. The full workflow scheme is depicted in
@@ -486,7 +486,7 @@ figure~\ref{fig:ModelWorkflow}
 		\hline
 		&\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
 		\hline
-		\name results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
+		\name{} results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
 		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
 		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
@@ -494,11 +494,24 @@ figure~\ref{fig:ModelWorkflow}
 		\hline
 		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
 		\hline
-		\name (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
+		\name{} (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
 		\hline
 	\end{tabular} \medskip
 
+<<<<<<< HEAD
 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+=======
+	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+		\hline
+		(c) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
+		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+		\hline
+		Naive predictor&DP pairs&$0.85$& --&--\\
+		DTINet&DP pairs&$0.91$&$0.74$&$0.67$\\
+		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
+		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
+		\name{}&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
+>>>>>>> ac4a0ce6c65ff1d0936665a0f0c224a96f995ca5
 		\hline
 		&&\multicolumn{3}{c|}{(c) Yamanishi results}&\multicolumn{3}{c|}{(d) BioSnap results}\\
 		Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}&Original scheme&\multicolumn{2}{c|}{Protein split}\\
@@ -516,9 +529,13 @@ figure~\ref{fig:ModelWorkflow}
 		MolTrans&DP pairs& --&--&--&$0.90$&$0.77$&$0.74$\\
 		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$& & & \\
 		\hline
+<<<<<<< HEAD
 	\end{tabular}\medskip
+=======
+	\end{tabular}
+>>>>>>> ac4a0ce6c65ff1d0936665a0f0c224a96f995ca5
 	
-	\caption{(a) + (b) Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
+	\caption{(a) + (b) Results for \name{} on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
 	\label{tab:Results}
 \end{table*}
 
@@ -592,18 +609,18 @@ graph whereas molecular features do not.
 
 
 \subsection{Protein-centric evaluation}
-The goal of \name is to find candidate drugs that target a specific
+The goal of \name{} is to find candidate drugs that target a specific
 protein; however, so far, we do not evaluate this application but
-rather how \name would perform in finding plausible drug--target
+rather how \name{} would perform in finding plausible drug--target
 interactions among all possible interactions (since we use the
 MacroAUC as our main evaluation measure). This evaluation does not
-correspond to the application of \name in finding drugs that target a
-specific protein.  To provide a better estimate on how \name performs
+correspond to the application of \name{} in finding drugs that target a
+specific protein.  To provide a better estimate on how \name{} performs
 for individual protein targets, we use micro-averages between proteins
 and compute the \textit{MicroAUC} (see Section \ref{sec:evaluation});
 to determine {\em MicroAUC}, we average the performance (true and
 false positive rates) per protein instead of across all drug--protein
-pairs; the resulting measure can therefore better estimate how \name
+pairs; the resulting measure can therefore better estimate how \name{}
 performs when tasked with finding a drug that targets a specific
 protein.
 
@@ -663,7 +680,7 @@ interactions for each protein in the validation set is unknown.  We
 apply this naive predictor on both the STITCH and Yamanishi datasets,
 using the full datasets as well as a 5-fold cross-validation over
 drugs and over drug--protein pairs to compare the prediction results
-directly to \name.  For each fold, we gradually increase $k$ to
+directly to \name{}.  For each fold, we gradually increase $k$ to
 determine the best performance for each fold. Using the full dataset,
 drug--target split, and drug split, we obtain the following MacroAUC
 results\todo[inline]{Put in Results table, then remove from here}: for
@@ -676,7 +693,7 @@ shows higher performance on the Yamanishi dataset than on STITCH, and
 a substantial gain in comparison to an expected random predictor on
 both datasets. In the following, we utilize this nai\"ve predictor as
 baseline to compare its performance to state of the art models and
-\name.
+\name{}.
 
 For comparison with the state of the art methods, we chose the best
 performing methods for drug--target interaction prediction that were
@@ -708,7 +725,7 @@ evaluating the same methods over a protein split, we find a
 substantial performance difference in comparison to the splitting
 scheme used in the original evaluation of each method. DTI-CDF was
 originally evaluated on all three splitting schemes underlining this
-point \cite{}. While \name provides comparable performance to the
+point \cite{}. While \name{} provides comparable performance to the
 na\"ive predictor and DTI-CDF in terms of MacroAUC, it yields
 considerably better results with respect to $\textrm{MicroAUC}_p$. We
 also find that methods that are trained using a protein split
@@ -731,7 +748,7 @@ computed the $MicroAUC_p$ score for all considered methods, leading to
 evaluation results that are comparable\todo{are the datasets
   comparable?} to the ones obtained on the Yaminishi dataset.
 
-\todo[inline]{ add \name model to table to allow
+\todo[inline]{ add \name{} model to table to allow
   DIRECT comparison:}
 The results of the analysis are summarized in the upper part of Figure
 \ref{tab:Results}.
@@ -820,7 +837,7 @@ molecular features work for all (most?) drugs, top-down features only
 for those that have a side-effect profile
 
 \begin{itemize}
-	\item \name comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
+	\item \name{} comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
 	\times prots = 5500 \times 3000 $, while only 
 	$\approx$ 1000 drugs have Sider Annotation, and 
 \end{itemize}
