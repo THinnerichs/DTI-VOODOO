@@ -331,4 +331,10 @@ Zitnik, M. and Leskovec, J. (2017).
 \newblock Predicting multicellular function through multi-layer tissue
   networks.
 
+\bibitem[Zitnik {\em et~al.}(2018)Zitnik, Sosic, and Leskovec]{BioSnap2018}
+Zitnik, M., Sosic, R., and Leskovec, J. (2018).
+\newblock Biosnap datasets: Stanford biomedical network dataset collection.
+\newblock {\em Note: http://snap. stanford. edu/biodata Cited by\/}, {\bf
+  5}(1).
+
 \end{thebibliography}

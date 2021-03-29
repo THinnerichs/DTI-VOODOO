@@ -236,7 +236,7 @@ def test_Yamanishi_AUC():
         print(results.mean())
 
 def parse_BioSnap():
-    path = '../data/BioSnap_data/'
+    path = 'data/BioSnap_data/'
 
     train_file = 'train.csv'
     val_file = 'val.csv'
@@ -283,6 +283,8 @@ def parse_BioSnap():
         dti_matrix[drug_index, gene_index] = label
 
     print(dti_matrix.sum(), dti_matrix.shape)
+
+    raise Exception
 
     print(f'Number of genes with at least one interactor {(dti_matrix.sum(axis=0)>0).sum()}')
 

@@ -150,7 +150,7 @@ for obtaining and processing the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yaminishi2008} consisting of 1,923 interactions
-between 708 drugs and 1,512 proteins.
+between 708 drugs and 1,512 proteins, and BioSnap dataset \cite{BioSnap2018}, which consists of 5,017 drug nodes, 2,324 gene nodes and 15,138 edges.
  
 \subsection{Model}
 
@@ -498,28 +498,25 @@ figure~\ref{fig:ModelWorkflow}
 		\hline
 	\end{tabular} \medskip
 
-	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 		\hline
-		(c) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+		&&\multicolumn{3}{c|}{(c) Yamanishi results}&\multicolumn{3}{c|}{(d) BioSnap results}\\
+		Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}&Original scheme&\multicolumn{2}{c|}{Protein split}\\
+		
+		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$&Macro AUC&Macro AUC&Micro $AUC_p$\\
 		\hline
-		Naive predictor&DP pairs&$0.85$& --&--\\
-		DTINet&DP pairs&$0.91$&$0.74$&$0.67$\\
-		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
-		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
-		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
+		Naive predictor&DP pairs&$0.85$& --&--&$0.79$&-- &--\\
+		DTINet&DP pairs&$0.91$&$0.74$&$0.67$ & --&--&--\\
+		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ & --&--&--\\
+		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$& --&--&--\\
 		\hline
+		DeepDTI&Drugs& --&--&--&$0.88$&$0.76$&$0.70$\\
+		DeepDTA&DP pairs& --&--&--&$0.88$&$0.77$&$0.69$\\
+		DeepConv-DTI&DP pairs& --&--&--&$0.88$&$0.76$&$0.73$\\
+		MolTrans&DP pairs& --&--&--&$0.90$&$0.77$&$0.74$\\
+		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$& & & \\
 		\hline
-		(d) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
-		\hline
-		Naive predictor&DP pairs&$0.79$&-- &--\\
-		DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
-		DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
-		DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
-		MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
-		\hline
-	\end{tabular}\\
+	\end{tabular}\medskip
 	
 	\caption{(a) + (b) Results for \name on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
 	\label{tab:Results}
