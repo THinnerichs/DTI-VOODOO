@@ -151,6 +151,7 @@ for obtaining and processing the necessary data on Github.
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yaminishi2008} consisting of 1,923 interactions
 between 708 drugs and 1,512 proteins, and BioSnap dataset \cite{BioSnap2018}, which consists of 5,017 drug nodes, 2,324 gene nodes and 15,138 edges.
+
  
 \subsection{Model}
 
@@ -379,6 +380,12 @@ leading to embeddings of size $4000$, testing different network widths
 and learning rates for each configuration.
 
 \subsection{Evaluation and metrics}
+
+\subsubsection{Splitting schemes}
+
+As DTI prediction is dependent on both drugs and proteins, there are multiple ways of determining training, validation and testing sets of pairs to evaluate each model. For cross-validation, we can perform the split over DTI pairs, over drugs and over proteins, respectively, where only in the latter two schemes unseen entities are shown to the model in the validation and testing phase. Additionally, these schemes have diverging expressiveness with respect to DTI prediction, as different information is known and leaked across training and testing phase. 
+
+\subsubsection{Metrics}
 \label{sec:evaluation}
 To assess each model, we compute a variety of common metrics for
 binary classification. As the datasets are highly imbalanced, we use
@@ -422,7 +429,7 @@ subset:
 	\end{cases}
 \end{equation*}
 
-Note that drugs and proteins can be interchanged in this formulation, and we
+Note that drugs and proteins can be interchanged in this formulation. We
 refer to the different measures as protein-centric microAUC
 ($MicroAUC_p$) and a drug-centric microAUC ($MicroAUC_d$).
 
@@ -448,7 +455,7 @@ used to determine if the drug and protein physically interact, and
 information about phenotypic effects of drugs and changes in protein
 function that may ``localize'' on an interaction network (i.e.,
 neighboring nodes will share some of these features or are
-phenotypically similar).  As structural features, \name{} uses
+phenotypically similar). As structural features, \name{} uses
 structural representations of drugs from the SMILES transformer
 \cite{SmilesTransformer} and representations of protein amino acid
 sequences from DeepGOPlus \cite{DeepGoPlus}.  \name{} learns
@@ -498,20 +505,8 @@ figure~\ref{fig:ModelWorkflow}
 		\hline
 	\end{tabular} \medskip
 
-<<<<<<< HEAD
 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-=======
-	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-		\hline
-		(c) Approach&\multicolumn{2}{c|}{Original scheme}&\multicolumn{2}{c|}{Protein split}\\
-		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
-		\hline
-		Naive predictor&DP pairs&$0.85$& --&--\\
-		DTINet&DP pairs&$0.91$&$0.74$&$0.67$\\
-		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
-		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
-		\name{}&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
->>>>>>> ac4a0ce6c65ff1d0936665a0f0c224a96f995ca5
+
 		\hline
 		&&\multicolumn{3}{c|}{(c) Yamanishi results}&\multicolumn{3}{c|}{(d) BioSnap results}\\
 		Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}&Original scheme&\multicolumn{2}{c|}{Protein split}\\
@@ -529,11 +524,7 @@ figure~\ref{fig:ModelWorkflow}
 		MolTrans&DP pairs& --&--&--&$0.90$&$0.77$&$0.74$\\
 		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$& & & \\
 		\hline
-<<<<<<< HEAD
 	\end{tabular}\medskip
-=======
-	\end{tabular}
->>>>>>> ac4a0ce6c65ff1d0936665a0f0c224a96f995ca5
 	
 	\caption{(a) + (b) Results for \name{} on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
 	\label{tab:Results}
@@ -561,7 +552,7 @@ features, and with and without inclusion of the PPI graph,
 separately. We comparing the molecular (MolPred) and phenotype-based
 (OntoPred) prediction model, and a combination of both where we
 concatenate both types of features.  Table
-\ref{tab:Results}\todo{check -- not currently in the table} shows the
+\ref{tab:Results} shows the
 results of these experiments.
 
 We find that the model using ontology-based features

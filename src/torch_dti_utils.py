@@ -118,7 +118,7 @@ class QuickProtFuncDTINetworkData:
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
         # DTI data
-        if not config.yamanishi_test and not config.biosnapt_test:
+        if not config.yamanishi_test and not config.biosnap_test:
             print("Loading DTI links ...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))

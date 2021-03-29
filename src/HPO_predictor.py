@@ -353,21 +353,9 @@ def siamese_drug_protein_network(config):
                           dti_utils.dti_f1_score(test_labels, test_predictions),
                           dti_utils.dti_mcc(test_labels, test_predictions))#@TODO, file=f)
 
-                    metrics_func_list = [metrics.accuracy_score, dti_utils.dti_auroc, metrics.average_precision_score, dti_utils.dti_f1_score,
-                                         metrics.matthews_corrcoef]
-                    ret = [list_fun(test_labels, test_predictions) for list_fun in metrics_func_list]
-
-                    test_loss = metrics.log_loss(test_labels, test_predictions, eps=0.000001)
-                    if test_loss < best_loss:
-                        best_loss = test_loss
-                        best_epoch = epoch
-
-                        print('rmse improved at epoch ', best_epoch, '; best_test_loss, best_test_ci:', best_test_loss,
-                              best_test_ci, model_st)
-                    else:
-                        print(test_loss, 'No improvement since epoch ', best_epoch, ';', model_st)
 
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
+
                     if test_AUROC > best_AUROC:
                         state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
                         torch.save(model.state_dict(), state_dict_path)

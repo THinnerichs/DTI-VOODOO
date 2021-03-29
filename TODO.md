@@ -385,7 +385,6 @@ Thus, building splitting over proteins is the most challenging of the three opti
 - naive predictor and \name on Biosnap
 - finalize introduction -> see Robert chat
 
-- Table side by side with multicolumn
 - introduce BioSnap in methods
 - splitting options into methods
 
