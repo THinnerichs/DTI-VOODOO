@@ -284,9 +284,9 @@ def parse_BioSnap():
 
     print(dti_matrix.sum(), dti_matrix.shape)
 
-    raise Exception
-
     print(f'Number of genes with at least one interactor {(dti_matrix.sum(axis=0)>0).sum()}')
+
+    raise Exception
 
     naive_predictor_pair_split(dti_matrix=dti_matrix)
 

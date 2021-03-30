@@ -194,7 +194,7 @@ def train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_rati
             sys.stdout.flush()
     return return_loss
 
-def predicting(model, device, loader):
+def predicting(model, device, loader, round=False):
     model.eval()
     total_preds = torch.Tensor()
     total_labels = torch.Tensor()
@@ -206,5 +206,8 @@ def predicting(model, device, loader):
             total_preds = torch.cat((total_preds, output.cpu()), 0)
             total_labels = torch.cat((total_labels, labels.view(-1, 1).float().cpu()), 0)
 
-    return total_labels.round().numpy().flatten(),total_preds.round().numpy().flatten()
+    if round:
+        return total_labels.round().numpy().flatten(),total_preds.round().numpy().flatten()
+    else:
+        return total_labels.round().numpy().flatten(),total_preds.numpy().flatten()
 

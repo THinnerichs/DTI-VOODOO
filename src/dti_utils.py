@@ -9,7 +9,7 @@ import math
 
 def dti_auroc(y_true, y_pred):
     if y_true.sum() == 0 or (1-y_true).sum() == 0:
-        return metrics.accuracy_score(y_true=y_true, y_pred=y_pred)
+        return metrics.accuracy_score(y_true=y_true, y_pred=y_pred.round())
     return metrics.roc_auc_score(y_true, y_pred)
 
 def dti_auprc(y_true, y_pred):
@@ -31,7 +31,7 @@ def micro_AUC_per_prot(y_true, y_pred, num_drugs):
     prot_wise_auc = []
     for prot_index in range(num_prots):
         if y_true[:, prot_index].sum() == 0:
-            prot_wise_auc.append(metrics.accuracy_score(y_true=y_true, y_pred=y_pred))
+            prot_wise_auc.append(metrics.accuracy_score(y_true=y_true, y_pred=y_pred.round()))
         prot_wise_auc.append(dti_auroc(y_true[:, prot_index], y_pred[:, prot_index]))
 
     prot_wise_auc = np.array(prot_wise_auc)

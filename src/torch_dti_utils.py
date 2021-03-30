@@ -350,7 +350,7 @@ def predicting(model, device, loader):
             total_labels = torch.cat((total_labels, y.view(-1, 1).float().cpu()), 0)
     return total_labels.round().numpy().flatten(),np.around(total_preds.numpy()).flatten()
 
-def quick_predicting(model, device, loader, round=True):
+def quick_predicting(model, device, loader, round=False):
     model.eval()
     total_preds = torch.Tensor()
     total_labels = torch.Tensor()
@@ -364,7 +364,7 @@ def quick_predicting(model, device, loader, round=True):
             total_labels = torch.cat((total_labels.view(-1,1), y.view(-1, 1).float().cpu()), 0)
 
     if round:
-        return total_labels.round().numpy().flatten(), np.around(total_preds.numpy()).flatten()
+        return total_labels.round().numpy().flatten(), total_preds.numpy().round().flatten()
     else:
         return total_labels.numpy().flatten(), total_preds.numpy().flatten()
 

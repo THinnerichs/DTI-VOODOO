@@ -339,19 +339,19 @@ def siamese_drug_protein_network(config):
                 with open(file=file, mode='a') as f:
                     train_labels, train_predictions = predicting(model, device, train_loader)
                     print('Train: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(train_labels, train_predictions),
+                          metrics.accuracy_score(train_labels, train_predictions.round()),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(train_labels, train_predictions),
-                          dti_utils.dti_mcc(train_labels, train_predictions))#@TODO, file=f)
+                          dti_utils.dti_f1_score(train_labels, train_predictions.round()),
+                          dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(test_labels, test_predictions),
+                          metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
-                          dti_utils.dti_f1_score(test_labels, test_predictions),
-                          dti_utils.dti_mcc(test_labels, test_predictions))#@TODO, file=f)
+                          dti_utils.dti_f1_score(test_labels, test_predictions.round()),
+                          dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
 
 
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)

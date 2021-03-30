@@ -145,36 +145,22 @@ def quickened_missing_target_predictor(config,
                     test_predictions = predictions.reshape((num_drugs, num_proteins))[:, train_mask==0].flatten()
 
                     print('pred_eval', train_labels.max(), train_predictions.max(), train_labels.min(), train_predictions.min(), train_predictions.shape)
-                    print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min(), test_predictions.shape, test_labels.shape)
+                    print('pred_eval', test_labels.max(), test_predictions.max(), test_labels.min(), test_predictions.min(), test_predictions.shape)
 
-                    print('Train:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Train:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(train_labels, train_predictions.round()),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(train_labels, train_predictions.round()),
                           metrics.matthews_corrcoef(train_labels, train_predictions.round()))#@TODO, file=f)
 
-                    print('Test:', config.neg_sample_ratio,'Acc, ROC_AUC, f1, matthews_corrcoef',
+                    print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(test_labels, test_predictions.round()),
                           metrics.matthews_corrcoef(test_labels, test_predictions.round()))#@TODO, file=f)
 
-                    # Uncomment for logging into file
-                    '''
-                    print('Train:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(train_labels, train_predictions),
-                          dti_utils.dti_auroc(train_labels, train_predictions),
-                          dti_utils.dti_f1_score(train_labels, train_predictions),
-                          metrics.matthews_corrcoef(train_labels, train_predictions), file = f)
-
-                    print('Test:', config.neg_sample_ratio, 'Acc, ROC_AUC, f1, matthews_corrcoef',
-                          metrics.accuracy_score(test_labels, test_predictions),
-                          dti_utils.dti_auroc(test_labels, test_predictions),
-                          dti_utils.dti_f1_score(test_labels, test_predictions),
-                          metrics.matthews_corrcoef(test_labels, test_predictions), file = f)
-                    '''
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
                     if test_AUROC > best_AUROC:
                         model_filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_' + str(fold) + '.model'
@@ -210,7 +196,6 @@ if __name__ == '__main__':
     parser.add_argument("--num_proteins", type=int, default=-1)
     parser.add_argument("--arch", type=str, default='GCNConv')
     parser.add_argument("--node_features", type=str, default='MolPred')
-    parser.add_argument("--neg_sample_ratio", type=float, default=0.1)
 
 
     parser.add_argument("--num_epochs", type=int, default=3)
