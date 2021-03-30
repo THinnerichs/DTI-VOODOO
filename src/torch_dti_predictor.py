@@ -133,7 +133,7 @@ def quickened_missing_target_predictor(config,
 
             if epoch%3 == 0:
                 print('Predicting for validation data...')
-                file='../results/quick_pred_' +config.arch+'_'+str(config.fold) + 'fold'+ '_results'
+                file='../results/quick_pred_' +config.arch+'_fold_'+str(config.fold) + '_results'
                 with open(file=file, mode='a') as f:
                     labels, predictions = quick_predicting(model, device, train_loader, round=False)
 
@@ -152,14 +152,14 @@ def quickened_missing_target_predictor(config,
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(train_labels, train_predictions.round()),
-                          metrics.matthews_corrcoef(train_labels, train_predictions.round()))#@TODO, file=f)
+                          metrics.matthews_corrcoef(train_labels, train_predictions.round()), file=f)
 
                     print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(test_labels, test_predictions.round()),
-                          metrics.matthews_corrcoef(test_labels, test_predictions.round()))#@TODO, file=f)
+                          metrics.matthews_corrcoef(test_labels, test_predictions.round()), file=f)
 
                     test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
                     if test_AUROC > best_AUROC:

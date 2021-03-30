@@ -333,7 +333,7 @@ def siamese_drug_protein_network(config):
             loss = train(config=config, model=model, device=device, train_loader=train_loader, optimizer=optimizer, epoch=epoch, neg_to_pos_ratio=neg_to_pos_ratio)
             print('Train Loss:', loss)
 
-            if epoch%1 == 0:
+            if epoch%2 == 0:
                 print('Predicting for validation data...')
                 file='../results/HPO_pred_results_' + str(config.num_epochs)+'_epochs'
                 with open(file=file, mode='a') as f:
@@ -343,7 +343,7 @@ def siamese_drug_protein_network(config):
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(train_labels, train_predictions.round()),
-                          dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
+                          dti_utils.dti_mcc(train_labels, train_predictions.round()), file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
@@ -351,7 +351,7 @@ def siamese_drug_protein_network(config):
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(test_labels, test_predictions.round()),
-                          dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
+                          dti_utils.dti_mcc(test_labels, test_predictions.round()), file=f)
 
 
                     test_AUROC = dti_utils.micro_AUC_per_prot_DT_pairs(test_labels, test_predictions, config.num_drugs)
