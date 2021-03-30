@@ -157,7 +157,7 @@ def quickened_missing_target_predictor(config,
                     print('Test:', 'Acc, ROC_AUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
-                          dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
+                          dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
                           dti_utils.dti_f1_score(test_labels, test_predictions.round()),
                           metrics.matthews_corrcoef(test_labels, test_predictions.round()))#@TODO, file=f)
 
