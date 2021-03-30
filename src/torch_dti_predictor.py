@@ -49,7 +49,7 @@ def quickened_missing_target_predictor(config,
     # dataset is present in dimension (num_drugs * num_proteins)
 
     # generate indices for proteins
-    kf = KFold(n_splits=config.num_folds, random_state=12, shuffle=True)
+    kf = KFold(n_splits=config.num_folds, random_state=42, shuffle=True)
     X = np.zeros((num_proteins,1))
 
     # build for help matrix for indices
