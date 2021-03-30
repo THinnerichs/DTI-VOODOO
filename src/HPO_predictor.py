@@ -354,7 +354,7 @@ def siamese_drug_protein_network(config):
                           dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
 
 
-                    test_AUROC = dti_utils.dti_auroc(test_labels, test_predictions)
+                    test_AUROC = dti_utils.micro_AUC_per_prot_DT_pairs(test_labels, test_predictions, config.num_drugs)
 
                     if test_AUROC > best_AUROC:
                         state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
