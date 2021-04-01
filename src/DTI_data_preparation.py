@@ -409,6 +409,26 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
 def get_BioSnap_data(original_drug_list, original_protein_list):
     path = '../data/BioSnap_data/'
 
+    drug_list = []
+    protein_list = []
+    dti_pairs = []
+    with open(file=path+'raw_biosnap_data.tsv', mode='r') as f:
+        for line in f:
+            drug, protein = line.strip().split('\t')
+            drug_list.append(drug)
+            protein_list.append(protein)
+            dti_pairs.append((drug, protein))
+
+    drug_list = list(set(drug_list))
+    protein_list = list(set(protein_list))
+
+    with open(file=path+'BioSnap_DB_drug_list', mode='w') as f:
+        for drug in drug_list:
+            print(drug,file=f)
+    with open(file=path + 'BioSnap_gene_list', mode='w') as f:
+        for protein in protein_list:
+            print(protein, file=f)
+
     # fetch DrugBank to Pubchem and UniProt to STRING mapping
     drug_mapping = DDI_utils.get_STITCH_db_Pubchem_mapping_dict()
     protein_mapping = {}
@@ -417,46 +437,18 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
             uniprot_id, STRING_id = line.strip().split('\t')
             protein_mapping[uniprot_id] = STRING_id
 
-    # build drug list
-    drug_list = []
-    with open(file=path+'BioSnap_DB_drug_list', mode='r') as f:
-        for line in f:
-            drug_list.append(line.strip())
     print('drug_list', len(drug_list))
-
-    # build protein list
-    protein_list = []
-    with open(file=path + 'BioSnap_gene_list', mode='r') as f:
-        for line in f:
-            protein_list.append(line.strip())
     print('protein_list', len(protein_list))
-
-    train_file = 'train.csv'
-    val_file = 'val.csv'
-    test_file = 'test.csv'
-
-    # parse all BioSnap data as preprocessed in MolTrans
-    full_list = []
-    for file in [train_file, val_file, test_file]:
-        print(f'Parsing {path + file}')
-        with open(file=path + file, mode='r') as f:
-            f.readline()
-            for i, line in enumerate(f):
-                full_list.append(line.strip().split(','))
-    full_table = np.array(full_list)
 
     # transform interaction list to interaction matrix of size num_drugs \times num_prots
     dti_matrix = np.zeros((len(drug_list), len(protein_list)))
-    for i in tqdm(range(full_table.shape[0])):
-        drug, gene, label = full_table[i,3:6]
-
+    for drug, gene in tqdm(dti_pairs):
         drug_index = drug_list.index(drug)
         gene_index = protein_list.index(gene)
-        label = float(label)
 
-        dti_matrix[drug_index, gene_index] = label
+        dti_matrix[drug_index, gene_index] = 1
 
-    dti_matrix = dti_matrix.round().astype(np.int8)
+    dti_matrix = dti_matrix.astype(np.int8)
 
     print(f'dti_matrix: {dti_matrix.sum()} interactions, shape: {dti_matrix.shape}')
 
