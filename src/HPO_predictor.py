@@ -45,8 +45,8 @@ class HPODTIDataBuilder:
 
         if config.yamanishi_test or config.biosnap_test:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
-            print("Loading Yamanishi data ...")
             if config.yamanishi_test:
+                print("Loading Yamanishi data ...")
                 self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             elif config.biosnap_test:
                 self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_BioSnap_data(self.drug_list, self.protein_list)

@@ -211,7 +211,7 @@ def get_DTIs(drug_list,
              mode=''):
     DTI_graph = get_human_DTI_graph(mode=mode)
 
-    y_data = np.zeros(len(drug_list)*len(protein_list))
+    y_data = np.zeros((len(drug_list), len(protein_list)))
 
     for i in range(len(protein_list)):
         protein = protein_list[i]
@@ -407,7 +407,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
     return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices,:][:, protein_indices]
 
 def get_BioSnap_data(original_drug_list, original_protein_list):
-    path = '../data/BioSnap_data/'
+    path = 'data/BioSnap_data/'
 
     drug_list = []
     protein_list = []
@@ -420,6 +420,8 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
             dti_pairs.append((drug, protein))
 
     drug_list = list(set(drug_list))
+    print(drug_list[:10])
+    raise Exception
     protein_list = list(set(protein_list))
 
     with open(file=path+'BioSnap_DB_drug_list', mode='w') as f:
@@ -455,8 +457,9 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
     drug_list = list(map(lambda d: drug_mapping.get(d, None), drug_list))
     protein_list = list(map(lambda p: protein_mapping.get(p, None), protein_list))
 
-    drug_indices = list(set([drug_list.index(drug) for drug in drug_list if drug in original_drug_list]))
-    protein_indices = list(set([protein_list.index(protein) for protein in protein_list if protein in original_protein_list]))
+    drug_indices = list(set([i for i, drug in enumerate(drug_list) if drug in original_drug_list]))
+    protein_indices = list(set([i for i, protein in enumerate(protein_list) if protein in original_protein_list]))
+
 
     drug_list = np.array(drug_list)
     protein_list = np.array(protein_list)
