@@ -777,11 +777,12 @@ results as observed on the Yaminishi dataset.
 
 In all our experiments, \name{} has the highest Micro $AUC_p$,
 demonstrating that \name{} can improve over other methods in the task
-of identifying drugs that target a specific protein. \name{}
-
-(i.e., higher MacroAUC
-when evaluated on a drug--target split compared to a protein split;
-large differences in macro- and micro measures)
+of identifying drugs that target a specific protein. Several methods
+achieve a higher Macro AUC than \name{}, in particular when evaluated
+using a drug--target pair splitting scheme; our results with the
+``na\"ive'' prediction method show that it may be possible that models
+trained on a drug--target split utilize certain biases in the dataset
+without necessarily producing novel biological insights.
 
 \section{Discussion}
 
