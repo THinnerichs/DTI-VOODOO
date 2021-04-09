@@ -795,8 +795,7 @@ information about a drug and protein and predict an interaction based
 on their molecular properties; the second, which we refer to as
 ``top-down'' approaches, start from observable characteristics of an
 organism and infer drug--target interactions as the putative molecular
-mechanisms that explain these observations; many top-down approaches
-follow methods similar to those used in reverse genetics \cite{}.
+mechanisms that explain these observations.
 
 Another view on these two approaches is as direct and indirect ways to
 predict drug--target interactions. Molecular information can be used
@@ -816,11 +815,11 @@ $P_2$). On the other hand, phenotypic consequences of changes in
 protein function, or drug effects, are often a result of aberrant
 pathway or network activity and involve more than one protein;
 consequently, we expect these features to benefit more from including
-information about protein--protein interactions. Our results confirm
-this hypothesis and demonstrate that molecular features do not benefit
-from including the interaction network whereas the indirect, top-down
-features benefit from the propagation over the interaction network.
-
+information about protein--protein interactions. Our results (Table
+\ref{tab:Results}) confirm this hypothesis and demonstrate that
+molecular features do not benefit from including the interaction
+network whereas the indirect, top-down features benefit from the
+propagation over the interaction network.
 
 % \todo[inline]{Methods:}
 % Through the very nature of the graph convolutional neural network, we
@@ -832,14 +831,14 @@ features benefit from the propagation over the interaction network.
 % leading to significantly less computing time.
 
 There are other types of indirect features that could be added to our
-model. A common feature that is added are drug indications which are
-highly predictive of drug--target interactions \cite{}; however, we do
+model. A common feature that may be added are drug indications which are
+predictive of drug--target interactions \cite{}; however, we do
 not include them in our model as including drug indications would
 allow our model to make many trivial predictions based only on
 remembering which targets are often used for which indication;
 including network information would likely benefit predictions based
 on drug indications because different drugs may target the same
-pathway through different mechanisms \cite{}.
+pathway through different mechanisms.
 
 
 
