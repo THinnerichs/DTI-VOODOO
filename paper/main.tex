@@ -841,34 +841,40 @@ on drug indications because different drugs may target the same
 pathway through different mechanisms.
 
 Combining bottom-up and top-down approaches in a single model can
-follow different strategies. Graph neural networks are a natural way
-to represent interactions between proteins, and interaction networks
-are used widely to determine indirect effects of molecular changes
-\cite{}. 
+follow different strategies. Interaction networks are used widely to
+determine indirect effects of molecular changes \cite{} and predict
+drug--target interactions \cite{}. Our work relies on graph neural
+networks as a way to combine qualitative information about
+interactions with additional features (molecular interaction,
+phenotypic and functional features); even if only some of these
+features benefit from the information the graph provides, graph neural
+networks will allow further extension of our model with additional
+features in the future.
 
-Graph neural networks \cite{} have the ability to
-represent interaction networks 
+% Graph neural networks \cite{} have the ability to
+% represent interaction networks 
 
-we built protein function and ontology based features based on DL2vec
+% we built protein function and ontology based features based on DL2vec
 
-Ontology derived protein function focused features are highly predictive for dtis
+% Ontology derived protein function focused features are highly predictive for dtis
 
-We built a versatile template for various features to test localization on the PPI graph
+% We built a versatile template for various features to test localization on the PPI graph
 
-normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
-
-
-molecular features work for all (most?) drugs, top-down features only
-for those that have a side-effect profile
-
-\begin{itemize}
-	\item \name{} comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
-	\times prots = 5500 \times 3000 $, while only 
-	$\approx$ 1000 drugs have Sider Annotation, and 
-\end{itemize}
+% normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
 
 
-\subsection{Evaluating drug--target interaction predictions}
+% molecular features work for all (most?) drugs, top-down features only
+% for those that have a side-effect profile
+
+% \begin{itemize}
+% 	\item \name{} comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
+% 	\times prots = 5500 \times 3000 $, while only 
+% 	$\approx$ 1000 drugs have Sider Annotation, and 
+% \end{itemize}
+
+
+\subsection{The challenge of evaluating drug--target interaction
+  predictions}
 
 We spent a significant amount of time testing different evaluation
 schemes for predicting drug--target interactions. We designed a
