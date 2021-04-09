@@ -495,28 +495,12 @@ figure~\ref{fig:ModelWorkflow}
 	\label{fig:ModelWorkflow}
 \end{figure}
 
-\begin{table*}[!tpb]
-  \centering
-	\begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
-		\hline
-		&\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
-		\hline
-		\name{} results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
-		&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
-		&Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
-		\hline
-		MolPred&$0.69$&$0.65$&$0.69$&$0.67$&$0.66$&$0.67$&$0.66$&$0.64$\\
-		\hline
-		OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
-		\hline
-		\name{} (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
-		\hline
-	\end{tabular} \medskip
+\begin{table*}
 
 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 
 		\hline
-		&&\multicolumn{3}{c|}{(c) Yamanishi results}&\multicolumn{3}{c|}{(d) BioSnap results}\\
+		&&\multicolumn{3}{c|}{Yamanishi results}&\multicolumn{3}{c|}{BioSnap results}\\
 		Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}&Original scheme&\multicolumn{2}{c|}{Protein split}\\
 		
 		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$&Macro AUC&Macro AUC&Micro $AUC_p$\\
@@ -532,10 +516,12 @@ figure~\ref{fig:ModelWorkflow}
 		MolTrans&DP pairs& --&--&--&$0.90$&$0.77$&$0.74$\\
 		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
 		\hline
-	\end{tabular}\medskip
-	
-	\caption{(a) + (b) Results for \name{} on STITCH and Yamanishi dataset evaluated with a 5-fold cross-validation. We hereby denote the molecular feature based predictor with \textit{MolPred}, while abbreviating the ontology based, top-down predictor with \textit{OntoPred}. (c) + (d) Results for various state of the art (c) drug--target interaction prediction methods on Yamanishi dataset and (d) drug--target affinity prediction methods on BIOSNAP dataset, evaluated on their original and the protein cross-validation splitting scheme, approximately reproducing the results of MolTrans \textbf{CITATION}.}
-	\label{tab:Results}
+	\end{tabular}
+        \caption{\label{tab:comparison} Comparison of \name{} with
+          state of the art drug--target interaction prediction methods
+          (Yamanishi dataset) and drug--target affinity prediction
+          methods (BioSnap dataset); we evaluated the original and the
+          protein-based split in a cross-validation}.
 \end{table*}
 
 We evaluate our model's ability to identify drug--target interactions
@@ -546,21 +532,45 @@ when tasked to identify drugs that may target a ``novel'' protein,
 i.e., one not seen during training, or a protein for which a drug that
 targets it should be predicted. 
 
+\begin{table*}[!tpb]
+  \centering
+  \begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
+    \hline
+    &\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
+    \hline
+    \name{} results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
+    &\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
+    &Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    MolPred&$0.69$&$0.65$&$0.69$&$0.67$&$0.66$&$0.67$&$0.66$&$0.64$\\
+    \hline
+    OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
+    \hline
+    \name{} (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:Results}Results for \name{} on the STITCH
+    and Yamanishi datasets evaluated with 5-fold cross-validation. We 
+    call the model using only molecular features
+    \textit{MolPred} and the model using only ontology-based
+    features \textit{OntoPred}. \name{} combines both types of
+    features.}
+\end{table*}
+
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
-we then selected the best-performing models (with respect to $MicroAUC_p$,
-see Section \ref{sec:evaluation}) and evaluate them in a 5-fold
-protein-split cross-validation on the Yamanishi benchmark dataset to
-avoid validation overfitting and yield more realistic testing
-results. To evaluate the influence of the different features
+we then selected the best-performing models (with respect to
+$MicroAUC_p$, see Section \ref{sec:evaluation}) and evaluate them in a
+5-fold protein-split cross-validation on the Yamanishi benchmark
+dataset to avoid validation overfitting and yield more realistic
+testing results. To evaluate the influence of the different features
 separately, and to determine whether they ``localize'' on the PPI
 graph (and therefore can be exploited successfully by the graph neural
 networks), we train and evaluate models with different types of
 features, and with and without inclusion of the PPI graph,
 separately. We comparing the molecular (MolPred) and phenotype-based
 (OntoPred) prediction model, and a combination of both where we
-concatenate both types of features.  Table
-\ref{tab:Results} shows the
+concatenate both types of features.  Table \ref{tab:Results} shows the
 results of these experiments.
 
 We find that the model using ontology-based features
