@@ -386,12 +386,15 @@ and learning rates for each configuration.
 As DTI prediction is dependent on both drugs and proteins, there are
 multiple ways of determining training, validation and testing sets of
 pairs to evaluate each model. For cross-validation, we can perform the
-split over DTI pairs, over drugs and over proteins, respectively,
-where only in the latter two schemes unseen entities are guaranteed to
+split over DTI pairs, over drugs and over proteins, respectively; when
+splitting over drugs or proteins, the entities (drugs or proteins) are
+separated and all their associations included in the split.
+Only when splitting by protein or drug are unseen entities guaranteed to
 be shown to the model in the validation and testing
-phase. Additionally, these schemes may have different expressiveness
-and use different information in DTI prediction, as different
-information is known in the training and testing phase.
+phase. The models resulting from the different splitting schemes may
+have different expressiveness and exploit different information in DTI
+prediction, as different information is known in the training and
+testing phase.
 
 \subsubsection{Metrics}
 \label{sec:evaluation}
