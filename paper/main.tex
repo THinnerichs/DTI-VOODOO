@@ -495,34 +495,6 @@ figure~\ref{fig:ModelWorkflow}
 	\label{fig:ModelWorkflow}
 \end{figure}
 
-\begin{table*}
-
-	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
-
-		\hline
-		&&\multicolumn{3}{c|}{Yamanishi results}&\multicolumn{3}{c|}{BioSnap results}\\
-		Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}&Original scheme&\multicolumn{2}{c|}{Protein split}\\
-		
-		&Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$&Macro AUC&Macro AUC&Micro $AUC_p$\\
-		\hline
-		Naive predictor&DP pairs&$0.85$& --&--&$0.79$&-- &--\\
-		DTINet&DP pairs&$0.91$&$0.74$&$0.67$ & --&--&--\\
-		DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ & --&--&--\\
-		DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$& --&--&--\\
-		\hline
-		DeepDTI&Drugs& --&--&--&$0.88$&$0.76$&$0.70$\\
-		DeepDTA&DP pairs& --&--&--&$0.88$&$0.77$&$0.69$\\
-		DeepConv-DTI&DP pairs& --&--&--&$0.88$&$0.76$&$0.73$\\
-		MolTrans&DP pairs& --&--&--&$0.90$&$0.77$&$0.74$\\
-		\name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
-		\hline
-	\end{tabular}
-        \caption{\label{tab:comparison} Comparison of \name{} with
-          state of the art drug--target interaction prediction methods
-          (Yamanishi dataset) and drug--target affinity prediction
-          methods (BioSnap dataset); we evaluated the original and the
-          protein-based split in a cross-validation}.
-\end{table*}
 
 We evaluate our model's ability to identify drug--target interactions
 using different approaches and datasets. First, we perform a
@@ -532,9 +504,9 @@ when tasked to identify drugs that may target a ``novel'' protein,
 i.e., one not seen during training, or a protein for which a drug that
 targets it should be predicted. 
 
-\begin{table*}[!tpb]
+\begin{table}[ht]
   \centering
-  \begin{tabular}{|p{2.2cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|p{0.9cm}|p{0.75cm}|}
+  \begin{tabular}{|p{1.1cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|}
     \hline
     &\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
     \hline
@@ -546,7 +518,7 @@ targets it should be predicted.
     \hline
     OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
     \hline
-    \name{} (MolPred + OntoPred) & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
+    \name{} & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
     \hline
   \end{tabular}
   \caption{\label{tab:Results}Results for \name{} on the STITCH
@@ -555,7 +527,7 @@ targets it should be predicted.
     \textit{MolPred} and the model using only ontology-based
     features \textit{OntoPred}. \name{} combines both types of
     features.}
-\end{table*}
+\end{table}
 
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
@@ -578,9 +550,10 @@ We find that the model using ontology-based features
 to using only molecular features. We also observe that only the model
 using ontology-based features results in increased performance when
 incorporating the PPI graph. This increase can be observed with
-different graph neural network architectures and configurations. While
-the {\em GCNConv} and {\em GENConv} architecture already shows some
-minor improvement, the use of \textit{ResGraphConv} results in larger
+different graph neural network architectures and configurations
+(Supplementary Table X\todo{Add to Supplement!}). While the {\em
+  GCNConv} and {\em GENConv} architecture already shows some minor
+improvement, the use of \textit{ResGraphConv} results in larger
 performance improvements.  {\em ResGraphConv} blocks add a large
 amount of additional learnable parameters to the network, leading to
 more expressive power. To test whether the observed improvement is due
@@ -591,7 +564,7 @@ blocks are removed, resulting in a model with similar parameters but
 without the ability to use graph-based information. This pruned
 network, with no information on the protein--protein interactions,
 reached very similar results to the original \textit{OntoPred} model
-and showed no improvement.
+and showed no improvement (Supplementary Table X\todo{Add!}).
 
 The improvements when including the graph are only provided by the
 \textit{GENConv} graph convolution scheme which includes the
@@ -600,7 +573,7 @@ convolutional methods fail to achieve any gain in comparison to the
 plain \textit{OntoPred} performance even when combined with the
 residual blocks. The discrepancy between {\em GENConv} and other graph
 convolutional methods may be the result of numerical instability and
-fading signals \cite{}.
+fading signals \cite{}\todo{Add citation to original paper}.
 
 Our results demonstrate that the inclusion of graph information
 can increase performance when ontology-based features are used but not
@@ -637,19 +610,20 @@ protein.
 
 
 % \subsection{Baseline model}
-Furthermore, we hypothesize that it may be possible to exploit biases
-in drug--target interactions to achieve relatively high prediction
-performance without obtaining a biologically meaningful signal.
-For example, hub proteins may have a large number of interactions,
-or certain drugs interact with many proteins, and preferentially
-predicting these interactions may increase predictive performance even
-in the absence of any biological features.
-To test this hypothesis, we design a ``na\"ive'' baseline model that
-predicts the same list of proteins for each drug based only on the
-number of known drug--target interactions for a protein. Formally,
-given lists $D$ and $P$ of drugs and proteins and a set of known
-interactions $\mathcal{I} := \{(d_i, p_i) \}$, we construct an
-interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$ with
+Furthermore, we hypothesize that it may be possible for a machine
+learning model to exploit biases in drug--target interaction data to
+achieve relatively high prediction performance without obtaining a
+biologically meaningful signal.  For example, hub proteins may have a
+large number of interactions, or certain drugs interact with many
+proteins, and preferentially predicting these interactions may
+increase predictive performance even in the absence of any biological
+features.  To test this hypothesis, we design a ``na\"ive'' baseline
+model that predicts the same list of proteins for each drug based only
+on the number of known drug--target interactions for a
+protein. Specifically, given lists $D$ and $P$ of drugs and proteins
+and a set of known interactions $\mathcal{I} := \{(d_i, p_i) \}$, we
+construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$
+with
 \begin{equation*}
 	M_{ij} = \begin{cases}
 		1 & \text{if } (d_i, p_j)\in \mathcal{I}\\
@@ -678,31 +652,30 @@ predict the same ranked list of drugs for all proteins; consequently,
 this na\"ive predictor does not rely on any biological features and
 will not predict any novel information about interactions between
 drugs and proteins; the na\"ive predictor only exploits imbalances in
-the evaluation set to make predictions that may perform
-well. % but allows us to estimate the effect of potential
-% biases in our evaluation dataset.
-% Also note the possibility for a similar predictor by calculating the top $k$ interacting drugs, respectively.
+the evaluation set to make predictions that may perform well.  The way
+in which we formulated the na\"ive predictor, it is not applicable for
+a protein split cross-validation as the number of interactions for
+each protein in the validation set is unknown.
 
-The way in which we formulated the na\"ive predictor, it is not
-applicable for a protein split cross-validation as the number of
-interactions for each protein in the validation set is unknown.  We
-apply this naive predictor on both the STITCH and Yamanishi datasets,
-using the full datasets as well as a 5-fold cross-validation over
-drugs and over drug--protein pairs to compare the prediction results
-directly to \name{}.  For each fold, we gradually increase $k$ to
-determine the best performance for each fold. Using the full dataset,
-drug--target split, and drug split, we obtain the following MacroAUC
-results\todo[inline]{Put in Results table, then remove from here}: for
-the STITCH database, we obtain a performance of $0.76$ on the whole
-dataset, $0.70$ for the drug--target pairs and $0.73$ in case of the
-drug splitting scheme; on the Yamanishi dataset, we obtain MacroAUC
-scores of $0.88$, $0.84$ and $0.85$, for the total dataset,
-drug--target pair and drug split, respectively.  The na\"ive predictor
-shows higher performance on the Yamanishi dataset than on STITCH, and
-a substantial gain in comparison to an expected random predictor on
-both datasets. In the following, we utilize this nai\"ve predictor as
-baseline to compare its performance to state of the art models and
-\name{}.
+
+We apply this naive predictor on both the STITCH and Yamanishi
+datasets, using the full datasets as well as a 5-fold cross-validation
+over drugs and over drug--protein pairs to compare the prediction
+results directly to \name{}.  For each fold, we gradually increase $k$
+to determine the best performance for each fold. Using the full
+dataset, drug--target split, and drug split, we obtain the following
+MacroAUC results: for the STITCH database, we obtain a performance of
+$0.76$ on the whole dataset, $0.70$ for the drug--target pairs and
+$0.73$ in case of the drug splitting scheme; on the Yamanishi dataset,
+we obtain MacroAUC scores of $0.88$, $0.84$ and $0.85$, for the total
+dataset, drug--target pair and drug split, respectively\todo{In the
+  Table is says 0.85 on Yaminishi for DP pair split, here it says 0.84
+  -- which is correct? Need fix}.  The na\"ive
+predictor shows higher performance on the Yamanishi dataset than on
+STITCH, and a substantial gain in comparison to an expected random
+predictor on both datasets. In the following, we utilize this nai\"ve
+predictor as baseline to compare its performance to state of the art
+models and \name{}.
 
 For comparison with the state of the art methods, we chose the best
 performing methods for drug--target interaction prediction that were
@@ -723,55 +696,92 @@ but not for the validation and testing phase as real world
 applications of these models would have to deal with possibly
 imbalanced data.
 
-The results of our experiments are summarized in part (c) of Table
-\ref{tab:Results}\todo{Check after restructure}; we calculated the
-performance of all compared methods over their original splitting
-scheme and over a protein split. We find that there is a large
-difference in performance when evaluating over a drug--target pair
-split compared to a protein split, with generally higher performance
-achieved when using the drug--target pair split.  Second, when
-evaluating the same methods over a protein split, we find a
-substantial performance difference in comparison to the splitting
-scheme used in the original evaluation of each method. DTI-CDF was
-originally evaluated on all three splitting schemes underlining this
-point \cite{}. While \name{} provides comparable performance to the
-na\"ive predictor and DTI-CDF in terms of MacroAUC, it yields
-considerably better results with respect to $\textrm{MicroAUC}_p$. We
-also find that methods that are trained using a protein split
-generally result in higher $\textrm{MicroAUC}_p$ than methods trained
-using a drug--target pair split.
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+    \hline
+    Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}\\
+    
+    &Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    Naive predictor&DP pairs&$0.85$& --&--\\
+    DTINet&DP pairs&$0.91$&$0.74$&$0.67$ \\
+    DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
+    DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
+    \name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:comparison1} Comparison of \name{} with
+    state of the art drug--target interaction prediction methods on
+    the Yamanishi dataset; we evaluated the original and the
+    protein-based split in a cross-validation}.
+\end{table}
+
+The results of our experiments are summarized in Table
+\ref{tab:comparison1}; we calculated the performance of all compared
+methods over their original splitting scheme and over a protein
+split. We find that there is a large difference in performance when
+evaluating over a drug--target pair split compared to a protein split,
+with generally higher performance achieved when using the drug--target
+pair split.  Second, when evaluating the same methods over a protein
+split, we find a substantial performance difference in comparison to
+the splitting scheme used in the original evaluation of each
+method. DTI-CDF was originally evaluated on all three splitting
+schemes underlining this point \cite{}. While \name{} provides
+comparable performance to the na\"ive predictor and DTI-CDF in terms
+of MacroAUC, it yields considerably better results with respect to
+$\textrm{MicroAUC}_p$. We also find that methods that are trained
+using a protein split generally result in higher $\textrm{MicroAUC}_p$
+than methods trained using a drug--target pair split, indicating that
+they may generalize better to unseen protein targets whereas methods
+trained on a drug--target split potentially exploit hidden biases and
+therefore generalize less well.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+    \hline
+    Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}\\
+    
+    &Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    Naive predictor&DP pairs&$0.79$&-- &--\\
+    DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
+    DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
+    DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
+    MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
+    \name&Proteins&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:comparison2} Comparison of \name{} with
+    state of the art drug--target interaction prediction methods
+    on the BioSnap dataset; we evaluated the original and the
+    protein-based split in a cross-validation}.
+\end{table}
+
 
 As the difference in performance with different splitting schemes is
 quite large, we further evaluated additional drug--target interaction
 and drug--target affinity prediction methods that were trained and
 evaluation on other datasets.  Following the results of MolTrans
-\cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017}, DeepDTA
-\cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019} and MolTrans itself on BioSnap\todo{What
-  is that? Is it described in methods?}  \cite{} over a protein split,
-as shown in part (d) of Table \ref{tab:Results}\todo{check table}. The
-authors of MolTrans evaluated all considered methods over the
-drug--target pair and the protein split; we were able to reproduce the
-results (Table \ref{tab:Results} (d))\todo{check table}, showing a
-substantial difference based on the splitting scheme. We additionally
-computed the $MicroAUC_p$ score for all considered methods, leading to
-evaluation results that are comparable\todo{are the datasets
-  comparable?} to the ones obtained on the Yaminishi dataset.
+\cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017},
+DeepDTA \cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019}, and
+MolTrans itself on the BioSnap dataset \cite{} and compared it to our
+``na\"ive'' predictor as well as \name{} (see Table
+\ref{tab:comparison2}).  MolTrans was evaluated over the drug--target
+pair and the protein split; we were able to reproduce the MolTrans
+results (Table \ref{tab:comparison2}), showing a substantial
+difference based on the splitting scheme. We additionally computed the
+$MicroAUC_p$ score for all considered methods, leading to similar 
+results as observed on the Yaminishi dataset.
 
-\todo[inline]{ add \name{} model to table to allow
-  DIRECT comparison:}
-The results of the analysis are summarized in the upper part of Figure
-\ref{tab:Results}.
+In all our experiments, \name{} has the highest Micro $AUC_p$,
+demonstrating that \name{} can improve over other methods in the task
+of identifying drugs that target a specific protein. \name{}
 
-We find that...\todo[inline]{summarize key findings from Table.}
-
-
-\todo[inline]{Replace/merge table:}
-
-
-%As the baseline predictor is based on the second dataset bias i.e. the existence of hub proteins with significantly more interactions within the dataset, this may hint on a more severe skew within the Yamanishi benchmark. 
-
-
-
+(i.e., higher MacroAUC
+when evaluated on a drug--target split compared to a protein split;
+large differences in macro- and micro measures)
 
 \section{Discussion}
 
