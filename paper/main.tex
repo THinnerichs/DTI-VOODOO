@@ -97,10 +97,20 @@ Both approaches may be used in conjunction with network inference
 protein--protein interaction networks \cite{} and networks including
 several other types of biological relations, including similarity
 between represented entities \cite{PREDICT}. Network-based DTI
-prediction methods use the guilt-by-association principle \cite{} and
-assume that a protein is a likely target for a drug if many of the
-protein's neighbors in the interaction network are targets of the
-drug \cite{}. 
+prediction methods use the guilt-by-association principle
+\cite{https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002444}
+and assume that a protein is a likely target for a drug if many of the
+protein's neighbors in the interaction network are targets of the drug
+\cite{https://academic.oup.com/bioinformatics/article/32/7/1057/1743938,
+  others}. Network-based methods have been applied successfully
+to DTI prediction. However, if DTIs are taken as direct physical
+interactions between a drug and protein, it remains an unresolved
+question whether the network-based guilt-by-association hypothesis is
+true, or whether an interaction of a drug and protein dys-regulates
+several of the protein's interaction partners, and therefore resulting
+in downstream effects that are not direct interactions but only
+downstream consequences of an interaction.
+
 
 In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
 However, only few applied this context to the task of DTI prediction in humans. The method of graph convolutional neural networks has been applied successfully to PPI networks \cite{Zitnik2017}, granting valuable information for medical diagnostics, closely related to phenotypic information.
