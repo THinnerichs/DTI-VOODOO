@@ -879,14 +879,20 @@ features in the future.
 One major component of our experiments was to determine how the
 information that is available to a machine learning model during
 training affects the performance of the model. Similarly to previous
-work, we find significant differences in predictive performance across
-different splitting schemes.
+work \cite{}, we find significant differences in predictive
+performance across different splitting schemes.
 
 The most common scheme for drug--target interaction prediction is the
 split over drug-target pairs \cite{Survey2018} where it may happen
 that most drugs and targets that are including in the model's
 validation and testing phase have also been included in the training
-phase (as part of other drug--target pairs).
+phase (as part of other drug--target pairs). This scheme is prone to a
+number of biases. If the number of interactions for a drug or protein
+are imbalanced, i.e., some drugs or proteins have many more
+interactions than others, these will be seen more often during
+training and they will likely also have more interactions in the
+testing and validation sets. Preferentially predicting 
+
 
 The second most prevalent arrangement is the split
 over drugs, while only close to none is aiming on a protein split.
@@ -918,6 +924,10 @@ Stratified Cross validation is suitable for training, but \textbf{NOT} for valid
 microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 
 
+
+Other biases: evaluate on balanced data, not all
+
+
 \todo[inline]{Likely discussion:}
 The aim of \name is to predict candidate drugs that target a given
 protein; the challenge is to develop a training and evaluation scheme
@@ -937,23 +947,6 @@ parts of the interactions are not seen during training and evaluate
 either how well targets are predicted for unseen drugs or unseen
 proteins. Hereby, different training and prediction schemes lead to
 divergent expressiveness of the resulting model.
-
-
-\todo[inline]{Likely discussion:}
-Assuming a hypothetical, perfectly generalizing model built upon an
-unbiased dataset, this very model would yield similar performances for
-all three , not overfitting on the known
-structures. On the other hand, for a hypothetical entirely overfitting
-model, trained on a highly biased dataset, this model would show
-substantial deviations from the original performance over another
-split.
-
-\todo[inline]{Likely discussion:}
-We emphasize, that all real-world models are prone to some sort of
-overfitting, and unknown, deviant entities in both validation and
-testing set will likely lead to some sort of performance gap for
-relevant metrics. However, a large disparity may hint the biases
-stated above.
 
 A naive predictor (ranking proteins) and predict each drug similarly
 achieves cutting edge performance ($87.5$ AUROC for whole dataset,
@@ -981,6 +974,23 @@ with more data points.
 
 %\subsection{\name identifies drugs that target a protein}
 
+
+
+% \todo[inline]{Likely discussion:}
+% Assuming a hypothetical, perfectly generalizing model built upon an
+% unbiased dataset, this very model would yield similar performances for
+% all three , not overfitting on the known
+% structures. On the other hand, for a hypothetical entirely overfitting
+% model, trained on a highly biased dataset, this model would show
+% substantial deviations from the original performance over another
+% split.
+
+% \todo[inline]{Likely discussion:}
+% We emphasize, that all real-world models are prone to some sort of
+% overfitting, and unknown, deviant entities in both validation and
+% testing set will likely lead to some sort of performance gap for
+% relevant metrics. However, a large disparity may hint the biases
+% stated above.
 
 
 
