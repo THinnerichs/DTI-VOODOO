@@ -891,20 +891,52 @@ number of biases. If the number of interactions for a drug or protein
 are imbalanced, i.e., some drugs or proteins have many more
 interactions than others, these will be seen more often during
 training and they will likely also have more interactions in the
-testing and validation sets. Preferentially predicting 
+testing and validation sets; because some entities have more
+interactions, i.e., they are more likely to interact, any model that
+preferentially predicts these as interaction partners will improve its
+predictive performance. While this accurately captures the
+distribution, predicting based on biases in the number of interaction
+partners is not desirable when applying the model to novel
+entities. We have demonstrated that even a ``na\"ive'' classifier that
+makes predictions only by exploiting the imbalanced number of
+interaction partners can achieve performance close to state of the art
+methods (when measuring Macro AUC). When training a machine learning
+model on such imbalanced data, it will eventually overfit to this
+imbalance.  Splitting by entity (protein or drug) can reduce the
+impact of this spurious correlation but not reduce it entirely,
+because similar entities will still exhibit similar interaction
+patterns. In our experiments, we observed the impact of splitting
+training and evaluation sets by protein as a decrease in overall
+performance (Macro AUC), providing some evidence that models trained
+using this splitting scheme are less sensitive to overfitting to this
+type of bias.
+
+The way in which training and evaluation data is generated is related
+to how the model is evaluated. An evaluation based on Macro AUC
+evaluated the application scenario where a set of drugs and proteins
+are given, and out of all possible pairs, the more likely interactions
+need to be identified. However, this does not correspond to most
+scenarios for drug repurposing where a drug that targets a {\em
+  specific} protein (e.g., a protein involved in a disease) needs to
+be identified. We use an evaluation measure based on micro-averaged
+per protein (Micro AUC$_p$) to evaluate this application.
 
 
-The second most prevalent arrangement is the split
-over drugs, while only close to none is aiming on a protein split.
-However, the first and second splitting scheme are exposed to the
-first dataset bias and are hence more likely vulnerable to
-transductive inference by just predicting recently seen structures,
-rather than implementing inductive inference and generalizing over the
-drug representations. Second, these two strategies are more
-susceptible to the second bias, as only in these cases the model may
-overfit on the number of existing interactions for a single protein,
-while in the third scheme the number of interactions of the test
-proteins is entirely unknown during training process.
+Finally, a potential source of differences in evaluation is how
+negatives are treated during evaluation (and training).
+Random sampling of unknown... 
+
+% The second most prevalent arrangement is the split
+% over drugs, while only close to none is aiming on a protein split.
+% However, the first and second splitting scheme are exposed to the
+% first dataset bias and are hence more likely vulnerable to
+% transductive inference by just predicting recently seen structures,
+% rather than implementing inductive inference and generalizing over the
+% drug representations. Second, these two strategies are more
+% susceptible to the second bias, as only in these cases the model may
+% overfit on the number of existing interactions for a single protein,
+% while in the third scheme the number of interactions of the test
+% proteins is entirely unknown during training process.
 
 We designed a
 na\"ive predictor and find that it can achieve a performance only
