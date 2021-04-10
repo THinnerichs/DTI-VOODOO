@@ -45,27 +45,58 @@ online.}
 \maketitle
 \section{Introduction}
 
-In history, traditional remedies, that were known for their medicinal
-properties lead to drugs by extraction of the functional
-ingredients. Alternatively, characteristics and features of potential
-drugs were detected by accident like in the case of penicillin. More
-recently, biological drug targets can be found \textit{in silico}
-through discovery of suitable computational predictors.
+% In history, traditional remedies, that were known for their medicinal
+% properties lead to drugs by extraction of the functional
+% ingredients. Alternatively, characteristics and features of potential
+% drugs were detected by accident like in the case of penicillin. More
+% recently, biological drug targets can be found \textit{in silico}
+% through discovery of suitable computational predictors.
 
-The challenge of accurately predicting drug-target-interactions (DTI)
-has shown its importance in the fields of drug repurposing and
-repositioning, and in the exploration of novel drugs and their
-interaction partners. Knowledge about those links between compounds
-and their target proteins help in an array of medical and
-pharmaceutical studies. Additionally, those associations can be
-utilized to identify disease specific targets, leading to desirable
-therapeutic effects.
+% Knowledge about those links between compounds and their
+% target proteins help in an array of medical and pharmaceutical
+% studies. Additionally, those associations can be utilized to identify
+% disease specific targets, leading to desirable therapeutic effects.
 
-With the rapidly growing field of machine learning approaches and
-their application to bioscientifical problems in the realm of
-bioinformatics, different kinds of data, such as long DNA sequences
-could be utilized for feature generation, while rapid advances were
-made. 
+% With the rapidly growing field of machine learning approaches and
+% their application to bioscientifical problems in the realm of
+% bioinformatics, different kinds of data, such as long DNA sequences
+% could be utilized for feature generation, while rapid advances were
+% made. 
+Identifying drug--target interactions (DTIs) is important in drug
+repurposing and repositioning, and in the exploration of novel drug
+candidates and their interaction partners. Computational methods are
+widely applied to predict DTIs and many computational methods have
+been developed.  These methods can be broadly classified into
+``top-down'' and ``bottom-up'' approaches. Top-down approaches start
+form observable characteristics resulting from a drug--target
+interaction, such as side-effects or the diseases treated by a drug,
+and infer likely molecular mechanisms (i.e., the interaction) using
+these observations.
+% and indications represented by knowledge graphs or ontologies, induced by a drug and infer targets based on the likely molecular mechanisms that result in these phenotypes
+Bottom-up approaches start from molecular features such as molecular
+structure or fingerprints associated with drug and protein, and
+predict interactions from this information.
+
+Both bottom-up and top-down approaches to drug--target interaction
+prediction have some advantages and limitations. Generally, bottom-up
+methods face the challenge to predict whether a structure binds to a
+protein given their molecular properties; whether two entities
+interact depends not only on the molecular structure of the entities
+(where binding sites and molecular forces need to be determined for
+accurate prediction) but also properties such as where a protein is
+expressed or in which celltypes and anatomical structures. Top-down
+methods use information for DTI prediction such as side-effect
+similarity \cite{Campillos2008} that is largely complementary to
+knowledge gained from molecular properties. While methods that rely on
+molecular information are directly predicting whether two molecular
+could interact, top-down methods rely on more indirect means and 
+infer a DTI from observable effects resulting from the interaction.
+
+Both approaches may be used in conjunction with network inference
+\cite{}. 
+
+In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
+However, only few applied this context to the task of DTI prediction in humans. The method of graph convolutional neural networks has been applied successfully to PPI networks \cite{Zitnik2017}, granting valuable information for medical diagnostics, closely related to phenotypic information.
 
 Only recently, the technique of graph learning was introduced by
 \citet{GCNConv} through graph convolution algorithms, and improved and
@@ -79,12 +110,7 @@ discovery of important regions within. Lately, graph learning
 approaches found application for computing compound representations
 for DTI prediction.
 
-These approaches can be classified into top-down and bottom-up methods. Top-down or network approaches hereby start form the observable, phenotypical characteristics, such as side-effects, associated diseases and indications represented by knowledge graphs or ontologies, induced by a drug and infer targets based on the likely molecular mechanisms that result in these phenotypes. On the other hand, bottom-up approaches start from molecular features, such as molecular structure, molecular fingerprints, secondary structure and contact predictions and others, deriving predictions from suitable correlations between these features. 
 
-However, both bottom--up and top--down approaches to drug--target interaction prediction contain some limitations that are not solvable within themselves. Generally, it is very challenging for bottom-up methods to accurately predict, whether there a structure is binding to a protein, as not only molecular structure, but also binding sites and molecular forces are crucial for accurate prediction. Thus, finding similarities for dissimilar drugs affecting the same targets is problematic but crucial. Furthermore, phenotypic features contain relevant information for DTI prediction \cite{Campillos2008} that are complementary to knowledge gained from molecular properties. While bottom-up representations possibly contain all information needed for accurate DTI prediction, we rely on indirect information for better generalization. Contrary, top-down approaches lack the ability to spot and cope with small differences within the molecular drug structure, thus both incapable to predict on novel entities and derive similarity from structural correlation.
-
-In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
-However, only few applied this context to the task of DTI prediction in humans. The method of graph convolutional neural networks has been applied successfully to PPI networks \cite{Zitnik2017}, granting valuable information for medical diagnostics, closely related to phenotypic information.
 
 Eventually, we further address potential biases and skews within DTI prediction datasets. \todo[inline]{Introduction}
 Within DTI prediction, there are potential biases resulting from the
