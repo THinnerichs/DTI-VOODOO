@@ -918,13 +918,41 @@ are given, and out of all possible pairs, the more likely interactions
 need to be identified. However, this does not correspond to most
 scenarios for drug repurposing where a drug that targets a {\em
   specific} protein (e.g., a protein involved in a disease) needs to
-be identified. We use an evaluation measure based on micro-averaged
-per protein (Micro AUC$_p$) to evaluate this application.
+be identified. We use an evaluation measure based on micro-averages
+per protein (Micro AUC$_p$) to evaluate this scenario, and we often
+find substantial differences in predictive performance when evaluating
+with Macro AUC and Micro AUC$_p$; generally, models that are trained
+using a split over drug--target pairs perform worse in Micro AUC$_p$
+than models that use a protein-based split, further providing evidence
+that a drug--target split results in overfitting to dataset biases.
 
+Finally, a potential source of differences in model performance is how
+negatives are identified and treated during evaluation (and
+training). There are few large sets of validated negative drug--target
+interactions; consequently, many models (including \name{}) use all
+unknown interactions as negatives. As there are many more negative
+than positive interactions, negatives are then sub-sampled during
+training resulting in a training set that is balanced between
+positives and negatives (or a certain ratio is preserved). While this
+is a reasonable strategy to deal with imbalanced data, it may be
+problematic when the same sub-sampling is applied on the model's
+evaluation set because it over-simplifies the evaluation process. The
+performance differences is not usually visible when using ROC curves
+but results in unrealistically high precision and therefore high area
+under a precision-recall curve.
 
-Finally, a potential source of differences in evaluation is how
-negatives are treated during evaluation (and training).
-Random sampling of unknown... 
+In summary, drug--target interaction prediction is not a single
+computational problem in bioinformatics but a set of related
+problems. Let $P$ be a set of proteins $P$ and $D$ a set of drugs; one
+task can be to identify arbitrary pairs $(p,d)$ with $p \in P$ and
+$d \in D$ that interact, another to identify a set of interacting
+drugs for each $p \in P$, and yet another to identify a set of
+proteins for each drug $d \in D$. The first task may be useful when no
+particular drug or protein is considered; the second task when
+searching for a drug that targets a specific (disease-associated)
+protein; and the third when aiming to find new applications for a
+given drug. The first task would best be evaluated using a Macro AUC,
+the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
 
 % The second most prevalent arrangement is the split
 % over drugs, while only close to none is aiming on a protein split.
@@ -938,22 +966,22 @@ Random sampling of unknown...
 % while in the third scheme the number of interactions of the test
 % proteins is entirely unknown during training process.
 
-We designed a
-na\"ive predictor and find that it can achieve a performance only
-slightly below state of the art drug--target prediction methods. We
-investigated this finding further and
+% We designed a
+% na\"ive predictor and find that it can achieve a performance only
+% slightly below state of the art drug--target prediction methods. We
+% investigated this finding further and
 
-In the presence of imbalanced 
+% In the presence of imbalanced 
 
-Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
+% Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
 
-Running split over proteins is harder than, drug and drug protein pair split (see below table)
+% Running split over proteins is harder than, drug and drug protein pair split (see below table)
 
-this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
+% this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
 
-Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+% Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
 
-microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+% microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
 
 
 
