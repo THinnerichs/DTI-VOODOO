@@ -985,50 +985,48 @@ the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
 
 
 
-Other biases: evaluate on balanced data, not all
+
+% \todo[inline]{Likely discussion:}
+% The aim of \name is to predict candidate drugs that target a given
+% protein; the challenge is to develop a training and evaluation scheme
+% that does not simply overfit to the inherent biases in training and
+% testing data.
+% In general, when performing cross-validation for DTI prediction, the
+% options are to split over 
+% \begin{enumerate}
+% 	\item split over drugs,
+% 	\item split over drug--target pairs, or
+% 	\item split over proteins
+% \end{enumerate}
+% where the first and third option concern splitting drugs and proteins,
+% respectively, into train, validation and test sets, and arranging the
+% corresponding drug-target interactions. They ensure that at least
+% parts of the interactions are not seen during training and evaluate
+% either how well targets are predicted for unseen drugs or unseen
+% proteins. Hereby, different training and prediction schemes lead to
+% divergent expressiveness of the resulting model.
+
+% A naive predictor (ranking proteins) and predict each drug similarly
+% achieves cutting edge performance ($87.5$ AUROC for whole dataset,
+% $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No
+% prot focused microAUC possible. $\rightarrow$ hub proteins
+
+% Yamanishi Dataset is only partially suitable for comparing results, if
+% everybody just derives a suitable subset (DTIGEMS)
+
+% This also applies to drug target affinity prediction. We were hereby
+% able to roughly reproduce the results from MolTrans (Bioinformatics)
+% on BioSnap
 
 
-\todo[inline]{Likely discussion:}
-The aim of \name is to predict candidate drugs that target a given
-protein; the challenge is to develop a training and evaluation scheme
-that does not simply overfit to the inherent biases in training and
-testing data.
-In general, when performing cross-validation for DTI prediction, the
-options are to split over 
-\begin{enumerate}
-	\item split over drugs,
-	\item split over drug--target pairs, or
-	\item split over proteins
-\end{enumerate}
-where the first and third option concern splitting drugs and proteins,
-respectively, into train, validation and test sets, and arranging the
-corresponding drug-target interactions. They ensure that at least
-parts of the interactions are not seen during training and evaluate
-either how well targets are predicted for unseen drugs or unseen
-proteins. Hereby, different training and prediction schemes lead to
-divergent expressiveness of the resulting model.
-
-A naive predictor (ranking proteins) and predict each drug similarly
-achieves cutting edge performance ($87.5$ AUROC for whole dataset,
-$85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No
-prot focused microAUC possible. $\rightarrow$ hub proteins
-
-Yamanishi Dataset is only partially suitable for comparing results, if
-everybody just derives a suitable subset (DTIGEMS)
-
-This also applies to drug target affinity prediction. We were hereby
-able to roughly reproduce the results from MolTrans (Bioinformatics)
-on BioSnap
+% %\subsection{Features to use in predicting drug targets}
 
 
-%\subsection{Features to use in predicting drug targets}
-
-
-\todo[inline]{Discussion:}
-The lack of stratification, only impacts the not
-considered area under precision recall curve (AUPRC) and not the Macro
-AUROC score, while also supporting the expressiveness of $MicroAUC_p$
-with more data points.
+%\todo[inline]{Discussion:}
+% The lack of stratification, only impacts the not
+% considered area under precision recall curve (AUPRC) and not the Macro
+% AUROC score, while also supporting the expressiveness of $MicroAUC_p$
+% with more data points.
 
 
 
@@ -1056,22 +1054,20 @@ with more data points.
 
 \section{Conclusions}
 
-For the bottom-up approach we build a model that only relies on
-molecular features, which we will discuss in more detail in the
-following methods chapter. For the combination of both approaches we
-now attach the predictions to the protein-protein interaction graph as
-node features for future graph learning steps. In this graph we tried
-to find both patterns and regions for each drug that could be of
-interest through application of different graph convolutional layers,
-which in return represent the feature for each protein. Representing
-the drug we take the drug-drug interaction graph and the semantic
-similarity over side effects which we will explain in the following
-paragraphs.
-
-Combining bottom-up and top-down features improves state of the art.
-
-Evaluating DTI predictions is non-trivial due to numerous biases in
-the training and evaluation datasets.
+We developed \name{} as a machine learning model that combines
+molecular features and functional information with an interaction
+network using graph neural networks to predict drugs that may target
+specific proteins. In this task, \name{} improves over several state
+of the art methods. We demonstrated that functional and phenotypic
+information localizes on the interaction network whereas molecular
+information does not. Moreover, we showed that drug--target
+interaction prediction datasets have some inherent biases that affect
+the performance of models. This led us to conclude that drug--target
+interaction prediction is not a single computational problem but a set
+of multiple problems. Experimental evaluation of drug--target
+interaction prediction methods must be carefully designed to reflect
+the problem the model aims to solve, and the interpretation of
+performance results should be aligned with the specific problem.
 
 
 
