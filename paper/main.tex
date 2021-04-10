@@ -111,46 +111,54 @@ several of the protein's interaction partners, and therefore resulting
 in downstream effects that are not direct interactions but only
 downstream consequences of an interaction.
 
+Progress in machine learning using graph neural networks can allow us
+to test this hypothesis and combine both bottom-up and top-down
+features with a network in a single machine learning model. 
+In particular, Graph Convolutional Networks \cite{GCNConv} and
+their variants using different types of kernels \cite{ChebConv,
+  ARMAConv}, including attention mechanisms \cite{GATConv}, and
+different forms of exploring node neighborhoods \cite{APPNPConv,
+  SAGEConv} can combine different types of features and graph-based
+information. % While based on diverse systems,
+% they can be relevant for testing distinct hypothesis for given
+% graphs. While convolutional filters are suitable for finding patterns
+% among the given graph, attention mechanisms are more relevant for
+% discovery of important regions within. Lately, graph learning
+% approaches found application for computing compound representations
+% for DTI prediction.
+They have previously been applied for a number of tasks, including
+prediction of protein functions \cite{Zitnik2017}, \todo{add 2 more,
+  and then one on DTI prediction}.
 
-In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
-However, only few applied this context to the task of DTI prediction in humans. The method of graph convolutional neural networks has been applied successfully to PPI networks \cite{Zitnik2017}, granting valuable information for medical diagnostics, closely related to phenotypic information.
-
-Only recently, the technique of graph learning was introduced by
-\citet{GCNConv} through graph convolution algorithms, and improved and
-altered under usage of different kernels \cite{ChebConv, ARMAConv},
-attention mechanisms \cite{GATConv}, random walks \cite{APPNPConv},
-and mixtures of both \cite{SAGEConv}. While based on diverse systems,
-they can be relevant for testing distinct hypothesis for given
-graphs. While convolutional filters are suitable for finding patterns
-among the given graph, attention mechanisms are more relevant for
-discovery of important regions within. Lately, graph learning
-approaches found application for computing compound representations
-for DTI prediction.
-
-
-
-Eventually, we further address potential biases and skews within DTI prediction datasets. \todo[inline]{Introduction}
-Within DTI prediction, there are potential biases resulting from the
-underlying datasets \citep{Pahikkala2014}. First, novel drugs are
-often designed by altering non-functional components of a drug,
-leading to two and more very similar drugs designed to target the same
-proteins \cite{Overington2006}. This can result in a bias when it
-leads to hidden duplicates that can distribute among the train/test
-split, resulting in a better (measured) predictive performance than
-would be expected when the model is applied to identify drugs that
-target a protein for which no drugs yet exist. Second, some proteins
-(which we call \textit{hub proteins}) have significantly more known
-interactions with drugs than others. In the STITCH database, $5\%$ of
-the proteins have $40\%$ of the interactions, and similar
-distributions are present in the Yamanishi and Drugbank
-\cite{Drugbank2007, Drugbank2017} datasets; preferentially predicting
+One challenge in DTI prediction are potential biases resulting from
+the underlying datasets \citep{Pahikkala2014} which may affect model
+evaluation and comparison. First, novel drugs are often designed by
+altering non-functional components of a drug, leading to two and more
+very similar drugs designed to target the same proteins
+\cite{Overington2006}. This can result in a bias when it leads to
+hidden duplicates or highly similar compounds that are distributed
+among training and evaluation dataset, resulting in a better
+(measured) predictive performance than would be expected when the
+model is applied to identify drugs that target a protein for which no
+drugs yet exist. Second, some proteins (which we call \textit{hub
+  proteins}) have significantly more known interactions with drugs
+than others. In the STITCH database, $5\%$ of the proteins have $40\%$
+of the interactions, and similar distributions are present in other
+datasets \cite{Drugbank2007, Drugbank2017}; preferentially predicting
 these proteins may increase predictive performance while not
-reflecting the actual performance when applied to a new protein (e.g.,
+reflecting the actual performance when applied to a new protein (i.e.,
 a protein for which no interactions are known). These differences in
 the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed). This may affect common \cite{Survey2018} cross-validation splitting schemes, that allow exploitation of these biases within DTI prediction.
+diseases for which drugs can be more profitably marketed). This may
+affect common evaluation schemes where it is possible
+to exploit these biases within DTI prediction \cite{Survey2018}.
+
+
+% In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
+% However, only few applied this context to the task of DTI prediction in humans. 
+
 
 \todo[inline]{Somehow smooth this transition}
 
