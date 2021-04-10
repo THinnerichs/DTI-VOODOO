@@ -876,8 +876,31 @@ features in the future.
 \subsection{The challenge of evaluating drug--target interaction
   predictions}
 
-We spent a significant amount of time testing different evaluation
-schemes for predicting drug--target interactions. We designed a
+One major component of our experiments was to determine how the
+information that is available to a machine learning model during
+training affects the performance of the model. Similarly to previous
+work, we find significant differences in predictive performance across
+different splitting schemes.
+
+The most common scheme for drug--target interaction prediction is the
+split over drug-target pairs \cite{Survey2018} where it may happen
+that most drugs and targets that are including in the model's
+validation and testing phase have also been included in the training
+phase (as part of other drug--target pairs).
+
+The second most prevalent arrangement is the split
+over drugs, while only close to none is aiming on a protein split.
+However, the first and second splitting scheme are exposed to the
+first dataset bias and are hence more likely vulnerable to
+transductive inference by just predicting recently seen structures,
+rather than implementing inductive inference and generalizing over the
+drug representations. Second, these two strategies are more
+susceptible to the second bias, as only in these cases the model may
+overfit on the number of existing interactions for a single protein,
+while in the third scheme the number of interactions of the test
+proteins is entirely unknown during training process.
+
+We designed a
 na\"ive predictor and find that it can achieve a performance only
 slightly below state of the art drug--target prediction methods. We
 investigated this finding further and
@@ -915,21 +938,6 @@ either how well targets are predicted for unseen drugs or unseen
 proteins. Hereby, different training and prediction schemes lead to
 divergent expressiveness of the resulting model.
 
-\todo[inline]{Likely discussion:} The most common scheme for DTI
-prediction is the split over drug-target pairs \citep{Survey2018},
-where likely all drugs and targets of the validation and testing phase
-have already occurred in the training phase, as part of other
-drug-target pairs. The second most prevalent arrangement is the split
-over drugs, while only close to none is aiming on a protein split.
-However, the first and second splitting scheme are exposed to the
-first dataset bias and are hence more likely vulnerable to
-transductive inference by just predicting recently seen structures,
-rather than implementing inductive inference and generalizing over the
-drug representations. Second, these two strategies are more
-susceptible to the second bias, as only in these cases the model may
-overfit on the number of existing interactions for a single protein,
-while in the third scheme the number of interactions of the test
-proteins is entirely unknown during training process.
 
 \todo[inline]{Likely discussion:}
 Assuming a hypothetical, perfectly generalizing model built upon an
