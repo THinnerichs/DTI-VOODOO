@@ -270,22 +270,21 @@ protein phenotypes, we use a deep half-twin neural network with a
 contrastive loss using cosine similarity.  A half-twin neural network
 aims to learn a similarity between two embeddings of the same
 dimension.  The precomputed embeddings may have different
-dimensionality and we first process them using a fully connected neural network
-layer which takes as input an embedding and outputs a representation
-of a particular size.
-We use this as a trainable feature transformation.
-
-An example structure for both types of features
-can be found in Figure~\ref{fig:HalfTwinNetwork}. We use this LFT to
-reduce the representation size of the embeddings for drugs and
-proteins separately.
+dimensionality and we first process them using a fully connected
+neural network layer which takes as input an embedding and outputs a
+representation of a particular size, i.e., we use this layer as a
+trainable feature transformation and apply it to reduce the
+representation size of the embeddings for drugs and proteins
+separately.  An example structure for both types of features can be
+found in Figure~\ref{fig:HalfTwinNetwork}.
 % While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we
-The use of an LFT enables flexible experimentation as both ontology
-and molecular feature for both drugs and proteins are reduced to
-the same dimensionality for varying sizes of inputs; this allows for a
-high amount of modularity across different experimental setups by
-adding different kinds of features into the model. Additionally, the
-generated features may be used for other tasks. % ; for
+The use of this trainable feature transformation layer enables
+flexible experimentation as both ontology and molecular feature for
+both drugs and proteins are reduced to the same dimensionality for
+varying sizes of inputs; this allows for a high amount of modularity
+across different experimental setups by adding different kinds of
+features into the model. Additionally, the generated features may be
+used for other tasks. % ; for
 % example, the ontology LFT can be reused for a variety of DL2vec-based
 % features with respect to other ontologies and hypotheses
 We follow the results of \textit{DL2vec} \cite{} and use as
