@@ -469,8 +469,8 @@ testing phase.
 \label{sec:evaluation}
 To assess each model, we compute a variety of common metrics for
 binary classification. As the datasets are highly imbalanced, we use
-the area under the receiver operating characteristic curve
-(AUROC) on training, validation and testing split.
+the area under the receiver operating characteristic curve (AUROC) on
+training, validation and testing split.
 % We calculated the true positive rate (TPR), false positive rate
 % (FPR), and precision score. We will further compute true positives
 % (TP), false positives (FP), false negatives (FN) and finally true
@@ -500,6 +500,9 @@ infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
 for that entity. For those entities, we impute the $MicroAUC$
 interpolating linearly, by using the accuracy for this
 subset:
+\todo[inline]{Is the accuracy usually close to $1$? I am still not so
+  sure this imputation with accuracy is well justified -- is there a
+  precedent/paper to cite somewhere?}
 \begin{equation*}
 	\textrm{MicroAUC}_p(l,y) := 
 	\begin{cases}
@@ -1263,18 +1266,16 @@ performance results should be aligned with the specific problem.
 
 
 
-\section{Conclusion}
-
-\vspace*{-10pt}
-
 
 \section*{Acknowledgements}
-
-\vspace*{-12pt}
+We acknowledge the use of computational resources from the 
+KAUST Supercomputing Core Laboratory.
 
 \section*{Funding}
 
-This work has been supported by the... Text Text  Text Text.\vspace*{-12pt}
+This work was supported by funding from King Abdullah University of
+Science and Technology (KAUST) Office of Sponsored Research (OSR)
+under Award No. URF/1/3790-01-01 and URF/1/4355-01-01.
 
 %\bibliographystyle{natbib}
 %\bibliographystyle{achemnat}
