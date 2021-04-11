@@ -3,7 +3,7 @@
 \copyrightyear{2015} \pubyear{2015}
 \usepackage{natbib}
 \bibliographystyle{natbib}
-
+\usepackage{url}
 
 \access{Advance Access Publication Date: Day Month Year}
 \appnotes{Manuscript Category}
@@ -174,7 +174,7 @@ them. \name is available as Free Software at \url{}\todo{add}.
 % However, only few applied this context to the task of DTI prediction in humans. 
 
 
-\todo[inline]{Somehow smooth this transition}
+%\todo[inline]{Somehow smooth this transition}
 
 \enlargethispage{12pt}
 
@@ -255,12 +255,12 @@ graph.
 % The overall structure of the ontology can be seen in
 % Figure~\ref{fig:Onto}.
 
-\todo[inline]{Consider supplement, or combine with other figures.}
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
-	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}
-	\label{fig:Onto}
-\end{figure}
+% \todo[inline]{Consider supplement, or combine with other figures.}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
+% 	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}
+% 	\label{fig:Onto}
+% \end{figure}
 
 
 \subsubsection{Half-twin neural networks and feature transformation}
@@ -291,26 +291,24 @@ We follow the results of \textit{DL2vec} \cite{} and use as
 activation function $\sigma := \mathrm{LeakyReLU}$ which leads to
 improved performance compared to other activation functions.
 
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
-	\caption{Half-twin network applied to molecular and DL2vec
-          features, utilizing deep learnable feature transformations
-          (LFT). The similarity function $\otimes$ yields the
-          similarity between both transformed embeddings e.g. by
-          computing the cosine similarity.}
-	\label{fig:HalfTwinNetwork}
-\end{figure}
-
-
-
+% \todo[inline]{Combine in some larger figure}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
+% 	\caption{Half-twin network applied to molecular and DL2vec
+%           features, utilizing deep learnable feature transformations
+%           (LFT). The similarity function $\otimes$ yields the
+%           similarity between both transformed embeddings e.g. by
+%           computing the cosine similarity.}
+% 	\label{fig:HalfTwinNetwork}
+% \end{figure}
 
 \subsubsection{Graph convolutional layers}
 
 We include these molecular and ontology-based sub-models within a
-graph neural network (GNN). The graph underlying the GNN is based on
-the protein--protein interaction (PPI) graph. The PPI dataset is
-represented by a graph $G=(V,E)$, where each protein is represented by
-a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$
+graph neural network (GNN) \cite{}. The graph underlying the GNN is
+based on the protein--protein interaction (PPI) graph. The PPI dataset
+is represented by a graph $G=(V,E)$, where each protein is represented
+by a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$
 represents an interaction between two proteins. Additionally, we
 introduce a mapping $x:V\rightarrow\mathbb{R}^{d}$ projecting each
 vertex $v$ to its node feature $x_v := x(v)$, where $d$ denotes the
@@ -360,12 +358,12 @@ formulation as proposed by \citet{GENConv2020}:
 	\right)
 \end{equation}
 where we only consider
-$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We denote
-this generalized layer type as \textsc{GENConv} following the
-notation of PyTorch Geometric \cite{PytorchGeometric}.  While the
-reordering is mainly import for numerical stability, this alteration
-also addresses the vanishing gradient problem for deeper convolutional
-networks \cite{GENConv2020}. Additionally, we can also generalize the
+$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We denote this
+generalized layer type as \textsc{GENConv} following the notation of
+PyTorch Geometric \cite{PytorchGeometric}.  While the reordering is
+mainly import for numerical stability, this alteration also addresses
+the vanishing gradient problem for deeper convolutional networks
+\cite{GENConv2020}. Additionally, we can also generalize the
 aggregation function to allow different weighting functions such as
 learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming
 signals for each vertex, substituting the averaging step in
@@ -380,14 +378,14 @@ We further employ another mechanism to avoid redundancy and fading
 signals in stacked graph convolutional networks, using residual
 connections and a normalization scheme \cite{DeepGCN2019,
   DeeperGCN2020}.  The residual blocks are reusable and can be stacked
-multiple times. The structure of the GNN architecture we use is shown
-in Figure~\ref{fig:ResGraphConvBlocks}.
+multiple times. % The structure of the GNN architecture we use is shown
+% in Figure~\ref{fig:ResGraphConvBlocks}.
 
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
-	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
-	\label{fig:ResGraphConvBlocks}
-\end{figure}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
+% 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+% 	\label{fig:ResGraphConvBlocks}
+% \end{figure}
 
 
 \begin{figure}[!tpb]%figure1
@@ -400,13 +398,17 @@ in Figure~\ref{fig:ResGraphConvBlocks}.
 Combining half-twin and graph convolutional neural networks, we map
 all protein representations to their respective node features,
 initializing the graph convolutional update steps. The resulting
-representations are used for a similarity prediction as presented in figure ~\ref{fig:HalfTwinNetwork}. 
+representations are used for a similarity prediction.
+% as presented in
+% figure ~\ref{fig:HalfTwinNetwork}
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
-computation. A more in-depth image of the overall and final architecture,
-combining both feature types, is depicted in figure
-~\ref{fig:FullModelAllLayers}. Here the original representations are transformed by LFTs and then run through a stack (here with height 3) of residual graph convolutional blocks.
+computation. An overview of the model architecture, combining both
+feature types, is shown in Figure ~\ref{fig:FullModelAllLayers}. Here
+the original representations are transformed by a dense layer and then
+used as input of a stack (with height 3) of residual graph
+convolutional blocks.
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the number of
