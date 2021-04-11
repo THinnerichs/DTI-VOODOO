@@ -270,10 +270,12 @@ protein phenotypes, we use a deep half-twin neural network with a
 contrastive loss using cosine similarity.  A half-twin neural network
 aims to learn a similarity between two embeddings of the same
 dimension.  The precomputed embeddings may have different
-dimensionality and we first process them using a learnable feature
-transformation (LFT) network, i.e., a fully connected neural network
+dimensionality and we first process them using a fully connected neural network
 layer which takes as input an embedding and outputs a representation
-of a particular size. An example structure for both types of features
+of a particular size.
+We use this as a trainable feature transformation.
+
+An example structure for both types of features
 can be found in Figure~\ref{fig:HalfTwinNetwork}. We use this LFT to
 reduce the representation size of the embeddings for drugs and
 proteins separately.
