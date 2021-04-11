@@ -393,11 +393,11 @@ multiple times. % The structure of the GNN architecture we use is shown
 % \end{figure}
 
 
-\begin{figure}[!tpb]%figure1
-	\centerline{\includegraphics[width=1\columnwidth]{figures/full_model_all_layers.png}}
-	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
-	\label{fig:FullModelAllLayers}
-\end{figure}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=1\columnwidth]{figures/full_model_all_layers.png}}
+% 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+% 	\label{fig:FullModelAllLayers}
+% \end{figure}
 
 \subsubsection{Combined prediction model}
 Combining half-twin and graph convolutional neural networks, we map
@@ -410,7 +410,8 @@ When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
 computation. An overview of the model architecture, combining both
-feature types, is shown in Figure ~\ref{fig:FullModelAllLayers}. Here
+feature types, is shown in Supplementary Figure
+\ref{fig:FullModelAllLayers}\todo{Move to supplement}. Here
 the original representations are transformed by a dense layer and then
 used as input of a stack (with height 3) of residual graph
 convolutional blocks.
@@ -444,14 +445,14 @@ process.
 To find the best hyperparameter configuration for the proposed model,
 we performed a grid search to find the most expressive and
 non-redundant representation. We pretrained the bottom-up and the
-top-down model separately and aimed at best performing models
-with respect to our evaluation metrics. We optimized embedding sizes,
-depth of the neural network, optimizer, learning rate and layer types
-using an extensive, manual grid search. Starting from na\"ive, shallow
-feature transformations with an embedding size of $10$, we scaled the
-network up to residual structures with up to $10$ hidden layers
-leading to embeddings of size $4000$, testing different network widths
-and learning rates for each configuration.
+top-down model separately and aimed at best performing models with
+respect to our evaluation metrics. We optimized embedding sizes, depth
+of the neural network, optimizer, learning rate and layer types using
+an extensive, manual grid search. Starting from shallow feature
+transformations with an embedding size of $10$, we scaled the network
+up to residual structures with up to $10$ hidden layers leading to
+embeddings of size $4000$, testing different network widths and
+learning rates for each configuration.
 
 \subsection{Evaluation and metrics}
 
@@ -609,7 +610,8 @@ targets it should be predicted.
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
 we then selected the best-performing models (with respect to
-$MicroAUC_p$, see Section \ref{sec:evaluation}) and evaluate them in a
+$MicroAUC_p$, see Section \ref{sec:evaluation}) and evaluate\todo{Only
+evaluate or retrain (from scratch)? Should say here.} them in a
 5-fold protein-split cross-validation on the Yamanishi benchmark
 dataset to avoid validation overfitting and yield more realistic
 testing results. To evaluate the influence of the different features
