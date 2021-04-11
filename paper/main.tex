@@ -184,9 +184,9 @@ them. \name is available as Free Software at \url{}\todo{add}.
 given protein we want to determine whether those interact or not.  We
 do not differentiate between types of interaction such as activation
 and inhibition, and do not predict the strength of the interaction.
-If we additionally assume that our knowledge is complete and all
-drug--protein pairs without a known interaction do not interact, we
-can formulate the problem as a binary classification task.
+We treat all drug--protein pairs without a known interaction as
+negatives and therefore formulate the problem as a binary
+classification task.
 
 \subsection{Datasets}
 We obtain a dataset consisting of 12,884 human proteins with over
