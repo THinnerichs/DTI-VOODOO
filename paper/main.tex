@@ -189,8 +189,8 @@ negatives and therefore formulate the problem as a binary
 classification task.
 
 \subsection{Datasets}
-We obtain a dataset consisting of 12,884 human proteins with over
-340627 links from STRING \citep{STRINGv10}. For the drug-target
+We obtain a dataset consisting of 12,884 human proteins with 
+340,627 links from STRING \citep{STRINGv10}. For the drug-target
 interactions, we use 229,870 links from the STITCH database
 \citep{STITCHv5}. As both STRING and STITCH provide confidence scores
 for each association, we filtered them as advised by a threshold of
@@ -199,12 +199,12 @@ $700$, therefore retaining only high-confidence interactions.
 We utilize the PhenomeNET ontology \citep{PhenomeNET2011}, an ontology
 integrating ontologies such as the Human Phenotype Ontology
 \citep{HPO2018}, Gene Ontology \cite{GOoriginal2000, GOrecent2020},
-Mammalian Phenotype Ontology \citep{MP2009} and several others.
-We obtained side effects and their links to drugs from SIDER
+Mammalian Phenotype Ontology \citep{MP2009} and several others.  We
+obtained side effects and their links to drugs from SIDER
 \citep{SIDER}; SIDER contains side effects encoded using identifiers
 from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
-provides a SPARQL query endpoint for the mentioned resources.
+provides a SPARQL \cite{} query endpoint for the mentioned resources.
 
 We only use proteins in our analysis that have at least one link in
 either STITCH or STRING, and drugs with at least one side effect and
@@ -215,8 +215,9 @@ for obtaining and processing the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yaminishi2008} consisting of 1,923 interactions
-between 708 drugs and 1,512 proteins, and BioSnap dataset \cite{BioSnap2018}, which consists of 5,017 drug nodes, 2,324 gene nodes and 15,138 edges.
-
+between 708 drugs and 1,512 proteins, and the BioSnap dataset
+\cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
+nodes and 15,138 edges.
  
 \subsection{Model}
 
@@ -233,9 +234,9 @@ feature separately.  As features for the bottom-up model, we use
 features derived from molecular structures of drugs from the
 \textit{SmilesTransformer} \citep{SmilesTransformer} and molecular
 features for proteins from \textit{DeepGOPlus}
-\citep{DeepGoPlus}. \textit{SmilesTransformer} introduces an
-autoencoder, learning over the SMILES strings and therefore the
-molecular organization of each drug in an unsupervised manner. 
+\citep{DeepGoPlus}. \textit{SmilesTransformer} is an autoencoder
+trained over the SMILES strings, and therefore captures (some aspects
+of) the molecular organization of each drug in an unsupervised manner.
 \textit{DeepGOPlus} provides features derived from protein amino acid
 sequences which are useful to predict protein function.
 % Thus, both embeddings seem to suitably supplement
