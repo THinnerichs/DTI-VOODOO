@@ -519,6 +519,8 @@ Drugs and proteins can be interchanged in this formulation. We refer
 to the different measures as protein-centric microAUC ($MicroAUC_p$)
 and a drug-centric microAUC ($MicroAUC_d$).
 
+Further, we choose AUROC over area under precision recall curve (AUPRC) as the latter is prone to data imbalance \cite{Jeni2013} and thus sub-sampling biases, undermining cross-approach evaluation.\todo[inline]{More Information? Right place?}
+
 \section{Results}
 
 \subsection{\name{}: computational model to identify drugs that target a
