@@ -92,7 +92,7 @@ accurate prediction) but also properties such as where a protein is
 expressed or in which celltypes and anatomical structures. Top-down
 methods use information for DTI prediction such as side-effect
 similarity \cite{Campillos2008} that is largely complementary to
-knowledge gained from molecular properties. While methods that rely on
+knowledge gained from molecular properties. While methods tha3t rely on
 molecular information are directly predicting whether two molecular
 could interact, top-down methods rely on more indirect means and 
 infer a DTI from observable effects resulting from the interaction.
@@ -101,13 +101,12 @@ Both approaches may be used in conjunction with network inference
 \cite{}. Biological networks used for DTI prediction include
 protein--protein interaction networks \cite{} and networks including
 several other types of biological relations, including similarity
-between represented entities \cite{PREDICT}. Network-based DTI
+between represented entities \cite{Gottlieb2011}. Network-based DTI
 prediction methods use the guilt-by-association principle
-\cite{https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002444}
+\cite{Oliver2000}
 and assume that a protein is a likely target for a drug if many of the
 protein's neighbors in the interaction network are targets of the drug
-\cite{https://academic.oup.com/bioinformatics/article/32/7/1057/1743938,
-  others}. Network-based methods have been applied successfully
+\cite{Gillis2012}. Network-based methods have been applied successfully
 to DTI prediction. However, if DTIs are taken as direct physical
 interactions between a drug and protein, it remains an unresolved
 question whether the network-based guilt-by-association hypothesis is
@@ -132,8 +131,7 @@ information. % While based on diverse systems,
 % approaches found application for computing compound representations
 % for DTI prediction.
 They have previously been applied for a number of tasks, including
-prediction of protein functions \cite{Zitnik2017}, \todo{add 2 more,
-  and then one on DTI prediction}.
+prediction of protein functions \cite{Zitnik2017}, cancer drug response \cite{Liu2020} and drug--target affinity prediction \cite{GraphDTA2020}.
 
 One challenge in DTI prediction are potential biases resulting from
 the underlying datasets \citep{Pahikkala2014} which may affect model
@@ -161,7 +159,7 @@ affect common evaluation schemes where it is possible
 to exploit these biases within DTI prediction \cite{Survey2018}.
 
 We developed \name{} as a method for predicting DTIs. We use an
-ontology-based machine learning method \cite{} to encode phenotypic
+ontology-based machine learning method \cite{DL2vec2020} to encode phenotypic
 consequences of DTIs and deep learning methods to encode molecular
 features. We combine both using a protein interaction network which we
 exploit using a graph neural network. We use this model to test
@@ -173,7 +171,7 @@ demonstrate a substantial improvement of \name{} over the state of the
 art in predicting drugs that target a protein. We also identify and
 characterize several biases in both training and evaluating DTI
 prediction methods, and make recommendations on how to avoid
-them. \name is available as Free Software at \url{}\todo{add}.
+them. \name{} is available as Free Software at \url{}\todo{add}.
 
 % In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
 % However, only few applied this context to the task of DTI prediction in humans. 
@@ -209,7 +207,7 @@ obtained side effects and their links to drugs from SIDER
 \citep{SIDER}; SIDER contains side effects encoded using identifiers
 from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
-provides a SPARQL \cite{} query endpoint for the mentioned resources.
+provides a SPARQL query endpoint for the mentioned resources.
 
 We only use proteins in our analysis that have at least one link in
 either STITCH or STRING, and drugs with at least one side effect and
@@ -219,7 +217,7 @@ interactions for the training phase. We provide links to and methods
 for obtaining and processing the necessary data on Github.
 
 For comparative evaluation, we use the gold standard dataset
-introduced by \citet{Yaminishi2008} consisting of 1,923 interactions
+introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
 between 708 drugs and 1,512 proteins, and the BioSnap dataset
 \cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
 nodes and 15,138 edges.
@@ -610,8 +608,7 @@ targets it should be predicted.
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
 we then selected the best-performing models (with respect to
-$MicroAUC_p$, see Section \ref{sec:evaluation}) and evaluate\todo{Only
-evaluate or retrain (from scratch)? Should say here.} them in a
+$MicroAUC_p$, see Section \ref{sec:evaluation}), and retrain them from scratch in a
 5-fold protein-split cross-validation on the Yamanishi benchmark
 dataset to avoid validation overfitting and yield more realistic
 testing results. To evaluate the influence of the different features
@@ -652,7 +649,7 @@ convolutional methods fail to achieve any gain in comparison to the
 plain \textit{OntoPred} performance even when combined with the
 residual blocks. The discrepancy between {\em GENConv} and other graph
 convolutional methods may be the result of numerical instability and
-fading signals \cite{}\todo{Add citation to original paper}.
+fading signals \cite{DeeperGCN2020}.
 
 Our results demonstrate that the inclusion of graph information
 can increase performance when ontology-based features are used but not
@@ -747,9 +744,7 @@ MacroAUC results: for the STITCH database, we obtain a performance of
 $0.76$ on the whole dataset, $0.70$ for the drug--target pairs and
 $0.73$ in case of the drug splitting scheme; on the Yamanishi dataset,
 we obtain MacroAUC scores of $0.88$, $0.84$ and $0.85$, for the total
-dataset, drug--target pair and drug split, respectively\todo{In the
-  Table is says 0.85 on Yaminishi for DP pair split, here it says 0.84
-  -- which is correct? Need fix}.  The na\"ive
+dataset, drug--target pair and drug split, respectively.  The na\"ive
 predictor shows higher performance on the Yamanishi dataset than on
 STITCH, and a substantial gain in comparison to an expected random
 predictor on both datasets. In the following, we utilize this nai\"ve
@@ -783,7 +778,7 @@ imbalanced data.
     
     &Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
     \hline
-    Naive predictor&DP pairs&$0.85$& --&--\\
+    Naive predictor&Drugs&$0.85$& --&--\\
     DTINet&DP pairs&$0.91$&$0.74$&$0.67$ \\
     DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
     DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
@@ -1018,8 +1013,7 @@ problematic when the same sub-sampling is applied on the model's
 evaluation set because it over-simplifies the evaluation process. The
 performance differences is not usually visible when using ROC curves
 but results in unrealistically high precision and therefore high area
-under a precision-recall curve\todo{I note that we do not report AUPR
-  -- why not?}.
+under a precision-recall curve.
 
 In summary, drug--target interaction prediction is not a single
 computational problem in bioinformatics but a set of related

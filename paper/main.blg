@@ -1,9 +1,13 @@
 This is BibTeX, Version 0.99d (TeX Live 2020/Arch Linux)
 Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
-The style file: natbib.bst.bst
+The style file: natbib.bst
 Database file #1: citations.bib
-Warning--I didn't find a database entry for "Yaminishi2008"
+I was expecting a `,' or a `}'---line 115 of file citations.bib
+ :   
+ :   @article{Liu2020,
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
 Warning--empty journal in ARMAConv
 Warning--empty journal in ChebConv
 Warning--empty journal in SAGEConv
@@ -12,45 +16,45 @@ Warning--empty journal in APPNPConv
 Warning--empty journal in DTINet2017
 Warning--empty journal in GATConv
 Warning--empty journal in Zitnik2017
-You've used 42 entries,
-            2378 wiz_defined-function locations,
-            785 strings with 17717 characters,
-and the built_in function-call counts, 28305 in all, are:
-= -- 1907
-> -- 3157
-< -- 8
-+ -- 1008
-- -- 997
-* -- 3194
-:= -- 5449
-add.period$ -- 174
-call.type$ -- 42
-change.case$ -- 259
-chr.to.int$ -- 41
-cite$ -- 50
-duplicate$ -- 769
-empty$ -- 1211
-format.name$ -- 1053
-if$ -- 5159
+You've used 46 entries,
+            2401 wiz_defined-function locations,
+            814 strings with 18370 characters,
+and the built_in function-call counts, 26178 in all, are:
+= -- 2181
+> -- 2177
+< -- 10
++ -- 704
+- -- 651
+* -- 2739
+:= -- 4735
+add.period$ -- 228
+call.type$ -- 46
+change.case$ -- 284
+chr.to.int$ -- 45
+cite$ -- 54
+duplicate$ -- 917
+empty$ -- 1381
+format.name$ -- 713
+if$ -- 4959
 int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 36
-newline$ -- 199
-num.names$ -- 168
-pop$ -- 305
+missing$ -- 40
+newline$ -- 219
+num.names$ -- 184
+pop$ -- 337
 preamble$ -- 1
-purify$ -- 259
+purify$ -- 284
 quote$ -- 0
-skip$ -- 507
+skip$ -- 600
 stack$ -- 0
-substring$ -- 1168
-swap$ -- 128
+substring$ -- 1351
+swap$ -- 177
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 378
+type$ -- 414
 warning$ -- 8
-while$ -- 166
+while$ -- 184
 width$ -- 0
-write$ -- 502
-(There were 9 warnings)
+write$ -- 553
+(There was 1 error message)
