@@ -34,15 +34,9 @@
 
 \editor{Associate Editor: XXXXXXX}
 
-\abstract{\textbf{Motivation:} Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-Text Text Text Text Text Text
-Text Text Text Text Text.\\
-\textbf{Results:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text  Text Text Text Text Text Text\\
-\textbf{Availability:} Text  Text Text Text Text Text Text Text Text Text  Text Text Text Text
-Text Text Text Text Text Text Text Text Text Text Text Text Text Text  Text\\
+\abstract{\textbf{Motivation:} \textit{In silico} drug--target interaction (DTI) prediction is crucial for drug discovery and down-stream tasks, such as drug indication and drug--disease prediction. However, DTI datasets are prone to certain biases, skewing the effective predictive expressiveness over those datasets. Additionally, only few approaches combine phenotypical and molecular features for DTI prediction.\\
+\textbf{Results:} We present \name{} to combine molecular features and functional information with protein--protein interaction networks under usage of graph convolutional neural networks, showing that phenotypic information localizes on the interaction network. We hereby focus on protein-centric evaluation, predicting drugs that may target specific targets. We further show that common drug--target interaction datasets contain intrinsic biases, majorly affecting predictive performance of compared models. Additionally, we propose an modified evaluation scheme and metric to circumvent such skews and to better reflect the problem DTI prediction methods aim to solve. \\
+\textbf{Availability:} Source code and data used in \name{} are available at \url{https://github.com/THinnerichs/DTI-VOODOO}\\
 \textbf{Contact:} \href{tilman.hinnerichs@kaust.edu.sa}{tilman.hinnerichs@kaust.edu.sa}\\
 \textbf{Supplementary information:}10264703 Supplementary data are available at \textit{Bioinformatics}
 online.}
@@ -171,7 +165,7 @@ demonstrate a substantial improvement of \name{} over the state of the
 art in predicting drugs that target a protein. We also identify and
 characterize several biases in both training and evaluating DTI
 prediction methods, and make recommendations on how to avoid
-them. \name{} is available as Free Software at \url{}\todo{add}.
+them. \name{} is available as Free Software at \url{https://github.com/THinnerichs/DTI-VOODOO}.
 
 % In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
 % However, only few applied this context to the task of DTI prediction in humans. 
@@ -504,9 +498,7 @@ infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
 for that entity. For those entities, we impute the $MicroAUC$
 interpolating linearly, by using the accuracy for this
 subset:
-\todo[inline]{Is the accuracy usually close to $1$? I am still not so
-  sure this imputation with accuracy is well justified -- is there a
-  precedent/paper to cite somewhere?}
+
 \begin{equation*}
 	\textrm{MicroAUC}_p(l,y) := 
 	\begin{cases}
