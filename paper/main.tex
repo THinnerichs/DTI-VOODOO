@@ -1,6 +1,6 @@
 \documentclass{bioinfo}
 \usepackage[english]{babel}
-\copyrightyear{2015} \pubyear{2015}
+\copyrightyear{2021} \pubyear{2021}
 \usepackage{natbib}
 \bibliographystyle{natbib}
 \usepackage{url}
@@ -92,8 +92,8 @@ could interact, top-down methods rely on more indirect means and
 infer a DTI from observable effects resulting from the interaction.
 
 Both approaches may be used in conjunction with network inference
-\cite{}. Biological networks used for DTI prediction include
-protein--protein interaction networks \cite{} and networks including
+\todo[inline]{CITE}\cite{}. Biological networks used for DTI prediction include
+protein--protein interaction networks \todo[inline]{CITE}\cite{} and networks including
 several other types of biological relations, including similarity
 between represented entities \cite{Gottlieb2011}. Network-based DTI
 prediction methods use the guilt-by-association principle
@@ -284,7 +284,7 @@ features into the model. Additionally, the generated features may be
 used for other tasks. % ; for
 % example, the ontology LFT can be reused for a variety of DL2vec-based
 % features with respect to other ontologies and hypotheses
-We follow the results of \textit{DL2vec} \cite{} and use as
+We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use as
 activation function $\sigma := \mathrm{LeakyReLU}$ which leads to
 improved performance compared to other activation functions.
 
@@ -302,7 +302,7 @@ improved performance compared to other activation functions.
 \subsubsection{Graph convolutional layers}
 
 We include these molecular and ontology-based sub-models within a
-graph neural network (GNN) \cite{}. The graph underlying the GNN is
+graph neural network (GNN) \cite{GCNConv}. The graph underlying the GNN is
 based on the protein--protein interaction (PPI) graph. The PPI dataset
 is represented by a graph $G=(V,E)$, where each protein is represented
 by a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$
@@ -403,7 +403,7 @@ graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
 computation. An overview of the model architecture, combining both
 feature types, is shown in Supplementary Figure
-\ref{fig:FullModelAllLayers}\todo{Move to supplement}. Here
+\ref{fig:FullModelAllLayers}. Here
 the original representations are transformed by a dense layer and then
 used as input of a stack (with height 3) of residual graph
 convolutional blocks.
@@ -495,8 +495,8 @@ $y:D\times P \rightarrow [0,1]$, we define
 In some cases, the $MicroAUC$ score may not be defined as in some
 datasets some proteins or drugs have no interactions, leading to an
 infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
-for that entity. For those entities, we impute the $MicroAUC$
-interpolating linearly, by using the accuracy for this
+for that entity. As this is quite common for DTI datasets, we do not omit but impute the $MicroAUC$
+interpolating linearly for those entities, by using the accuracy for this
 subset:
 
 \begin{equation*}
@@ -507,7 +507,7 @@ subset:
 		Accuracy(l,y)&otherwise
 	\end{cases}
 \end{equation*}
-Drugs and proteins can be interchanged in this formulation. We refer
+Note that drugs and proteins can be interchanged in this formulation. We refer
 to the different measures as protein-centric microAUC ($MicroAUC_p$)
 and a drug-centric microAUC ($MicroAUC_d$).
 
@@ -795,7 +795,7 @@ pair split.  Second, when evaluating the same methods over a protein
 split, we find a substantial performance difference in comparison to
 the splitting scheme used in the original evaluation of each
 method. DTI-CDF was originally evaluated on all three splitting
-schemes underlining this point \cite{}. While \name{} provides
+schemes underlining this point \cite{DTI-CDF2019}. While \name{} provides
 comparable performance to the na\"ive predictor and DTI-CDF in terms
 of MacroAUC, it yields considerably better results with respect to
 $\textrm{MicroAUC}_p$. We also find that methods that are trained
@@ -834,7 +834,7 @@ and drug--target affinity prediction methods that were trained and
 evaluation on other datasets.  Following the results of MolTrans
 \cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017},
 DeepDTA \cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019}, and
-MolTrans itself on the BioSnap dataset \cite{} and compared it to our
+MolTrans itself on the BioSnap dataset \cite{BioSnap2018} and compared it to our
 ``na\"ive'' predictor as well as \name{} (see Table
 \ref{tab:comparison2}).  MolTrans was evaluated over the drug--target
 pair and the protein split; we were able to reproduce the MolTrans
@@ -900,7 +900,7 @@ propagation over the interaction network.
 
 There are other types of indirect features that could be added to our
 model. A common feature that may be added are drug indications which are
-predictive of drug--target interactions \cite{}; however, we do
+predictive of drug--target interactions \todo[inline]{CITE}\cite{}; however, we do
 not include them in our model as including drug indications would
 allow our model to make many trivial predictions based only on
 remembering which targets are often used for which indication;
@@ -910,8 +910,8 @@ pathway through different mechanisms.
 
 Combining bottom-up and top-down approaches in a single model can
 follow different strategies. Interaction networks are used widely to
-determine indirect effects of molecular changes \cite{} and predict
-drug--target interactions \cite{}. Our work relies on graph neural
+determine indirect effects of molecular changes \todo[inline]{CITE}\cite{} and predict
+drug--target interactions \todo[inline]{CITE}\cite{}. Our work relies on graph neural
 networks as a way to combine qualitative information about
 interactions with additional features (molecular interaction,
 phenotypic and functional features); even if only some of these
@@ -947,7 +947,7 @@ features in the future.
 One major component of our experiments was to determine how the
 information that is available to a machine learning model during
 training affects the performance of the model. Similarly to previous
-work \cite{}, we find significant differences in predictive
+work \cite{MolTrans2020}\cite{DeepConvDTI2019}, we find significant differences in predictive
 performance across different splitting schemes.
 
 The most common scheme for drug--target interaction prediction is the
@@ -1206,49 +1206,6 @@ performance results should be aligned with the specific problem.
 
 
 
-% \subsection{Tested hypotheses}
-
-% In this work we are testing the following hypotheses:
-% \begin{enumerate}
-% 	\item Can we build a model that outperforms state of the art approaches, combining top-down and bottom-up approaches?
-% 	\item Are interaction networks sufficient to improve the performance of simple molecular predictors?
-% \end{enumerate}
-% We will test the first hypothesis by building a model that takes both top-down and bottom-up features into account. Thus, we propose a novel approach to combine those mutual exclusive attempts, through the usage of interaction networks, similarity and molecular features. Additionally, we test the latter by building a simple molecular DTI predictor and enhance it under usage of the interaction networks.\\
-
-
-% \section{Methods}
-
-% \subsection{Models}
-% The used model consists of two separate models, that help to fuse together the two methods:
-% \begin{enumerate}
-% 	\item The molecular predictor
-% 	\item The interaction network based predictor
-% \end{enumerate}
-% We build the molecular predictor by using pretrained, molecular fingerprints models for both drugs and proteins. Regarding proteins, we used the pretrained feature generator from \textit{DeepGoPlus} (\citep{DeepGoPlus}) that was originally designed for protein function prediction and is regarded as state of the art for this purpose. For drugs we used a pretrained fingerprint model from \textit{SMILES transformer} (\cite{SmilesTransformer}), that provides a simple and fast method to compute fingerprints through autoencoder models. The encodings from these two models were funneled into a simple deep neural network (see Figure~\ref{fig:01}) with few fully connected. \\
-% The results of that prediction flow into the annotation of the protein-protein interaction (PPI) graph as depicted in (IMAGE). Hereby, the predictions of the molecular predictor are used as node features for the graph, with respect to the given drug. Thus, given a compound-target pair, the nodes of the PPI graph now hold bottom-up features, which can now be processed by the graph learning algorithms. \\
-% The PPI graph is processed by different graph convolutional layers, that may underline the importance of either patterns or regions within the graph, to obtain a feature vector for the wanted node. In contrast to learning over whole graphs we perform node classification within the graph. These layers are either graph convolutional layers, that learn a certain kernel over the graph, or attention based. Different layers of both and other types such as were tested.  \\
-% The drug-drug interaction features are retrieved by choosing the corresponding row in the adjacency matrix of the graph, thus leading to quite simple features. \\
-% For the semantic similarity feature, that once again represents a top-down attribute, we artificially link each drug to its corresponding side effects in the MedDRA hierarchy. Concerning this hierarchy, drug-drug similarity is computed by the Resnik similarity (\cite{Resnik1995}). For the given compound we take the corresponding row of this symmetric similarity matrix. \\
-
-% Thereby, we concatenate these three features together and funnel them into another deep neural network as depicted in figure \ref{fig:02}. This network finally yields our prediction. We hereby perform splits over both drugs and proteins, in order to test and show the discrepancy and increasing difficulty.\\ Implementation was done in PyTorch (\cite{Pytorch}) and is available on Github under \href{github.com/thinnerichs/KAUST-dti-metabol}{github.com/thinnerichs/KAUST-dti-metabol}. Graph learning methods were build with help of PyTorch-Geometric (\cite{PytorchGeometric}), a geometric deep learning extension library for PyTorch, that recently got a lot of attention in the machine learning community. This library gives the potential to use many state of the art graph learning mechanisms, such as plain but effective graph convolution (\citet{GCNConv}), Chebychev kernels (\cite{ChebConv}), ARMA kernels (\cite{ARMAConv}), translation-invariant operators (\cite{FeaStConv}), attention mechanisms (\cite{GATConv}), random walks (\cite{APPNPConv}) and mixtures of the latter two (\cite{SAGEConv}). The performance of these various layer types were tested for this particular problem, as discussed in the results section.
-
-% \begin{figure}[!tpb]%figure1
-% 	\centerline{\includegraphics[width=0.4\textwidth]{figures/MolecularPredictor.png}}
-% 	\caption{Molecular predictor based on the generated features from DeepGoPlus and SMILES transformer.}\label{fig:MolPred}
-% \end{figure}
-
-% \begin{figure}[!tpb]%figure2
-% \centerline{\includegraphics[width=0.4\textwidth]{figures/InteractionNetwork.png}}
-% \caption{Deep neural network that predicts based on drug-drug interaction features and semantic similarity features over side effects for drugs, and graph convolution over protein-protein interaction networks for proteins. Protein and drug features are represented by blue and red, respectively.}\label{fig:02}
-% \end{figure}
-
-%\section{Discussion}
-
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -1282,7 +1239,6 @@ under Award No. URF/1/3790-01-01 and URF/1/4355-01-01.
 %\bibliographystyle{plain}
 %
 \bibliography{citations}
-
 
 \end{document}
 
