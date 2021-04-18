@@ -39,31 +39,29 @@
   drug repurposing.  Approaches to predict DTIs can proceed
   indirectly, top-down, using phenotypic effects of drugs to identify
   potential drug targets, or they can be direct, bottom-up and use
-  molecular information to directly predict binding potentials.
-  Both approaches can be combined with information about interaction
-  networks, 
-  
-  However, DTI datasets are prone to certain biases,
-  skewing the effective predictive expressiveness over those
-  datasets.
-  \textbf{Results:} We present \name{} to combine molecular features
-  and functional information with protein--protein interaction
-  networks under usage of graph convolutional neural networks, showing
-  that phenotypic information localizes on the interaction network. We
-  hereby focus on protein-centric evaluation, predicting drugs that
-  may target specific targets. We further show that common
-  drug--target interaction datasets contain intrinsic biases, majorly
-  affecting predictive performance of compared models. Additionally,
-  we propose an modified evaluation scheme and metric to circumvent
-  such skews and to better reflect the problem DTI prediction methods
-  aim to solve. \\
-  \textbf{Availability:} Source code and data used in \name{} are
-  available at \url{https://github.com/THinnerichs/DTI-VOODOO} \\
+  molecular information to directly predict binding potentials.  Both
+  approaches can be combined with information about interaction
+  networks. \\
+  \textbf{Results:} We developed \name{} as a computational method
+  that combines molecular features and ontology-encoded phenotypic
+  effects of drugs with protein--protein interaction networks, and
+  uses a graph neural networks to predict DTIs.  We demonstrate that
+  drug effect features can exploit information in the interaction
+  network whereas molecular features do not.  \name{} is designed to
+  predict candidate drugs for a given protein; we use this formulation
+  to show that common DTI datasets contain intrinsic biases with major
+  affects on performance evaluation and comparison of DTI prediction
+  methods. Using a modified evaluation scheme, we demonstrate that
+  \name{} improves substantially over state of the art DTI prediction
+  methods. \\
+  \textbf{Availability:} \name{} source code and data necessary to
+  reproduce results are freely available at
+  \url{https://github.com/THinnerichs/DTI-VOODOO}. \\
   \textbf{Contact:}
   \href{tilman.hinnerichs@kaust.edu.sa}{tilman.hinnerichs@kaust.edu.sa}
   \\
-  \textbf{Supplementary information:}Supplementary data are
-  available at \textit{Bioinformatics} online.}
+  \textbf{Supplementary information:}Supplementary data are available
+  at \textit{Bioinformatics} online.}
 
 \maketitle
 \section{Introduction}
