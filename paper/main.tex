@@ -95,8 +95,8 @@ Both approaches may be used in conjunction with network inference
 \cite{Chen2015}. Biological networks used for DTI prediction include
 protein--protein interaction networks \cite{Feng2017, Lee2018} and
 networks including several other types of biological relations,
-including similarity between represented entities
-\cite{Gottlieb2011}. Network-based DTI prediction methods use the
+including similarity between represented entities \cite{Ding2013,
+  Gottlieb2011}. Network-based DTI prediction methods use the
 guilt-by-association principle \cite{Oliver2000} and assume that a
 protein is a likely target for a drug if many of the protein's
 neighbors in the interaction network are targets of the drug
@@ -125,7 +125,9 @@ information. % While based on diverse systems,
 % approaches found application for computing compound representations
 % for DTI prediction.
 They have previously been applied for a number of tasks, including
-prediction of protein functions \cite{Zitnik2017}, cancer drug response \cite{Liu2020} and drug--target affinity prediction \cite{GraphDTA2020}.
+prediction of protein functions \cite{Zitnik2017}, cancer drug
+response \cite{Liu2020} and drug--target affinity prediction
+\cite{GraphDTA2020}.
 
 One challenge in DTI prediction are potential biases resulting from
 the underlying datasets \citep{Pahikkala2014} which may affect model
@@ -495,10 +497,9 @@ $y:D\times P \rightarrow [0,1]$, we define
 In some cases, the $MicroAUC$ score may not be defined as in some
 datasets some proteins or drugs have no interactions, leading to an
 infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
-for that entity. As this is quite common for DTI datasets, we do not omit but impute the $MicroAUC$
-interpolating linearly for those entities, by using the accuracy for this
-subset:
-
+for that entity. As this is quite common for DTI datasets, we do not
+omit but impute the $MicroAUC$ interpolating linearly for those
+entities using the accuracy for this subset:
 \begin{equation*}
 	\textrm{MicroAUC}_p(l,y) := 
 	\begin{cases}
@@ -511,7 +512,10 @@ Note that drugs and proteins can be interchanged in this formulation. We refer
 to the different measures as protein-centric microAUC ($MicroAUC_p$)
 and a drug-centric microAUC ($MicroAUC_d$).
 
-Further, we choose AUROC over area under precision recall curve (AUPRC) as the latter is prone to data imbalance \cite{Jeni2013} and thus sub-sampling biases, undermining cross-approach evaluation.\todo[inline]{More Information? Right place?}
+Further, we choose the AUROC as primary metric to compare different
+methods, over area under precision recall curve (AUPRC); AUPRC is
+prone to data imbalance \cite{Jeni2013} and thus sub-sampling biases,
+undermining cross-approach evaluation.
 
 \section{Results}
 
