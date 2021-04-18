@@ -86,28 +86,28 @@ accurate prediction) but also properties such as where a protein is
 expressed or in which celltypes and anatomical structures. Top-down
 methods use information for DTI prediction such as side-effect
 similarity \cite{Campillos2008} that is largely complementary to
-knowledge gained from molecular properties. While methods tha3t rely on
+knowledge gained from molecular properties. While methods that rely on
 molecular information are directly predicting whether two molecular
 could interact, top-down methods rely on more indirect means and 
 infer a DTI from observable effects resulting from the interaction.
 
 Both approaches may be used in conjunction with network inference
-\todo[inline]{CITE}\cite{}. Biological networks used for DTI prediction include
-protein--protein interaction networks \todo[inline]{CITE}\cite{} and networks including
-several other types of biological relations, including similarity
-between represented entities \cite{Gottlieb2011}. Network-based DTI
-prediction methods use the guilt-by-association principle
-\cite{Oliver2000}
-and assume that a protein is a likely target for a drug if many of the
-protein's neighbors in the interaction network are targets of the drug
-\cite{Gillis2012}. Network-based methods have been applied successfully
-to DTI prediction. However, if DTIs are taken as direct physical
-interactions between a drug and protein, it remains an unresolved
-question whether the network-based guilt-by-association hypothesis is
-true, or whether an interaction of a drug and protein dys-regulates
-several of the protein's interaction partners, and therefore resulting
-in downstream effects that are not direct interactions but only
-downstream consequences of an interaction.
+\cite{Chen2015}. Biological networks used for DTI prediction include
+protein--protein interaction networks \cite{Feng2017, Lee2018} and
+networks including several other types of biological relations,
+including similarity between represented entities
+\cite{Gottlieb2011}. Network-based DTI prediction methods use the
+guilt-by-association principle \cite{Oliver2000} and assume that a
+protein is a likely target for a drug if many of the protein's
+neighbors in the interaction network are targets of the drug
+\cite{Gillis2012}. Network-based methods have been applied
+successfully to DTI prediction. However, if DTIs are taken as direct
+physical interactions between a drug and protein, it remains an
+unresolved question whether the network-based guilt-by-association
+hypothesis is true, or whether an interaction of a drug and protein
+dys-regulates several of the protein's interaction partners, and
+therefore resulting in effects that are not direct interactions but
+only downstream consequences of an interaction.
 
 Progress in machine learning using graph neural networks can allow us
 to test this hypothesis and combine both bottom-up and top-down
