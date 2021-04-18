@@ -905,21 +905,21 @@ propagation over the interaction network.
 % leading to significantly less computing time.
 
 There are other types of indirect features that could be added to our
-model. A common feature that may be added are drug indications which are
-predictive of drug--target interactions \todo[inline]{CITE}\cite{}; however, we do
-not include them in our model as including drug indications would
-allow our model to make many trivial predictions based only on
-remembering which targets are often used for which indication;
-including network information would likely benefit predictions based
-on drug indications because different drugs may target the same
-pathway through different mechanisms.
+model. A common feature that may be added are drug indications which
+are predictive of drug--target interactions \cite{Gottlieb2011};
+however, we do not include them in our model as including drug
+indications would allow our model to make many trivial predictions
+based only on remembering which targets are often used for which
+indication; including network information would likely benefit
+predictions based on drug indications because different drugs may
+target the same pathway through different mechanisms.
 
 Combining bottom-up and top-down approaches in a single model can
 follow different strategies. Interaction networks are used widely to
-determine indirect effects of molecular changes \todo[inline]{CITE}\cite{} and predict
-drug--target interactions \todo[inline]{CITE}\cite{}. Our work relies on graph neural
-networks as a way to combine qualitative information about
-interactions with additional features (molecular interaction,
+determine indirect effects of molecular changes and predict
+drug--target interactions \cite{LotfiShahreza2017}. Our work relies on
+graph neural networks as a way to combine qualitative information
+about interactions with additional features (molecular interaction,
 phenotypic and functional features); even if only some of these
 features benefit from the information the graph provides, graph neural
 networks will allow further extension of our model with additional
@@ -953,8 +953,9 @@ features in the future.
 One major component of our experiments was to determine how the
 information that is available to a machine learning model during
 training affects the performance of the model. Similarly to previous
-work \cite{MolTrans2020}\cite{DeepConvDTI2019}, we find significant differences in predictive
-performance across different splitting schemes.
+work \cite{MolTrans2020, DeepConvDTI2019}, we find significant
+differences in predictive performance across different splitting
+schemes.
 
 The most common scheme for drug--target interaction prediction is the
 split over drug-target pairs \cite{Survey2018} where it may happen
