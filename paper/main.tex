@@ -155,19 +155,20 @@ affect common evaluation schemes where it is possible
 to exploit these biases within DTI prediction \cite{Survey2018}.
 
 We developed \name{} as a method for predicting DTIs. We use an
-ontology-based machine learning method \cite{DL2vec2020} to encode phenotypic
-consequences of DTIs and deep learning methods to encode molecular
-features. We combine both using a protein interaction network which we
-exploit using a graph neural network. We use this model to test
-whether molecular or phenotype features benefit from the network
-information and find that only phenotype features localize on the
-graph whereas molecular features do not. We further evaluate and
-compare \name{} against several DTI prediction methods and
-demonstrate a substantial improvement of \name{} over the state of the
-art in predicting drugs that target a protein. We also identify and
+ontology-based machine learning method \cite{DL2vec2020} to encode
+phenotypic consequences of DTIs and deep learning methods to encode
+molecular features. We combine both using a protein interaction
+network which we exploit using a graph neural network. We use this
+model to test whether molecular or phenotype features benefit from the
+network information and find that only phenotype features localize on
+the graph whereas molecular features do not. We further evaluate and
+compare \name{} against several DTI prediction methods and demonstrate
+a substantial improvement of \name{} over the state of the art in
+predicting drugs that target a protein. We also identify and
 characterize several biases in both training and evaluating DTI
 prediction methods, and make recommendations on how to avoid
-them. \name{} is available as Free Software at \url{https://github.com/THinnerichs/DTI-VOODOO}.
+them. \name{} is available as Free Software at
+\url{https://github.com/THinnerichs/DTI-VOODOO}.
 
 % In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
 % However, only few applied this context to the task of DTI prediction in humans. 
@@ -513,9 +514,10 @@ to the different measures as protein-centric microAUC ($MicroAUC_p$)
 and a drug-centric microAUC ($MicroAUC_d$).
 
 Further, we choose the AUROC as primary metric to compare different
-methods, over area under precision recall curve (AUPRC); AUPRC is
-prone to data imbalance \cite{Jeni2013} and thus sub-sampling biases,
-undermining cross-approach evaluation.
+methods over other measures such as the area under precision recall
+curve (AUPRC); AUPRC is sensitive to data imbalances \cite{Jeni2013}
+and therefore more challenging to apply to comparing different DTI
+prediction methods.
 
 \section{Results}
 
