@@ -46,30 +46,25 @@
 \begin{table}[ht]
 	\centering
 
-	\begin{tabular}{|p{2.0cm}|p{1.1cm}|p{0.8cm}|p{0.8cm}|p{1.2cm}|p{1.2cm}|}
+	\begin{tabular}{|p{2.0cm}|p{1.1cm}|p{1.2cm}|p{0.8cm}|p{0.8cm}|p{1.2cm}|p{1.2cm}|}
 		\hline
-		Approach&\multicolumn{5}{c|}{Graph convolution method}\\
-		&without&GCN-Conv&GEN-Conv&RGC + GCNConv&RGC + GENConv\\
+		Approach&\multicolumn{6}{c|}{Graph convolution method}\\
+		&without&without/ empty RGC&GCN-Conv&GEN-Conv&RGC + GCNConv&RGC + GENConv\\
 		\hline
-		MolPred & $0.69$ & $0.67$& $0.68$& $0.65$& $0.69$\\
+		MolPred & $0.69$ & $0.67$& $0.67$& $0.68$& $0.65$& $0.69$\\
 		\hline
-		OntoPred &$0.88$ &$0.88$&$0.90$&$0.86$&$0.92$\\
+		OntoPred &$0.88$ &$0.87$ &$0.88$&$0.90$&$0.86$&$0.92$\\
 		\hline
-		\name& $0.89$& $0.89$& $0.91$& $0.86$& $\mathbf{0.93}$\\
+		\name& $0.89$&$0.89$& $0.89$& $0.91$& $0.86$& $\mathbf{0.93}$\\
 		\hline
 	\end{tabular}
-	\caption{\label{tab:Results}Results for \name{} on the STITCH
-		and Yamanishi datasets evaluated with 5-fold cross-validation. We 
-		call the model using only molecular features
-		\textit{MolPred} and the model using only ontology-based
-		features \textit{OntoPred}. \name{} combines both types of
-		features.}
+	\caption{\label{tab:Results}Results for various neural graph convolutional methods enhancing MolPred, OntoPred and \name{} over the STITCH dataset. We evaluated all methods over different stacking heights without and with residual graph convolution blocks (RGC, ResGraphConv) as depicted in Supplementary figure \ref{fig:ResGraphConvBlocks}. ``Empty RGC`` denotes a RGC block with a plain neural layer substituting the GraphConv layer.}
 \end{table}
 
 
 \begin{table}[ht]
 	\centering
-	\begin{tabular}{|p{1.4cm}|p{0.6cm}|p{0.7cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|p{0.7cm}|}
+	\begin{tabular}{|p{2.0cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|p{0.8cm}|}
 		\hline
 		&\multicolumn{6}{c|}{(a) STITCH results}\\
 		\hline
@@ -84,12 +79,7 @@
 		\name{} & $0.89$& $0.91$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$&$\mathbf{0.94}$\\
 		\hline
 	\end{tabular}
-	\caption{\label{tab:Results}Results for \name{} on the STITCH
-		and Yamanishi datasets evaluated with 5-fold cross-validation. We 
-		call the model using only molecular features
-		\textit{MolPred} and the model using only ontology-based
-		features \textit{OntoPred}. \name{} combines both types of
-		features.}
+	\caption{Extended results table for MolPred, OntoPred and \name{} over STITCH with added $MicroAUC'_p$ for comparison of both metrics.}
 \end{table}
 
 

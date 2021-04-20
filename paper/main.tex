@@ -173,8 +173,8 @@ the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
 diseases for which drugs can be more profitably marketed). This may
-affect common evaluation schemes where it is possible
-to exploit these biases within DTI prediction \cite{Survey2018}.
+affect common evaluation schemes\cite{Survey2018} where it is possible
+to exploit these biases within DTI prediction \cite{}. \citet{vanLaarhoven2014} showed that another bias can be heavily capitalized over the dataset of \citet{Yamanishi2008}. 
 
 We developed \name{} as a method for predicting DTIs. We use an
 ontology-based machine learning method \cite{DL2vec2020} to encode
@@ -228,18 +228,17 @@ from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
 provides a SPARQL query endpoint for the mentioned resources.
 
-We only use proteins in our analysis that have at least one link in
-either STITCH or STRING, and drugs with at least one side effect and
-one existing target. Therefore, the intersection between these
-resources yields 1,428 drugs and 7,368 human proteins with 32,212
-interactions for the training phase. We provide links to and methods
-for obtaining and processing the necessary data on Github.
-
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
 between 708 drugs and 1,512 proteins, and the BioSnap dataset
 \cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
 nodes and 15,138 edges.
+
+We only use proteins in our analysis that have at least one link in STRING or one association in PhenomeNET, and drugs with at least one side effect. Therefore, the intersection between these
+resources yields 1,428 drugs and 7,368 human proteins with 32,212
+interactions for STITCH, 1,837 interactions between 680 drugs and 1,458 proteins for Yamanishi, and 6,498 links between 949 drugs and 2,221 proteins for BioSnap dataset. We provide links to and methods
+for obtaining and processing the necessary data on Github.
+
  
 \subsection{Model}
 
@@ -428,7 +427,7 @@ graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
 computation. An overview of the model architecture, combining both
 feature types, is shown in Supplementary Figure
-\ref{fig:FullModelAllLayers}. Here
+4. Here
 the original representations are transformed by a dense layer and then
 used as input of a stack (with height 3) of residual graph
 convolutional blocks.
@@ -649,7 +648,7 @@ to using only molecular features. We also observe that only the model
 using ontology-based features results in increased performance when
 incorporating the PPI graph. This increase can be observed with
 different graph neural network architectures and configurations
-(Supplementary Table X\todo{Add to Supplement!}). While the {\em
+(Supplementary Table 1). While the {\em
   GCNConv} and {\em GENConv} architecture already shows some minor
 improvement, the use of \textit{ResGraphConv} results in larger
 performance improvements.  {\em ResGraphConv} blocks add a large
@@ -662,7 +661,7 @@ blocks are removed, resulting in a model with similar parameters but
 without the ability to use graph-based information. This pruned
 network, with no information on the protein--protein interactions,
 reached very similar results to the original \textit{OntoPred} model
-and showed no improvement (Supplementary Table X\todo{Add!}).
+and showed no improvement (Supplementary Table 1).
 
 The improvements when including the graph are only provided by the
 \textit{GENConv} graph convolution scheme which includes the
@@ -845,14 +844,14 @@ therefore generalize less well.
     DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
     DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
     DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
-    MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
+    MolTrans&DP pairs&$\mathbf{0.90}$&$0.77$&$0.74$\\
     \name&Proteins&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
     \hline
   \end{tabular}
   \caption{\label{tab:comparison2} Comparison of \name{} with
     state of the art drug--target interaction prediction methods
     on the BioSnap dataset; we evaluated the original and the
-    protein-based split in a cross-validation}.
+    protein-based split in a cross-validation.}.
 \end{table}
 
 

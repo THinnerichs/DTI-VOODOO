@@ -52,6 +52,13 @@ Chen, J.  {\em et~al.} (2020).
   site of expression.
 \newblock {\em Bioinformatics\/}.
 
+\bibitem[Chen {\em et~al.}(2015)Chen, Yan, Zhang, Zhang, Dai, Yin, and
+  Zhang]{Chen2015}
+Chen, X.  {\em et~al.} (2015).
+\newblock Drug{\textendash}target interaction prediction: databases, web
+  servers and computational models.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 17}(4), 696--712.
+
 \bibitem[Chu {\em et~al.}(2019)Chu, Kaushik, Wang, Wang, Zhang, Shan, Salahub,
   Xiong, and Wei]{DTI-CDF2019}
 Chu, Y.  {\em et~al.} (2019).
@@ -64,6 +71,18 @@ Chu, Y.  {\em et~al.} (2019).
 Defferrard, M.  {\em et~al.} (2016).
 \newblock Convolutional neural networks on graphs with fast localized spectral
   filtering.
+
+\bibitem[Ding {\em et~al.}(2013)Ding, Takigawa, Mamitsuka, and Zhu]{Ding2013}
+Ding, H.  {\em et~al.} (2013).
+\newblock Similarity-based machine learning methods for predicting
+  drug{\textendash}target interactions: a brief review.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 15}(5), 734--747.
+
+\bibitem[Feng {\em et~al.}(2017)Feng, Wang, and Wang]{Feng2017}
+Feng, Y.  {\em et~al.} (2017).
+\newblock Drug target protein-protein interaction networks: A systematic
+  perspective.
+\newblock {\em {BioMed} Research International\/}, {\bf 2017}, 1--13.
 
 \bibitem[Fey and Lenssen(2019)Fey and Lenssen]{PytorchGeometric}
 Fey, M. and Lenssen, J.~E. (2019).
@@ -151,6 +170,12 @@ Kulmanov, M. and Hoehndorf, R. (2019).
 \newblock {DeepGOPlus}: improved protein function prediction from sequence.
 \newblock {\em Bioinformatics\/}.
 
+\bibitem[Lee and Nam(2018)Lee and Nam]{Lee2018}
+Lee, I. and Nam, H. (2018).
+\newblock Identification of drug-target interaction by a random walk with
+  restart method on an interactome network.
+\newblock {\em {BMC} Bioinformatics\/}, {\bf 19}(S8).
+
 \bibitem[Lee {\em et~al.}(2019)Lee, Keum, and Nam]{DeepConvDTI2019}
 Lee, I.  {\em et~al.} (2019).
 \newblock {DeepConv}-{DTI}: Prediction of drug-target interactions via deep
@@ -221,6 +246,12 @@ Pahikkala, T.  {\em et~al.} (2014).
 \newblock Toward more realistic drug-target interaction predictions.
 \newblock {\em Briefings in Bioinformatics\/}, {\bf 16}(2), 325--337.
 
+\bibitem[Shahreza {\em et~al.}(2017)Shahreza, Ghadiri, Mousavi, Varshosaz, and
+  Green]{LotfiShahreza2017}
+Shahreza, M.~L.  {\em et~al.} (2017).
+\newblock A review of network-based approaches to drug repositioning.
+\newblock {\em Briefings in Bioinformatics\/}, {\bf 19}(5), 878--892.
+
 \bibitem[Smith and Eppig(2009)Smith and Eppig]{MP2009}
 Smith, C.~L. and Eppig, J.~T. (2009).
 \newblock The mammalian phenotype ontology: enabling robust annotation and
@@ -249,6 +280,13 @@ Thafar, M.~A.  {\em et~al.} (2020).
 \newblock {DTiGEMS}: drug-target interaction prediction using graph embedding,
   graph mining, and similarity-based techniques.
 \newblock {\em Journal of Cheminformatics\/}, {\bf 12}(1).
+
+\bibitem[van Laarhoven and Marchiori(2014)van Laarhoven and
+  Marchiori]{vanLaarhoven2014}
+van Laarhoven, T. and Marchiori, E. (2014).
+\newblock Biases of drug{\textendash}target interaction network data.
+\newblock In {\em Pattern Recognition in Bioinformatics\/}, pages 23--33.
+  Springer International Publishing.
 
 \bibitem[Veličković {\em et~al.}(2017)Veličković, Cucurull, Casanova,
   Romero, Liò, and Bengio]{GATConv}

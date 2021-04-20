@@ -16,45 +16,45 @@ Warning--empty journal in APPNPConv
 Warning--empty journal in DTINet2017
 Warning--empty journal in GATConv
 Warning--empty journal in Zitnik2017
-You've used 47 entries,
+You've used 53 entries,
             2401 wiz_defined-function locations,
-            820 strings with 18611 characters,
-and the built_in function-call counts, 26648 in all, are:
-= -- 2228
-> -- 2203
-< -- 10
-+ -- 712
-- -- 658
-* -- 2779
-:= -- 4815
-add.period$ -- 235
-call.type$ -- 47
-change.case$ -- 290
-chr.to.int$ -- 46
-cite$ -- 55
-duplicate$ -- 942
-empty$ -- 1414
-format.name$ -- 721
-if$ -- 5056
+            856 strings with 19800 characters,
+and the built_in function-call counts, 29814 in all, are:
+= -- 2548
+> -- 2374
+< -- 13
++ -- 767
+- -- 705
+* -- 3076
+:= -- 5341
+add.period$ -- 268
+call.type$ -- 53
+change.case$ -- 328
+chr.to.int$ -- 52
+cite$ -- 61
+duplicate$ -- 1075
+empty$ -- 1617
+format.name$ -- 778
+if$ -- 5693
 int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 41
-newline$ -- 224
-num.names$ -- 188
-pop$ -- 349
+missing$ -- 47
+newline$ -- 254
+num.names$ -- 212
+pop$ -- 390
 preamble$ -- 1
-purify$ -- 290
+purify$ -- 328
 quote$ -- 0
-skip$ -- 611
+skip$ -- 702
 stack$ -- 0
-substring$ -- 1366
-swap$ -- 181
-text.length$ -- 0
+substring$ -- 1569
+swap$ -- 213
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 423
+type$ -- 477
 warning$ -- 8
-while$ -- 187
+while$ -- 216
 width$ -- 0
-write$ -- 566
+write$ -- 645
 (There was 1 error message)
