@@ -118,7 +118,7 @@ class QuickProtFuncDTINetworkData:
         # self.edge_attr = torch.ones((self.edge_list.size(1),1), dtype=torch.float)
 
         # DTI data
-        if not config.yamanishi_test and not config.biosnap_test:
+        if not config.yamanishi_test:
             print("Loading DTI links ...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
@@ -131,12 +131,8 @@ class QuickProtFuncDTINetworkData:
         # self.test_prots = config.test_prots
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
-        epsilon = 0.00001
 
-        self.num_PPI_features = 200# +100
-
-
-        self.node_degree_protein_feature = torch.tensor(DTI_data_preparation.get_protein_degree_percentile(protein_list=self.protein_list, n=100))
+        self.num_PPI_features = 200
 
         if config.include_mol_features:
             self.drug_mol_encodings = torch.Tensor([self.drug_mol_encodings[drug] for drug in self.drug_list])
@@ -207,7 +203,6 @@ class QuickProtFuncDTINetworkData:
         data_list = []
 
         indices = list(range(self.num_drugs))
-        protfunc_data = None
 
         # for index in tqdm(indices):
         for drug_index in indices:
@@ -224,15 +219,12 @@ class QuickProtFuncDTINetworkData:
 
             if self.config.include_indications:
                 full_PPI_graph.drug_feature = torch.cat([self.drug_embeddings[drug_index, :], self.drug_indication_embeddings[drug_index, :]])
-                # drug_feature = self.drug_indication_embeddings[drug_index, :]
             else:
                 full_PPI_graph.drug_feature = self.drug_embeddings[drug_index, :]
 
             if self.config.include_mol_features:
                 full_PPI_graph.drug_mol_feature = molecular_drug_feature
                 full_PPI_graph.protein_mol_feature = self.protein_mol_encodings
-
-            # full_PPI_graph.__num_nodes__ = self.num_proteins
 
             data_list.append(full_PPI_graph)
 
@@ -268,7 +260,6 @@ def BCELoss_ClassWeights(input, target, pos_weight):
     input = torch.clamp(input,min=1e-7,max=1-1e-7)
     target = target.view(-1,1)
     weighted_bce = - pos_weight*target * torch.log(input) - 1*(1 - target) * torch.log(1 - input)
-    # weighted_bce = weighted_bce / (pos_weight+1)
     final_reduced_over_batch = weighted_bce.sum(axis=0)
     return final_reduced_over_batch
 

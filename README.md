@@ -1,16 +1,36 @@
 # DTI-Voodoo
-**Motivation:** *In silico* drug--target interaction (DTI) prediction is crucial for drug discovery and down-stream tasks, such as drug indication and drug--disease prediction. However, DTI datasets are prone to certain biases, skewing the effective predictive expressiveness over those datasets. Additionally, only few approaches combine phenotypical and molecular features for DTI prediction.
+**Motivation:** *In silico* drug--target
+  interaction (DTI) prediction is important for drug discovery and
+  drug repurposing.  Approaches to predict DTIs can proceed
+  indirectly, top-down, using phenotypic effects of drugs to identify
+  potential drug targets, or they can be direct, bottom-up and use
+  molecular information to directly predict binding potentials.  Both
+  approaches can be combined with information about interaction
+  networks.
 
-**Results:** We present DTI-Voodoo to combine molecular features and functional information with protein--protein interaction networks under usage of graph convolutional neural networks, showing that phenotypic information localizes on the interaction network. We hereby focus on protein-centric evaluation, predicting drugs that may target specific targets. We further show that common drug--target interaction datasets contain intrinsic biases, majorly affecting predictive performance of compared models. Additionally, we propose an modified evaluation scheme and metric to circumvent such skews and to better reflect the problem DTI prediction methods aim to solve. 
+**Results:** We developed DTI-Voodoo as a computational method
+  that combines molecular features and ontology-encoded phenotypic
+  effects of drugs with protein--protein interaction networks, and
+  uses a graph neural networks to predict DTIs.  We demonstrate that
+  drug effect features can exploit information in the interaction
+  network whereas molecular features do not.  DTI-Voodoo is designed to
+  predict candidate drugs for a given protein; we use this formulation
+  to show that common DTI datasets contain intrinsic biases with major
+  affects on performance evaluation and comparison of DTI prediction
+  methods. Using a modified evaluation scheme, we demonstrate that
+  DTI-Voodoo improves substantially over state of the art DTI prediction
+  methods.
 
 ## Requirements
 `Python 3.7` packages:
-```python
+```
 - pytorch 1.6+
 - pytorch-geometric 1.6+
 - numpy 1.19+
 - scikit-learn 
+- networkx
 - rdflib
+- BioPython
 - tqdm (for better evaluation and sanity preservation)
 ```
 

@@ -89,7 +89,7 @@ candidates and their interaction partners. Computational methods are
 widely applied to predict DTIs and many computational methods have
 been developed.  These methods can be broadly classified into
 ``top-down'' and ``bottom-up'' approaches. Top-down approaches start
-form observable characteristics resulting from a drug--target
+from observable characteristics resulting from a drug--target
 interaction, such as side-effects or the diseases treated by a drug,
 and infer likely molecular mechanisms (i.e., the interaction) using
 these observations.
@@ -99,18 +99,18 @@ structure or fingerprints associated with drug and protein, and
 predict interactions from this information.
 
 Both bottom-up and top-down approaches to drug--target interaction
-prediction have some advantages and limitations. Generally, bottom-up
+prediction bear some advantages and limitations. Generally, bottom-up
 methods face the challenge to predict whether a structure binds to a
 protein given their molecular properties; whether two entities
 interact depends not only on the molecular structure of the entities
 (where binding sites and molecular forces need to be determined for
-accurate prediction) but also properties such as where a protein is
+accurate prediction) but also properties namely where a protein is
 expressed or in which celltypes and anatomical structures. Top-down
 methods use information for DTI prediction such as side-effect
 similarity \cite{Campillos2008} that is largely complementary to
 knowledge gained from molecular properties. While methods that rely on
 molecular information are directly predicting whether two molecular
-could interact, top-down methods rely on more indirect means and 
+could interact, top-down methods base on more indirect means and 
 infer a DTI from observable effects resulting from the interaction.
 
 Both approaches may be used in conjunction with network inference
@@ -127,7 +127,7 @@ successfully to DTI prediction. However, if DTIs are taken as direct
 physical interactions between a drug and protein, it remains an
 unresolved question whether the network-based guilt-by-association
 hypothesis is true, or whether an interaction of a drug and protein
-dys-regulates several of the protein's interaction partners, and
+dysregulates several of the protein's interaction partners, and
 therefore resulting in effects that are not direct interactions but
 only downstream consequences of an interaction.
 
@@ -135,7 +135,7 @@ Progress in machine learning using graph neural networks can allow us
 to test this hypothesis and combine both bottom-up and top-down
 features with a network in a single machine learning model. 
 In particular, Graph Convolutional Networks \cite{GCNConv} and
-their variants using different types of kernels \cite{ChebConv,
+their variants operate on different types of kernels \cite{ChebConv,
   ARMAConv}, including attention mechanisms \cite{GATConv}, and
 different forms of exploring node neighborhoods \cite{APPNPConv,
   SAGEConv} can combine different types of features and graph-based
@@ -151,17 +151,17 @@ prediction of protein functions \cite{Zitnik2017}, cancer drug
 response \cite{Liu2020} and drug--target affinity prediction
 \cite{GraphDTA2020}.
 
-One challenge in DTI prediction are potential biases resulting from
+Potential biases resulting from
 the underlying datasets \citep{Pahikkala2014} which may affect model
-evaluation and comparison. First, novel drugs are often designed by
+evaluation and comparison pose a challenge for DTI prediction. Firstly, novel drugs are often developed by
 altering non-functional components of a drug, leading to two and more
 very similar drugs designed to target the same proteins
 \cite{Overington2006}. This can result in a bias when it leads to
 hidden duplicates or highly similar compounds that are distributed
 among training and evaluation dataset, resulting in a better
-(measured) predictive performance than would be expected when the
+(measured) predictive performance than it would be expected when the
 model is applied to identify drugs that target a protein for which no
-drugs yet exist. Second, some proteins (which we call \textit{hub
+drugs yet exist. Secondly, some proteins (which we call \textit{hub
   proteins}) have significantly more known interactions with drugs
 than others. In the STITCH database, $5\%$ of the proteins have $40\%$
 of the interactions, and similar distributions are present in other
@@ -172,15 +172,15 @@ a protein for which no interactions are known). These differences in
 the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
-diseases for which drugs can be more profitably marketed). This may
-affect common evaluation schemes where it is possible
-to exploit these biases within DTI prediction \cite{Survey2018}.
+diseases for which drugs can be more profitably marketed). This might
+affect common evaluation schemes\cite{Survey2018} where it is possible
+to exploit these biases within DTI prediction \cite{}. \citet{vanLaarhoven2014} showed that another bias can be heavily capitalized over the dataset of \citet{Yamanishi2008}. 
 
 We developed \name{} as a method for predicting DTIs. We use an
 ontology-based machine learning method \cite{DL2vec2020} to encode
 phenotypic consequences of DTIs and deep learning methods to encode
 molecular features. We combine both using a protein interaction
-network which we exploit using a graph neural network. We use this
+network which we exploit with the aid of a graph neural network. We use this
 model to test whether molecular or phenotype features benefit from the
 network information and find that only phenotype features localize on
 the graph whereas molecular features do not. We further evaluate and
@@ -228,18 +228,17 @@ from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
 provides a SPARQL query endpoint for the mentioned resources.
 
-We only use proteins in our analysis that have at least one link in
-either STITCH or STRING, and drugs with at least one side effect and
-one existing target. Therefore, the intersection between these
-resources yields 1,428 drugs and 7,368 human proteins with 32,212
-interactions for the training phase. We provide links to and methods
-for obtaining and processing the necessary data on Github.
-
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
 between 708 drugs and 1,512 proteins, and the BioSnap dataset
 \cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
 nodes and 15,138 edges.
+
+We only use proteins in our analysis that have at least one link in STRING or one association in PhenomeNET, and drugs with at least one side effect. Therefore, the intersection between these
+resources yields 1,428 drugs and 7,368 human proteins with 32,212
+interactions for STITCH, 1,837 interactions between 680 drugs and 1,458 proteins for Yamanishi, and 6,498 links between 949 drugs and 2,221 proteins for BioSnap dataset. We provide links to and methods
+for obtaining and processing the necessary data on Github.
+
  
 \subsection{Model}
 
@@ -270,8 +269,8 @@ use as top-down features. DL2vec constructs a graph by introducing
 nodes for each ontology class and edges for ontology axioms, followed
 by random walks starting from each node in the graph. These walks are
 encoded using a Word2vec \citep{Word2vec2013} model. Therefore, DL2Vec
-generates representations that can encode drug effects or protein
-functions while preserving their semantic neighbourhood within that
+generates representations that enable to encode drug effects or protein
+functions while preserving their semantic neighborhood within that
 graph.
 
 % The overall structure of the ontology can be seen in
@@ -290,9 +289,8 @@ graph.
 As we want to learn from the similarity of drug side effects and
 protein phenotypes, we use a deep half-twin neural network with a
 contrastive loss using cosine similarity.  A half-twin neural network
-aims to learn a similarity between two embeddings of the same
-dimension.  The precomputed embeddings may have different
-dimensionality and we first process them using a fully connected
+aims to learn a similarity between two embeddings of variable but same
+dimension. As the original feature space may have varying dimensionality, we first process them using a fully connected
 neural network layer which takes as input an embedding and outputs a
 representation of a particular size, i.e., we use this layer as a
 trainable feature transformation and apply it to reduce the
@@ -367,7 +365,7 @@ $d_i$, i.e., the degree of each vertex $i$. We denote this type of
 graph convolutional neural layers with \textsc{GCNConv}.
 
 While in this initial formulation of a GCNConv the node-wise update
-step is defined by the sum over all neighbouring node representations,
+step is defined by the sum over all neighboring node representations,
 we can alter this formulation to other message passing schemes.  We
 can rearrange the order of activation function $\sigma$, aggregation
 $\mathrm{AGG}$, and linear neural layer $\mathrm{MLP}$ with this
@@ -383,7 +381,7 @@ where we only consider
 $\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We denote this
 generalized layer type as \textsc{GENConv} following the notation of
 PyTorch Geometric \cite{PytorchGeometric}.  While the reordering is
-mainly import for numerical stability, this alteration also addresses
+mainly important for numerical stability, this alteration also addresses
 the vanishing gradient problem for deeper convolutional networks
 \cite{GENConv2020}. Additionally, we can also generalize the
 aggregation function to allow different weighting functions such as
@@ -428,13 +426,13 @@ graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
 computation. An overview of the model architecture, combining both
 feature types, is shown in Supplementary Figure
-\ref{fig:FullModelAllLayers}. Here
+4. Here
 the original representations are transformed by a dense layer and then
 used as input of a stack (with height 3) of residual graph
 convolutional blocks.
 
 \subsubsection{Hyperparameter tuning}
-As the number of drug-targets are sparse with respect to the number of
+As the number of drug-targets are sparse with respect to the amount of
 both drugs and proteins considered, the training, validation and
 testing datasets are imbalanced. As there are only $22,336$ links in
 the considered STITCH subset, the ratio
@@ -575,7 +573,7 @@ node features. \name{} then propagates information among the PPI network
 utilizing graph convolutional steps, calculates the similarity of drug
 and protein representations, and predicts whether there is an
 interaction. The full workflow scheme is depicted in
-figure~\ref{fig:ModelWorkflow}
+Figure~\ref{fig:ModelWorkflow}
 
 % Note that this approach can be easily generalized, profiting from
 % other protein function and phenotype representation methods.
@@ -649,7 +647,7 @@ to using only molecular features. We also observe that only the model
 using ontology-based features results in increased performance when
 incorporating the PPI graph. This increase can be observed with
 different graph neural network architectures and configurations
-(Supplementary Table X\todo{Add to Supplement!}). While the {\em
+(Supplementary Table 1). While the {\em
   GCNConv} and {\em GENConv} architecture already shows some minor
 improvement, the use of \textit{ResGraphConv} results in larger
 performance improvements.  {\em ResGraphConv} blocks add a large
@@ -662,7 +660,7 @@ blocks are removed, resulting in a model with similar parameters but
 without the ability to use graph-based information. This pruned
 network, with no information on the protein--protein interactions,
 reached very similar results to the original \textit{OntoPred} model
-and showed no improvement (Supplementary Table X\todo{Add!}).
+and showed no improvement (Supplementary Table 1).
 
 The improvements when including the graph are only provided by the
 \textit{GENConv} graph convolution scheme which includes the
@@ -845,14 +843,14 @@ therefore generalize less well.
     DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
     DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
     DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
-    MolTrans&DP pairs&$0.90$&$0.77$&$0.74$\\
+    MolTrans&DP pairs&$\mathbf{0.90}$&$0.77$&$0.74$\\
     \name&Proteins&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
     \hline
   \end{tabular}
   \caption{\label{tab:comparison2} Comparison of \name{} with
     state of the art drug--target interaction prediction methods
     on the BioSnap dataset; we evaluated the original and the
-    protein-based split in a cross-validation}.
+    protein-based split in a cross-validation.}.
 \end{table}
 
 
@@ -894,12 +892,12 @@ organism and infer drug--target interactions as the putative molecular
 mechanisms that explain these observations.
 
 Another view on these two approaches is as direct and indirect ways to
-predict drug--target interactions. Molecular information can be used
+predict drug--target interactions. On one hand, molecular information can be used
 to directly determine whether two molecules (such as a drug and
 protein) have the ability to interact, whereas information about
 phenotypic consequences of a drug (drug effects) or disruption of a
 protein function can be used to indirectly suggest candidate
-drug--target interactions. Molecular information will be specific to a
+drug--target interactions. Molecular features will be specific to a
 drug--target pair and we would not expect this information to
 propagate through a protein--protein interaction network; the main
 information about drug--target interactions that could be obtained
@@ -928,8 +926,8 @@ propagation over the interaction network.
 
 There are other types of indirect features that could be added to our
 model. A common feature that may be added are drug indications which
-are predictive of drug--target interactions \cite{Gottlieb2011};
-however, we do not include them in our model as including drug
+are predictive of drug--target interactions \cite{Gottlieb2011}.
+However, we do not include them in our model as including drug
 indications would allow our model to make many trivial predictions
 based only on remembering which targets are often used for which
 indication; including network information would likely benefit
