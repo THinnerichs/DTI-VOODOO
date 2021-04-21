@@ -18,7 +18,7 @@ Warning--empty journal in GATConv
 Warning--empty journal in Zitnik2017
 You've used 53 entries,
             2401 wiz_defined-function locations,
-            856 strings with 19800 characters,
+            856 strings with 19796 characters,
 and the built_in function-call counts, 29814 in all, are:
 = -- 2548
 > -- 2374

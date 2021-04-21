@@ -1,32 +1,5 @@
 \begin{thebibliography}{}
 
-\bibitem[and Seth~Carbon {\em et~al.}(2020)and Seth~Carbon, Douglass, Good,
-  Unni, Harris, Mungall, Basu, Chisholm, Dodson, Hartline, Fey, Thomas, Albou,
-  Ebert, Kesling, Mi, Muruganujan, Huang, Mushayahama, LaBonte, Siegele,
-  Antonazzo, Attrill, Brown, Garapati, Marygold, Trovisco, dos Santos, Falls,
-  Tabone, Zhou, Goodman, Strelets, Thurmond, Garmiri, Ishtiaq,
-  Rodr{\'{\i}}guez-L{\'{o}}pez, Acencio, Kuiper, L{\ae}greid, Logie, Lovering,
-  Kramarz, Saverimuttu, Pinheiro, Gunn, Su, Thurlow, Chibucos, Giglio,
-  Nadendla, Munro, Jackson, Duesbury, Del-Toro, Meldal, Paneerselvam, Perfetto,
-  Porras, Orchard, Shrivastava, Chang, Finn, Mitchell, Rawlings, Richardson,
-  Sangrador-Vegas, Blake, Christie, Dolan, Drabkin, Hill, Ni, Sitnikov, Harris,
-  Oliver, Rutherford, Wood, Hayles, B\"{a}hler, Bolton, Pons, Dwinell, Hayman,
-  Kaldunski, Kwitek, Laulederkind, Plasterer, Tutaj, Vedi, Wang, D'Eustachio,
-  Matthews, Balhoff, Aleksander, Alexander, Cherry, Engel, Gondwe, Karra,
-  Miyasato, Nash, Simison, Skrzypek, Weng, Wong, Feuermann, Gaudet, Morgat,
-  Bakker, Berardini, Reiser, Subramaniam, Huala, Arighi, Auchincloss, Axelsen,
-  Argoud-Puy, Bateman, Blatter, Boutet, Bowler, Breuza, Bridge, Britto,
-  Bye-A-Jee, Casas, Coudert, Denny, Estreicher, Famiglietti, Georghiou, Gos,
-  Gruaz-Gumowski, Hatton-Ellis, Hulo, Ignatchenko, Jungo, Laiho, Mercier,
-  Lieberherr, Lock, Lussi, MacDougall, Magrane, Martin, Masson, Natale,
-  Hyka-Nouspikel, Orchard, Pedruzzi, Pourcel, Poux, Pundir, Rivoire, Speretta,
-  Sundaram, Tyagi, Warner, Zaru, Wu, Diehl, Chan, Grove, Lee, Muller, Raciti,
-  Auken, Sternberg, Berriman, Paulini, Howe, Gao, Wright, Stein, Howe, Toro,
-  Westerfield, Jaiswal, Cooper, and Elser]{GOrecent2020}
-and Seth~Carbon  {\em et~al.} (2020).
-\newblock The gene ontology resource: enriching a {GOld} mine.
-\newblock {\em Nucleic Acids Research\/}, {\bf 49}(D1), D325--D334.
-
 \bibitem[Ashburner {\em et~al.}(2000)Ashburner, Ball, Blake, Botstein, Butler,
   Cherry, Davis, Dolinski, Dwight, Eppig, Harris, Hill, Issel-Tarver,
   Kasarskis, Lewis, Matese, Richardson, Ringwald, Rubin, and
@@ -45,6 +18,33 @@ Bianchi, F.~M.  {\em et~al.} (2019).
 Campillos, M.  {\em et~al.} (2008).
 \newblock Drug target identification using side-effect similarity.
 \newblock {\em Science\/}, {\bf 321}(5886), 263--266.
+
+\bibitem[Carbon {\em et~al.}(2020)Carbon, Douglass, Good, Unni, Harris,
+  Mungall, Basu, Chisholm, Dodson, Hartline, Fey, Thomas, Albou, Ebert,
+  Kesling, Mi, Muruganujan, Huang, Mushayahama, LaBonte, Siegele, Antonazzo,
+  Attrill, Brown, Garapati, Marygold, Trovisco, dos Santos, Falls, Tabone,
+  Zhou, Goodman, Strelets, Thurmond, Garmiri, Ishtiaq,
+  Rodr{\'{\i}}guez-L{\'{o}}pez, Acencio, Kuiper, L{\ae}greid, Logie, Lovering,
+  Kramarz, Saverimuttu, Pinheiro, Gunn, Su, Thurlow, Chibucos, Giglio,
+  Nadendla, Munro, Jackson, Duesbury, Del-Toro, Meldal, Paneerselvam, Perfetto,
+  Porras, Orchard, Shrivastava, Chang, Finn, Mitchell, Rawlings, Richardson,
+  Sangrador-Vegas, Blake, Christie, Dolan, Drabkin, Hill, Ni, Sitnikov, Harris,
+  Oliver, Rutherford, Wood, Hayles, B\"{a}hler, Bolton, Pons, Dwinell, Hayman,
+  Kaldunski, Kwitek, Laulederkind, Plasterer, Tutaj, Vedi, Wang, D'Eustachio,
+  Matthews, Balhoff, Aleksander, Alexander, Cherry, Engel, Gondwe, Karra,
+  Miyasato, Nash, Simison, Skrzypek, Weng, Wong, Feuermann, Gaudet, Morgat,
+  Bakker, Berardini, Reiser, Subramaniam, Huala, Arighi, Auchincloss, Axelsen,
+  Argoud-Puy, Bateman, Blatter, Boutet, Bowler, Breuza, Bridge, Britto,
+  Bye-A-Jee, Casas, Coudert, Denny, Estreicher, Famiglietti, Georghiou, Gos,
+  Gruaz-Gumowski, Hatton-Ellis, Hulo, Ignatchenko, Jungo, Laiho, Mercier,
+  Lieberherr, Lock, Lussi, MacDougall, Magrane, Martin, Masson, Natale,
+  Hyka-Nouspikel, Orchard, Pedruzzi, Pourcel, Poux, Pundir, Rivoire, Speretta,
+  Sundaram, Tyagi, Warner, Zaru, Wu, Diehl, Chan, Grove, Lee, Muller, Raciti,
+  Auken, Sternberg, Berriman, Paulini, Howe, Gao, Wright, Stein, Howe, Toro,
+  Westerfield, Jaiswal, Cooper, and Elser]{GOrecent2020}
+Carbon, S.  {\em et~al.} (2020).
+\newblock The gene ontology resource: enriching a {GOld} mine.
+\newblock {\em Nucleic Acids Research\/}, {\bf 49}(D1), D325--D334.
 
 \bibitem[Chen {\em et~al.}(2020)Chen, Althagafi, and Hoehndorf]{DL2vec2020}
 Chen, J.  {\em et~al.} (2020).
