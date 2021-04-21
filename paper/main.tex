@@ -630,13 +630,13 @@ targets it should be predicted.
 We trained, validated and finally tested all considered models on the
 STITCH dataset using a 5-fold cross-validation over a protein split;
 we then selected the best-performing models (with respect to
-$MicroAUC_p$, see Section \ref{sec:evaluation}), and retrain them from scratch in a
-5-fold protein-split cross-validation on the Yamanishi benchmark
-dataset to avoid validation overfitting and yield more realistic
-testing results. To evaluate the influence of the different features
-separately, and to determine whether they ``localize'' on the PPI
-graph (and therefore can be exploited successfully by the graph neural
-networks), we train and evaluate models with different types of
+$MicroAUC_p$, see Section \ref{sec:evaluation}), and retrain them from
+scratch in a 5-fold protein-split cross-validation on the Yamanishi
+benchmark dataset to avoid validation overfitting and yield more
+realistic testing results. To evaluate the influence of the different
+features separately, and to determine whether they ``localize'' on the
+PPI graph (and therefore can be exploited successfully by the graph
+neural networks), we train and evaluate models with different types of
 features, and with and without inclusion of the PPI graph,
 separately. We comparing the molecular (MolPred) and phenotype-based
 (OntoPred) prediction model, and a combination of both where we
