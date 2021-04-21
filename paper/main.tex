@@ -153,7 +153,8 @@ response \cite{Liu2020} and drug--target affinity prediction
 
 Potential biases resulting from
 the underlying datasets \citep{Pahikkala2014} which may affect model
-evaluation and comparison pose a challenge for DTI prediction. Firstly, novel drugs are often developed by
+evaluation and comparison pose a challenge for DTI
+prediction. Firstly, novel drugs are often developed by
 altering non-functional components of a drug, leading to two and more
 very similar drugs designed to target the same proteins
 \cite{Overington2006}. This can result in a bias when it leads to
@@ -173,8 +174,10 @@ the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
 diseases for which drugs can be more profitably marketed). This might
-affect common evaluation schemes\cite{Survey2018} where it is possible
-to exploit these biases within DTI prediction \cite{}. \citet{vanLaarhoven2014} showed that another bias can be heavily capitalized over the dataset of \citet{Yamanishi2008}. 
+affect common evaluation schemes \cite{Survey2018} where it is possible
+to exploit these biases within DTI prediction \cite{}.
+\citet{vanLaarhoven2014} showed that several bias can be exploited on
+the dataset of \citet{Yamanishi2008}.
 
 We developed \name{} as a method for predicting DTIs. We use an
 ontology-based machine learning method \cite{DL2vec2020} to encode
