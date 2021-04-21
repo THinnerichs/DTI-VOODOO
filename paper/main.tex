@@ -45,7 +45,7 @@
   \textbf{Results:} We developed \name{} as a computational method
   that combines molecular features and ontology-encoded phenotypic
   effects of drugs with protein--protein interaction networks, and
-  uses a graph neural networks to predict DTIs.  We demonstrate that
+  uses a graph convolutional neural network to predict DTIs.  We demonstrate that
   drug effect features can exploit information in the interaction
   network whereas molecular features do not.  \name{} is designed to
   predict candidate drugs for a given protein; we use this formulation
@@ -307,8 +307,8 @@ features into the model. Additionally, the generated features may be
 used for other tasks. % ; for
 % example, the ontology LFT can be reused for a variety of DL2vec-based
 % features with respect to other ontologies and hypotheses
-We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use as
-activation function $\sigma := \mathrm{LeakyReLU}$ which leads to
+We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use $\sigma := \mathrm{LeakyReLU}$ as
+activation function  which leads to
 improved performance compared to other activation functions.
 
 % \todo[inline]{Combine in some larger figure}
