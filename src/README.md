@@ -38,10 +38,10 @@ python HPO_predictor.py --num_epochs 100 --batch_size 10000 --lr 0.0001 --fold 3
 
 To run full DTI-Voodoo after pretraining `HPO_predictor` with `GCNConv` run
 ```
-python3 torch_dti_predictor.py --arch GCNConv --num_epochs 200 --batch_size 50 --fold 3 --lr 0.0001 --PPI_min_score 700 --mode database {dataset}
+python3 torch_dti_predictor.py --arch GCNConv --include_mol_features --num_epochs 200 --batch_size 50 --fold 3 --lr 0.0001 --PPI_min_score 700 --mode database {dataset}
 ```
 or with `GENConv`
 ```
-python3 torch_dti_predictor.py --arch GENConv --num_epochs 200 --batch_size 50 --fold 3 --lr 0.0001 --PPI_min_score 700 --mode database {dataset}
+python3 torch_dti_predictor.py --arch GENConv --include_mol_features --num_epochs 200 --batch_size 50 --fold 3 --lr 0.0001 --PPI_min_score 700 --mode database {dataset}
 ```
 with `{dataset}` set as described above.
