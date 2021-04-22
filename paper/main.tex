@@ -175,7 +175,7 @@ study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
 diseases for which drugs can be more profitably marketed). This might
 affect common evaluation schemes \cite{Survey2018} where it is possible
-to exploit these biases within DTI prediction \cite{}.
+to exploit these biases within DTI prediction \cite{}\todo[inline]{cite or delete}.
 \citet{vanLaarhoven2014} showed that several bias can be exploited on
 the dataset of \citet{Yamanishi2008}.
 
@@ -299,7 +299,7 @@ representation of a particular size, i.e., we use this layer as a
 trainable feature transformation and apply it to reduce the
 representation size of the embeddings for drugs and proteins
 separately.  An example structure for both types of features can be
-found in Figure~\ref{fig:HalfTwinNetwork}.
+found in Supplementary Figure 2.
 % While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we
 The use of this trainable feature transformation layer enables
 flexible experimentation as both ontology and molecular feature for
@@ -870,7 +870,9 @@ pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
 $MicroAUC_p$ score for all considered methods, leading to similar 
-results as observed on the Yaminishi dataset.
+results as observed on the Yaminishi dataset. As \name{} considers less drugs 
+than alternative approaches, we perform a two-sided T-test yielding $p<0.0001$ for 
+$\alpha<0.01$ showing the significance of \name's performance gain over other state-of-the-art methods.\todo[inline]{Formulation correct? Confidence interval?}
 
 In all our experiments, \name{} has the highest Micro $AUC_p$,
 demonstrating that \name{} can improve over other methods in the task

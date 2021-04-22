@@ -213,13 +213,13 @@ def write_PhenomeNET_files(mode='all', yamanishi_test=False):
             for protein in protein_list:
                 f.write(protein+'\n')
 
-def output_example_DL2vec_command(workers=48, embedsize=200):
+def output_example_DL2vec_command(prefix='', workers=48, embedsize=200):
     print('Running DL2vec embedding generator ...')
     path = '../../data/PhenomeNET_data/'
     onto = path + 'phenomenet.owl'
-    asso = path + 'association_file'
-    outfile = path + 'embedding_model'
-    ents = path + 'entity_list'
+    asso = path + prefix+'association_file'
+    outfile = path + prefix+'embedding_model'
+    ents = path + prefix +'entity_list'
     command = 'python runDL2vec.py -embedsize {embedsize} -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents} -num_workers {num_workers}'.format(
         embedsize=embedsize,
         onto=onto,

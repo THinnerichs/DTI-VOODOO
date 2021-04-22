@@ -25,10 +25,11 @@
 `Python 3.7` packages:
 ```
 - pytorch 1.6+
-- pytorch-geometric 1.6+
+- pytorch-geometric 1.6+ (please refer to https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html)
 - numpy 1.19+
 - scikit-learn 
 - networkx
+- gensim
 - rdflib
 - BioPython
 - tqdm (for better evaluation and sanity preservation)

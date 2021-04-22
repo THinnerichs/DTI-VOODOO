@@ -117,7 +117,8 @@ def write_encoded_proteins():
     in_file = protein_dir+'data/PPI_graph_protein_seqs.fasta'
     out_file = protein_dir+'results/output'
 
-    subprocess.call('source' + protein_dir+f'predict.sh {in_file} {out_file}')
+    print('Execute this command in',protein_dir)
+    print(f'source {protein_dir}predict.sh {in_file} {out_file}')
 
 def molecular_predictor(config):
     model_st = 'molecular_predictor'
@@ -529,10 +530,7 @@ if __name__=='__main__':
         write_encoded_drugs(drug_list, mode='rnn')
         print('Successfully computed molecular drug embeddings. Aborting rest of script.')
 
-        raise Exception
-
-    # Run classifier
-    if config.model == 'protein':
+    elif config.model == 'protein':
         molecular_predictor(config)
     elif config.model == 'drug':
         drug_split_molecular_predictor(config)
