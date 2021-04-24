@@ -151,12 +151,11 @@ prediction of protein functions \cite{Zitnik2017}, cancer drug
 response \cite{Liu2020} and drug--target affinity prediction
 \cite{GraphDTA2020}.
 
-Potential biases resulting from
-the underlying datasets \citep{Pahikkala2014} which may affect model
-evaluation and comparison pose a challenge for DTI
-prediction. Firstly, novel drugs are often developed by
-altering non-functional components of a drug, leading to two and more
-very similar drugs designed to target the same proteins
+Potential biases resulting from the underlying datasets
+\citep{Pahikkala2014} which may affect model evaluation and comparison
+pose a challenge for DTI prediction. Firstly, novel drugs are often
+developed by altering non-functional components of a drug, leading to
+two and more very similar drugs designed to target the same proteins
 \cite{Overington2006}. This can result in a bias when it leads to
 hidden duplicates or highly similar compounds that are distributed
 among training and evaluation dataset, resulting in a better
@@ -174,8 +173,8 @@ the number of drugs targeting certain proteins may be the result of
 study bias where more ``valuable'' proteins have more drugs designed
 to target them due to their involvement in more common diseases (or
 diseases for which drugs can be more profitably marketed). This might
-affect common evaluation schemes \cite{Survey2018} where it is possible
-to exploit these biases within DTI prediction \cite{}\todo[inline]{cite or delete}.
+affect common evaluation schemes where it is possible to exploit these
+biases within DTI prediction \cite{Survey2018}.
 \citet{vanLaarhoven2014} showed that several bias can be exploited on
 the dataset of \citet{Yamanishi2008}.
 
@@ -870,7 +869,7 @@ pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
 $MicroAUC_p$ score for all considered methods, leading to similar 
-results as observed on the Yaminishi dataset. As \name{} considers less drugs than alternative approaches, we execute a one-tailed T-test with $\alpha=0.01$ over all considered methods. Considering MacroAUCs, \name{} improves significantly over MolTrans ($p<0.0001$), DeepDTI ($p<0.0001$), DeepDTA ($p<0.0001$), and DeepConv-DTI ($p<0.0001$) with respect to BioSnap dataset, and significantly over DTINet ($p<0.0001$), and DTIGEMS+ ($p<0.0001$) with respect to Yamanishi dataset. However, DTI-CDF performs significantly better than \name{} ($\alpha=0.05, p=0.02$) when considering MacroAUCs. As we compare \name{} to 4 different methods over BioSnap and 3 over Yamanishi dataset, we add a Bonferroni correction by multiplying the $p$-values by 4 and 3, respectively, leading to $p<0.0002$ ($\alpha=0.01$) for all previous comparisons except DTI-CDF. We thus run another one-tailed T-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferron correction. We find that \name{} advances significantly over MolTrans ($p<0.00001$), DeepDTI ($p<0.00001$), DeepDTA ($p<0.00001$), and DeepConv-DTI ($p<0.00001$) regarding BioSnap dataset, and over DTINet ($p<0.00001$), DTIGEMS+ ($p<0.00001$) and DTI-CDF ($p<0.00001$).
+results as observed on the Yaminishi dataset. As \name{} considers less drugs than alternative approaches, we execute a one-tailed T-test with $\alpha=0.01$ over all considered methods. Considering Macro AUCs, \name{} improves significantly over MolTrans ($p<0.0001$), DeepDTI ($p<0.0001$), DeepDTA ($p<0.0001$), and DeepConv-DTI ($p<0.0001$) with respect to BioSnap dataset, and significantly over DTINet ($p<0.0001$) and DTIGEMS+ ($p<0.0001$) with respect to Yamanishi dataset. However, DTI-CDF performs significantly better than \name{} ($\alpha=0.05, p=0.02$) when considering Macro AUC. As we compare \name{} to 4 different methods over BioSnap and 3 over Yamanishi dataset, we add a Bonferroni correction by multiplying the $p$-values by 4 and 3, respectively, leading to $p<0.0002$ ($\alpha=0.01$) for all previous comparisons except DTI-CDF. We further run another one-tailed T-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<0.00001$), DeepDTI ($p<0.00001$), DeepDTA ($p<0.00001$), and DeepConv-DTI ($p<0.00001$) regarding BioSnap dataset, and over DTINet ($p<0.00001$), DTIGEMS+ ($p<0.00001$) and DTI-CDF ($p<0.00001$) regarding Yamanishi dataset.
 
 In all our experiments, \name{} has the highest $MicroAUC_p$,
 demonstrating that \name{} can improve significantly over other methods in the task
