@@ -420,8 +420,6 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
             dti_pairs.append((drug, protein))
 
     drug_list = list(set(drug_list))
-    print(drug_list[:10])
-    raise Exception
     protein_list = list(set(protein_list))
 
     with open(file=path+'BioSnap_DB_drug_list', mode='w') as f:

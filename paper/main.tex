@@ -870,12 +870,10 @@ pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
 $MicroAUC_p$ score for all considered methods, leading to similar 
-results as observed on the Yaminishi dataset. As \name{} considers less drugs 
-than alternative approaches, we perform a two-sided T-test yielding $p<0.0001$ for 
-$\alpha<0.01$ showing the significance of \name's performance gain over other state-of-the-art methods.\todo[inline]{Formulation correct? Confidence interval?}
+results as observed on the Yaminishi dataset. As \name{} considers less drugs than alternative approaches, we execute a one-tailed T-test with $\alpha=0.01$ over all considered methods. Considering MacroAUCs, \name{} improves significantly over MolTrans ($p<0.0001$), DeepDTI ($p<0.0001$), DeepDTA ($p<0.0001$), and DeepConv-DTI ($p<0.0001$) with respect to BioSnap dataset, and significantly over DTINet ($p<0.0001$), and DTIGEMS+ ($p<0.0001$) with respect to Yamanishi dataset. However, DTI-CDF performs significantly better than \name{} ($\alpha=0.05, p=0.02$) when considering MacroAUCs. As we compare \name{} to 4 different methods over BioSnap and 3 over Yamanishi dataset, we add a Bonferroni correction by multiplying the $p$-values by 4 and 3, respectively, leading to $p<0.0002$ ($\alpha=0.01$) for all previous comparisons except DTI-CDF. We thus run another one-tailed T-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferron correction. We find that \name{} advances significantly over MolTrans ($p<0.00001$), DeepDTI ($p<0.00001$), DeepDTA ($p<0.00001$), and DeepConv-DTI ($p<0.00001$) regarding BioSnap dataset, and over DTINet ($p<0.00001$), DTIGEMS+ ($p<0.00001$) and DTI-CDF ($p<0.00001$).
 
-In all our experiments, \name{} has the highest Micro $AUC_p$,
-demonstrating that \name{} can improve over other methods in the task
+In all our experiments, \name{} has the highest $MicroAUC_p$,
+demonstrating that \name{} can improve significantly over other methods in the task
 of identifying drugs that target a specific protein. Several methods
 achieve a higher Macro AUC than \name{}, in particular when evaluated
 using a drug--target pair splitting scheme; our results with the
