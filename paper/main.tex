@@ -879,8 +879,17 @@ with $\alpha=0.01$ over all considered methods. Considering Macro
 AUCs, \name{} improves significantly ($p<0.0001$, one-sided t-test)
 over MolTrans, DeepDTI, DeepDTA, and DeepConv-DTI on the BioSnap
 dataset, and significantly ($p<0.0001$, one-sided t-test) over DTINet
-and DTIGEMS+ on the Yamanishi dataset. However, DTI-CDF performs
-significantly better than \name{} when considering Macro AUC ($p=0.02$). As we compare \name{} to 4 different methods over BioSnap and 3 over Yamanishi dataset, we add a Bonferroni correction by multiplying the $p$-values by 4 and 3, respectively, leading to $p<0.0002$ ($\alpha=0.01$) for all previous comparisons except DTI-CDF. We further run another one-tailed T-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<0.00001$), DeepDTI ($p<0.00001$), DeepDTA ($p<0.00001$), and DeepConv-DTI ($p<0.00001$) regarding BioSnap dataset, and over DTINet ($p<0.00001$), DTIGEMS+ ($p<0.00001$) and DTI-CDF ($p<0.00001$) regarding Yamanishi dataset.
+and DTIGEMS+ on the Yamanishi dataset' DTI-CDF performs
+significantly better than \name{} ($p=0.02$, one-sided t-test). % As
+                                % we compare \name{} to 4 different
+                                % methods over BioSnap and 3 over
+                                % Yamanishi dataset, we add a
+                                % Bonferroni correction by multiplying
+                                % the $p$-values by 4 and 3,
+                                % respectively, leading to $p<0.0002$
+                                % ($\alpha=0.01$) for all previous
+                                % comparisons except DTI-CDF.
+We further run another one-tailed t-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<0.00001$), DeepDTI ($p<0.00001$), DeepDTA ($p<0.00001$), and DeepConv-DTI ($p<0.00001$) regarding BioSnap dataset, and over DTINet ($p<0.00001$), DTIGEMS+ ($p<0.00001$) and DTI-CDF ($p<0.00001$) regarding Yamanishi dataset.
 
 In all our experiments, \name{} has the highest $MicroAUC_p$,
 demonstrating that \name{} can improve significantly over other methods in the task
