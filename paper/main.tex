@@ -228,7 +228,7 @@ obtained side effects and their links to drugs from SIDER
 \citep{SIDER}; SIDER contains side effects encoded using identifiers
 from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
-provides a SPARQL query endpoint for the mentioned resources.
+provides a SPARQL query endpoint for the mentioned resources. The overall structure is depicted in Supplementary Figure 1.
 
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
@@ -236,10 +236,14 @@ between 708 drugs and 1,512 proteins, and the BioSnap dataset
 \cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
 nodes and 15,138 edges.
 
-We only use proteins in our analysis that have at least one link in STRING or one association in PhenomeNET, and drugs with at least one side effect. Therefore, the intersection between these
-resources yields 1,428 drugs and 7,368 human proteins with 32,212
-interactions for STITCH, 1,837 interactions between 680 drugs and 1,458 proteins for Yamanishi, and 6,498 links between 949 drugs and 2,221 proteins for BioSnap dataset. We provide links to and methods
-for obtaining and processing the necessary data on Github.
+We only use proteins in our analysis that have at least one link in
+STRING or one association in PhenomeNET, and drugs with at least one
+side effect. Therefore, the intersection between these resources
+yields 1,428 drugs and 7,368 human proteins with 32,212 interactions
+for STITCH, 1,837 interactions between 680 drugs and 1,458 proteins
+for Yamanishi, and 6,498 links between 949 drugs and 2,221 proteins
+for BioSnap dataset. We provide links to and methods for obtaining and
+processing the necessary data in our Github repository.
 
  
 \subsection{Model}
@@ -431,7 +435,7 @@ feature types, is shown in Supplementary Figure
 4. Here
 the original representations are transformed by a dense layer and then
 used as input of a stack (with height 3) of residual graph
-convolutional blocks.
+convolutional blocks. The full eventual model of \name{} is shown in Supplementary Figure 4.
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the amount of
@@ -624,7 +628,7 @@ targets it should be predicted.
     call the model using only molecular features
     \textit{MolPred} and the model using only ontology-based
     features \textit{OntoPred}. \name{} combines both types of
-    features.}
+    features. For a comparison of MicroAUC$_p$ and MicroAUC$'_p$ (See Section \ref{sec:evaluation} for more information) see Supplementary Table 2. }
 \end{table}
 
 We trained, validated and finally tested all considered models on the
@@ -640,7 +644,7 @@ neural networks), we train and evaluate models with different types of
 features, and with and without inclusion of the PPI graph,
 separately. We comparing the molecular (MolPred) and phenotype-based
 (OntoPred) prediction model, and a combination of both where we
-concatenate both types of features.  Table \ref{tab:Results} shows the
+concatenate both types of features. Table \ref{tab:Results} shows the
 results of these experiments.
 
 We find that the model using ontology-based features
@@ -859,7 +863,7 @@ therefore generalize less well.
 As the difference in performance with different splitting schemes is
 quite large, we further evaluated additional drug--target interaction
 and drug--target affinity prediction methods that were trained and
-evaluation on other datasets.  Following the results of MolTrans
+evaluated on other datasets. Following the results of MolTrans
 \cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017},
 DeepDTA \cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019}, and
 MolTrans itself on the BioSnap dataset \cite{BioSnap2018} and compared it to our
@@ -869,7 +873,23 @@ pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
 $MicroAUC_p$ score for all considered methods, leading to similar 
-results as observed on the Yaminishi dataset. As \name{} considers less drugs than alternative approaches, we execute a one-tailed T-test comparing \name{} to all examined methods. Considering Macro AUCs, \name{} improves significantly over MolTrans ($p<10^{-4}$), DeepDTI ($p<10^{-4}$), DeepDTA ($p<10^{-4}$), and DeepConv-DTI ($p<10^{-4}$) with respect to BioSnap dataset, and significantly over DTINet ($p<10^{-4}$) and DTIGEMS+ ($p<10^{-4}$) with respect to Yamanishi dataset. However, DTI-CDF performs significantly better than \name{} ($p=0.02$) when considering Macro AUC. As we compare \name{} to 4 different methods over BioSnap and 3 over Yamanishi dataset, we add a Bonferroni correction by multiplying the $p$-values by 4 and 3, respectively, leading to $p<10^{-3}$ for all previous comparisons except DTI-CDF. We further run another one-tailed T-test concerning $MicroAUC_p$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<10^{-4}$), DeepDTI ($p<10^{-4}$), DeepDTA ($p<10^{-4}$), and DeepConv-DTI ($p<10^{-4}$) regarding BioSnap dataset, and over DTINet ($p<10^{-4}$), DTIGEMS+ ($p<10^{-4}$) and DTI-CDF ($p<10^{-4}$) regarding Yamanishi dataset.
+results as observed on the Yaminishi dataset. As \name{} considers
+less drugs than alternative approaches, we execute a one-tailed T-test
+with $\alpha=0.01$ over all considered methods. Considering Macro
+AUCs, \name{} improves significantly ($p<10^{-4}$, one-sided t-test)
+over MolTrans ($t=36.6$), DeepDTI ($t=40.5$), DeepDTA ($t=36.6$), and DeepConv-DTI ($t=40.5$) on the BioSnap
+dataset, and significantly ($p<10^{-4}$, one-sided t-test) over DTINet ($t=20.8$)
+and DTIGEMS+ ($t=18.0$) on the Yamanishi dataset' DTI-CDF performs
+significantly better than \name{} ($p=0.02$, one-sided t-test). % As
+                                % we compare \name{} to 4 different
+                                % methods over BioSnap and 3 over
+                                % Yamanishi dataset, we add a
+                                % Bonferroni correction by multiplying
+                                % the $p$-values by 4 and 3,
+                                % respectively, leading to $p<0.0002$
+                                % ($\alpha=0.01$) for all previous
+                                % comparisons except DTI-CDF.
+We further run another one-tailed t-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<10^{-4}, t=21.2$), DeepDTI ($p<10^{-4}, t=31.0$), DeepDTA ($p<10^{-4}, t=33.4$), and DeepConv-DTI ($p<10^{-4}, t=23.7$) regarding BioSnap dataset, and over DTINet ($p<10^{-4}, t=29.6$), DTIGEMS+ ($p<10^{-4}, t=28.0$) and DTI-CDF ($p<10^{-4}, t=9.5$) regarding Yamanishi dataset.
 
 In all our experiments, \name{} has the highest $MicroAUC_p$,
 demonstrating that \name{} can improve significantly over other methods in the task
