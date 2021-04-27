@@ -405,7 +405,7 @@ simultaneously. % , and the resulting information\todo{Which information?
 We further employ another mechanism to avoid redundancy and fading
 signals in stacked graph convolutional networks, using residual
 connections and a normalization scheme \cite{DeepGCN2019,
-  DeeperGCN2020} as shown in Supplemtary Figure 3.  The residual
+  DeeperGCN2020} as shown in Supplementary Figure 3.  The residual
 blocks are reusable and can be stacked multiple times.
 % The structure of the GNN architecture we use is shown
 % in Figure~\ref{fig:ResGraphConvBlocks}.
@@ -445,8 +445,8 @@ both drugs and proteins considered, the training, validation and
 testing datasets are imbalanced. As there are only $22,336$ links in
 the considered STITCH subset, the ratio
 \begin{equation}
-	w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
-	\label{weight}
+  w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
+  \label{weight}
 \end{equation}
 consequently needs suitable compensation in the computed loss function and
 appropriate metrics for the evaluation.
@@ -455,7 +455,7 @@ Therefore, we weight all positive drug-protein pair samples with this
 ratio by introducing the following loss function with respect to 
 binary cross-entropy:
 \begin{equation}
-	l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
+  l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
 \end{equation}
 for a given prediction $x$ and target $y$, and positive weight $w$
 defined by equation \eqref{weight}. We average this loss among all
@@ -537,15 +537,18 @@ entities using the accuracy for this subset:
 		Accuracy(l,y)&otherwise
 	\end{cases}
 \end{equation*}
-Note that drugs and proteins can be interchanged in this formulation. We refer
+Drugs and proteins can be interchanged in this formulation. We refer
 to the different measures as protein-centric microAUC ($MicroAUC_p$)
-and a drug-centric microAUC ($MicroAUC_d$).
+and a drug-centric microAUC ($MicroAUC_d$).  We further compare
+MicroAUC$_p$ with imputation and MicroAUC$'_p$ without imputing
+undefined $MicroAUC$ values (but omitting them) in Supplementary Table
+1.
 
-Further, we choose the AUROC as primary metric to compare different
-methods over other measures such as the area under precision recall
-curve (AUPRC); AUPRC is sensitive to data imbalances \cite{Jeni2013}
-and therefore more challenging to apply to comparing different DTI
-prediction methods.
+Further, we choose the AUROC over other measures such as the area
+under precision recall curve (AUPRC) as primary metric to compare
+different methods; AUPRC is sensitive to data imbalances
+\cite{Jeni2013} and therefore more challenging to apply to comparing
+different DTI prediction methods.
 
 \section{Results}
 
@@ -577,9 +580,9 @@ ontology-based annotations of drugs and proteins.
 
 We construct a graph with proteins as nodes and protein-protein
 interactions as edges, mapping the protein features to each target as
-node features. \name{} then propagates information among the PPI network
-utilizing graph convolutional steps, calculates the similarity of drug
-and protein representations, and predicts whether there is an
+node features. \name{} then propagates information among the PPI
+network utilizing graph convolutional steps, calculates the similarity
+of drug and protein representations, and predicts whether there is an
 interaction. The full workflow scheme is depicted in
 Figure~\ref{fig:ModelWorkflow}
 
@@ -630,7 +633,7 @@ targets it should be predicted.
     call the model using only molecular features
     \textit{MolPred} and the model using only ontology-based
     features \textit{OntoPred}. \name{} combines both types of
-    features. For a comparison of MicroAUC$_p$ and MicroAUC$'_p$ (See Section \ref{sec:evaluation} for more information) see Supplementary Table 2. }
+    features.}
 \end{table}
 
 We trained, validated and finally tested all considered models on the
@@ -655,7 +658,7 @@ to using only molecular features. We also observe that only the model
 using ontology-based features results in increased performance when
 incorporating the PPI graph. This increase can be observed with
 different graph neural network architectures and configurations
-(Supplementary Table 1). While the {\em
+(Supplementary Table 2). While the {\em
   GCNConv} and {\em GENConv} architecture already shows some minor
 improvement, the use of \textit{ResGraphConv} results in larger
 performance improvements.  {\em ResGraphConv} blocks add a large
@@ -668,7 +671,7 @@ blocks are removed, resulting in a model with similar parameters but
 without the ability to use graph-based information. This pruned
 network, with no information on the protein--protein interactions,
 reached very similar results to the original \textit{OntoPred} model
-and showed no improvement (Supplementary Table 1).
+and showed no improvement (Supplementary Table 2).
 
 The improvements when including the graph are only provided by the
 \textit{GENConv} graph convolution scheme which includes the
