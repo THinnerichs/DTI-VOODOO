@@ -5,42 +5,42 @@ The style file: natbib.bst
 Database file #1: citations.bib
 You've used 52 entries,
             2401 wiz_defined-function locations,
-            872 strings with 19978 characters,
-and the built_in function-call counts, 30312 in all, are:
-= -- 2628
+            872 strings with 19992 characters,
+and the built_in function-call counts, 30380 in all, are:
+= -- 2637
 > -- 2345
 < -- 15
 + -- 757
 - -- 697
-* -- 3104
-:= -- 5357
+* -- 3117
+:= -- 5364
 add.period$ -- 291
 call.type$ -- 52
 change.case$ -- 322
 chr.to.int$ -- 52
 cite$ -- 52
-duplicate$ -- 1128
-empty$ -- 1673
+duplicate$ -- 1129
+empty$ -- 1680
 format.name$ -- 769
-if$ -- 5855
+if$ -- 5869
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 51
 newline$ -- 265
 num.names$ -- 208
-pop$ -- 352
+pop$ -- 349
 preamble$ -- 1
 purify$ -- 322
 quote$ -- 0
 skip$ -- 750
 stack$ -- 0
-substring$ -- 1638
-swap$ -- 262
+substring$ -- 1654
+swap$ -- 263
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 468
 warning$ -- 0
-while$ -- 217
+while$ -- 219
 width$ -- 0
-write$ -- 677
+write$ -- 678
