@@ -9,20 +9,35 @@
 \begin{letter}{TO\_ADDRESS}
 \address{ADDRESS}
 
-
 Dear Editor,
 
-Please find our manuscript entitled "DTI-Voodoo: machine learning over interaction networks and
-ontology-based background knowledge predicts drug--target
-interactions" for your consideration. We therefore developed a novel method for drug--target interaction prediction (DTI) utilizing both ontology-encoded phenotypical and molecular features for both drugs and proteins. We further combine these methods with interaction networks, aiming for a more protein-centric prediction and evaluation. 
+Please find our manuscript entitled "DTI-Voodoo: machine learning over
+interaction networks and ontology-based background knowledge predicts
+drug--target interactions" for your consideration.
 
-We designed DTI-Voodoo under usage of graph convolutional neural network, exploiting the ``guilt-by-association`` principle and incorporate both top-down and bottom-up features into protein-protein interaction networks. Furthermore, we show that common DTI datasets share immanent biases, majorly influencing predictive DTI model performance evaluations. Thus, we propose a modified evaluation scheme, showing that DTI-Voodoo advances significantly over other state of the art DTI prediction approaches over several datasets.
+DTI-Voodoo is a novel method for drug--target interaction (DTI)
+prediction utilizing both ontology-based information about phenotypic
+effects of drugs (side effects), and molecular features that encode
+for interactions between drugs and proteins. We compare DTI-Voodoo to
+seven state of the art DTI prediction methods on two datasets, and
+significantly improve over all of them in our evaluation.
 
-The importance of DTI prediction for other challenges such as drug repurposing and repositioning makes DTI-Voodoo highly influential for a variety of researchers. Eventually, DTI-Voodoo's versatile methodology may be used over alternative protein-based representations to improve performances within other predictive tasks in the realm of bioinformatics and computational biology. 
+Moreover, we introduce several novel aspects to DTI prediction: First,
+we identify, analyze, and correct for a number of inherent biases in
+drug--target interaction prediction datasets; for this purpose, we
+propose a ``naive'' classifier which does not make predictions based
+on any biological information but achieves performance close to state
+of the art methods.  Second, DTI-Voodoo combines indirect information
+such as side effects and molecular properties of both drugs and
+proteins in a novel way using an interaction network. Using this
+network, we can demonstrate that side effect information ``localizes''
+on the interaction network, i.e., that side effects are enriched on
+modules consisting of interacting proteins, whereas molecular features
+do not benefit from information the graph.
 
-Therefore, we believe that
-DTI-Voodoo will be well suited for the broad readership of
-Bioinformatics.
+We believe that our results, as well as the novel methods we
+introduced in developing DTI-Voodoo, makes our manuscript highly
+suitable for the readers of Bioinformatics.
 
 Please do not hesitate to contact us should you require any further
 information.
