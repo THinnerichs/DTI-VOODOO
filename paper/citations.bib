@@ -14,53 +14,86 @@
     eprint = {https://academic.oup.com/bib/article-pdf/20/6/2066/32121027/bby069.pdf},
 }
 
-@article{ChebConv,
-Author = {Michaël Defferrard and Xavier Bresson and Pierre Vandergheynst},
-Title = {Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering},
-Year = {2016},
-Eprint = {arXiv:1606.09375},
-Howpublished = {Advances in Neural Information Processing Systems 29 (2016)},
+@inproceedings{ChebConv,
+author = {Defferrard, Micha\"{e}l and Bresson, Xavier and Vandergheynst, Pierre},
+title = {Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering},
+year = {2016},
+isbn = {9781510838819},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {In this work, we are interested in generalizing convolutional neural networks (CNNs) from low-dimensional regular grids, where image, video and speech are represented, to high-dimensional irregular domains, such as social networks, brain connectomes or words' embedding, represented by graphs. We present a formulation of CNNs in the context of spectral graph theory, which provides the necessary mathematical background and efficient numerical schemes to design fast localized convolutional filters on graphs. Importantly, the proposed technique offers the same linear computational complexity and constant learning complexity as classical CNNs, while being universal to any graph structure. Experiments on MNIST and 20NEWS demonstrate the ability of this novel deep learning system to learn local, stationary, and compositional features on graphs.},
+booktitle = {Proceedings of the 30th International Conference on Neural Information Processing Systems},
+pages = {3844–3852},
+numpages = {9},
+location = {Barcelona, Spain},
+series = {NIPS'16}
 }
 
-@article{SAGEConv,
-Author = {William L. Hamilton and Rex Ying and Jure Leskovec},
-Title = {Inductive Representation Learning on Large Graphs},
-Year = {2017},
-Eprint = {arXiv:1706.02216},
+@inproceedings{SAGEConv,
+  title={Inductive Representation Learning on Large Graphs},
+  author={William L. Hamilton and Zhitao Ying and J. Leskovec},
+  booktitle={NIPS},
+  year={2017}
 }
 
 @article{GATConv,
-Author = {Petar Veličković and Guillem Cucurull and Arantxa Casanova and Adriana Romero and Pietro Liò and Yoshua Bengio},
-Title = {Graph Attention Networks},
-Year = {2017},
-Eprint = {1710.10903},
-Eprinttype = {arXiv},
+  title={Graph attention networks},
+  author={Veli{\v{c}}kovi{\'c}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Lio, Pietro and Bengio, Yoshua},
+  journal={arXiv preprint arXiv:1710.10903},
+  year={2017}
 }
+
 
 @article{GCNConv,
-Author = {Thomas N. Kipf and Max Welling},
-Title = {Semi-Supervised Classification with Graph Convolutional Networks},
-Year = {2016},
-Eprint = {1609.02907},
-Eprinttype = {arXiv},
+  author    = {Thomas N. Kipf and
+               Max Welling},
+  title     = {Semi-Supervised Classification with Graph Convolutional Networks},
+  journal   = {CoRR},
+  volume    = {abs/1609.02907},
+  year      = {2016},
+  url       = {http://arxiv.org/abs/1609.02907},
+  archivePrefix = {arXiv},
+  eprint    = {1609.02907},
+  timestamp = {Mon, 13 Aug 2018 16:48:31 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/KipfW16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@article{ARMAConv,
-Author = {Filippo Maria Bianchi and Daniele Grattarola and Cesare Alippi and Lorenzo Livi},
-Title = {Graph Neural Networks with convolutional ARMA filters},
-Year = {2019},
-Eprint = {1901.01343},
-Eprinttype = {arXiv},
+
+
+
+@article{ArmaConv,
+  author    = {Filippo Maria Bianchi and
+               Daniele Grattarola and
+               Lorenzo Livi and
+               Cesare Alippi},
+  title     = {Graph Neural Networks with convolutional {ARMA} filters},
+  journal   = {CoRR},
+  volume    = {abs/1901.01343},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1901.01343},
+  archivePrefix = {arXiv},
+  eprint    = {1901.01343},
+  timestamp = {Thu, 31 Jan 2019 13:52:49 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1901-01343.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{APPNPConv,
-Author = {Johannes Klicpera and Aleksandar Bojchevski and Stephan Günnemann},
-Title = {Predict then Propagate: Graph Neural Networks meet Personalized PageRank},
-Year = {2018},
-Eprint = {1810.05997},
-Eprinttype = {arXiv},
-Howpublished = {International Conference on Learning Representations (ICLR), New
-  Orleans, LA, USA, 2019},
+  author    = {Johannes Klicpera and
+               Aleksandar Bojchevski and
+               Stephan G{\"{u}}nnemann},
+  title     = {Personalized Embedding Propagation: Combining Neural Networks on Graphs
+               with Personalized PageRank},
+  journal   = {CoRR},
+  volume    = {abs/1810.05997},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1810.05997},
+  archivePrefix = {arXiv},
+  eprint    = {1810.05997},
+  timestamp = {Tue, 30 Oct 2018 20:39:56 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1810-05997.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @misc{FeaStConv,
@@ -111,8 +144,9 @@ Eprint = {arXiv:1706.05206},
   author = {Assaf Gottlieb and Gideon Y Stein and Eytan Ruppin and Roded Sharan},
   title = {{PREDICT}: a method for inferring novel drug indications with application to personalized medicine},
   journal = {Molecular Systems Biology}
+ }
   
-  @article{Liu2020,
+ @article{Liu2020,
   doi = {10.1093/bioinformatics/btaa822},
   url = {https://doi.org/10.1093/bioinformatics/btaa822},
   year = {2020},
@@ -126,18 +160,23 @@ Eprint = {arXiv:1706.05206},
   journal = {Bioinformatics}
 }
   
-  @article{GraphDTA2020,
-  doi = {10.1093/bioinformatics/btaa921},
-  url = {https://doi.org/10.1093/bioinformatics/btaa921},
-  year = {2020},
-  month = oct,
-  publisher = {Oxford University Press ({OUP})},
-  author = {Thin Nguyen and Hang Le and Thomas P Quinn and Tri Nguyen and Thuc Duy Le and Svetha Venkatesh},
-  editor = {Pier Luigi Martelli},
-  title = {{GraphDTA}: Predicting drug{\textendash}target binding affinity with graph neural networks},
-  journal = {Bioinformatics}
+@article{GraphDTA2020,
+    author = {Nguyen, Thin and Le, Hang and Quinn, Thomas P and Nguyen, Tri and Le, Thuc Duy and Venkatesh, Svetha},
+    title = "{GraphDTA: Predicting drug–target binding affinity with graph neural networks}",
+    journal = {Bioinformatics},
+    year = {2020},
+    month = {10},
+    abstract = "{The development of new drugs is costly, time consuming, and often accompanied with safety issues. Drug repurposing can avoid the expensive and lengthy process of drug development by finding new uses for already approved drugs. In order to repurpose drugs effectively, it is useful to know which proteins are targeted by which drugs. Computational models that estimate the interaction strength of new drug–target pairs have the potential to expedite drug repurposing. Several models have been proposed for this task. However, these models represent the drugs as strings, which is not a natural way to represent molecules. We propose a new model called GraphDTA that represents drugs as graphs and uses graph neural networks to predict drug–target affinity. We show that graph neural networks not only predict drug–target affinity better than non-deep learning models, but also outperform competing deep learning methods. Our results confirm that deep learning models are appropriate for drug–target binding affinity prediction, and that representing drugs as graphs can lead to further improvements.The proposed models are implemented in Python. Related data, pre-trained models, and source code are publicly available at https://github.com/thinng/GraphDTA. All scripts and data needed to reproduce the post-hoc statistical analysis are available from https://doi.org/10.5281/zenodo.3603523.}",
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btaa921},
+    url = {https://doi.org/10.1093/bioinformatics/btaa921},
+    note = {btaa921},
+    eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btaa921/34053365/btaa921.pdf},
 }
-}
+
+
+
+
 
 @article{Tsubaki2018,
     author = {Tsubaki, Masashi and Tomii, Kentaro and Sese, Jun},
@@ -266,22 +305,36 @@ Eprint = {arXiv:1706.05206},
 }
 
 @article{DeepGoPlus,
-  doi = {10.1093/bioinformatics/btz595},
-  url = {https://doi.org/10.1093/bioinformatics/btz595},
-  year = {2019},
-  month = jul,
-  publisher = {Oxford University Press ({OUP})},
-  author = {Maxat Kulmanov and Robert Hoehndorf},
-  editor = {Lenore Cowen},
-  title = {{DeepGOPlus}: improved protein function prediction from sequence},
-  journal = {Bioinformatics}
+    author = {Kulmanov, Maxat and Hoehndorf, Robert},
+    title = "{DeepGOPlus: improved protein function prediction from sequence}",
+    journal = {Bioinformatics},
+    volume = {36},
+    number = {2},
+    pages = {422-429},
+    year = {2019},
+    month = {07},
+    abstract = "{Protein function prediction is one of the major tasks of bioinformatics that can help in wide range of biological problems such as understanding disease mechanisms or finding drug targets. Many methods are available for predicting protein functions from sequence based features, protein–protein interaction networks, protein structure or literature. However, other than sequence, most of the features are difficult to obtain or not available for many proteins thereby limiting their scope. Furthermore, the performance of sequence-based function prediction methods is often lower than methods that incorporate multiple features and predicting protein functions may require a lot of time.We developed a novel method for predicting protein functions from sequence alone which combines deep convolutional neural network (CNN) model with sequence similarity based predictions. Our CNN model scans the sequence for motifs which are predictive for protein functions and combines this with functions of similar proteins (if available). We evaluate the performance of DeepGOPlus using the CAFA3 evaluation measures and achieve an Fmax of 0.390, 0.557 and 0.614 for BPO, MFO and CCO evaluations, respectively. These results would have made DeepGOPlus one of the three best predictors in CCO and the second best performing method in the BPO and MFO evaluations. We also compare DeepGOPlus with state-of-the-art methods such as DeepText2GO and GOLabeler on another dataset. DeepGOPlus can annotate around 40 protein sequences per second on common hardware, thereby making fast and accurate function predictions available for a wide range of proteins.http://deepgoplus.bio2vec.net/.Supplementary data are available at Bioinformatics online.}",
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btz595},
+    url = {https://doi.org/10.1093/bioinformatics/btz595},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/36/2/422/31962786/btz595\_supplementary\_data.pdf},
 }
 
-@misc{SmilesTransformer,
-Author = {Shion Honda and Shoi Shi and Hiroki R. Ueda},
-Title = {SMILES Transformer: Pre-trained Molecular Fingerprint for Low Data Drug Discovery},
-Year = {2019},
-Eprint = {arXiv:1911.04738},
+@article{SmilesTransformer,
+  author    = {Shion Honda and
+               Shoi Shi and
+               Hiroki R. Ueda},
+  title     = {{SMILES} Transformer: Pre-trained Molecular Fingerprint for Low Data
+               Drug Discovery},
+  journal   = {CoRR},
+  volume    = {abs/1911.04738},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1911.04738},
+  archivePrefix = {arXiv},
+  eprint    = {1911.04738},
+  timestamp = {Mon, 02 Dec 2019 13:44:01 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1911-04738.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{Resnik1995,
@@ -304,23 +357,31 @@ publisher = {Curran Associates, Inc.},
 url = {http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf}
 }
 
-@inproceedings{PytorchGeometric,
-  title={Fast Graph Representation Learning with {PyTorch Geometric}},
-  author={Fey, Matthias and Lenssen, Jan E.},
-  booktitle={ICLR Workshop on Representation Learning on Graphs and Manifolds},
-  year={2019},
+@article{PytorchGeometric,
+  author    = {Matthias Fey and
+               Jan Eric Lenssen},
+  title     = {Fast Graph Representation Learning with PyTorch Geometric},
+  journal   = {CoRR},
+  volume    = {abs/1903.02428},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1903.02428},
+  archivePrefix = {arXiv},
+  eprint    = {1903.02428},
+  timestamp = {Sun, 31 Mar 2019 19:01:24 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1903-02428.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@inproceedings{Jeni2013,
-  doi = {10.1109/acii.2013.47},
-  url = {https://doi.org/10.1109/acii.2013.47},
-  year = {2013},
-  month = sep,
-  publisher = {{IEEE}},
-  author = {Laszlo A. Jeni and Jeffrey F. Cohn and Fernando De La Torre},
-  title = {Facing Imbalanced Data--Recommendations for the Use of Performance Metrics},
-  booktitle = {2013 Humaine Association Conference on Affective Computing and Intelligent Interaction}
-}
+@INPROCEEDINGS{Jeni2013,
+  author={Jeni, László A. and Cohn, Jeffrey F. and De La Torre, Fernando},
+  booktitle={2013 Humaine Association Conference on Affective Computing and Intelligent Interaction}, 
+  title={Facing Imbalanced Data--Recommendations for the Use of Performance Metrics}, 
+  year={2013},
+  volume={},
+  number={},
+  pages={245-251},
+  doi={10.1109/ACII.2013.47}}
+
 
 @article{Overington2006,
   doi = {10.1038/nrd2199},
@@ -429,7 +490,8 @@ url = {http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-perf
   author = {Jun Chen and Azza Althagafi and Robert Hoehndorf},
   editor = {Robinson Peter},
   title = {Predicting candidate genes from phenotypes,  functions and anatomical site of expression},
-  journal = {Bioinformatics}
+  journal = {Bioinformatics},
+  note = {advance access}
 }
 
 @misc{Word2vec2013,
@@ -439,18 +501,20 @@ Year = {2013},
 Eprint = {arXiv:1301.3781},
 }
 
-@misc{GENConv2020,
-Author = {Guohao Li and Chenxin Xiong and Ali Thabet and Bernard Ghanem},
-Title = {DeeperGCN: All You Need to Train Deeper GCNs},
-Year = {2020},
-Eprint = {arXiv:2006.07739},
+@article{GENConv2020,
+  title={Deepergcn: All you need to train deeper gcns},
+  author={Li, Guohao and Xiong, Chenxin and Thabet, Ali and Ghanem, Bernard},
+  journal={arXiv preprint arXiv:2006.07739},
+  year={2020}
 }
 
-@misc{Adam2014,
-Author = {Diederik P. Kingma and Jimmy Ba},
-Title = {Adam: A Method for Stochastic Optimization},
-Year = {2014},
-Eprint = {arXiv:1412.6980},
+
+@article{Adam2014,
+  title={Adam: A Method for Stochastic Optimization},
+  author={Diederik P. Kingma and Jimmy Ba},
+  journal={CoRR},
+  year={2015},
+  volume={abs/1412.6980}
 }
 
 @article{Yamanishi2008,
@@ -467,18 +531,11 @@ Eprint = {arXiv:1412.6980},
   journal = {Bioinformatics}
 }
 
-@misc{DeepGCN2019,
-Author = {Guohao Li and Matthias Müller and Ali Thabet and Bernard Ghanem},
-Title = {DeepGCNs: Can GCNs Go as Deep as CNNs?},
-Year = {2019},
-Eprint = {arXiv:1904.03751},
-}
-
-@misc{DeeperGCN2020,
-Author = {Guohao Li and Chenxin Xiong and Ali Thabet and Bernard Ghanem},
-Title = {DeeperGCN: All You Need to Train Deeper GCNs},
-Year = {2020},
-Eprint = {arXiv:2006.07739},
+@InProceedings{DeepGCN2019,
+    title={DeepGCNs: Can GCNs Go as Deep as CNNs?},
+    author={Guohao Li and Matthias Müller and Ali Thabet and Bernard Ghanem},
+    booktitle={The IEEE International Conference on Computer Vision (ICCV)},
+    year={2019}
 }
 
 @article{Drugbank2007,
@@ -524,14 +581,16 @@ Eprint = {arXiv:2006.07739},
 }
 
 @article{DTINet2017,
-  doi = {10.1101/100305},
-  url = {https://doi.org/10.1101/100305},
-  year = {2017},
-  month = jan,
-  publisher = {Cold Spring Harbor Laboratory},
-  author = {Yunan Luo and Xinbin Zhao and Jingtian Zhou and Jinglin Yang and Yanqing Zhang and Wenhua Kuang and Jian Peng and Ligong Chen and Jianyang Zeng},
-  title = {A Network Integration Approach for Drug-Target Interaction Prediction and Computational Drug Repositioning from Heterogeneous Information}
+  title={A network integration approach for drug-target interaction prediction and computational drug repositioning from heterogeneous information},
+  author={Luo, Yunan and Zhao, Xinbin and Zhou, Jingtian and Yang, Jinglin and Zhang, Yanqing and Kuang, Wenhua and Peng, Jian and Chen, Ligong and Zeng, Jianyang},
+  journal={Nature communications},
+  volume={8},
+  number={1},
+  pages={1--13},
+  year={2017},
+  publisher={Nature Publishing Group}
 }
+
 
 @article{DTIGEMS2020,
   doi = {10.1186/s13321-020-00447-2},
@@ -590,12 +649,18 @@ Eprint = {arXiv:2006.07739},
 }
 
 @article{Zitnik2017,
-Author = {Marinka Zitnik and Jure Leskovec},
-Title = {Predicting multicellular function through multi-layer tissue networks},
-Year = {2017},
-Eprint = {arXiv:1707.04638},
-Howpublished = {Bioinformatics 2017, 33 (14): i190-i198},
-Doi = {10.1093/bioinformatics/btx252},
+  author    = {Marinka Zitnik and
+               Jure Leskovec},
+  title     = {Predicting multicellular function through multi-layer tissue networks},
+  journal   = {CoRR},
+  volume    = {abs/1707.04638},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1707.04638},
+  archivePrefix = {arXiv},
+  eprint    = {1707.04638},
+  timestamp = {Mon, 13 Aug 2018 16:48:44 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/ZitnikL17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @article{MolTrans2020,
@@ -607,7 +672,8 @@ Doi = {10.1093/bioinformatics/btx252},
   author = {Kexin Huang and Cao Xiao and Lucas M Glass and Jimeng Sun},
   editor = {Zhiyong Lu},
   title = {{MolTrans}: Molecular Interaction Transformer for drug{\textendash}target interaction prediction},
-  journal = {Bioinformatics}
+  journal = {Bioinformatics},
+  note = {advanced access}
 }
 
 @article{DeepDTI2017,
@@ -656,7 +722,7 @@ Doi = {10.1093/bioinformatics/btx252},
 @article{BioSnap2018,
   title={BioSNAP Datasets: Stanford biomedical network dataset collection},
   author={Zitnik, Marinka and Sosic, Rok and Leskovec, Jure},
-  journal={Note: http://snap. stanford. edu/biodata Cited by},
+  journal={Note: http://snap.stanford.edu/biodata Cited by},
   volume={5},
   number={1},
   year={2018}
