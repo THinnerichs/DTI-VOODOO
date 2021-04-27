@@ -887,9 +887,9 @@ one-sided t-test) over MolTrans ($t=36.6$), DeepDTI ($t=40.5$),
 DeepDTA ($t=36.6$), and DeepConv-DTI ($t=40.5$) on the BioSnap
 dataset, and significantly ($p<10^{-4}$, one-sided t-test) over DTINet
 ($t=20.8$) and DTIGEMS+ ($t=18.0$) on the Yamanishi dataset; DTI-CDF
-performs better than \name{} ($p=0.1, t=1.3$, one-sided t-test) \todo{significance}.  We further
+performs better than \name{} ($p=0.1, t=1.3$, one-sided t-test).  We further
 perform another one-tailed t-test to compare $MicroAUC_p$
-performance. We find that \name{} improved significantly
+performance. We find that \name{} improves significantly
 ($p < 10^{-4}$) over MolTrans($t=21.2$), DeepDTI ($t=31.0$), DeepDTA
 ($t=33.4$), and DeepConv-DTI ($t=23.7$) on the BioSnap dataset, and
 over DTINet ($t=29.6$), DTIGEMS+ ($t=28.0$), and DTI-CDF ($t=9.5$) on
@@ -898,7 +898,7 @@ the Yamanishi dataset.
 In all our experiments, \name{} improves over all other methods with
 respect to $MicroAUC_p$, demonstrating that \name{} can identify drugs
 that target a specific protein more accurately than other
-methods. Several methods achieve a higher MacroAUC than \name{}, in
+methods. Some methods achieve a higher MacroAUC than \name{}, in
 particular when evaluated using a drug--target pair splitting scheme;
 our results with the ``na\"ive'' prediction method show that it may be
 possible that models trained on a drug--target split utilize certain
@@ -997,7 +997,7 @@ features in the future.
 \subsection{The challenge of evaluating drug--target interaction
   predictions}
 
-\todo[inline]{Why is having only having 20\% of drugs reasonable -> significance test in results}
+%\todo[inline]{Why is having only having 20\% of drugs reasonable -> significance test in results}
 One major component of our experiments was to determine how the
 information that is available to a machine learning model during
 training affects the performance of the model. Similarly to previous

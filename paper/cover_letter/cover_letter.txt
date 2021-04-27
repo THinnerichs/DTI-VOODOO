@@ -1,14 +1,3 @@
-\documentclass[]{letter}
-
-
-\begin{document}
-% If you want headings on subsequent pages,
-% remove the ``%'' on the next line:
-% \pagestyle{headings}
-
-\begin{letter}{TO\_ADDRESS}
-\address{ADDRESS}
-
 Dear Editor,
 
 Please find our manuscript entitled "DTI-Voodoo: machine learning over
@@ -43,14 +32,4 @@ Please do not hesitate to contact us should you require any further
 information.
 
 With best wishes,
-Tilman Hinnerichs and Robert Hoehndorf.\\
-
-
-\signature{}
-
-
-%enclosure listing
-%\encl{}
-
-\end{letter}
-\end{document}
+Tilman Hinnerichs and Robert Hoehndorf.
