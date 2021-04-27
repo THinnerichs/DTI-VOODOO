@@ -228,7 +228,8 @@ obtained side effects and their links to drugs from SIDER
 \citep{SIDER}; SIDER contains side effects encoded using identifiers
 from the MedDRA database \citep{MedDRA}. We mapped side effects to the
 PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
-provides a SPARQL query endpoint for the mentioned resources. The overall structure is depicted in Supplementary Figure 1.
+provides a SPARQL query endpoint for the mentioned resources. The
+overall structure is shown in Supplementary Figure 1.
 
 For comparative evaluation, we use the gold standard dataset
 introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
@@ -296,8 +297,9 @@ As we want to learn from the similarity of drug side effects and
 protein phenotypes, we use a deep half-twin neural network with a
 contrastive loss using cosine similarity.  A half-twin neural network
 aims to learn a similarity between two embeddings of variable but same
-dimension. As the original feature space may have varying dimensionality, we first process them using a fully connected
-neural network layer which takes as input an embedding and outputs a
+dimension. As the original feature space may have varying
+dimensionality, we first process them using a fully connected neural
+network layer which takes as input an embedding and outputs a
 representation of a particular size, i.e., we use this layer as a
 trainable feature transformation and apply it to reduce the
 representation size of the embeddings for drugs and proteins
@@ -313,8 +315,8 @@ features into the model. Additionally, the generated features may be
 used for other tasks. % ; for
 % example, the ontology LFT can be reused for a variety of DL2vec-based
 % features with respect to other ontologies and hypotheses
-We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use $\sigma := \mathrm{LeakyReLU}$ as
-activation function  which leads to
+We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use
+$\sigma := \mathrm{LeakyReLU}$ as activation function which leads to
 improved performance compared to other activation functions.
 
 % \todo[inline]{Combine in some larger figure}
@@ -404,7 +406,8 @@ We further employ another mechanism to avoid redundancy and fading
 signals in stacked graph convolutional networks, using residual
 connections and a normalization scheme \cite{DeepGCN2019,
   DeeperGCN2020}.  The residual blocks are reusable and can be stacked
-multiple times. % The structure of the GNN architecture we use is shown
+multiple times.
+% The structure of the GNN architecture we use is shown
 % in Figure~\ref{fig:ResGraphConvBlocks}.
 
 % \begin{figure}[!tpb]%figure1
