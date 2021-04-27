@@ -433,13 +433,11 @@ representations are used for a similarity prediction.
 When combining ontology and molecular features with or without the
 graph model, we concatenate both protein features and both drugs
 features, before plugging them into the graph model for the similarity
-computation. % An overview of the model architecture, combining both
-% feature types, is shown in Supplementary Figure
-% 4. 
-Here the original representations are transformed by a dense layer and
-then used as input of a stack (with height 3) of residual graph
-convolutional blocks. The full model of \name{} is shown in
-Supplementary Figure 4.
+computation.  An overview of the model architecture, combining both
+feature types, is shown in Supplementary Figure 4.  Here the original
+representations are transformed by a dense layer and then used as
+input of a stack (with height 3) of residual graph convolutional
+blocks. %The full model of \name{} is shown in Supplementary Figure 4.
 
 \subsubsection{Hyperparameter tuning}
 As the number of drug-targets are sparse with respect to the amount of
