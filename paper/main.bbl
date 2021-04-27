@@ -201,7 +201,7 @@ Li, G.  {\em et~al.} (2019).
 \bibitem[Li {\em et~al.}(2020)Li, Xiong, Thabet, and Ghanem]{GENConv2020}
 Li, G.  {\em et~al.} (2020).
 \newblock Deepergcn: All you need to train deeper gcns.
-\newblock {\em arXiv preprint arXiv:2006.07739\/}.
+\newblock {\em CoRR\/}, {\bf abs/2006.07739}.
 
 \bibitem[Liu {\em et~al.}(2020)Liu, Hu, Jiang, and Zhou]{Liu2020}
 Liu, Q.  {\em et~al.} (2020).
@@ -216,10 +216,12 @@ Luo, Y.  {\em et~al.} (2017).
   and computational drug repositioning from heterogeneous information.
 \newblock {\em Nature communications\/}, {\bf 8}(1), 1--13.
 
-\bibitem[Mikolov {\em et~al.}(2013)Mikolov, Chen, Corrado, and
+\bibitem[Mikolov {\em et~al.}(2013)Mikolov, Sutskever, Chen, Corrado, and
   Dean]{Word2vec2013}
 Mikolov, T.  {\em et~al.} (2013).
-\newblock Efficient estimation of word representations in vector space.
+\newblock Distributed representations of words and phrases and their
+  compositionality.
+\newblock {\em CoRR\/}, {\bf abs/1310.4546}.
 
 \bibitem[Mozzicato(2009)Mozzicato]{MedDRA}
 Mozzicato, P. (2009).
@@ -232,7 +234,7 @@ Nguyen, T.  {\em et~al.} (2020).
 \newblock {GraphDTA: Predicting drug–target binding affinity with graph
   neural networks}.
 \newblock {\em Bioinformatics\/}.
-\newblock btaa921.
+\newblock advance access.
 
 \bibitem[Oliver(2000)Oliver]{Oliver2000}
 Oliver, S. (2000).
@@ -303,7 +305,7 @@ van Laarhoven, T. and Marchiori, E. (2014).
   Casanova, Romero, Lio, and Bengio]{GATConv}
 Veli{\v{c}}kovi{\'c}, P.  {\em et~al.} (2017).
 \newblock Graph attention networks.
-\newblock {\em arXiv preprint arXiv:1710.10903\/}.
+\newblock {\em CoRR\/}, {\bf abs/1710.10903v3}.
 
 \bibitem[Wan {\em et~al.}(2019)Wan, Hong, Xiao, Jiang, and Zeng]{NeoDTI2019}
 Wan, F.  {\em et~al.} (2019).
@@ -353,6 +355,6 @@ Zitnik, M. and Leskovec, J. (2017).
 \bibitem[Zitnik {\em et~al.}(2018)Zitnik, Sosic, and Leskovec]{BioSnap2018}
 Zitnik, M.  {\em et~al.} (2018).
 \newblock Biosnap datasets: Stanford biomedical network dataset collection.
-\newblock {\em Note: http://snap.stanford.edu/biodata Cited by\/}, {\bf 5}(1).
+\newblock {\em \url{http://snap.stanford.edu/biodata}\/}, {\bf 5}(1).
 
 \end{thebibliography}
