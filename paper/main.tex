@@ -764,7 +764,6 @@ in which we formulated the na\"ive predictor, it is not applicable for
 a protein split cross-validation as the number of interactions for
 each protein in the validation set is unknown.
 
-
 We apply this naive predictor on both the STITCH and Yamanishi
 datasets, using the full datasets as well as a 5-fold cross-validation
 over drugs and over drug--protein pairs to compare the prediction
@@ -871,21 +870,22 @@ and drug--target affinity prediction methods that were trained and
 evaluated on other datasets. Following the results of MolTrans
 \cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017},
 DeepDTA \cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019}, and
-MolTrans itself on the BioSnap dataset \cite{BioSnap2018} and compared it to our
-``na\"ive'' predictor as well as \name{} (see Table
+MolTrans itself on the BioSnap dataset \cite{BioSnap2018} and compared
+it to our ``na\"ive'' predictor as well as \name{} (see Table
 \ref{tab:comparison2}).  MolTrans was evaluated over the drug--target
 pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
-$MicroAUC_p$ score for all considered methods, leading to similar 
+$MicroAUC_p$ score for all considered methods, leading to similar
 results as observed on the Yaminishi dataset. As \name{} considers
 less drugs than alternative approaches, we execute a one-tailed T-test
 with $\alpha=0.01$ over all considered methods. Considering Macro
 AUCs, \name{} improves significantly ($p<10^{-4}$, one-sided t-test)
-over MolTrans ($t=36.6$), DeepDTI ($t=40.5$), DeepDTA ($t=36.6$), and DeepConv-DTI ($t=40.5$) on the BioSnap
-dataset, and significantly ($p<10^{-4}$, one-sided t-test) over DTINet ($t=20.8$)
-and DTIGEMS+ ($t=18.0$) on the Yamanishi dataset' DTI-CDF performs
-significantly better than \name{} ($p=0.02$, one-sided t-test). % As
+over MolTrans ($t=36.6$), DeepDTI ($t=40.5$), DeepDTA ($t=36.6$), and
+DeepConv-DTI ($t=40.5$) on the BioSnap dataset, and significantly
+($p<10^{-4}$, one-sided t-test) over DTINet ($t=20.8$) and DTIGEMS+
+($t=18.0$) on the Yamanishi dataset; DTI-CDF performs significantly
+better than \name{} ($p=0.02$, one-sided t-test). % As
                                 % we compare \name{} to 4 different
                                 % methods over BioSnap and 3 over
                                 % Yamanishi dataset, we add a
@@ -894,16 +894,22 @@ significantly better than \name{} ($p=0.02$, one-sided t-test). % As
                                 % respectively, leading to $p<0.0002$
                                 % ($\alpha=0.01$) for all previous
                                 % comparisons except DTI-CDF.
-We further run another one-tailed t-test concerning $MicroAUC_p$ with $\alpha=0.01$ including Bonferroni correction. We find that \name{} advances significantly over MolTrans ($p<10^{-4}, t=21.2$), DeepDTI ($p<10^{-4}, t=31.0$), DeepDTA ($p<10^{-4}, t=33.4$), and DeepConv-DTI ($p<10^{-4}, t=23.7$) regarding BioSnap dataset, and over DTINet ($p<10^{-4}, t=29.6$), DTIGEMS+ ($p<10^{-4}, t=28.0$) and DTI-CDF ($p<10^{-4}, t=9.5$) regarding Yamanishi dataset.
+We further perform another one-tailed t-test to compare $MicroAUC_p$
+performance. We find that \name{} improved significantly ($p <
+10^{-4}$) over MolTrans($t=21.2$), DeepDTI ($t=31.0$), DeepDTA
+($t=33.4$), and DeepConv-DTI ($t=23.7$) on the BioSnap dataset, and
+over DTINet ($t=29.6$), DTIGEMS+ ($t=28.0$), and DTI-CDF ($t=9.5$) on
+the Yamanishi dataset.
 
-In all our experiments, \name{} has the highest $MicroAUC_p$,
-demonstrating that \name{} can improve significantly over other methods in the task
-of identifying drugs that target a specific protein. Several methods
-achieve a higher Macro AUC than \name{}, in particular when evaluated
-using a drug--target pair splitting scheme; our results with the
-``na\"ive'' prediction method show that it may be possible that models
-trained on a drug--target split utilize certain biases in the dataset
-without necessarily producing novel biological insights.
+In all our experiments, \name{} improves over all other methods with
+respect to $MicroAUC_p$, demonstrating that \name{} can identify drugs
+that target a specific protein more accurately than other
+methods. Several methods achieve a higher MacroAUC than \name{}, in
+particular when evaluated using a drug--target pair splitting scheme;
+our results with the ``na\"ive'' prediction method show that it may be
+possible that models trained on a drug--target split utilize certain
+biases in the dataset without necessarily producing novel biological
+insights.
 
 \section{Discussion}
 
