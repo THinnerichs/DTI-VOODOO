@@ -3,58 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: natbib.bst
 Database file #1: citations.bib
-I was expecting a `,' or a `}'---line 115 of file citations.bib
- :   
- :   @article{Liu2020,
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-Warning--empty journal in ARMAConv
-Warning--empty journal in ChebConv
-Warning--empty journal in SAGEConv
-Warning--empty journal in GCNConv
-Warning--empty journal in APPNPConv
-Warning--empty journal in DTINet2017
-Warning--empty journal in GATConv
-Warning--empty journal in Zitnik2017
-You've used 53 entries,
+You've used 52 entries,
             2401 wiz_defined-function locations,
-            856 strings with 19796 characters,
-and the built_in function-call counts, 29814 in all, are:
-= -- 2548
-> -- 2374
-< -- 13
-+ -- 767
-- -- 705
-* -- 3076
-:= -- 5341
-add.period$ -- 268
-call.type$ -- 53
-change.case$ -- 328
+            872 strings with 19978 characters,
+and the built_in function-call counts, 30312 in all, are:
+= -- 2628
+> -- 2345
+< -- 15
++ -- 757
+- -- 697
+* -- 3104
+:= -- 5357
+add.period$ -- 291
+call.type$ -- 52
+change.case$ -- 322
 chr.to.int$ -- 52
-cite$ -- 61
-duplicate$ -- 1075
-empty$ -- 1617
-format.name$ -- 778
-if$ -- 5693
-int.to.chr$ -- 2
+cite$ -- 52
+duplicate$ -- 1128
+empty$ -- 1673
+format.name$ -- 769
+if$ -- 5855
+int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 47
-newline$ -- 254
-num.names$ -- 212
-pop$ -- 390
+missing$ -- 51
+newline$ -- 265
+num.names$ -- 208
+pop$ -- 352
 preamble$ -- 1
-purify$ -- 328
+purify$ -- 322
 quote$ -- 0
-skip$ -- 702
+skip$ -- 750
 stack$ -- 0
-substring$ -- 1569
-swap$ -- 213
-text.length$ -- 1
+substring$ -- 1638
+swap$ -- 262
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 477
-warning$ -- 8
-while$ -- 216
+type$ -- 468
+warning$ -- 0
+while$ -- 217
 width$ -- 0
-write$ -- 645
-(There was 1 error message)
+write$ -- 677

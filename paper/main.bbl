@@ -8,10 +8,11 @@ Ashburner, M.  {\em et~al.} (2000).
 \newblock Gene ontology: tool for the unification of biology.
 \newblock {\em Nature Genetics\/}, {\bf 25}(1), 25--29.
 
-\bibitem[Bianchi {\em et~al.}(2019)Bianchi, Grattarola, Alippi, and
-  Livi]{ARMAConv}
+\bibitem[Bianchi {\em et~al.}(2019)Bianchi, Grattarola, Livi, and
+  Alippi]{ARMAConv}
 Bianchi, F.~M.  {\em et~al.} (2019).
-\newblock Graph neural networks with convolutional arma filters.
+\newblock Graph neural networks with convolutional {ARMA} filters.
+\newblock {\em CoRR\/}, {\bf abs/1901.01343}.
 
 \bibitem[Campillos {\em et~al.}(2008)Campillos, Kuhn, Gavin, Jensen, and
   Bork]{Campillos2008}
@@ -51,6 +52,7 @@ Chen, J.  {\em et~al.} (2020).
 \newblock Predicting candidate genes from phenotypes, functions and anatomical
   site of expression.
 \newblock {\em Bioinformatics\/}.
+\newblock advance access.
 
 \bibitem[Chen {\em et~al.}(2015)Chen, Yan, Zhang, Zhang, Dai, Yin, and
   Zhang]{Chen2015}
@@ -71,6 +73,9 @@ Chu, Y.  {\em et~al.} (2019).
 Defferrard, M.  {\em et~al.} (2016).
 \newblock Convolutional neural networks on graphs with fast localized spectral
   filtering.
+\newblock In {\em Proceedings of the 30th International Conference on Neural
+  Information Processing Systems\/}, NIPS'16, page 3844–3852, Red Hook, NY,
+  USA. Curran Associates Inc.
 
 \bibitem[Ding {\em et~al.}(2013)Ding, Takigawa, Mamitsuka, and Zhu]{Ding2013}
 Ding, H.  {\em et~al.} (2013).
@@ -86,9 +91,8 @@ Feng, Y.  {\em et~al.} (2017).
 
 \bibitem[Fey and Lenssen(2019)Fey and Lenssen]{PytorchGeometric}
 Fey, M. and Lenssen, J.~E. (2019).
-\newblock Fast graph representation learning with {PyTorch Geometric}.
-\newblock In {\em ICLR Workshop on Representation Learning on Graphs and
-  Manifolds\/}.
+\newblock Fast graph representation learning with pytorch geometric.
+\newblock {\em CoRR\/}, {\bf abs/1903.02428}.
 
 \bibitem[Gillis and Pavlidis(2012)Gillis and Pavlidis]{Gillis2012}
 Gillis, J. and Pavlidis, P. (2012).
@@ -106,6 +110,7 @@ Gottlieb, A.  {\em et~al.} (2011).
 \bibitem[Hamilton {\em et~al.}(2017)Hamilton, Ying, and Leskovec]{SAGEConv}
 Hamilton, W.~L.  {\em et~al.} (2017).
 \newblock Inductive representation learning on large graphs.
+\newblock In {\em NIPS\/}.
 
 \bibitem[Hoehndorf {\em et~al.}(2011)Hoehndorf, Schofield, and
   Gkoutos]{PhenomeNET2011}
@@ -115,35 +120,40 @@ Hoehndorf, R.  {\em et~al.} (2011).
 
 \bibitem[Honda {\em et~al.}(2019)Honda, Shi, and Ueda]{SmilesTransformer}
 Honda, S.  {\em et~al.} (2019).
-\newblock Smiles transformer: Pre-trained molecular fingerprint for low data
+\newblock {SMILES} transformer: Pre-trained molecular fingerprint for low data
   drug discovery.
+\newblock {\em CoRR\/}, {\bf abs/1911.04738}.
 
 \bibitem[Huang {\em et~al.}(2020)Huang, Xiao, Glass, and Sun]{MolTrans2020}
 Huang, K.  {\em et~al.} (2020).
 \newblock {MolTrans}: Molecular interaction transformer for
   drug{\textendash}target interaction prediction.
 \newblock {\em Bioinformatics\/}.
+\newblock advanced access.
 
-\bibitem[Jeni {\em et~al.}(2013)Jeni, Cohn, and Torre]{Jeni2013}
+\bibitem[Jeni {\em et~al.}(2013)Jeni, Cohn, and De~La~Torre]{Jeni2013}
 Jeni, L.~A.  {\em et~al.} (2013).
 \newblock Facing imbalanced data--recommendations for the use of performance
   metrics.
 \newblock In {\em 2013 Humaine Association Conference on Affective Computing
-  and Intelligent Interaction\/}. {IEEE}.
+  and Intelligent Interaction\/}, pages 245--251.
 
-\bibitem[Kingma and Ba(2014)Kingma and Ba]{Adam2014}
-Kingma, D.~P. and Ba, J. (2014).
+\bibitem[Kingma and Ba(2015)Kingma and Ba]{Adam2014}
+Kingma, D.~P. and Ba, J. (2015).
 \newblock Adam: A method for stochastic optimization.
+\newblock {\em CoRR\/}, {\bf abs/1412.6980}.
 
 \bibitem[Kipf and Welling(2016)Kipf and Welling]{GCNConv}
 Kipf, T.~N. and Welling, M. (2016).
 \newblock Semi-supervised classification with graph convolutional networks.
+\newblock {\em CoRR\/}, {\bf abs/1609.02907}.
 
 \bibitem[Klicpera {\em et~al.}(2018)Klicpera, Bojchevski, and
-  Günnemann]{APPNPConv}
+  G{\"{u}}nnemann]{APPNPConv}
 Klicpera, J.  {\em et~al.} (2018).
-\newblock Predict then propagate: Graph neural networks meet personalized
-  pagerank.
+\newblock Personalized embedding propagation: Combining neural networks on
+  graphs with personalized pagerank.
+\newblock {\em CoRR\/}, {\bf abs/1810.05997}.
 
 \bibitem[K\"{o}hler {\em et~al.}(2018)K\"{o}hler, Carmody, Vasilevsky,
   Jacobsen, Danis, Gourdine, Gargano, Harris, Matentzoglu, McMurry,
@@ -167,8 +177,8 @@ Kuhn, M.  {\em et~al.} (2015).
 
 \bibitem[Kulmanov and Hoehndorf(2019)Kulmanov and Hoehndorf]{DeepGoPlus}
 Kulmanov, M. and Hoehndorf, R. (2019).
-\newblock {DeepGOPlus}: improved protein function prediction from sequence.
-\newblock {\em Bioinformatics\/}.
+\newblock {DeepGOPlus: improved protein function prediction from sequence}.
+\newblock {\em Bioinformatics\/}, {\bf 36}(2), 422--429.
 
 \bibitem[Lee and Nam(2018)Lee and Nam]{Lee2018}
 Lee, I. and Nam, H. (2018).
@@ -185,14 +195,13 @@ Lee, I.  {\em et~al.} (2019).
 \bibitem[Li {\em et~al.}(2019)Li, Müller, Thabet, and Ghanem]{DeepGCN2019}
 Li, G.  {\em et~al.} (2019).
 \newblock Deepgcns: Can gcns go as deep as cnns?
+\newblock In {\em The IEEE International Conference on Computer Vision
+  (ICCV)\/}.
 
-\bibitem[Li {\em et~al.}(2020a)Li, Xiong, Thabet, and Ghanem]{GENConv2020}
-Li, G.  {\em et~al.} (2020a).
+\bibitem[Li {\em et~al.}(2020)Li, Xiong, Thabet, and Ghanem]{GENConv2020}
+Li, G.  {\em et~al.} (2020).
 \newblock Deepergcn: All you need to train deeper gcns.
-
-\bibitem[Li {\em et~al.}(2020b)Li, Xiong, Thabet, and Ghanem]{DeeperGCN2020}
-Li, G.  {\em et~al.} (2020b).
-\newblock Deepergcn: All you need to train deeper gcns.
+\newblock {\em arXiv preprint arXiv:2006.07739\/}.
 
 \bibitem[Liu {\em et~al.}(2020)Liu, Hu, Jiang, and Zhou]{Liu2020}
 Liu, Q.  {\em et~al.} (2020).
@@ -205,6 +214,7 @@ Liu, Q.  {\em et~al.} (2020).
 Luo, Y.  {\em et~al.} (2017).
 \newblock A network integration approach for drug-target interaction prediction
   and computational drug repositioning from heterogeneous information.
+\newblock {\em Nat Commun\/}.
 
 \bibitem[Mikolov {\em et~al.}(2013)Mikolov, Chen, Corrado, and
   Dean]{Word2vec2013}
@@ -219,9 +229,10 @@ Mozzicato, P. (2009).
 \bibitem[Nguyen {\em et~al.}(2020)Nguyen, Le, Quinn, Nguyen, Le, and
   Venkatesh]{GraphDTA2020}
 Nguyen, T.  {\em et~al.} (2020).
-\newblock {GraphDTA}: Predicting drug{\textendash}target binding affinity with
-  graph neural networks.
+\newblock {GraphDTA: Predicting drug–target binding affinity with graph
+  neural networks}.
 \newblock {\em Bioinformatics\/}.
+\newblock btaa921.
 
 \bibitem[Oliver(2000)Oliver]{Oliver2000}
 Oliver, S. (2000).
@@ -288,10 +299,11 @@ van Laarhoven, T. and Marchiori, E. (2014).
 \newblock In {\em Pattern Recognition in Bioinformatics\/}, pages 23--33.
   Springer International Publishing.
 
-\bibitem[Veličković {\em et~al.}(2017)Veličković, Cucurull, Casanova,
-  Romero, Liò, and Bengio]{GATConv}
-Veličković, P.  {\em et~al.} (2017).
+\bibitem[Veli{\v{c}}kovi{\'c} {\em et~al.}(2017)Veli{\v{c}}kovi{\'c}, Cucurull,
+  Casanova, Romero, Lio, and Bengio]{GATConv}
+Veli{\v{c}}kovi{\'c}, P.  {\em et~al.} (2017).
 \newblock Graph attention networks.
+\newblock {\em arXiv preprint arXiv:1710.10903\/}.
 
 \bibitem[Wan {\em et~al.}(2019)Wan, Hong, Xiao, Jiang, and Zeng]{NeoDTI2019}
 Wan, F.  {\em et~al.} (2019).
@@ -336,11 +348,11 @@ Yamanishi, Y.  {\em et~al.} (2008).
 Zitnik, M. and Leskovec, J. (2017).
 \newblock Predicting multicellular function through multi-layer tissue
   networks.
+\newblock {\em CoRR\/}, {\bf abs/1707.04638}.
 
 \bibitem[Zitnik {\em et~al.}(2018)Zitnik, Sosic, and Leskovec]{BioSnap2018}
 Zitnik, M.  {\em et~al.} (2018).
 \newblock Biosnap datasets: Stanford biomedical network dataset collection.
-\newblock {\em Note: http://snap. stanford. edu/biodata Cited by\/}, {\bf
-  5}(1).
+\newblock {\em Note: http://snap.stanford.edu/biodata Cited by\/}, {\bf 5}(1).
 
 \end{thebibliography}
