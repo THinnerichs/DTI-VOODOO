@@ -1,0 +1,1303 @@
+\documentclass{bioinfo}
+\usepackage[english]{babel}
+\copyrightyear{2021} \pubyear{2021}
+\usepackage{natbib}
+\bibliographystyle{natbib}
+\usepackage{url}
+
+\access{Advance Access Publication Date: Day Month Year}
+\appnotes{Manuscript Category}
+
+\renewcommand{\cite}{\citep}
+\usepackage{todonotes}
+
+\begin{document}
+\firstpage{1}
+
+\subtitle{Subject Section}
+\newcommand{\name}{DTI-Voodoo}
+
+\title[\name{}]{\name{}: machine learning over interaction networks and
+  ontology-based background knowledge predicts drug--target
+  interactions}
+\author[Hinnerichs \& Hoehndorf]{Tilman Hinnerichs\,$^{\text{\sfb 1,}*}$ and Robert
+  Hoehndorf\,$^{\text{\sfb 1}}$}
+\address{$^{\text{\sf 1}}$Computational Bioscience Research Center, Computer,
+  Electrical and Mathematical Sciences \& Engineering Division, King
+  Abdullah University of Science and Technology, 4700 King Abdullah
+  University of Science and Technology, Thuwal 23955, Saudi Arabia.}
+
+\corresp{$^\ast$To whom correspondence should be addressed.}
+
+\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+
+\editor{Associate Editor: XXXXXXX}
+
+\abstract{\textbf{Motivation:} \textit{In silico} drug--target
+  interaction (DTI) prediction is important for drug discovery and
+  drug repurposing.  Approaches to predict DTIs can proceed
+  indirectly, top-down, using phenotypic effects of drugs to identify
+  potential drug targets, or they can be direct, bottom-up and use
+  molecular information to directly predict binding potentials.  Both
+  approaches can be combined with information about interaction
+  networks. \\
+  \textbf{Results:} We developed \name{} as a computational method
+  that combines molecular features and ontology-encoded phenotypic
+  effects of drugs with protein--protein interaction networks, and
+  uses a graph convolutional neural network to predict DTIs.  We
+  demonstrate that drug effect features can exploit information in the
+  interaction network whereas molecular features do not.  \name{} is
+  designed to predict candidate drugs for a given protein; we use this
+  formulation to show that common DTI datasets contain intrinsic
+  biases with major affects on performance evaluation and comparison
+  of DTI prediction methods. Using a modified evaluation scheme, we
+  demonstrate that \name{} improves significantly over state of the
+  art DTI prediction methods. \\
+  \textbf{Availability:} \name{} source code and data necessary to
+  reproduce results are freely available at
+  \url{https://github.com/THinnerichs/DTI-VOODOO}. \\
+  \textbf{Contact:}
+  \href{tilman.hinnerichs@kaust.edu.sa}{tilman.hinnerichs@kaust.edu.sa}
+  \\
+  \textbf{Supplementary information:}Supplementary data are available
+  at \url{https://github.com/THinnerichs/DTI-VOODOO}.}
+
+\maketitle
+\section{Introduction}
+
+% In history, traditional remedies, that were known for their medicinal
+% properties lead to drugs by extraction of the functional
+% ingredients. Alternatively, characteristics and features of potential
+% drugs were detected by accident like in the case of penicillin. More
+% recently, biological drug targets can be found \textit{in silico}
+% through discovery of suitable computational predictors.
+
+% Knowledge about those links between compounds and their
+% target proteins help in an array of medical and pharmaceutical
+% studies. Additionally, those associations can be utilized to identify
+% disease specific targets, leading to desirable therapeutic effects.
+
+% With the rapidly growing field of machine learning approaches and
+% their application to bioscientifical problems in the realm of
+% bioinformatics, different kinds of data, such as long DNA sequences
+% could be utilized for feature generation, while rapid advances were
+% made. 
+Identifying drug--target interactions (DTIs) is important in drug
+repurposing and repositioning, and in the exploration of novel drug
+candidates and their interaction partners. Computational methods are
+widely applied to predict DTIs and many computational methods have
+been developed.  These methods can be broadly classified into
+``top-down'' and ``bottom-up'' approaches. Top-down approaches start
+from observable characteristics resulting from a drug--target
+interaction, such as side-effects or the diseases treated by a drug,
+and infer likely molecular mechanisms (i.e., the interaction) using
+these observations.
+% and indications represented by knowledge graphs or ontologies, induced by a drug and infer targets based on the likely molecular mechanisms that result in these phenotypes
+Bottom-up approaches start from molecular features such as molecular
+structure or fingerprints associated with drug and protein, and
+predict interactions from this information.
+
+Both bottom-up and top-down approaches to drug--target interaction
+prediction bear some advantages and limitations. Generally, bottom-up
+methods face the challenge to predict whether a structure binds to a
+protein given their molecular properties; whether two entities
+interact depends not only on the molecular structure of the entities
+(where binding sites and molecular forces need to be determined for
+accurate prediction) but also properties namely where a protein is
+expressed or in which celltypes and anatomical structures. Top-down
+methods use information for DTI prediction such as side-effect
+similarity \cite{Campillos2008} that is largely complementary to
+knowledge gained from molecular properties. While methods that rely on
+molecular information are directly predicting whether two molecular
+could interact, top-down methods base on more indirect means and 
+infer a DTI from observable effects resulting from the interaction.
+
+Both approaches may be used in conjunction with network inference
+\cite{Chen2015}. Biological networks used for DTI prediction include
+protein--protein interaction networks \cite{Feng2017, Lee2018} and
+networks including several other types of biological relations,
+including similarity between represented entities \cite{Ding2013,
+  Gottlieb2011}. Network-based DTI prediction methods use the
+guilt-by-association principle \cite{Oliver2000} and assume that a
+protein is a likely target for a drug if many of the protein's
+neighbors in the interaction network are targets of the drug
+\cite{Gillis2012}. Network-based methods have been applied
+successfully to DTI prediction. However, if DTIs are taken as direct
+physical interactions between a drug and protein, it remains an
+unresolved question whether the network-based guilt-by-association
+hypothesis is true, or whether an interaction of a drug and protein
+dysregulates several of the protein's interaction partners, and
+therefore resulting in effects that are not direct interactions but
+only downstream consequences of an interaction.
+
+Progress in machine learning using graph neural networks can allow us
+to test this hypothesis and combine both bottom-up and top-down
+features with a network in a single machine learning model. 
+In particular, Graph Convolutional Networks \cite{GCNConv} and
+their variants operate on different types of kernels \cite{ChebConv,
+  ARMAConv}, including attention mechanisms \cite{GATConv}, and
+different forms of exploring node neighborhoods \cite{APPNPConv,
+  SAGEConv} can combine different types of features and graph-based
+information. % While based on diverse systems,
+% they can be relevant for testing distinct hypothesis for given
+% graphs. While convolutional filters are suitable for finding patterns
+% among the given graph, attention mechanisms are more relevant for
+% discovery of important regions within. Lately, graph learning
+% approaches found application for computing compound representations
+% for DTI prediction.
+They have previously been applied for a number of tasks, including
+prediction of protein functions \cite{Zitnik2017}, cancer drug
+response \cite{Liu2020} and drug--target affinity prediction
+\cite{GraphDTA2020}.
+
+Potential biases resulting from the underlying datasets
+\citep{Pahikkala2014} which may affect model evaluation and comparison
+pose a challenge for DTI prediction. Firstly, novel drugs are often
+developed by altering non-functional components of a drug, leading to
+two and more very similar drugs designed to target the same proteins
+\cite{Overington2006}. This can result in a bias when it leads to
+hidden duplicates or highly similar compounds that are distributed
+among training and evaluation dataset, resulting in a better
+(measured) predictive performance than it would be expected when the
+model is applied to identify drugs that target a protein for which no
+drugs yet exist. Secondly, some proteins (which we call \textit{hub
+  proteins}) have significantly more known interactions with drugs
+than others. In the STITCH database, $5\%$ of the proteins have $40\%$
+of the interactions, and similar distributions are present in other
+datasets \cite{Drugbank2007, Drugbank2017}; preferentially predicting
+these proteins may increase predictive performance while not
+reflecting the actual performance when applied to a new protein (i.e.,
+a protein for which no interactions are known). These differences in
+the number of drugs targeting certain proteins may be the result of
+study bias where more ``valuable'' proteins have more drugs designed
+to target them due to their involvement in more common diseases (or
+diseases for which drugs can be more profitably marketed). This might
+affect common evaluation schemes where it is possible to exploit these
+biases within DTI prediction \cite{Survey2018}.
+\citet{vanLaarhoven2014} showed that several bias can be exploited on
+the dataset of \citet{Yamanishi2008}.
+
+We developed \name{} as a method for predicting DTIs. We use an
+ontology-based machine learning method \cite{DL2vec2020} to encode
+phenotypic consequences of DTIs and deep learning methods to encode
+molecular features. We combine both using a protein interaction
+network which we exploit with the aid of a graph neural network. We use this
+model to test whether molecular or phenotype features benefit from the
+network information and find that only phenotype features localize on
+the graph whereas molecular features do not. We further evaluate and
+compare \name{} against several DTI prediction methods and demonstrate
+a substantial improvement of \name{} over the state of the art in
+predicting drugs that target a protein. We also identify and
+characterize several biases in both training and evaluating DTI
+prediction methods, and make recommendations on how to avoid
+them. \name{} is available as Free Software at
+\url{https://github.com/THinnerichs/DTI-VOODOO}.
+
+% In order to design representations concerning both top-down and bottom-up features for proteins and drugs,respectively, we utilize protein--protein interaction (PPI) networks which have shown great results in protein function prediction \cite{Vazquez2003} and antiviral drug--target discovery \cite{Ackerman2019}. 
+% However, only few applied this context to the task of DTI prediction in humans. 
+
+
+%\todo[inline]{Somehow smooth this transition}
+
+\enlargethispage{12pt}
+
+\section{Methods}
+\subsection{Problem Description}
+\name{} aims to solve the following problem: for a given drug and a
+given protein we want to determine whether those interact or not.  We
+do not differentiate between types of interaction such as activation
+and inhibition, and do not predict the strength of the interaction.
+We treat all drug--protein pairs without a known interaction as
+negatives and therefore formulate the problem as a binary
+classification task.
+
+\subsection{Datasets}
+We obtain a dataset consisting of 12,884 human proteins with 
+340,627 links from STRING \citep{STRINGv10}. For the drug-target
+interactions, we use 229,870 links from the STITCH database
+\citep{STITCHv5}. As both STRING and STITCH provide confidence scores
+for each association, we filtered them as advised by a threshold of
+$700$, therefore retaining only high-confidence interactions.
+
+We utilize the PhenomeNET ontology \citep{PhenomeNET2011}, an ontology
+integrating ontologies such as the Human Phenotype Ontology
+\citep{HPO2018}, Gene Ontology \cite{GOoriginal2000, GOrecent2020},
+Mammalian Phenotype Ontology \citep{MP2009} and several others.  We
+obtained side effects and their links to drugs from SIDER
+\citep{SIDER}; SIDER contains side effects encoded using identifiers
+from the MedDRA database \citep{MedDRA}. We mapped side effects to the
+PhenomeNET ontology using the \textit{Phenomebrowser.net}, which
+provides a SPARQL query endpoint for the mentioned resources. The
+overall structure is shown in Supplementary Figure 1.
+
+For comparative evaluation, we use the gold standard dataset
+introduced by \citet{Yamanishi2008} consisting of 1,923 interactions
+between 708 drugs and 1,512 proteins, and the BioSnap dataset
+\cite{BioSnap2018} which consists of 5,017 drug nodes, 2,324 gene
+nodes and 15,138 edges.
+
+We only use proteins in our analysis that have at least one link in
+STRING or one association in PhenomeNET, and drugs with at least one
+side effect. Therefore, the intersection between these resources
+yields 1,428 drugs and 7,368 human proteins with 32,212 interactions
+for STITCH, 1,837 interactions between 680 drugs and 1,458 proteins
+for Yamanishi, and 6,498 links between 949 drugs and 2,221 proteins
+for BioSnap dataset. We provide links to and methods for obtaining and
+processing the necessary data in our Github repository.
+
+ 
+\subsection{Model}
+
+Our model combines ``top-down'' and ``bottom-up'' information for
+drug--target identification. We consider an approach to be
+``top-down'' when observable characteristics of either a drug (such as
+a drug effect) or protein (such as a protein function, or phenotypes
+resulting from a loss of function) are used to provide information
+about a molecular mechanisms; we consider an approach ``bottom-up''
+when structural or other molecular information is used to determine a
+mechanism.  In order to build a method that incorporates both top-down
+and bottom-up features, we first create a model for each type of
+feature separately.  As features for the bottom-up model, we use
+features derived from molecular structures of drugs from the
+\textit{SmilesTransformer} \citep{SmilesTransformer} and molecular
+features for proteins from \textit{DeepGOPlus}
+\citep{DeepGoPlus}. \textit{SmilesTransformer} is an autoencoder
+trained over the SMILES strings, and therefore captures (some aspects
+of) the molecular organization of each drug in an unsupervised manner.
+\textit{DeepGOPlus} provides features derived from protein amino acid
+sequences which are useful to predict protein function.
+% Thus, both embeddings seem to suitably supplement
+% the following ontology based representations.
+
+As phenotypes and functions are encoded through ontologies, we use
+DL2Vec \citep{DL2vec2020} to obtain ontology based representations for
+use as top-down features. DL2vec constructs a graph by introducing
+nodes for each ontology class and edges for ontology axioms, followed
+by random walks starting from each node in the graph. These walks are
+encoded using a Word2vec \citep{Word2vec2013} model. Therefore, DL2Vec
+generates representations that enable to encode drug effects or protein
+functions while preserving their semantic neighborhood within that
+graph.
+
+% The overall structure of the ontology can be seen in
+% Figure~\ref{fig:Onto}.
+
+% \todo[inline]{Consider supplement, or combine with other figures.}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.5\textwidth]{figures/drug_protein_ontology_network.png}}
+% 	\caption{Drugs and proteins with annotations to SiDER and PhenomeNET}
+% 	\label{fig:Onto}
+% \end{figure}
+
+
+\subsubsection{Half-twin neural networks and feature transformation}
+
+As we want to learn from the similarity of drug side effects and
+protein phenotypes, we use a deep half-twin neural network with a
+contrastive loss using cosine similarity.  A half-twin neural network
+aims to learn a similarity between two embeddings of variable but same
+dimension. As the original feature space may have varying
+dimensionality, we first process them using a fully connected neural
+network layer which takes as input an embedding and outputs a
+representation of a particular size, i.e., we use this layer as a
+trainable feature transformation and apply it to reduce the
+representation size of the embeddings for drugs and proteins
+separately.  An example structure for both types of features can be
+found in Supplementary Figure 2.
+% While a regular deep neural network, denoted by LFT, for feature space reduction is not particularly novel, we
+The use of this trainable feature transformation layer enables
+flexible experimentation as both ontology and molecular feature for
+both drugs and proteins are reduced to the same dimensionality for
+varying sizes of inputs; this allows for a high amount of modularity
+across different experimental setups by adding different kinds of
+features into the model. Additionally, the generated features may be
+used for other tasks. % ; for
+% example, the ontology LFT can be reused for a variety of DL2vec-based
+% features with respect to other ontologies and hypotheses
+We follow the results of \textit{DL2vec} \cite{DL2vec2020} and use
+$\sigma := \mathrm{LeakyReLU}$ as activation function which leads to
+improved performance compared to other activation functions.
+
+% \todo[inline]{Combine in some larger figure}
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.35\textwidth]{figures/siamese_network.png}}
+% 	\caption{Half-twin network applied to molecular and DL2vec
+%           features, utilizing deep learnable feature transformations
+%           (LFT). The similarity function $\otimes$ yields the
+%           similarity between both transformed embeddings e.g. by
+%           computing the cosine similarity.}
+% 	\label{fig:HalfTwinNetwork}
+% \end{figure}
+
+\subsubsection{Graph convolutional layers}
+
+We include these molecular and ontology-based sub-models within a
+graph neural network (GNN) \cite{GCNConv}. The graph underlying the GNN is
+based on the protein--protein interaction (PPI) graph. The PPI dataset
+is represented by a graph $G=(V,E)$, where each protein is represented
+by a vertex $v\in V$, and each edge $e\in E\subseteq V\times V$
+represents an interaction between two proteins. Additionally, we
+introduce a mapping $x:V\rightarrow\mathbb{R}^{d}$ projecting each
+vertex $v$ to its node feature $x_v := x(v)$, where $d$ denotes the
+dimensionality of the node features.
+ 
+% As described before, graph convolution has shown significant
+% performance increase in a variety of tasks. While there are various
+% methods out there we will only introduce the most basic one here. 
+A graph convolutional layer \cite{GCNConv} consists of a learnable
+weight matrix followed by an aggregation step, formalized by
+\begin{equation}
+	\mathbf{X}^{\prime} = \mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
+	\mathbf{\hat{D}}^{-1/2} \mathbf{X} \mathbf{\Theta}
+\end{equation}
+where for a given graph $G=(V,E)$, $\hat{A} = A + I$ denotes the
+adjacency matrix with added self-loops for each vertex, $D$ is
+described by $\hat{D}_{ii} = \sum_{j=0} \hat{A}_{ij}$, a diagonal
+matrix displaying the degree of each node, and $\Theta$ denotes the
+learnable weight matrix. Added self-loops enforce that each node
+representation is directly dependent on its own preceding one. The
+number of graph convolutional layers stacked equals the radius of
+relevant nodes for each vertex within the graph.
+
+The update rule for each node is given by a message passing scheme
+formalized by
+\begin{equation}
+	\mathbf{x}^{\prime}_i = \mathbf{\Theta} \sum^{N}_{j}
+	\frac{1}{\sqrt{\hat{d}_j \hat{d}_i}} \mathbf{x}_j
+\end{equation}
+where both $\hat{d}_i, \hat{d}_j$ are dependent on the edge weights
+$e_{ij}$ of the graph. With simple, single-valued edge weights such as
+$e_{ij}=1 \text{ }\forall (i,j)\in E$, all $\hat{d}_i$ reduce to
+$d_i$, i.e., the degree of each vertex $i$. We denote this type of
+graph convolutional neural layers with \textsc{GCNConv}.
+
+While in this initial formulation of a GCNConv the node-wise update
+step is defined by the sum over all neighboring node representations,
+we can alter this formulation to other message passing schemes.  We
+can rearrange the order of activation function $\sigma$, aggregation
+$\mathrm{AGG}$, and linear neural layer $\mathrm{MLP}$ with this
+formulation as proposed by \citet{GENConv2020}:
+\begin{equation}
+	\mathbf{x}_i^{\prime} = \mathrm{MLP} \left( \mathbf{x}_i +
+	\mathrm{AGG} \left( \left\{
+	\mathrm{\sigma} \left( \mathbf{x}_j + \mathbf{e_{ji}} \right) +\epsilon
+	: j \in \mathcal{N}(i) \right\} \right)
+	\right)
+\end{equation}
+where we only consider
+$\sigma \in \{\mathrm{ReLU}, \mathrm{LeakyReLU}\}$. We denote this
+generalized layer type as \textsc{GENConv} following the notation of
+PyTorch Geometric \cite{PytorchGeometric}.  While the reordering is
+mainly important for numerical stability, this alteration also addresses
+the vanishing gradient problem for deeper convolutional networks
+\cite{GENConv2020}. Additionally, we can also generalize the
+aggregation function to allow different weighting functions such as
+learnable $\mathrm{SoftMax}$ or $\mathrm{Power}$ for the incoming
+signals for each vertex, substituting the averaging step in
+\textsc{GCNConv}. Hence, while \textsc{GCNConv} suffers from both
+vanishing gradients and signal fading for large scale and highly
+connected graphs, each propagation step in \textsc{GENConv} emphasizes
+signals with values close to $0$ and $1$. The same convolutional
+filter and weight matrix are applied to and learned for all nodes
+simultaneously. % , and the resulting information\todo{Which information?
+  % Specify} hold no information on their own connectivity.
+We further employ another mechanism to avoid redundancy and fading
+signals in stacked graph convolutional networks, using residual
+connections and a normalization scheme \cite{DeepGCN2019,
+  GENConv2020} as shown in Supplementary Figure 3.  The residual
+blocks are reusable and can be stacked multiple times.
+% The structure of the GNN architecture we use is shown
+% in Figure~\ref{fig:ResGraphConvBlocks}.
+
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=0.5\columnwidth]{figures/ResGraphConvBlocks.png}}
+% 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+% 	\label{fig:ResGraphConvBlocks}
+% \end{figure}
+
+
+% \begin{figure}[!tpb]%figure1
+% 	\centerline{\includegraphics[width=1\columnwidth]{figures/full_model_all_layers.png}}
+% 	\caption{Residual architecture built by \citet{DeepGCN2019} and \citet{DeeperGCN2020} enabling deeper graph convolutional models}
+% 	\label{fig:FullModelAllLayers}
+% \end{figure}
+
+\subsubsection{Combined prediction model}
+Combining half-twin and graph convolutional neural networks, we map
+all protein representations to their respective node features,
+initializing the graph convolutional update steps. The resulting
+representations are used for a similarity prediction.
+% as presented in
+% figure ~\ref{fig:HalfTwinNetwork}
+When combining ontology and molecular features with or without the
+graph model, we concatenate both protein features and both drugs
+features, before plugging them into the graph model for the similarity
+computation.  An overview of the model architecture, combining both
+feature types, is shown in Supplementary Figure 4.  Here the original
+representations are transformed by a dense layer and then used as
+input of a stack (with height 3) of residual graph convolutional
+blocks. %The full model of \name{} is shown in Supplementary Figure 4.
+
+\subsubsection{Hyperparameter tuning}
+As the number of drug-targets are sparse with respect to the amount of
+both drugs and proteins considered, the training, validation and
+testing datasets are imbalanced. As there are only $22,336$ links in
+the considered STITCH subset, the ratio
+\begin{equation}
+  w:= \frac{\#drugs \cdot \#proteins}{\#dti\_links} \approx 360,
+  \label{weight}
+\end{equation}
+consequently needs suitable compensation in the computed loss function and
+appropriate metrics for the evaluation.
+
+Therefore, we weight all positive drug-protein pair samples with this
+ratio by introducing the following loss function with respect to 
+binary cross-entropy:
+\begin{equation}
+  l(x,y) = - w \left[ y \cdot \log x + (1 - y) \cdot \log (1 - x) \right]
+\end{equation}
+for a given prediction $x$ and target $y$, and positive weight $w$
+defined by equation \eqref{weight}. We average this loss among all
+drug-protein pairs in the training set, leading to a stable
+environment for the \textit{Adam} optimization algorithm
+\citep{Adam2014}. We implemented a 5-fold cross validation split among
+the proteins. Furthermore, we used early stopping in the training
+process.
+
+To find the best hyperparameter configuration for the proposed model,
+we performed a grid search to find the most expressive and
+non-redundant representation. We pretrained the bottom-up and the
+top-down model separately and aimed at best performing models with
+respect to our evaluation metrics. We optimized embedding sizes, depth
+of the neural network, optimizer, learning rate and layer types using
+an extensive, manual grid search. Starting from shallow feature
+transformations with an embedding size of $10$, we scaled the network
+up to residual structures with up to $10$ hidden layers leading to
+embeddings of size $4000$, testing different network widths and
+learning rates for each configuration.
+
+\subsection{Evaluation and metrics}
+
+\subsubsection{Splitting schemes}
+
+As DTI prediction is dependent on both drugs and proteins, there are
+multiple ways of determining training, validation and testing sets of
+pairs to evaluate each model. For cross-validation, we can perform the
+split over DTI pairs, over drugs and over proteins, respectively; when
+splitting over drugs or proteins, the entities (drugs or proteins) are
+separated and all their associations included in the split.
+Only when splitting by protein or drug are unseen entities guaranteed to
+be shown to the model in the validation and testing
+phase. The models resulting from the different splitting schemes may
+have different expressiveness and exploit different information in DTI
+prediction, as different information is known in the training and
+testing phase.
+
+\subsubsection{Metrics}
+\label{sec:evaluation}
+To assess each model, we compute a variety of common metrics for
+binary classification. As the datasets are highly imbalanced, we use
+the area under the receiver operating characteristic curve (AUROC) on
+training, validation and testing split.
+% We calculated the true positive rate (TPR), false positive rate
+% (FPR), and precision score. We will further compute true positives
+% (TP), false positives (FP), false negatives (FN) and finally true
+% negatives (TN).
+
+We calculate the AUROC by computing true positive rate at various
+false positive rate thresholds and use trapezoidal approximations to
+estimate the area under the curve. We refer to this measure as
+$\textrm{MacroAUC}$.
+
+We also calculate the $\textrm{MicroAUC}$ score. For given lists $D$
+and $P$ of drugs and proteins, respectively, and a set of known
+interactions $Int := \{(d_i, p_i) \}$, \textit{MicroAUC} is calculated
+as the average per entity \textit{AUROC} score. For example, the
+protein-centric score can be formalized as: given labels
+$l:D\times P \rightarrow \{0,1\}$ and predictions
+$y:D\times P \rightarrow [0,1]$, we define
+\begin{equation*}
+  \textrm{MicroAUC}'_p(l,y) := \underset{p\in P}{mean}\left(\left\{
+      \text{AUROC}(\{ (l(d_i, p), y(d_i,p))| d_i\in D\})
+    \right\}\right)
+\end{equation*}
+
+In some cases, the $MicroAUC$ score may not be defined as in some
+datasets some proteins or drugs have no interactions, leading to an
+infeasible $TPR=0$ for all thresholds and an undefined $AUROC$ score
+for that entity. As this is quite common for DTI datasets, we do not
+omit but impute the $MicroAUC$ interpolating linearly for those
+entities using the accuracy for this subset:
+\begin{equation*}
+	\textrm{MicroAUC}_p(l,y) := 
+	\begin{cases}
+		MicroAUC'_p(l,y) & \text{if }\sum_{d_i\in
+                  D}l(d_i,p)\neq 0\\
+		Accuracy(l,y)&otherwise
+	\end{cases}
+\end{equation*}
+Drugs and proteins can be interchanged in this formulation. We refer
+to the different measures as protein-centric microAUC ($MicroAUC_p$)
+and a drug-centric microAUC ($MicroAUC_d$).  We further compare
+MicroAUC$_p$ with imputation and MicroAUC$'_p$ without imputing
+undefined $MicroAUC$ values (but omitting them) in Supplementary Table
+1.
+
+Further, we choose the AUROC over other measures such as the area
+under precision recall curve (AUPRC) as primary metric to compare
+different methods; AUPRC is sensitive to data imbalances
+\cite{Jeni2013} and therefore more challenging to apply to comparing
+different DTI prediction methods.
+
+\section{Results}
+
+\subsection{\name{}: computational model to identify drugs that target a
+  protein}
+
+% As in machine learning inference is derived from the underlying data,
+% models and data are naturally and intrinsically linked. Thus, the more
+% we understand about the pitfalls and biases within the data, the more
+% we can try to bypass these difficulties. We will hereby abbreviate,
+% e.g., a cross validation splitting scheme as \glqq split\grqq{}
+% determining the train, validation and test subset of a given dataset.
+
+We developed \name{} as a computational model to predict drug--target
+interactions. Specifically, given a protein, \name{} will identify and
+rank drugs that likely target this protein. \name{} combines two types
+of features: structural information for drugs and proteins that can be
+used to determine if the drug and protein physically interact, and
+information about phenotypic effects of drugs and changes in protein
+function that may ``localize'' on an interaction network (i.e.,
+neighboring nodes will share some of these features or are
+phenotypically similar). As structural features, \name{} uses
+structural representations of drugs from the SMILES transformer
+\cite{SmilesTransformer} and representations of protein amino acid
+sequences from DeepGOPlus \cite{DeepGoPlus}.  \name{} learns
+representations of drug effects and protein functions using the
+ontology-based machine learning method DL2Vec \cite{DL2vec2020} and
+ontology-based annotations of drugs and proteins.
+
+We construct a graph with proteins as nodes and protein-protein
+interactions as edges, mapping the protein features to each target as
+node features. \name{} then propagates information among the PPI
+network utilizing graph convolutional steps, calculates the similarity
+of drug and protein representations, and predicts whether there is an
+interaction. The full workflow scheme is depicted in
+Figure~\ref{fig:ModelWorkflow}
+
+% Note that this approach can be easily generalized, profiting from
+% other protein function and phenotype representation methods.
+
+
+\begin{figure}[!tpb]
+	\centering
+	\includegraphics[width=0.8\columnwidth]{../figures/model_workflow.png}
+	\caption{Full DTI prediction model based on the pretrained
+          learnable feature transformations (LFT) for either molecular
+          structure or ontology based features. The transformed
+          protein representations are added to each corresponded
+          protein as node features for the graph convolutional
+          steps.}
+	\label{fig:ModelWorkflow}
+\end{figure}
+
+
+We evaluate our model's ability to identify drug--target interactions
+using different approaches and datasets. First, we perform a
+cross-validation over proteins and validate our results. A
+cross-validation over proteins aims to evaluate how the model performs
+when tasked to identify drugs that may target a ``novel'' protein,
+i.e., one not seen during training, or a protein for which a drug that
+targets it should be predicted. 
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|p{1.1cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|p{0.6cm}|p{0.7cm}|}
+    \hline
+    &\multicolumn{4}{c|}{(a) STITCH results}& \multicolumn{4}{c|}{(b) Yamanishi results}\\
+    \hline
+    \name{} results&\multicolumn{4}{c|}{PPI graph}&\multicolumn{4}{c|}{PPI graph}\\
+    &\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}&\multicolumn{2}{c|}{without}&\multicolumn{2}{c|}{with}\\
+    &Macro AUC&Micro $AUC_p$&Macro AUC&Micro $AUC_p$&Macro AUC&Micro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    MolPred&$0.69$&$0.65$&$0.69$&$0.67$&$0.66$&$0.67$&$0.66$&$0.64$\\
+    \hline
+    OntoPred&$0.88$&$0.87$&$0.92$&$0.93$&$0.80$&$0.79$&$0.83$&$0.82$\\
+    \hline
+    \name{} & $0.89$ & $0.90$&$\mathbf{0.93}$&$\mathbf{0.94}$& $0.83$ & $0.82$&$\mathbf{0.84}$&$\mathbf{0.84}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:Results}Results for \name{} on the STITCH
+    and Yamanishi datasets evaluated with 5-fold cross-validation. We 
+    call the model using only molecular features
+    \textit{MolPred} and the model using only ontology-based
+    features \textit{OntoPred}. \name{} combines both types of
+    features.}
+\end{table}
+
+We trained, validated and finally tested all considered models on the
+STITCH dataset using a 5-fold cross-validation over a protein split;
+we then selected the best-performing models (with respect to
+$MicroAUC_p$, see Section \ref{sec:evaluation}), and retrain them from
+scratch in a 5-fold protein-split cross-validation on the Yamanishi
+benchmark dataset to avoid validation overfitting and yield more
+realistic testing results. To evaluate the influence of the different
+features separately, and to determine whether they ``localize'' on the
+PPI graph (and therefore can be exploited successfully by the graph
+neural networks), we train and evaluate models with different types of
+features, and with and without inclusion of the PPI graph,
+separately. We comparing the molecular (MolPred) and phenotype-based
+(OntoPred) prediction model, and a combination of both where we
+concatenate both types of features. Table \ref{tab:Results} shows the
+results of these experiments.
+
+We find that the model using ontology-based features
+(\textit{OntoPred}) is showing better performance on STITCH compared
+to using only molecular features. We also observe that only the model
+using ontology-based features results in increased performance when
+incorporating the PPI graph. This increase can be observed with
+different graph neural network architectures and configurations
+(Supplementary Table 2). While the {\em
+  GCNConv} and {\em GENConv} architecture already shows some minor
+improvement, the use of \textit{ResGraphConv} results in larger
+performance improvements.  {\em ResGraphConv} blocks add a large
+amount of additional learnable parameters to the network, leading to
+more expressive power. To test whether the observed improvement is due
+to the number of learnable parameters added or the result of better
+exploiting the information about PPIs, we experiment with a graph
+model in which all graph convolutional neural layers in the residual
+blocks are removed, resulting in a model with similar parameters but
+without the ability to use graph-based information. This pruned
+network, with no information on the protein--protein interactions,
+reached very similar results to the original \textit{OntoPred} model
+and showed no improvement (Supplementary Table 2).
+
+The improvements when including the graph are only provided by the
+\textit{GENConv} graph convolution scheme which includes the
+{\em ResGraphConv} blocks; \textit{GCNConv} and other graph
+convolutional methods fail to achieve any gain in comparison to the
+plain \textit{OntoPred} performance even when combined with the
+residual blocks. The discrepancy between {\em GENConv} and other graph
+convolutional methods may be the result of numerical instability and
+fading signals \cite{GENConv2020}.
+
+Our results demonstrate that the inclusion of graph information
+can increase performance when ontology-based features are used but not
+when molecular features are used alone. This observation allows us to
+conclude that information about protein functions localizes on the
+graph whereas molecular features do not.
+
+% despite predicting per protein is
+% rather counter-intuitive as there only limited drug-targets
+% \citep{Overington2006}, and thus novel drugs are more likely to arise
+% than novel targets. Yet, we aim to find all interacting drugs for
+% existing targets motivating our split choice even further.
+
+
+
+
+\subsection{Protein-centric evaluation}
+The goal of \name{} is to find candidate drugs that target a specific
+protein; however, so far, we do not evaluate this application but
+rather how \name{} would perform in finding plausible drug--target
+interactions among all possible interactions (since we use the
+MacroAUC as our main evaluation measure). This evaluation does not
+correspond to the application of \name{} in finding drugs that target a
+specific protein.  To provide a better estimate on how \name{} performs
+for individual protein targets, we use micro-averages between proteins
+and compute the \textit{MicroAUC} (see Section \ref{sec:evaluation});
+to determine {\em MicroAUC}, we average the performance (true and
+false positive rates) per protein instead of across all drug--protein
+pairs; the resulting measure can therefore better estimate how \name{}
+performs when tasked with finding a drug that targets a specific
+protein.
+
+% Note, that both $MicroAUC_p$ and $MicroAUC_d$, as introduced in the previous chapter, are applicable to all three kinds of splitting schemes, but $MicroAUC_p$ and $MicroAUC_d$ are most plausible and valuable for protein split and drug split, respectively. As we want to evaluate the models performance to find all suitable drugs for each protein individually, \textit{$MicroAUC_p$} seems to be more reasonable in comparison to both $MicroAUC_d$ and $AUROC$ with respect to the previously proposed protein split cross-validation. 
+
+
+% \subsection{Baseline model}
+Furthermore, we hypothesize that it may be possible for a machine
+learning model to exploit biases in drug--target interaction data to
+achieve relatively high prediction performance without obtaining a
+biologically meaningful signal.  For example, hub proteins may have a
+large number of interactions, or certain drugs interact with many
+proteins, and preferentially predicting these interactions may
+increase predictive performance even in the absence of any biological
+features.  To test this hypothesis, we design a ``na\"ive'' baseline
+model that predicts the same list of proteins for each drug based only
+on the number of known drug--target interactions for a
+protein. Specifically, given lists $D$ and $P$ of drugs and proteins
+and a set of known interactions $\mathcal{I} := \{(d_i, p_i) \}$, we
+construct an interaction matrix $M_{int}\in\{0,1\}^{|D|\times|P|}$
+with
+\begin{equation*}
+	M_{ij} = \begin{cases}
+		1 & \text{if } (d_i, p_j)\in \mathcal{I}\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+describing for all drug--protein pairs whether there is a known
+interaction or not. We now rank all proteins $p_j\in P$ descending by
+their number of drug interactors by summing over the columns of
+$M_{ij}$ and ranking these sums:
+\begin{equation*}
+	f: P \rightarrow \mathbb{N} \text{ with } f:p_j \mapsto \sum_{i=1}^{|D|}M_{ij}
+\end{equation*}
+Our ``na\"ive'' predictor $P_k$ predicts all drugs to interact with
+the top $k$ targets with respect to the introduced ranking:
+\begin{equation*}
+	P_k: D\times P \rightarrow \{0,1\} \text{ with } P_k: d_i, p_j \mapsto \begin{cases}
+		1 & \text{ if }p_j \in Top_{k}(P)\\
+		0 & otherwise
+	\end{cases}
+\end{equation*}
+with the only hyperparameter $k$.
+
+The prediction $P_k$ is not dependent on the drug $d_i$ and will
+predict the same ranked list of drugs for all proteins; consequently,
+this na\"ive predictor does not rely on any biological features and
+will not predict any novel information about interactions between
+drugs and proteins; the na\"ive predictor only exploits imbalances in
+the evaluation set to make predictions that may perform well.  The way
+in which we formulated the na\"ive predictor, it is not applicable for
+a protein split cross-validation as the number of interactions for
+each protein in the validation set is unknown.
+
+We apply this naive predictor on both the STITCH and Yamanishi
+datasets, using the full datasets as well as a 5-fold cross-validation
+over drugs and over drug--protein pairs to compare the prediction
+results directly to \name{}.  For each fold, we gradually increase $k$
+to determine the best performance for each fold. Using the full
+dataset, drug--target split, and drug split, we obtain the following
+MacroAUC results: for the STITCH database, we obtain a performance of
+$0.76$ on the whole dataset, $0.70$ for the drug--target pairs and
+$0.73$ in case of the drug splitting scheme; on the Yamanishi dataset,
+we obtain MacroAUC scores of $0.88$, $0.84$ and $0.85$, for the total
+dataset, drug--target pair and drug split, respectively.  The na\"ive
+predictor shows higher performance on the Yamanishi dataset than on
+STITCH, and a substantial gain in comparison to an expected random
+predictor on both datasets. In the following, we utilize this nai\"ve
+predictor as baseline to compare its performance to state of the art
+models and \name{}.
+
+For comparison with the state of the art methods, we chose the best
+performing methods for drug--target interaction prediction that were
+previously evaluated on the Yamanishi benchmark dataset. These methods
+include DTIGEMS+ \cite{DTIGEMS2020} and DTI-CDF \cite{DTI-CDF2019}
+which have showed superior results in comparison to numerous
+works. Furthermore, we added DTINet \cite{DTINet2017} as method for
+comparison which has been used to develop a number of methods such as
+NeoDTI \cite{NeoDTI2019} with similar methodology.
+
+We evaluate all models on their recommended splitting scheme choice,
+hyperparameters and folds in cross-validation, measuring their
+respective AUROC. We further evaluate each model by performing a
+protein-wise cross-validation determining the MacroAUC and
+$MicroAUC_p$. For this evaluation, we allow
+sub-sampling of negatives for the training process
+but not for the validation and testing phase as real world
+applications of these models would have to deal with possibly
+imbalanced data.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+    \hline
+    Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}\\
+    
+    &Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    Naive predictor&Drugs&$0.85$& --&--\\
+    DTINet&DP pairs&$0.91$&$0.74$&$0.67$ \\
+    DTIGEMS+&DP pairs&$\mathbf{0.93}$& $0.72$& $0.68$ \\
+    DTI-CDF&Proteins&$0.85$&$\mathbf{0.85}$&$0.79$\\
+    \name&Proteins&$0.84$&$0.84$&$\mathbf{0.84}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:comparison1} Comparison of \name{} with
+    state of the art drug--target interaction prediction methods on
+    the Yamanishi dataset; we evaluated the original and the
+    protein-based split in a cross-validation}.
+\end{table}
+
+The results of our experiments are summarized in Table
+\ref{tab:comparison1}; we calculated the performance of all compared
+methods over their original splitting scheme and over a protein
+split. We find that there is a large difference in performance when
+evaluating over a drug--target pair split compared to a protein split,
+with generally higher performance achieved when using the drug--target
+pair split.  Second, when evaluating the same methods over a protein
+split, we find a substantial performance difference in comparison to
+the splitting scheme used in the original evaluation of each
+method. DTI-CDF was originally evaluated on all three splitting
+schemes underlining this point \cite{DTI-CDF2019}. While \name{} provides
+comparable performance to the na\"ive predictor and DTI-CDF in terms
+of MacroAUC, it yields considerably better results with respect to
+$\textrm{MicroAUC}_p$. We also find that methods that are trained
+using a protein split generally result in higher $\textrm{MicroAUC}_p$
+than methods trained using a drug--target pair split, indicating that
+they may generalize better to unseen protein targets whereas methods
+trained on a drug--target split potentially exploit hidden biases and
+therefore generalize less well.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+    \hline
+    Approach&Original&Original scheme&\multicolumn{2}{c|}{Protein split}\\
+    
+    &Splitting scheme&Macro AUC&Macro AUC&Micro $AUC_p$\\
+    \hline
+    Naive predictor&DP pairs&$0.79$&-- &--\\
+    DeepDTI&Drugs&$0.88$&$0.76$&$0.70$\\
+    DeepDTA&DP pairs&$0.88$&$0.77$&$0.69$\\
+    DeepConv-DTI&DP pairs&$0.88$&$0.76$&$0.73$\\
+    MolTrans&DP pairs&$\mathbf{0.90}$&$0.77$&$0.74$\\
+    \name&Proteins&0.85 & $\mathbf{0.85}$& $\mathbf{0.82}$\\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:comparison2} Comparison of \name{} with
+    state of the art drug--target interaction prediction methods
+    on the BioSnap dataset; we evaluated the original and the
+    protein-based split in a cross-validation.}.
+\end{table}
+
+
+As the difference in performance with different splitting schemes is
+quite large, we further evaluated additional drug--target interaction
+and drug--target affinity prediction methods that were trained and
+evaluated on other datasets. Following the results of MolTrans
+\cite{MolTrans2020}, we reevaluated DeepDTI \cite{DeepDTI2017},
+DeepDTA \cite{DeepDTA2018}, DeepConv-DTI \cite{DeepConvDTI2019}, and
+MolTrans itself on the BioSnap dataset \cite{BioSnap2018} and compared
+it to our ``na\"ive'' predictor as well as \name{} (see Table
+\ref{tab:comparison2}).  MolTrans was evaluated over the drug--target
+pair and the protein split; we were able to reproduce the MolTrans
+results (Table \ref{tab:comparison2}), showing a substantial
+difference based on the splitting scheme. We additionally computed the
+$MicroAUC_p$ score for all considered methods, leading to similar
+results as observed on the Yaminishi dataset. We test whether \name{}
+performs better than the methods we compare against or whether the
+observed values for $MicroAUC_p$ and $MacroAUC$ fall within expected
+variant; we use a one-tailed T-test with Bonferroni correction for
+this test.
+
+Considering Macro AUCs, \name{} improves significantly ($p<10^{-4}$,
+one-sided t-test) over MolTrans ($t=36.6$), DeepDTI ($t=40.5$),
+DeepDTA ($t=36.6$), and DeepConv-DTI ($t=40.5$) on the BioSnap
+dataset, and significantly ($p<10^{-4}$, one-sided t-test) over DTINet
+($t=20.8$) and DTIGEMS+ ($t=18.0$) on the Yamanishi dataset; DTI-CDF
+performs better than \name{} ($p=0.1, t=1.3$, one-sided t-test).  We further
+perform another one-tailed t-test to compare $MicroAUC_p$
+performance. We find that \name{} improves significantly
+($p < 10^{-4}$) over MolTrans($t=21.2$), DeepDTI ($t=31.0$), DeepDTA
+($t=33.4$), and DeepConv-DTI ($t=23.7$) on the BioSnap dataset, and
+over DTINet ($t=29.6$), DTIGEMS+ ($t=28.0$), and DTI-CDF ($t=9.5$) on
+the Yamanishi dataset.
+
+In all our experiments, \name{} improves over all other methods with
+respect to $MicroAUC_p$, demonstrating that \name{} can identify drugs
+that target a specific protein more accurately than other
+methods. Some methods achieve a higher MacroAUC than \name{}, in
+particular when evaluated using a drug--target pair splitting scheme;
+our results with the ``na\"ive'' prediction method show that it may be
+possible that models trained on a drug--target split utilize certain
+biases in the dataset without necessarily producing novel biological
+insights.
+
+\section{Discussion}
+
+\subsection{``Bottom-up'' and ``top-down'' prediction of drug-target interactions}
+
+There are many computational methods to predict drug--target
+interactions. They can broadly be grouped in two types; the first,
+which we refer to as ``bottom-up'' approaches, start from molecular
+information about a drug and protein and predict an interaction based
+on their molecular properties; the second, which we refer to as
+``top-down'' approaches, start from observable characteristics of an
+organism and infer drug--target interactions as the putative molecular
+mechanisms that explain these observations.
+
+Another view on these two approaches is as direct and indirect ways to
+predict drug--target interactions. On one hand, molecular information can be used
+to directly determine whether two molecules (such as a drug and
+protein) have the ability to interact, whereas information about
+phenotypic consequences of a drug (drug effects) or disruption of a
+protein function can be used to indirectly suggest candidate
+drug--target interactions. Molecular features will be specific to a
+drug--target pair and we would not expect this information to
+propagate through a protein--protein interaction network; the main
+information about drug--target interactions that could be obtained
+from interactions between proteins is information about binding sites
+between proteins that may also be used by a drug molecule (i.e.,
+information that protein $P_1$ binds to protein $P_2$ reveals
+information about the molecular structures of both $P_1$ and
+$P_2$). On the other hand, phenotypic consequences of changes in
+protein function, or drug effects, are often a result of aberrant
+pathway or network activity and involve more than one protein;
+consequently, we expect these features to benefit more from including
+information about protein--protein interactions. Our results (Table
+\ref{tab:Results}) confirm this hypothesis and demonstrate that
+molecular features do not benefit from including the interaction
+network whereas the indirect, top-down features benefit from the
+propagation over the interaction network.
+
+% \todo[inline]{Methods:}
+% Through the very nature of the graph convolutional neural network, we
+% build the transformed representation for all proteins in every
+% forwarding step of the model. Note particularly, that the same
+% convolutional filter and weight matrix are applied to and learned for
+% all nodes simultaneously. By construction, for a single drug we can
+% compute and predict all its interactors in a single run of the model,
+% leading to significantly less computing time.
+
+There are other types of indirect features that could be added to our
+model. A common feature that may be added are drug indications which
+are predictive of drug--target interactions \cite{Gottlieb2011}.
+However, we do not include them in our model as including drug
+indications would allow our model to make many trivial predictions
+based only on remembering which targets are often used for which
+indication; including network information would likely benefit
+predictions based on drug indications because different drugs may
+target the same pathway through different mechanisms.
+
+Combining bottom-up and top-down approaches in a single model can
+follow different strategies. Interaction networks are used widely to
+determine indirect effects of molecular changes and predict
+drug--target interactions \cite{LotfiShahreza2017}. Our work relies on
+graph neural networks as a way to combine qualitative information
+about interactions with additional features (molecular interaction,
+phenotypic and functional features); even if only some of these
+features benefit from the information the graph provides, graph neural
+networks will allow further extension of our model with additional
+features in the future.
+
+% Graph neural networks \cite{} have the ability to
+% represent interaction networks 
+
+% we built protein function and ontology based features based on DL2vec
+
+% Ontology derived protein function focused features are highly predictive for dtis
+
+% We built a versatile template for various features to test localization on the PPI graph
+
+% normal GCNs don't work on PPI graph, as it is highly connected $\rightarrow$ needs stronger more expressive aggregation function $\rightarrow$ GENConv in residual blocks for better numerical stability
+
+
+% molecular features work for all (most?) drugs, top-down features only
+% for those that have a side-effect profile
+
+% \begin{itemize}
+% 	\item \name{} comparison to other approaches on BioSnap prone to bias, as $ BioSnap: drugs 
+% 	\times prots = 5500 \times 3000 $, while only 
+% 	$\approx$ 1000 drugs have Sider Annotation, and 
+% \end{itemize}
+
+
+\subsection{The challenge of evaluating drug--target interaction
+  predictions}
+
+%\todo[inline]{Why is having only having 20\% of drugs reasonable -> significance test in results}
+One major component of our experiments was to determine how the
+information that is available to a machine learning model during
+training affects the performance of the model. Similarly to previous
+work \cite{MolTrans2020, DeepConvDTI2019}, we find significant
+differences in predictive performance across different splitting
+schemes.
+
+The most common scheme for drug--target interaction prediction is the
+split over drug-target pairs \cite{Survey2018} where it may happen
+that most drugs and targets that are including in the model's
+validation and testing phase have also been included in the training
+phase (as part of other drug--target pairs). This scheme is prone to a
+number of biases. If the number of interactions for a drug or protein
+are imbalanced, i.e., some drugs or proteins have many more
+interactions than others, these will be seen more often during
+training and they will likely also have more interactions in the
+testing and validation sets; because some entities have more
+interactions, i.e., they are more likely to interact, any model that
+preferentially predicts these as interaction partners will improve its
+predictive performance. While this accurately captures the
+distribution, predicting based on biases in the number of interaction
+partners is not desirable when applying the model to novel
+entities. We have demonstrated that even a ``na\"ive'' classifier that
+makes predictions only by exploiting the imbalanced number of
+interaction partners can achieve performance close to state of the art
+methods (when measuring Macro AUC). When training a machine learning
+model on such imbalanced data, it will eventually overfit to this
+imbalance.  Splitting by entity (protein or drug) can reduce the
+impact of this spurious correlation but not reduce it entirely,
+because similar entities will still exhibit similar interaction
+patterns. In our experiments, we observed the impact of splitting
+training and evaluation sets by protein as a decrease in overall
+performance (Macro AUC), providing some evidence that models trained
+using this splitting scheme are less sensitive to overfitting to this
+type of bias.
+
+The way in which training and evaluation data is generated is related
+to how the model is evaluated. An evaluation based on Macro AUC
+evaluated the application scenario where a set of drugs and proteins
+are given, and out of all possible pairs, the more likely interactions
+need to be identified. However, this does not correspond to most
+scenarios for drug repurposing where a drug that targets a {\em
+  specific} protein (e.g., a protein involved in a disease) needs to
+be identified. We use an evaluation measure based on micro-averages
+per protein (Micro AUC$_p$) to evaluate this scenario, and we often
+find substantial differences in predictive performance when evaluating
+with Macro AUC and Micro AUC$_p$; generally, models that are trained
+using a split over drug--target pairs perform worse in Micro AUC$_p$
+than models that use a protein-based split, further providing evidence
+that a drug--target split results in overfitting to dataset biases.
+
+Finally, a potential source of differences in model performance is how
+negatives are identified and treated during evaluation (and
+training). There are few large sets of validated negative drug--target
+interactions; consequently, many models (including \name{}) use all
+unknown interactions as negatives. As there are many more negative
+than positive interactions, negatives are then sub-sampled during
+training resulting in a training set that is balanced between
+positives and negatives (or a certain ratio is preserved). While this
+is a reasonable strategy to deal with imbalanced data, it may be
+problematic when the same sub-sampling is applied on the model's
+evaluation set because it over-simplifies the evaluation process. The
+performance differences is not usually visible when using ROC curves
+but results in unrealistically high precision and therefore high area
+under a precision-recall curve.
+
+In summary, drug--target interaction prediction is not a single
+computational problem in bioinformatics but a set of related
+problems. Let $P$ be a set of proteins $P$ and $D$ a set of drugs; one
+task can be to identify arbitrary pairs $(p,d)$ with $p \in P$ and
+$d \in D$ that interact, another to identify a set of interacting
+drugs for each $p \in P$, and yet another to identify a set of
+proteins for each drug $d \in D$. The first task may be useful when no
+particular drug or protein is considered; the second task when
+searching for a drug that targets a specific (disease-associated)
+protein; and the third when aiming to find new applications for a
+given drug. The first task would best be evaluated using a Macro AUC,
+the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
+
+% The second most prevalent arrangement is the split
+% over drugs, while only close to none is aiming on a protein split.
+% However, the first and second splitting scheme are exposed to the
+% first dataset bias and are hence more likely vulnerable to
+% transductive inference by just predicting recently seen structures,
+% rather than implementing inductive inference and generalizing over the
+% drug representations. Second, these two strategies are more
+% susceptible to the second bias, as only in these cases the model may
+% overfit on the number of existing interactions for a single protein,
+% while in the third scheme the number of interactions of the test
+% proteins is entirely unknown during training process.
+
+% We designed a
+% na\"ive predictor and find that it can achieve a performance only
+% slightly below state of the art drug--target prediction methods. We
+% investigated this finding further and
+
+% In the presence of imbalanced 
+
+% Only few other methods perform their split over proteins \citep{Survey2018}, DTI-CDF does it
+
+% Running split over proteins is harder than, drug and drug protein pair split (see below table)
+
+% this applies for both DTI prediction and drug target affinity prediction (and Saras gene-disease association)
+
+% Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+
+% microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+
+
+
+
+% \todo[inline]{Likely discussion:}
+% The aim of \name is to predict candidate drugs that target a given
+% protein; the challenge is to develop a training and evaluation scheme
+% that does not simply overfit to the inherent biases in training and
+% testing data.
+% In general, when performing cross-validation for DTI prediction, the
+% options are to split over 
+% \begin{enumerate}
+% 	\item split over drugs,
+% 	\item split over drug--target pairs, or
+% 	\item split over proteins
+% \end{enumerate}
+% where the first and third option concern splitting drugs and proteins,
+% respectively, into train, validation and test sets, and arranging the
+% corresponding drug-target interactions. They ensure that at least
+% parts of the interactions are not seen during training and evaluate
+% either how well targets are predicted for unseen drugs or unseen
+% proteins. Hereby, different training and prediction schemes lead to
+% divergent expressiveness of the resulting model.
+
+% A naive predictor (ranking proteins) and predict each drug similarly
+% achieves cutting edge performance ($87.5$ AUROC for whole dataset,
+% $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No
+% prot focused microAUC possible. $\rightarrow$ hub proteins
+
+% Yamanishi Dataset is only partially suitable for comparing results, if
+% everybody just derives a suitable subset (DTIGEMS)
+
+% This also applies to drug target affinity prediction. We were hereby
+% able to roughly reproduce the results from MolTrans (Bioinformatics)
+% on BioSnap
+
+
+% %\subsection{Features to use in predicting drug targets}
+
+
+%\todo[inline]{Discussion:}
+% The lack of stratification, only impacts the not
+% considered area under precision recall curve (AUPRC) and not the Macro
+% AUROC score, while also supporting the expressiveness of $MicroAUC_p$
+% with more data points.
+
+
+
+%\subsection{\name identifies drugs that target a protein}
+
+
+
+% \todo[inline]{Likely discussion:}
+% Assuming a hypothetical, perfectly generalizing model built upon an
+% unbiased dataset, this very model would yield similar performances for
+% all three , not overfitting on the known
+% structures. On the other hand, for a hypothetical entirely overfitting
+% model, trained on a highly biased dataset, this model would show
+% substantial deviations from the original performance over another
+% split.
+
+% \todo[inline]{Likely discussion:}
+% We emphasize, that all real-world models are prone to some sort of
+% overfitting, and unknown, deviant entities in both validation and
+% testing set will likely lead to some sort of performance gap for
+% relevant metrics. However, a large disparity may hint the biases
+% stated above.
+
+
+
+\section{Conclusions}
+
+We developed \name{} as a machine learning model that combines
+molecular features and functional information with an interaction
+network using graph neural networks to predict drugs that may target
+specific proteins. In this task, \name{} improves over several state
+of the art methods. We demonstrated that functional and phenotypic
+information localizes on the interaction network whereas molecular
+information does not. Moreover, we showed that drug--target
+interaction prediction datasets have some inherent biases that affect
+the performance of models. This led us to conclude that drug--target
+interaction prediction is not a single computational problem but a set
+of multiple problems. Experimental evaluation of drug--target
+interaction prediction methods must be carefully designed to reflect
+the problem the model aims to solve, and the interpretation of
+performance results should be aligned with the specific problem.
+
+
+
+
+% \subsection{Deification of our method}
+% \begin{itemize}
+% 	\item all AUROC in \% AUROC score on STITCH
+	
+% 	\begin{tabular}{|l|r|r|}
+% 		\hline
+% 		DNNT model&Without graph model&With graph model\\
+% 		\hline
+% 		MolPred&$69$&$69$\\
+% 		PhenomeNETPred&$88$&$92$\\
+% 		\hline
+% 		MolPred + PhenomeNETPred & $89$ & $93$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item microAUC for MolPred + PhenomeNETPred on graph is about $93+-$
+% 	\item and on yamanishi dataset
+	
+% 	\begin{tabular}{|l|r|r|}
+% 		\hline
+% 		DNNT model&Without graph model&With graph model\\
+% 		\hline
+% 		PhenomeNETPred&$83$&$84$\\
+% 		\hline
+% 		MolPred + PhenomeNETPred & $83$ & $84.5$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item MicroAUC is about $83$
+% \end{itemize}
+
+% \subsection{How to insult other methods}
+% \begin{itemize}
+% 	\item Stratified Cross validation is suitable for training, but \textbf{NOT} for validating and testing (Uselessly high AUPRC)
+% 	\item microAUC is a superior and more intuitive metric for drug repurposing $\rightarrow$ why for each protein and not for each drug
+	
+% 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
+% 		\hline
+% 		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+% 		\hline
+% 		DTINet&DP pairs&$91$&$84.1$&$67.2$\\
+% 		DTIGEMS+&DP pairs&$93$& $72.2$& $67.8$ \\
+% 		DTI-CDF&Proteins&$83$&$83$&$79$\\
+% 		\hline
+% 	\end{tabular}
+% 	\item A naive predictor (ranking proteins) and predict each drug similarly achieves cutting edge performance ($87.5$ AUROC for whole dataset, $85.5$ for 5-fold cross validation in drug-split) $\rightarrow$ No prot focused microAUC possible. $\rightarrow$ hub proteins
+% 	\item Yamanishi Dataset is only partially suitable \todo{for
+%             comparing results}, if everybody just derives a suitable subset (DTIGEMS)
+% 	\item This also applies to drug target affinity prediction. We were hereby able to roughly reproduce the results from MolTrans (Bioinformatics) on BioSnap
+
+% \end{itemize}
+
+% \begin{figure}[!tpb]%figure1
+% 	\begin{tabular}{|l|p{1cm}|p{1cm}|p{1cm}|r|}
+% 		\hline
+% 		Approach&Splitting scheme&Original AUROC score&Protein split AUROC&MicroAUC\\
+% 		\hline
+% 		DeepDTI&Drugs&$87.6$&$75.9$&$70.1$\\
+% 		DeepDTA&DP pairs&87.6&$76.7$&$69.4$\\
+% 		DeepConv-DTI&DP pairs&88.3&$76.6$&$73.0$\\
+% 		MolTrans&DP pairs&89.5&$77.0$&$74.0$\\
+		
+% 		\hline
+% 	\end{tabular}
+% \end{figure}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     please remove the " % " symbol from \centerline{\includegraphics{fig01.eps}}
+%     as it may ignore the figures.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+\section*{Acknowledgements}
+We acknowledge the use of computational resources from the 
+KAUST Supercomputing Core Laboratory.
+
+\section*{Funding}
+
+This work was supported by funding from King Abdullah University of
+Science and Technology (KAUST) Office of Sponsored Research (OSR)
+under Award No. URF/1/3790-01-01 and URF/1/4355-01-01.
+
+%\bibliographystyle{natbib}
+%\bibliographystyle{achemnat}
+%\bibliographystyle{plainnat}
+%\bibliographystyle{abbrv}
+%\bibliographystyle{bioinformatics}
+%
+%\bibliographystyle{plain}
+%
+\bibliography{citations}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
