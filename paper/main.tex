@@ -877,26 +877,21 @@ pair and the protein split; we were able to reproduce the MolTrans
 results (Table \ref{tab:comparison2}), showing a substantial
 difference based on the splitting scheme. We additionally computed the
 $MicroAUC_p$ score for all considered methods, leading to similar
-results as observed on the Yaminishi dataset. As \name{} considers
-less drugs than alternative approaches, we execute a one-tailed T-test
-with $\alpha=0.01$ over all considered methods. Considering Macro
-AUCs, \name{} improves significantly ($p<10^{-4}$, one-sided t-test)
-over MolTrans ($t=36.6$), DeepDTI ($t=40.5$), DeepDTA ($t=36.6$), and
-DeepConv-DTI ($t=40.5$) on the BioSnap dataset, and significantly
-($p<10^{-4}$, one-sided t-test) over DTINet ($t=20.8$) and DTIGEMS+
-($t=18.0$) on the Yamanishi dataset; DTI-CDF performs significantly
-better than \name{} ($p=0.02$, one-sided t-test). % As
-                                % we compare \name{} to 4 different
-                                % methods over BioSnap and 3 over
-                                % Yamanishi dataset, we add a
-                                % Bonferroni correction by multiplying
-                                % the $p$-values by 4 and 3,
-                                % respectively, leading to $p<0.0002$
-                                % ($\alpha=0.01$) for all previous
-                                % comparisons except DTI-CDF.
-We further perform another one-tailed t-test to compare $MicroAUC_p$
-performance. We find that \name{} improved significantly ($p <
-10^{-4}$) over MolTrans($t=21.2$), DeepDTI ($t=31.0$), DeepDTA
+results as observed on the Yaminishi dataset. We test whether \name{}
+performs better than the methods we compare against or whether the
+observed values for $MicroAUC_p$ and $MacroAUC$ fall within expected
+variant; we use a one-tailed T-test with Bonferroni correction for
+this test.
+
+Considering Macro AUCs, \name{} improves significantly ($p<10^{-4}$,
+one-sided t-test) over MolTrans ($t=36.6$), DeepDTI ($t=40.5$),
+DeepDTA ($t=36.6$), and DeepConv-DTI ($t=40.5$) on the BioSnap
+dataset, and significantly ($p<10^{-4}$, one-sided t-test) over DTINet
+($t=20.8$) and DTIGEMS+ ($t=18.0$) on the Yamanishi dataset; DTI-CDF
+performs significantly better than \name{} ($p=0.02$, one-sided
+t-test).  We further perform another one-tailed t-test to compare
+$MicroAUC_p$ performance. We find that \name{} improved significantly
+($p < 10^{-4}$) over MolTrans($t=21.2$), DeepDTI ($t=31.0$), DeepDTA
 ($t=33.4$), and DeepConv-DTI ($t=23.7$) on the BioSnap dataset, and
 over DTINet ($t=29.6$), DTIGEMS+ ($t=28.0$), and DTI-CDF ($t=9.5$) on
 the Yamanishi dataset.
