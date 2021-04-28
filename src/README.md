@@ -12,18 +12,18 @@ python DTI_data_preparation.py
 ```
 The command will output 4 commands for DL2vec to execute. Please run each of them in `src/DL2vec/`. Each of them takes about 2 hours on 16 cores and 50GB RAM.
 
-To run `DeepGOPlus`, switch to `results/protein_representation`, make sure to have `blastp` and `diamond` installed and run 
+To run `DeepGOPlus`, switch to `models/protein_representation`, make sure to have `blastp` and `diamond` installed, and run 
 ```
 wget http://deepgoplus.bio2vec.net/data/data.tar.gz -P data/
 ```
-and unpack the directory. If this is now available, use the more bloated `https://deepgo.cbrc.kaust.edu.sa/data/data-2016.tar.gz`
+and unpack the directory. If this is not available, use the more bloated `https://deepgo.cbrc.kaust.edu.sa/data/data-2016.tar.gz`
 Then run
 ```
 source predict.sh data/PPI_graph_protein_seqs.fasta results/output
 ```
 Refer to [DeepGOPlus documentation](https://github.com/bio-ontology-research-group/deepgoplus) for more in-depth information.
 
-Now run the following commands after installing the required packages to build the drug molecular features.
+Now run the following commands after installing the required packages to build the drug-side molecular features.
 ```
 python molecular_predictor.py --compute_embeddings
 ```
