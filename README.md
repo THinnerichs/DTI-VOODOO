@@ -1,4 +1,6 @@
-# DTI-Voodoo
+# DTI-Voodoo: 
+### Machine learning over interaction networks and ontology-based background knowledge predicts drug--target interactions
+
 **Motivation:** *In silico* drug--target
   interaction (DTI) prediction is important for drug discovery and
   drug repurposing.  Approaches to predict DTIs can proceed
