@@ -45,8 +45,8 @@ class HPODTIDataBuilder:
 
         if config.yamanishi_test or config.biosnap_test:
             self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
-            print("Loading Yamanishi data ...")
             if config.yamanishi_test:
+                print("Loading Yamanishi data ...")
                 self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
             elif config.biosnap_test:
                 self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_BioSnap_data(self.drug_list, self.protein_list)
@@ -74,15 +74,13 @@ class HPODTIDataBuilder:
     def build_data(self, config):
 
         # DTI data
-        if not config.yamanishi_test and not config.biosnap_test:
+        if not config.yamanishi_test:
             print("Loading DTI links ...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
                                                        mode=config.mode)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
-        print(self.y_dti_data.shape, self.y_dti_data.sum())
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
-        epsilon = 0.00001
 
         DL2vec_path_prefix = '../data/PhenomeNET_data/'
         drug_indication_prefix = '../data/drug_indications/'
@@ -316,12 +314,6 @@ def siamese_drug_protein_network(config):
 
         optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
 
-        # storing best results
-        best_loss = math.inf
-        best_test_loss = math.inf
-        best_epoch = -1
-        best_test_ci = 0
-
         # model_file_name = '../models/' + model_st + '_' + config.node_features + '_' + str(
             # config.num_proteins) + '_fold_' + str(fold) + '_model.model'
 
@@ -342,64 +334,26 @@ def siamese_drug_protein_network(config):
                           metrics.accuracy_score(train_labels, train_predictions.round()),
                           dti_utils.dti_auroc(train_labels, train_predictions),
                           dti_utils.micro_AUC_per_prot(train_labels, train_predictions, config.num_drugs),
+                          metrics.average_precision_score(train_labels, train_predictions),
                           dti_utils.dti_f1_score(train_labels, train_predictions.round()),
-                          dti_utils.dti_mcc(train_labels, train_predictions.round()), file=f)
+                          dti_utils.dti_mcc(train_labels, train_predictions.round()))#@TODO, file=f)
 
                     test_labels, test_predictions = predicting(model, device, test_loader)
                     print('Test: Acc, ROC_AUC, MicroAUC, f1, matthews_corrcoef',
                           metrics.accuracy_score(test_labels, test_predictions.round()),
                           dti_utils.dti_auroc(test_labels, test_predictions),
                           dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs),
+                          metrics.average_precision_score(test_labels, test_predictions),
                           dti_utils.dti_f1_score(test_labels, test_predictions.round()),
-                          dti_utils.dti_mcc(test_labels, test_predictions.round()), file=f)
-
+                          dti_utils.dti_mcc(test_labels, test_predictions.round()))#@TODO, file=f)
 
                     test_AUROC = dti_utils.micro_AUC_per_prot(test_labels, test_predictions, config.num_drugs)
 
                     if test_AUROC > best_AUROC:
+                        print('New best test MicroAUC:', test_AUROC)
                         state_dict_path = '../models/HPO_models/hpo_pred_fold_'+str(fold)+'_model'
                         torch.save(model.state_dict(), state_dict_path)
             sys.stdout.flush()
-
-        return
-
-        print('Build overall data...')
-        sys.stdout.flush()
-        overall_dataset = dti_data.get(np.arange(dti_data.num_drugs * dti_data.num_proteins))
-        overall_dataloader = data.DataLoader(overall_dataset, batch_size=config.batch_size)
-
-        print('Predicting...')
-        sys.stdout.flush()
-        labels, predictions = predicting(model, device, overall_dataloader)
-        filename = '../models/protein_function_predictor/pred_fold_'+str(fold)
-        with open(file=filename+'.pkl', mode='wb') as f:
-            pickle.dump(predictions, f, pickle.HIGHEST_PROTOCOL)
-
-
-        model_filename = '../models/protein_function_predictor/prot_func_pred_'+ (config.model_id +'_' if config.model_id else '') + 'model_fold_'+str(fold)+'.model'
-        torch.save(model.state_dict(), model_filename)
-        print("Done.")
-        sys.stdout.flush()
-
-        results.append(ret)
-
-    return
-
-    results = np.array(results)
-    results = [(results[:, i].mean(), results[:, i].std()) for i in range(results.shape[1])]
-
-    results_file_name = '../results/protein_function_model' + '_'+ (config.model_id +'_' if config.model_id else '') + str(config.num_proteins) + '_model_results'
-
-    print('Overall Results:')
-    print('Model\tacc\tauroc\tf1\tmatt')
-    print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)))
-
-    with open(results_file_name, 'a') as f:
-        print('Model\tacc\tauroc\tf1\tmatt', file=f, end='\n')
-        print(model_st + '\t' + str(config.num_proteins) + '\t' + '\t'.join(map(str, results)), file=f, end='\n')
-
-    print("Done.")
-    sys.stdout.flush()
 
 if __name__ == '__main__':
     # Add parser arguments

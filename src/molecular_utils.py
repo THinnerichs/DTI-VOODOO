@@ -177,10 +177,7 @@ def train(config, model, device, train_loader, optimizer, epoch, neg_to_pos_rati
         labels = labels.float().to(device)
         output = model(features)
 
-        weight_vec = torch.ones([1]) * neg_to_pos_ratio
-
-        # loss = nn.BCEWithLogitsLoss(pos_weight=weight_vec.to(output.device))(output, labels.view(-1, 1))
-        loss = BCELoss_ClassWeights(input=output, target=labels.view(-1,1), pos_weight=neg_to_pos_ratio/10)
+        loss = BCELoss_ClassWeights(input=output, target=labels.view(-1,1), pos_weight=neg_to_pos_ratio)
         loss = loss /(config.num_proteins * config.num_drugs)
         return_loss += loss
         loss.backward()

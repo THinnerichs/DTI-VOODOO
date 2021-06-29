@@ -211,7 +211,7 @@ def get_DTIs(drug_list,
              mode=''):
     DTI_graph = get_human_DTI_graph(mode=mode)
 
-    y_data = np.zeros(len(drug_list)*len(protein_list))
+    y_data = np.zeros((len(drug_list), len(protein_list)))
 
     for i in range(len(protein_list)):
         protein = protein_list[i]
@@ -407,7 +407,7 @@ def get_yamanishi_data(original_drug_list, original_protein_list):
     return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices,:][:, protein_indices]
 
 def get_BioSnap_data(original_drug_list, original_protein_list):
-    path = '../data/BioSnap_data/'
+    path = 'data/BioSnap_data/'
 
     drug_list = []
     protein_list = []
@@ -455,86 +455,37 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
     drug_list = list(map(lambda d: drug_mapping.get(d, None), drug_list))
     protein_list = list(map(lambda p: protein_mapping.get(p, None), protein_list))
 
-    drug_indices = list(set([drug_list.index(drug) for drug in drug_list if drug in original_drug_list]))
-    protein_indices = list(set([protein_list.index(protein) for protein in protein_list if protein in original_protein_list]))
+    drug_indices = list(set([i for i, drug in enumerate(drug_list) if drug in original_drug_list]))
+    protein_indices = list(set([i for i, protein in enumerate(protein_list) if protein in original_protein_list]))
+
 
     drug_list = np.array(drug_list)
     protein_list = np.array(protein_list)
 
     return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices, :][:, protein_indices]
 
-def test():
-    # print("DTI", len(get_human_proteins()))
-    # print("PPI", len(PPI_utils.get_human_protein_list()))
-
-    dti_graph = get_human_DTI_graph()
-    print(len(dti_graph.nodes()))
-    print(len(dti_graph.edges()))
-
-    ppi_graph = PPI_utils.get_PPI_graph()
-    print(len(set(dti_graph.nodes()) & set(ppi_graph.nodes())))
-
 
 if __name__ == '__main__':
+    DDI_utils.write_chemical_stereo_to_normal_mapping()
+    DDI_utils.write_STITCH_db_Pubchem_mapping_dict()
 
-    parser = argparse.ArgumentParser()
+    PPI_utils.prune_protein_protein_db(min_score=700, mode='')
+    PPI_utils.write_PPI_graph(700)
 
-    parser.add_argument("--mode", type=str, default='')
+    PhenomeNET_DL2vec_utils.write_UMLS_NET_files()
+    PhenomeNET_DL2vec_utils.write_PhenomeNET_files('drug')
+    PhenomeNET_DL2vec_utils.write_PhenomeNET_files('GO')
+    PhenomeNET_DL2vec_utils.write_PhenomeNET_files('uberon')
+    PhenomeNET_DL2vec_utils.write_PhenomeNET_files('MP')
 
-    config = parser.parse_args()
+    write_human_DTI_graph(700, mode='database')
 
-    mode=config.mode
-    # write_human_DTI_graph(300, mode='experimental')
-    # write_human_DTI_graph(500, mode='experimental')
-    # write_human_DTI_graph(700, mode=mode)
-
-    # dti_graph = get_human_DTI_graph()
-    # print("Nodes", len(dti_graph.nodes()))
-    # print("Edges", len(dti_graph.edges()))
-
-    # drug_list = get_drug_list()
-    # print('Drugs:', len(drug_list))
-
-    write_human_protein_list(mode=mode)
-
-
-    # write_truncated_drug_to_SMILES_dict()
-    # get_truncated_drug_to_SMILES_dict()
-
-    # protein_list = get_human_proteins()
-    # PPI_utils.write_protein_fasta(protein_list=protein_list)
+    print('\n----------')
+    print('Execute the following commands in src/DL2vec/ with your CPU core amount as workers. This might take some time.')
+    PhenomeNET_DL2vec_utils.output_example_DL2vec_command(prefix='drug')
+    PhenomeNET_DL2vec_utils.output_example_DL2vec_command(prefix='GO')
+    PhenomeNET_DL2vec_utils.output_example_DL2vec_command(prefix='MP')
+    PhenomeNET_DL2vec_utils.output_example_DL2vec_command(prefix='uberon')
 
 
-    # test()
 
-    # write_human_protein_list()
-    # print('num_proteins', len(get_human_proteins()))
-
-    # print(get_annotated_PPI_graph())
-
-    # write_drug_to_HMM_filtered_targets_dict()
-
-
-    '''
-    drug_list = get_drug_list()
-    protein_list = get_human_proteins()
-    print(len(drug_list), len(protein_list))
-
-    print('Fetching drughub data...')
-    drughub_drug_list = PPI_utils.get_drughub_drug_list()
-    drughub_protein_list = PPI_utils.get_drughub_protein_list()
-    print(len(drughub_drug_list), len(drughub_protein_list))
-
-    drug_intersect = set(drug_list) & set(drughub_drug_list)
-    protein_intersect = set(protein_list) & set(drughub_protein_list)
-    '''
-
-    # write_human_prot_func_protein_list(mode=mode)
-    write_human_PhenomeNET_proteins(mode=mode)
-    # dicki = get_human_prot_func_proteins()
-    # print('num_proteins', len(dicki))
-
-    print('drugs', len(get_drug_list(mode=mode)))
-    print('prots', len(get_human_PhenomeNET_proteins()))
-
-    pass

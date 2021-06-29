@@ -1,0 +1,38 @@
+Dear Editor,
+
+Please find our manuscript entitled "DTI-Voodoo: machine learning over
+interaction networks and ontology-based background knowledge predicts
+drug--target interactions" for your consideration.
+
+DTI-Voodoo is a novel method for drug--target interaction (DTI)
+prediction utilizing both ontology-based information about phenotypic
+effects of drugs (side effects), and molecular features that encode
+for interactions between drugs and proteins. We compare DTI-Voodoo to
+seven state of the art DTI prediction methods on two datasets, and
+significantly improve over all of them in our evaluation.
+
+More importantly, we explore several novel aspects of DTI prediction
+tasks. First, we identify, analyze, and correct for inherent biases in
+drug--target interaction prediction datasets; we propose a "naive"
+classifier which does not make predictions based on any biological
+information and predicts the same ranked list of drugs or each
+protein, and which achieves performance similar to state of the art
+methods.
+
+Second, DTI-Voodoo combines indirect information such as side effects
+and molecular properties of both drugs and proteins in a novel way
+using an interaction network. Using this network, we demonstrate that
+only side effect information "localizes" on the interaction network
+(i.e., side effects are enriched on modules of interacting proteins),
+whereas molecular features do not benefit from graph-based
+information.
+
+We believe that our results, as well as the novel methods we
+introduced in developing DTI-Voodoo, makes our manuscript very
+suitable for the readers of Bioinformatics.
+
+Please do not hesitate to contact us should you require any further
+information.
+
+With best wishes,
+Tilman Hinnerichs and Robert Hoehndorf.

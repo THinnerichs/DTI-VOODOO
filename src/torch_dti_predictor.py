@@ -205,8 +205,6 @@ if __name__ == '__main__':
 
     parser.add_argument("--fold", type=int, default=-1)
 
-    parser.add_argument("--split_mode", type=str, default='standard')
-
     parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--PPI_min_score", type=int, default=700)
 

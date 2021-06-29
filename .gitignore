@@ -169,3 +169,6 @@ venv.bak/
 
 *aligned*
 *msa_output
+*.bbl
+*.blg
+*.pdf

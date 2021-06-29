@@ -1,2 +1,0 @@
-\babel@toc {nil}{}
-\beamer@sectionintoc {1}{Problem Description}{3}{0}{1}
