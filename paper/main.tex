@@ -82,9 +82,9 @@
 % bioinformatics, different kinds of data, such as long DNA sequences
 % could be utilized for feature generation, while rapid advances were
 % made. 
-Identifying drug--target interactions (DTIs) is important in drug
-repurposing and repositioning, and in the exploration of novel drug
-candidates and their interaction partners. Computational methods are
+Identifying drug--target interactions (DTIs) is one of the initial steps in drug discovery and screening for disease treatment and thus helps to mitigate the the costs and risks of drug development.  Further, it forms a generalization of both drug repurposing and repositioning, finding novel functions for already approved and extensively analyzed drugs with well explored properties. Inferring and deriving from those existing properties and interactions can help to analyze and identify novel drugs for known targets, leading to desirable therapeutic effects. Moreover, while \textit{in vitro} DTI prediction requires the availability of all substances, computational, \textit{in silico} DTI predictors interpret and anticipate millions of interactions within short time.
+
+Computational methods are
 widely applied to predict DTIs and many computational methods have
 been developed.  These methods can be broadly classified into
 ``top-down'' and ``bottom-up'' approaches. Top-down approaches start
@@ -99,16 +99,15 @@ predict interactions from this information.
 
 Both bottom-up and top-down approaches to drug--target interaction
 prediction bear some advantages and limitations. Generally, bottom-up
-methods face the challenge to predict whether a structure binds to a
+methods face the challenge to predict whether a chemical structure binds to a
 protein given their molecular properties; whether two entities
 interact depends not only on the molecular structure of the entities
 (where binding sites and molecular forces need to be determined for
-accurate prediction) but also properties namely where a protein is
-expressed or in which celltypes and anatomical structures. Top-down
+accurate prediction) but also properties namely in which celltypes and anatomical structures a protein is expressed. Top-down
 methods use information for DTI prediction such as side-effect
 similarity \cite{Campillos2008} that is largely complementary to
 knowledge gained from molecular properties. While methods that rely on
-molecular information are directly predicting whether two molecular
+molecular information are directly predicting whether two molecules
 could interact, top-down methods base on more indirect means and 
 infer a DTI from observable effects resulting from the interaction.
 
@@ -687,6 +686,8 @@ when molecular features are used alone. This observation allows us to
 conclude that information about protein functions localizes on the
 graph whereas molecular features do not.
 
+We further investigate the influence of the more specific interaction types \textbf{inhibition} and \textit{activation} within STITCH database on the performance of \name{}. The results are summarized in Supplementary table 3, where we find no difference in comparison to the complete dataset.
+
 % despite predicting per protein is
 % rather counter-intuitive as there only limited drug-targets
 % \citep{Overington2006}, and thus novel drugs are more likely to arise
@@ -936,11 +937,15 @@ $P_2$). On the other hand, phenotypic consequences of changes in
 protein function, or drug effects, are often a result of aberrant
 pathway or network activity and involve more than one protein;
 consequently, we expect these features to benefit more from including
-information about protein--protein interactions. Our results (Table
-\ref{tab:Results}) confirm this hypothesis and demonstrate that
+information about protein--protein interactions. Moreover, as the protein--protein 
+interaction relation is not transitive (protein $P_1$ interacting with $P_2$, 
+and $P_2$ relating with $P_3$ does not imply $P_1$ interacting
+or influencing $P_3$), we can only infer from the direct neighborhood of each protein within the PPI graph. 
+Our results (Table
+\ref{tab:Results}) confirm the first hypothesis and demonstrate that
 molecular features do not benefit from including the interaction
 network whereas the indirect, top-down features benefit from the
-propagation over the interaction network.
+propagation over the interaction network. While the exploitation of ontology based features over PPI graphs was already examined in \citet{Trebacz2020} for gene expression analysis, our work is the first to investigate and apply this technique to DTI prediction. Further, \name{} is the first work to combine both ``bottom-up'' and ``top-down'' features.  
 
 % \todo[inline]{Methods:}
 % Through the very nature of the graph convolutional neural network, we
@@ -971,6 +976,7 @@ phenotypic and functional features); even if only some of these
 features benefit from the information the graph provides, graph neural
 networks will allow further extension of our model with additional
 features in the future.
+
 
 % Graph neural networks \cite{} have the ability to
 % represent interaction networks 
@@ -1020,7 +1026,7 @@ preferentially predicts these as interaction partners will improve its
 predictive performance. While this accurately captures the
 distribution, predicting based on biases in the number of interaction
 partners is not desirable when applying the model to novel
-entities. We have demonstrated that even a ``na\"ive'' classifier that
+entities. We have demonstrated that even the newly proposed ``na\"ive'' classifier that
 makes predictions only by exploiting the imbalanced number of
 interaction partners can achieve performance close to state of the art
 methods (when measuring Macro AUC). When training a machine learning
@@ -1076,6 +1082,10 @@ searching for a drug that targets a specific (disease-associated)
 protein; and the third when aiming to find new applications for a
 given drug. The first task would best be evaluated using a Macro AUC,
 the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
+
+\subsection{Pharmacological novelty}
+
+As the target-based predictive power of \name{} improves significantly over other methods, we utilized our model to predict novel drug classes for protein families. We therefore collected the 2nd level ATC (Anatomical Therapeutic Chemical) groups for each drug and all InterPro \cite{Interpro2020} top-level families for each protein. Utilizing the STITCH interactions, we followed a protein split within each InterPro family by predicting over all available drugs. We eventually normalized the number of novel interactions per class by the amount of proteins within the respective family. A heatmap showing the results of this analysis can be found in Supplementary figure 5. \dots \todo{Roberts class analysis}.
 
 % The second most prevalent arrangement is the split
 % over drugs, while only close to none is aiming on a protein split.

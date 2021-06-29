@@ -77,7 +77,7 @@
 
 	\begin{tabular}{|p{2.0cm}|p{1.1cm}|p{1.2cm}|p{0.8cm}|p{0.8cm}|p{1.2cm}|p{1.2cm}|}
 		\hline
-		Approach&\multicolumn{6}{c|}{Graph convolution method}\\
+		Approach&\multicolumn{6}{c|}{Graph convolution method (MacroAUC)}\\
 		&without&without/ empty RGC&GCN-Conv&GEN-Conv&RGC + GCNConv&RGC + GENConv\\
 		\hline
 		MolPred & $0.69$ & $0.67$& $0.67$& $0.68$& $0.65$& $0.69$\\
@@ -95,6 +95,34 @@
           Supplementary figure \ref{fig:ResGraphConvBlocks}). ``Empty
           RGC'' denotes a RGC block with a plain neural layer
           substituting the GraphConv layer.}
+\end{table}
+
+\clearpage
+\begin{figure}[ht]%figure1
+	\centerline{\includegraphics[width=1.1\textwidth]{../figures/ATC_Interpro_heatmap.png}}
+	\caption{Heatmap showing the results of the ATC drug class and InterPro family prediction analysis}
+	\label{fig:ATCInterproHeatmap}
+\end{figure}
+
+\clearpage
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{|p{2.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+		\hline
+		&\multicolumn{4}{c|}{Interaction type}\\
+		&\multicolumn{2}{c|}{Activation}&\multicolumn{2}{c|}{Inhibition}\\
+		\#Drugs & \multicolumn{2}{l|}{723} & \multicolumn{2}{l|}{954}\\
+		\#Proteins&\multicolumn{2}{l|}{4562}&\multicolumn{2}{l|}{6222}\\
+		\#Links&\multicolumn{2}{l|}{14174}&\multicolumn{2}{l|}{16364}\\
+		\hline
+		Metric&Macro AUC&Micro AUC$_p$&Macro AUC&Micro AUC$_p$\\
+		\name&$0.95$&$0.95$&$0.93$&$0.94$\\
+		\hline
+		
+	\end{tabular}
+	\caption{Extended results table for MolPred, OntoPred and
+		\name{} over STITCH with added $MicroAUC'_p$ (without
+		imputation) for comparison of both metrics.}
 \end{table}
 
 

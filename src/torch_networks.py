@@ -443,7 +443,7 @@ class QuickTemplateNodeFeatureNet(torch.nn.Module):
 
         # mask feature
 
-        # GCN laye4s
+        # GCN layers
         if 'GCNConv' in conv_method:
             self.conv1 = nn.GCNConv(200, 200, cached=True, improved=True)
             self.conv2 = nn.GCNConv(200, 200, cached=True, improved=True)

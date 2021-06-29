@@ -1,3 +1,5 @@
+import subprocess
+
 import numpy as np
 import math
 from sklearn.model_selection import KFold
@@ -32,7 +34,7 @@ class HPODTIDataBuilder:
                 indication_drug_list = set(PhenomeNET_DL2vec_utils.get_UMLS_drug_list())
                 self.drug_list = np.array(list(set(self.drug_list) & indication_drug_list))
         else:
-            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode, config.interaction_type))
         print(len(self.drug_list), "drugs present")
 
         # get protein lists for each ontology
@@ -41,10 +43,17 @@ class HPODTIDataBuilder:
         MP_protein_list = PhenomeNET_DL2vec_utils.get_PhenomeNET_protein_list(mode='MP')
 
         dti_graph = DTI_data_preparation.get_human_DTI_graph(mode=config.mode)
-        PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+        self.PPI_graph = PPI_utils.get_PPI_graph(min_score=700)
+        self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & set(dti_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+
+        if config.ipro_class:
+            print('Fetching matching interpro proteins...')
+            print('InterPro class:', config.ipro_class)
+            ipro_prots = DTI_data_preparation.get_prots_per_IPRO_class(config.ipro_class)
+            self.protein_list = np.array(list(set(self.protein_list) & set(ipro_prots)))
 
         if config.yamanishi_test or config.biosnap_test:
-            self.protein_list = np.array(list(set(PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
+            self.protein_list = np.array(list(set(self.PPI_graph.nodes()) & (set(uberon_protein_list) | set(GO_protein_list) | set(MP_protein_list))))
             if config.yamanishi_test:
                 print("Loading Yamanishi data ...")
                 self.drug_list, self.protein_list, self.y_dti_data = DTI_data_preparation.get_yamanishi_data(self.drug_list, self.protein_list)
@@ -58,11 +67,6 @@ class HPODTIDataBuilder:
                 raise ValueError
         print(len(self.protein_list), "proteins present\n")
 
-        # PPI data
-        print("Loading PPI graph ...")
-        self.PPI_graph = DTI_data_preparation.get_PPI_DTI_graph_intersection()
-        self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
-
         # calculate dimensions of network
         self.num_proteins = len(self.protein_list)
         self.num_drugs = len(self.drug_list)
@@ -70,14 +74,12 @@ class HPODTIDataBuilder:
         config.num_proteins = self.num_proteins
         config.num_drugs = self.num_drugs
 
-
     def build_data(self, config):
-
         # DTI data
         if not config.yamanishi_test:
-            print("Loading DTI links ...")
+            print("Loading DTI links...")
             y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list,
-                                                       mode=config.mode)
+                                                       mode=config.mode, interaction_type=config.interaction_type)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
 
         self.feature_matrix = np.zeros((self.num_drugs, self.num_proteins))
@@ -283,10 +285,10 @@ def siamese_drug_protein_network(config):
     fold = 0
     for train_protein_indices, test_protein_indices in kf.split(X):
         fold += 1
-        print("Fold:", fold)
         if config.fold != -1 and config.fold != fold:
             continue
 
+        print("Fold:", fold)
         dti_data.build_data(config)
 
         # build train data over whole dataset with help matrix
@@ -355,6 +357,27 @@ def siamese_drug_protein_network(config):
                         torch.save(model.state_dict(), state_dict_path)
             sys.stdout.flush()
 
+        if config.ipro_class:
+            # ATC/Interpro evaluation
+            predicted_prots = dti_data.protein_list[test_protein_indices]
+            drugs = dti_data.drug_list
+
+            test_labels, test_predictions = predicting(model, device, test_loader)
+            test_labels = test_labels.reshape((len(drugs),-1))
+            test_predictions = test_predictions.reshape((len(drugs),-1))
+
+            filename = f'../results/ATC_Interpro_results/{config.ipro_class}_'
+
+            # write drug_list ATC classes later
+            # write prots, labels and predictions in correct order
+            with open(file='../results/ATC_Interpro_results/drug_list', mode='wb') as f:
+                pickle.dump(list(drugs), f, pickle.HIGHEST_PROTOCOL)
+
+            with open(file=filename+'results', mode='a') as f:
+                for i, prot in enumerate(predicted_prots):
+                    print(f'{prot}\t{list(test_labels[:,i])}\t{list(test_predictions[:,i])}', file=f)
+
+
 if __name__ == '__main__':
     # Add parser arguments
     parser = argparse.ArgumentParser()
@@ -368,7 +391,6 @@ if __name__ == '__main__':
     parser.add_argument("--lr", type=float, default=0.001)
 
     parser.add_argument("--model_id", type=str, default='')
-    parser.add_argument("--model", type=str, default='protein')
     parser.add_argument("--mode", type=str, default='')
     parser.add_argument("--fold", type=int, default=3)
 
@@ -376,14 +398,9 @@ if __name__ == '__main__':
     parser.add_argument("--biosnap_test", action='store_true')
     parser.add_argument("--include_indications", action='store_true')
 
+    parser.add_argument("--ipro_class", type=str, default='')
+    parser.add_argument("--interaction_type", type=str, default='')
+
     config = parser.parse_args()
 
-    if config.model=='protein':
-        siamese_drug_protein_network(config)
-    elif config.model=='drug':
-        # drug_split_protein_function_predictor(config)
-        pass
-    else:
-        print('No valid model selected...')
-        raise ValueError
-
+    siamese_drug_protein_network(config)

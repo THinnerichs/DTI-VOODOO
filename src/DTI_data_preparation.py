@@ -20,11 +20,10 @@ import PhenomeNET_DL2vec_utils
 
 
 def write_human_DTI_graph(min_score=700,
-                          mode=''):
-    filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
+                          mode='',
+                          interaction_type=''):
     dti_graph = nx.Graph()
 
-    # drug_set = similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()
     # drug_set = get_drug_list()
 
     print("Loading chemical stereo to mono mapping...")
@@ -32,32 +31,53 @@ def write_human_DTI_graph(min_score=700,
     print("Done.\n")
 
     print("Parsing human drug-protein-links data ...")
-    with open(file=filename, mode='r') as f:
-        f.readline()
-        for line in tqdm(f, total=15473940):
-            split_line = line.split('\t')
-            drug = split_line[0].strip()
-            if 's' in drug:
-                drug = stereo_mono_mapping.get(drug, None)
-                if not drug:
-                    continue
-            # drug = split_line[0].replace('s','m')
-            target = split_line[1]
+    if not interaction_type:
+        filename = "../data/STITCH_data/9606.protein_chemical.links.transfer.v5.0.tsv"
+        with open(file=filename, mode='r') as f:
+            f.readline()
+            for line in tqdm(f, total=15473940):
+                split_line = line.split('\t')
+                drug = split_line[0].strip()
+                if 's' in drug:
+                    drug = stereo_mono_mapping.get(drug, None)
+                    if not drug:
+                        continue
+                # drug = split_line[0].replace('s','m')
+                target = split_line[1]
 
-            score = None
-            if mode=='experimental':
-                score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000))*1000)
-            elif mode=='database':
-                score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000) * (1-int(split_line[6])/1000) * (1-int(split_line[7])/1000))*1000)
-            else:
-                score = int(split_line[-1])
-            # if not drug in drug_set:
-                # continue
+                score = None
+                if mode=='experimental':
+                    score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000))*1000)
+                elif mode=='database':
+                    score = int((1- (1-int(split_line[2])/1000) * (1-int(split_line[3])/1000) * (1-int(split_line[6])/1000) * (1-int(split_line[7])/1000))*1000)
+                else:
+                    score = int(split_line[-1])
+                # if not drug in drug_set:
+                    # continue
 
-            if score >= min_score:
-                dti_graph.add_node(drug)
-                dti_graph.add_node(target)
-                dti_graph.add_edge(drug, target, score=score)
+                if score >= min_score:
+                    dti_graph.add_node(drug)
+                    dti_graph.add_node(target)
+                    dti_graph.add_edge(drug, target, score=score)
+    else:
+        filename = "../data/STITCH_data/9606.actions.v5.0.tsv"
+        with open(file=filename, mode='r') as f:
+            # skip header
+            f.readline()
+            for line in tqdm(f, total=21773491):
+                item_a, item_b, interaction_mode, action, a_is_acting, score = line.strip().split('\t')
+                score = int(score)
+
+                if interaction_mode == interaction_type and score > min_score and item_a.startswith('CID'):
+                    drug = stereo_mono_mapping.get(item_a, None)
+                    if not drug: continue
+
+                    dti_graph.add_node(drug)
+                    dti_graph.add_node(item_b)
+                    dti_graph.add_edge(drug, item_b, score=score)
+
+        if len(dti_graph.nodes()) == 0:
+            raise Exception('Invalid interaction type selected.')
 
     print("Finished.\n")
 
@@ -65,16 +85,15 @@ def write_human_DTI_graph(min_score=700,
     print('num_edges', len(dti_graph.edges()))
 
     print("Writing human only DTI-graph to disk ...")
-    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
+    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+(interaction_type+'_' if interaction_type else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='wb') as f:
         pickle.dump(dti_graph, f, pickle.HIGHEST_PROTOCOL)
     print("Finished writing {}.\n".format(filename))
 
-def get_human_DTI_graph(mode=''):
-    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+"DTI_graph"
+def get_human_DTI_graph(mode='', interaction_type=None):
+    filename = "../data/STITCH_data/human_only_"+(mode+'_' if mode else '')+(interaction_type+'_' if interaction_type else '')+"DTI_graph"
     with open(file=filename+'.pkl', mode='rb') as f:
         return pickle.load(f)
-
 
 def write_human_protein_list(min_score=700,
                              mode=''):
@@ -156,9 +175,8 @@ def get_human_PhenomeNET_proteins():
         return pickle.load(f)
 
 
-def get_drug_list(mode=''):
-    human_DTI_graph = get_human_DTI_graph(mode=mode)
-    # drug_list = sorted(list(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
+def get_drug_list(mode='', interaction_type=''):
+    human_DTI_graph = get_human_DTI_graph(mode=mode, interaction_type=interaction_type)
     # drug_list = sorted(list(DDI_utils.get_DDI_Boyce_graph().nodes()))
     # drug_list = HPO_GO_similarity.get_HPO_SIDER_drug_list()
 
@@ -208,8 +226,9 @@ def get_DDI_feature_list(intersect_drug_list):
 
 def get_DTIs(drug_list,
              protein_list,
-             mode=''):
-    DTI_graph = get_human_DTI_graph(mode=mode)
+             mode='',
+             interaction_type=''):
+    DTI_graph = get_human_DTI_graph(mode=mode, interaction_type=interaction_type)
 
     y_data = np.zeros((len(drug_list), len(protein_list)))
 
@@ -222,7 +241,7 @@ def get_DTIs(drug_list,
                 continue
             j = list(drug_list).index(drug)
 
-            y_data[j * len(protein_list) + i] = 1
+            y_data[j, i] = 1
 
     return np.array(y_data, dtype=np.int8)
 
@@ -282,7 +301,6 @@ def get_DL2vec_features(entity_list):
     model_filename = "../data/PhenomeNET_data/embedding_model"
     # entities = gensim.models.Word2Vec.load(model_filename).wv.vocab.keys()
     # print('num present entities:', len(entities))
-
 
     vector_dict = gensim.models.Word2Vec.load(model_filename).wv
 
@@ -463,6 +481,93 @@ def get_BioSnap_data(original_drug_list, original_protein_list):
     protein_list = np.array(protein_list)
 
     return drug_list[drug_indices], protein_list[protein_indices], dti_matrix[drug_indices, :][:, protein_indices]
+
+def get_drug_ATC_classification_mapping():
+    # Returns a dict, mapping from STITCH drug to ATC level 2 class
+    filename = "../data/SIDER_data/drug_atc.tsv"
+    drug_ATC_mapping = {}
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            drug, ATC_class = line.strip().split('\t')
+
+            # get level 2 class
+            ATC_class = ATC_class[:3]
+            drug = 'CIDm' + drug[4:]
+
+            drug_ATC_mapping[drug] = ATC_class
+
+    return drug_ATC_mapping
+
+def get_UniProt_STRING_mapping():
+    filename = '../data/STRING_data/human.uniprot_2_string.2018.tsv'
+
+    return_mapping = {}
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            uniprot_id = line.strip().split('\t')[1].split('|')[0]
+            STRING_id = line.strip().split('\t')[2]
+            return_mapping[uniprot_id] = STRING_id
+
+    return return_mapping
+
+def write_prots_for_top_IPRO_classes(ipro_class_list):
+    uniprot_string_mapping = get_UniProt_STRING_mapping()
+
+    filename = '../data/Interpro_data/protein2ipr.dat'
+
+    # intialize ipro_classes as keys
+    class_to_protlist_dict = {}
+    for c in ipro_class_list:
+        class_to_protlist_dict[c] = set()
+
+    with open(file=filename, mode='r') as f:
+        for line in tqdm(f, total=1072769334):
+            uniprot_id, ipro_id = line.strip().split('\t')[:2]
+
+            if ipro_id in ipro_class_list:
+                string_id = uniprot_string_mapping.get(uniprot_id, None)
+                if not string_id:
+                    continue
+
+                class_to_protlist_dict[ipro_id].add(string_id)
+
+    # write prots per class to file
+    for c in ipro_class_list:
+        write_file = f'../data/Interpro_data/{c}_proteins'
+        with open(file=write_file, mode='w') as out_f:
+            for prot in class_to_protlist_dict[c]:
+                print(prot, file=out_f)
+
+    print('Done.')
+
+def get_prots_per_IPRO_class(top_level_class):
+    protein_list = []
+    filename = f'../data/Interpro_data/{top_level_class}_proteins'
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            protein_list.append(line.strip())
+
+    return protein_list
+
+def top_hit_IPRO_classes():
+    filename = '../data/Interpro_data/ParentChildTreeFile.txt'
+    top_level_classes = []
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            if line.startswith('IPR') and 'domain' not in line and 'superfamily' not in line:
+                top_level_classes.append(line.strip().split('::')[0])
+
+    filename = '../data/Interpro_data/ipro_histo'
+    top_hit_classes = []
+    with open(file=filename, mode='r') as f:
+        for line in f:
+            ipro_class, hits = line.strip().split('\t')
+
+            top_hit_classes.append((ipro_class, hits))
+
+    return_list = [(c, h) for c, h in top_hit_classes if c in top_level_classes]
+
+    return return_list
 
 
 if __name__ == '__main__':

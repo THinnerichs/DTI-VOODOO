@@ -14,6 +14,15 @@ Bianchi, F.~M.  {\em et~al.} (2019).
 \newblock Graph neural networks with convolutional {ARMA} filters.
 \newblock {\em CoRR\/}, {\bf abs/1901.01343}.
 
+\bibitem[Blum {\em et~al.}(2020)Blum, Chang, Chuguransky, Grego, Kandasaamy,
+  Mitchell, Nuka, Paysan-Lafosse, Qureshi, Raj, Richardson, Salazar, Williams,
+  Bork, Bridge, Gough, Haft, Letunic, Marchler-Bauer, Mi, Natale, Necci,
+  Orengo, Pandurangan, Rivoire, Sigrist, Sillitoe, Thanki, Thomas, Tosatto, Wu,
+  Bateman, and Finn]{Interpro2020}
+Blum, M.  {\em et~al.} (2020).
+\newblock The {InterPro} protein families and domains database: 20 years on.
+\newblock {\em Nucleic Acids Research\/}, {\bf 49}(D1), D344--D354.
+
 \bibitem[Campillos {\em et~al.}(2008)Campillos, Kuhn, Gavin, Jensen, and
   Bork]{Campillos2008}
 Campillos, M.  {\em et~al.} (2008).
@@ -293,6 +302,13 @@ Thafar, M.~A.  {\em et~al.} (2020).
 \newblock {DTiGEMS}: drug-target interaction prediction using graph embedding,
   graph mining, and similarity-based techniques.
 \newblock {\em Journal of Cheminformatics\/}, {\bf 12}(1).
+
+\bibitem[Trebacz {\em et~al.}(2020)Trebacz, Shams, Jamnik, Scherer,
+  Simidjievski, Terre, and Liò]{Trebacz2020}
+Trebacz, M.  {\em et~al.} (2020).
+\newblock Using ontology embeddings for structural inductive bias in gene
+  expression data analysis.
+\newblock {\em CoRR\/}, {\bf abs/2011.10998}.
 
 \bibitem[van Laarhoven and Marchiori(2014)van Laarhoven and
   Marchiori]{vanLaarhoven2014}

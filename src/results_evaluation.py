@@ -2,6 +2,8 @@ import pickle
 import numpy as np
 import random
 
+import matplotlib.pyplot as plt
+
 from tqdm import tqdm
 
 import DTI_data_preparation
@@ -10,7 +12,6 @@ import dti_utils
 
 import sklearn.metrics as metrics
 from sklearn.model_selection import KFold
-
 
 
 def write_predicted_DTIs(fold=3):
@@ -378,14 +379,77 @@ def naive_predictor_pair_split(dti_matrix):
         results = np.array(results)
         print(results.mean())
 
+def analyze_ATC_Ipro_rel():
+    # ipro_class_list = ['IPR013087', 'IPR000276', 'IPR000742', 'IPR003961', 'IPR007110', 'IPR000719', 'IPR002048', 'IPR001452', 'IPR000504', 'IPR001356']
+    ipro_class_list = ['IPR013087', 'IPR017452', 'IPR000276', 'IPR001909', 'IPR001841', 'IPR003961', 'IPR001806',
+                  'IPR001314', 'IPR001965', 'IPR001304', 'IPR002035', 'IPR000315', 'IPR001781', 'IPR000571']
+
+    ATC_mapping = DTI_data_preparation.get_drug_ATC_classification_mapping()
+    drug_list = None
+    with open(file='../results/ATC_Interpro_results/drug_list', mode='rb') as f:
+        drug_list = pickle.load(f)
+    drug_list = np.array([ATC_mapping.get(drug, None) for drug in drug_list])
+
+    present_ATC_classes = list(set(drug_list))
+    present_ATC_classes.remove(None)
+    print('Number of present level 2 ATC classes:', len(present_ATC_classes))
+
+    results_list = np.zeros((len(ipro_class_list), len(present_ATC_classes)))
+    for ipro_index, ipro_class in enumerate(ipro_class_list):
+        filename = f'../results/ATC_Interpro_results/{ipro_class}_'
+
+        with open(file=filename+'results', mode='r') as f:
+            # count lines of results file
+            num_prots = sum(1 for _ in f)
+
+        with open(file=filename + 'results', mode='r') as f:
+            for line in f:
+                prot, labels, predictions = line.strip().split('\t')
+                labels = np.array([int(float(i)) for i in labels[1:-1].split(',')])
+                predictions = np.array([round(float(i)) for i in predictions[1:-1].split(',')])
+
+                for ATC_index, ATC_class in enumerate(present_ATC_classes):
+                    mask = drug_list==ATC_class
+                    results_list[ipro_index,ATC_index] = ((predictions[mask] - labels[mask])==1).astype(int).sum()
+
+        # normalize by number of prots
+        results_list[ipro_index, :] /= num_prots
+
+    sorted_indices = np.argsort(results_list.flatten())
+    highest_hits_list = []
+    for i in sorted_indices[-100:]:
+        ipro_index = i//71
+        ATC_index = i%71
+
+        highest_hits_list.append((ipro_class_list[ipro_index], present_ATC_classes[ATC_index], results_list.flatten()[i]))
+
+    path = '../results/ATC_Interpro_results/'
+    # np.savetxt(path+'ATC_IPRO_class_relations', results_list, fmt='%.4f', delimiter=' ', comments='# matrix (ipro x ATC classes) consisting of number of newly predicted interactions by DTI-Voodoo, normalized by the amount of proteins in that InterPro family; Class names present in ipro_classes and ATC_classes')
+    # np.savetxt(path+'ipro_classes', np.array(ipro_class_list), fmt='%s', delimiter=',')
+    # np.savetxt(path+'ATC_classes', np.array(present_ATC_classes), fmt='%s', delimiter=',')
+
+    atc_sorted_indices = np.argsort(np.array(present_ATC_classes))
+    present_ATC_classes = np.array(present_ATC_classes)
+    plt.figure(figsize=(18, 8))
+    plt.xticks(ticks=np.arange(len(present_ATC_classes)), labels=present_ATC_classes[atc_sorted_indices], rotation=90)
+    plt.yticks(ticks=np.arange(len(ipro_class_list)), labels=ipro_class_list)
+    hm = plt.imshow(results_list[:, atc_sorted_indices], interpolation="nearest")
+
+    plt.colorbar(hm, shrink=0.5, aspect=20*0.5)
+
+    plt.tight_layout()
+
+    plt.savefig('../results/ATC_Interpro_results/ATC_Interpro_heatmap.png', dpi=80)
+
+    # return results_list, ipro_class_list, present_ATC_classes
+    return highest_hits_list
+
 
 if __name__ == '__main__':
     # analyze_DTI_net_results()
     # test_Yamanishi_AUC()
     # write_predicted_DTIs()
 
-    parse_BioSnap()
+    # parse_BioSnap()
 
-
-
-
+    analyze_ATC_Ipro_rel()

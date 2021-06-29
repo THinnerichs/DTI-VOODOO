@@ -6,9 +6,6 @@ from tqdm import tqdm
 
 import networkx as nx
 
-import similarity_measurement
-
-
 
 def get_db_PubChem_id_mapping_dict():
     STITCH_mapping = get_STITCH_db_Pubchem_mapping_dict()
@@ -385,59 +382,6 @@ def parse_SIDER_indications():
 
 
 
-
-
-
-
-def evaluate_dicts_and_graph():
-
-    '''
-    map_1 = get_db_PubChem_id_mapping_dict()
-    map_2 = get_db_PubChem_id_mapping_dict_mahmud()
-    map_3 = get_pddi_db_pubchem_mapping()
-
-    key_set1 = set(map_1.keys())
-    key_set2 = set(map_2.items())
-    key_set3 = set(map_3.items())
-
-    print(len(key_set1))
-    print(len(key_set2))
-    print(len(key_set3))
-
-    print(len(key_set2 & key_set3))
-
-    super_dict = dict(key_set2 | key_set2)
-
-    print(len(list(super_dict.keys())))
-    '''
-
-    drugbank_graph = get_DDI_drugbank_graph()
-    boyce_graph = get_DDI_Boyce_graph()
-
-    # print(len(drugbank_graph.nodes()))
-    print('boyce', len(boyce_graph.nodes()), len(boyce_graph.edges()))
-    print('db', len(drugbank_graph.nodes()), len(drugbank_graph.edges()))
-
-    intersect = set(drugbank_graph.nodes()) & set(boyce_graph.nodes())
-    print('intersect', len(intersect))
-
-    merged_graph = get_merged_DDI_graph()
-    print('merged', len(merged_graph.nodes()), len(merged_graph.edges()))
-
-    SIDER_drugs = set(similarity_measurement.get_SIDER_drug_list())
-
-    print(len(SIDER_drugs | intersect))
-
-
-    # SIDER_only_graph = get_SIDER_only_graph()
-    # drug_set = set(get_SIDER_drug_list())
-
-    # print(len(drug_set & key_set1))
-
-
-
-
-
 if __name__ == '__main__':
     # write_SITCH_db_Pubchem_mapping_dict()
     # get_STITCH_db_Pubchem_mapping_dict()
@@ -445,7 +389,6 @@ if __name__ == '__main__':
     # get_DDI_Boyce_graph()
 
     # write_DDI_drugbank_graph()
-    # print(len(similarity_measurement.get_SIDER_Boyce_Drubank_drug_intersection()))
 
     evaluate_dicts_and_graph()
 

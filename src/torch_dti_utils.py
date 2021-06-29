@@ -27,7 +27,7 @@ class QuickProtFuncDTINetworkData:
         if config.yamanishi_test or config.biosnap_test:
             self.drug_list = np.array(PhenomeNET_DL2vec_utils.get_PhenomeNET_drug_list())
         else:
-            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode))
+            self.drug_list = np.array(DTI_data_preparation.get_drug_list(config.mode, config.interaction_type))
         print(len(self.drug_list), "drugs present")
 
         # self.protein_list = np.array(DTI_data_preparation.get_human_prot_func_proteins())[:config.num_proteins]
@@ -84,8 +84,6 @@ class QuickProtFuncDTINetworkData:
 
         print(len(self.protein_list), "proteins present\n")
 
-
-
         # PPI data
         print("Loading PPI graph ...")
         self.PPI_graph = self.PPI_graph.subgraph(self.protein_list)
@@ -120,7 +118,7 @@ class QuickProtFuncDTINetworkData:
         # DTI data
         if not config.yamanishi_test:
             print("Loading DTI links ...")
-            y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode)
+            y_dti_data = DTI_data_preparation.get_DTIs(drug_list=self.drug_list, protein_list=self.protein_list, mode=config.mode, interaction_type=config.interaction_type)
             self.y_dti_data = y_dti_data.reshape((len(self.drug_list), len(self.protein_list)))
         print(self.y_dti_data.shape)
 

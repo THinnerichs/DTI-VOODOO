@@ -20,12 +20,7 @@ import argparse
 from torch_dti_utils import *
 from torch_networks import *
 
-from protein_function_utils import ProteinFunctionPredNet, ProteinFunctionDTIDataBuilder
 import dti_utils
-
-import DTI_data_preparation
-import PPI_utils
-import DDI_utils
 
 
 def quickened_missing_target_predictor(config,
@@ -105,15 +100,6 @@ def quickened_missing_target_predictor(config,
         print("model total parameters", sum(p.numel() for p in model.parameters()))
 
         optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)#, momentum=0.9)
-
-        # storing best results
-        best_loss = math.inf
-        best_test_loss = math.inf
-        best_epoch = -1
-        best_test_ci = 0
-
-        model_st = 'transductive_simple_node_feature'
-        # model_file_name = '../models/'+model_st+'_'+config.node_features + '_'+ str(config.num_proteins)+'_fold_'+str(fold)+'_model.model'
 
         sys.stdout.flush()
 
@@ -197,7 +183,6 @@ if __name__ == '__main__':
     parser.add_argument("--arch", type=str, default='GCNConv')
     parser.add_argument("--node_features", type=str, default='MolPred')
 
-
     parser.add_argument("--num_epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_folds", type=int, default=5)
@@ -215,6 +200,8 @@ if __name__ == '__main__':
     parser.add_argument("--biosnap_test", action='store_true')
     parser.add_argument("--include_indications", action='store_true')
 
+    parser.add_argument("--ipro_class", type=str, default='')
+    parser.add_argument("--interaction_type", type=str, default='')
 
     config = parser.parse_args()
 
