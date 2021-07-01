@@ -1099,6 +1099,24 @@ performance differences is not usually visible when using ROC curves
 but results in unrealistically high precision and therefore high area
 under a precision-recall curve.
 
+Several of the biases we identify in evaluating DTI prediction methods
+have been observed previously. The performance difference based on how
+training and evaluation data is split (by interaction pair, by drug,
+or by protein) has been demonstrated before using a
+\todo{MacroAUC/MicroAUC???} measure \cite{}; we further extend on
+these results by introducing performance measures based on micro
+averages (Micro AUC$_p$ and Micro AUC_$d$) to further illustrate how
+prediction performance changes when evaluation data is imbalanced. We
+have further extended on prior results by introducing a ``na\"ive''
+classifier that explicitly exploits one data bias to make predictions,
+illustrating that this bias has a significant impact on DTI
+methods. The bias we identify is similar to a previous bias found in
+gene networks and methods that rely on the guilt-by-association
+approach
+\cite{}\todo{https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002444}
+but which has, to our knowledge, not been demonstrated in the context
+of DTI prediction.
+
 In summary, drug--target interaction prediction is not a single
 computational problem in bioinformatics but a set of related
 problems. Let $P$ be a set of proteins $P$ and $D$ a set of drugs; one
@@ -1111,6 +1129,8 @@ searching for a drug that targets a specific (disease-associated)
 protein; and the third when aiming to find new applications for a
 given drug. The first task would best be evaluated using a Macro AUC,
 the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
+
+
 
 \subsection{Pharmacological novelty}
 
