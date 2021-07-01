@@ -936,11 +936,11 @@ organism and infer drug--target interactions as the putative molecular
 mechanisms that explain these observations.
 
 Another view on these two approaches is as direct and indirect ways to
-predict drug--target interactions. On one hand, molecular information can be used
-to directly determine whether two molecules (such as a drug and
-protein) have the ability to interact, whereas information about
-phenotypic consequences of a drug (drug effects) or disruption of a
-protein function can be used to indirectly suggest candidate
+predict drug--target interactions. On one hand, molecular information
+can be used to directly determine whether two molecules (such as a
+drug and protein) have the ability to interact, whereas information
+about phenotypic consequences of a drug (drug effects) or disruption
+of a protein function can be used to indirectly suggest candidate
 drug--target interactions. Molecular features will be specific to a
 drug--target pair and we would not expect this information to
 propagate through a protein--protein interaction network; the main
@@ -953,15 +953,15 @@ $P_2$). On the other hand, phenotypic consequences of changes in
 protein function, or drug effects, are often a result of aberrant
 pathway or network activity and involve more than one protein;
 consequently, we expect these features to benefit more from including
-information about protein--protein interactions. Moreover, as the protein--protein 
-interaction relation is not transitive (protein $P_1$ interacting with $P_2$, 
-and $P_2$ relating with $P_3$ does not imply $P_1$ interacting
-or influencing $P_3$), we can only infer from the direct neighborhood of each protein within the PPI graph. 
-Our results (Table
+information about protein--protein interactions. Moreover, as the
+protein--protein interaction relation is not transitive (protein $P_1$
+interacting with $P_2$, and $P_2$ relating with $P_3$ does not imply
+$P_1$ interacting with $P_3$), we can only infer from the direct
+neighborhood of each protein within the PPI graph. Our results (Table
 \ref{tab:Results}) confirm the first hypothesis and demonstrate that
 molecular features do not benefit from including the interaction
 network whereas the indirect, top-down features benefit from the
-propagation over the interaction network. While the exploitation of ontology based features over PPI graphs was already examined in \citet{Trebacz2020} for gene expression analysis, our work is the first to investigate and apply this technique to DTI prediction. Further, \name{} is the first work to combine both ``bottom-up'' and ``top-down'' features.  
+propagation over the interaction network.
 
 % \todo[inline]{Methods:}
 % Through the very nature of the graph convolutional neural network, we
@@ -992,6 +992,12 @@ phenotypic and functional features); even if only some of these
 features benefit from the information the graph provides, graph neural
 networks will allow further extension of our model with additional
 features in the future.
+
+\name{} introduces a number of novel 
+
+While the exploitation of ontology based features over PPI graphs was already examined in \citet{Trebacz2020} for gene expression analysis, our work is the first to investigate and apply this technique to DTI prediction. Further, \name{} is the first work to combine both ``bottom-up'' and ``top-down'' features.  
+
+
 
 
 % Graph neural networks \cite{} have the ability to
