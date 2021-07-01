@@ -993,12 +993,17 @@ features benefit from the information the graph provides, graph neural
 networks will allow further extension of our model with additional
 features in the future.
 
-\name{} introduces a number of novel 
-
-While the exploitation of ontology based features over PPI graphs was already examined in \citet{Trebacz2020} for gene expression analysis, our work is the first to investigate and apply this technique to DTI prediction. Further, \name{} is the first work to combine both ``bottom-up'' and ``top-down'' features.  
-
-
-
+To the best of our knowledge, \name{} is the first DTI prediction
+model that propagates ontology-based features of protein interaction
+networks; while a similar approach of combining ontology embeddings
+with interaction networks has previously been used for analyzing gene
+expression \citet{Trebacz2020}, \name{} extends this method to DTI
+prediction. Further, \name{} is novel in that it explicitly integrates
+``bottom-up'' and ``top-down'' features using a graph representation
+of interactions between proteins; this property of \name{} relies on
+the ability to integrate heterogeneous features using graphs, and the
+ability to exploit this graph through the use of graph neural
+networks.
 
 % Graph neural networks \cite{} have the ability to
 % represent interaction networks 
