@@ -1054,19 +1054,19 @@ preferentially predicts these as interaction partners will improve its
 predictive performance. While this accurately captures the
 distribution, predicting based on biases in the number of interaction
 partners is not desirable when applying the model to novel
-entities. We have demonstrated that even the newly proposed ``na\"ive'' classifier that
-makes predictions only by exploiting the imbalanced number of
-interaction partners can achieve performance close to state of the art
-methods (when measuring Macro AUC). When training a machine learning
-model on such imbalanced data, it will eventually overfit to this
-imbalance.  Splitting by entity (protein or drug) can reduce the
-impact of this spurious correlation but not reduce it entirely,
-because similar entities will still exhibit similar interaction
-patterns. In our experiments, we observed the impact of splitting
-training and evaluation sets by protein as a decrease in overall
-performance (Macro AUC), providing some evidence that models trained
-using this splitting scheme are less sensitive to overfitting to this
-type of bias.
+entities. We have demonstrated that even the newly proposed
+``na\"ive'' classifier that makes predictions only by exploiting the
+imbalanced number of interaction partners can achieve performance
+close to state of the art methods (when measuring Macro AUC). When
+training a machine learning model on such imbalanced data, it will
+eventually overfit to this imbalance.  Splitting by entity (protein or
+drug) can reduce the impact of these spurious correlations but not
+reduce it entirely, because similar entities will still exhibit
+similar interaction patterns. In our experiments, we observed the
+impact of splitting training and evaluation sets by protein as a
+decrease in overall performance (Macro AUC), providing some evidence
+that models trained using this splitting scheme are less sensitive to
+overfitting to this type of bias.
 
 The way in which training and evaluation data is generated is related
 to how the model is evaluated. An evaluation based on Macro AUC
@@ -1075,13 +1075,14 @@ are given, and out of all possible pairs, the more likely interactions
 need to be identified. However, this does not correspond to most
 scenarios for drug repurposing where a drug that targets a {\em
   specific} protein (e.g., a protein involved in a disease) needs to
-be identified. We use an evaluation measure based on micro-averages
-per protein (Micro AUC$_p$) to evaluate this scenario, and we often
-find substantial differences in predictive performance when evaluating
-with Macro AUC and Micro AUC$_p$; generally, models that are trained
-using a split over drug--target pairs perform worse in Micro AUC$_p$
-than models that use a protein-based split, further providing evidence
-that a drug--target split results in overfitting to dataset biases.
+be identified. We introduce an evaluation measure based on
+micro-averages per protein (Micro AUC$_p$) to evaluate this scenario,
+and we often find substantial differences in predictive performance
+when evaluating with Macro AUC and Micro AUC$_p$; generally, models
+that are trained using a split over drug--target pairs perform worse
+in Micro AUC$_p$ than models that use a protein-based split, further
+providing evidence that a drug--target split results in overfitting to
+dataset biases.
 
 Finally, a potential source of differences in model performance is how
 negatives are identified and treated during evaluation (and
