@@ -82,16 +82,25 @@
 % bioinformatics, different kinds of data, such as long DNA sequences
 % could be utilized for feature generation, while rapid advances were
 % made. 
-Identifying drug--target interactions (DTIs) is one of the initial steps in drug discovery and screening for disease treatment and thus helps to mitigate the the costs and risks of drug development.  Further, it forms a generalization of both drug repurposing and repositioning, finding novel functions for already approved and extensively analyzed drugs with well explored properties. Inferring and deriving from those existing properties and interactions can help to analyze and identify novel drugs for known targets, leading to desirable therapeutic effects. Moreover, while \textit{in vitro} DTI prediction requires the availability of all substances, computational, \textit{in silico} DTI predictors interpret and anticipate millions of interactions within short time.
+Identifying drug--target interactions (DTIs) is a crucial step in drug
+discovery; finding novel DTIs for approved drugs can be used for drug
+repurposing, either by finding new drugs for a known target or finding
+a drug for a novel target involved in a disease process.  Inferring
+the interactions between drugs and their targets can help to analyze
+and identify potential desired or adverse drug effects as well as
+desirable therapeutic effects. While \textit{in vitro} DTI prediction
+is time consuming, computational \textit{in silico} DTI predictors can
+screen for millions of interactions within a short time.  Determining
+DTIs computationally can therefore help to mitigate the costs and
+risks of drug development.
 
-Computational methods are
-widely applied to predict DTIs and many computational methods have
-been developed.  These methods can be broadly classified into
-``top-down'' and ``bottom-up'' approaches. Top-down approaches start
-from observable characteristics resulting from a drug--target
-interaction, such as side-effects or the diseases treated by a drug,
-and infer likely molecular mechanisms (i.e., the interaction) using
-these observations.
+Computational methods are widely applied to predict DTIs and many
+computational methods have been developed.  These methods can be
+broadly classified into ``top-down'' and ``bottom-up''
+approaches. Top-down approaches start from observable characteristics
+resulting from a drug--target interaction, such as side-effects or the
+diseases treated by a drug, and infer likely molecular mechanisms
+(i.e., the interaction) using these observations.
 % and indications represented by knowledge graphs or ontologies, induced by a drug and infer targets based on the likely molecular mechanisms that result in these phenotypes
 Bottom-up approaches start from molecular features such as molecular
 structure or fingerprints associated with drug and protein, and
@@ -99,17 +108,19 @@ predict interactions from this information.
 
 Both bottom-up and top-down approaches to drug--target interaction
 prediction bear some advantages and limitations. Generally, bottom-up
-methods face the challenge to predict whether a chemical structure binds to a
-protein given their molecular properties; whether two entities
-interact depends not only on the molecular structure of the entities
-(where binding sites and molecular forces need to be determined for
-accurate prediction) but also properties namely in which celltypes and anatomical structures a protein is expressed. Top-down
-methods use information for DTI prediction such as side-effect
-similarity \cite{Campillos2008} that is largely complementary to
-knowledge gained from molecular properties. While methods that rely on
-molecular information are directly predicting whether two molecules
-could interact, top-down methods base on more indirect means and 
-infer a DTI from observable effects resulting from the interaction.
+methods face the challenge to predict whether a chemical structure
+binds to a protein given their molecular properties; whether two
+entities interact depends not only on the molecular structure of the
+entities (where binding sites and molecular forces need to be
+determined for accurate prediction) but also properties such as in
+which celltypes and anatomical structures a protein is
+expressed. Top-down methods use information about physiological
+effects of drugs for DTI prediction, such as side-effect similarity
+\cite{Campillos2008}, that is largely complementary to knowledge
+gained from molecular properties. While methods that rely on molecular
+information are directly predicting whether two molecules could
+interact, top-down methods base on more indirect means and infer a DTI
+from observable effects resulting from the interaction.
 
 Both approaches may be used in conjunction with network inference
 \cite{Chen2015}. Biological networks used for DTI prediction include
@@ -686,7 +697,12 @@ when molecular features are used alone. This observation allows us to
 conclude that information about protein functions localizes on the
 graph whereas molecular features do not.
 
-We further investigate the influence of the more specific interaction types \textbf{inhibition} and \textit{activation} within STITCH database on the performance of \name{}. The results are summarized in Supplementary table 3, where we find no difference in comparison to the complete dataset.
+We further investigate the performance on the specific interaction
+types {\em inhibition} and {\em activation} that are available within
+the STITCH database. The results are summarized in Supplementary Table
+3; we find no difference between the performance on specific
+interaction types and  the complete dataset where we do not separate
+types of interaction.
 
 % despite predicting per protein is
 % rather counter-intuitive as there only limited drug-targets
