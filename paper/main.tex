@@ -1036,10 +1036,6 @@ use of graph neural networks.
 
 
 
-\todo{TODO}Most of novel predictions made by \name{} are for antineoplastic
-agents targeting proteins belonging to the Zinc finger, LIM-type
-family ({\tt IPR001781}).
-
 
 
 
@@ -1151,7 +1147,23 @@ the second and third using a Micro AUC$_p$ and Micro AUC$_d$.
 
 \subsection{Pharmacological novelty}
 
-As the target-based predictive power of \name{} improves significantly over other methods, we utilized our model to predict novel drug classes for protein families. We therefore collected the 2nd level ATC (Anatomical Therapeutic Chemical) groups for each drug and all InterPro \cite{Interpro2020} top-level families for each protein. Utilizing the STITCH interactions, we followed a protein split within each InterPro family by predicting over all available drugs. We eventually normalized the number of novel interactions per class by the amount of proteins within the respective family. A heatmap showing the results of this analysis can be found in Supplementary figure 5. \dots \todo{Roberts class analysis}.
+As the target-based predictive power of \name{} improves significantly
+over other methods, we utilized our model to predict novel drug
+classes for protein families. We therefore collected the 2nd level ATC
+(Anatomical Therapeutic Chemical) groups for each drug and all
+InterPro \cite{Interpro2020} top-level families for each
+protein. Utilizing the STITCH interactions, we followed a protein
+split within each InterPro family by predicting over all available
+drugs. We eventually normalized the number of novel interactions per
+class by the amount of proteins within the respective family. A
+heatmap showing the results of this analysis can be found in
+Supplementary Figure 5. \dots \todo{Roberts class analysis}.
+
+Most of novel predictions made by \name{} are for antineoplastic
+agents targeting proteins belonging to the Zinc finger, LIM-type
+family ({\tt IPR001781}).
+
+
 
 % The second most prevalent arrangement is the split
 % over drugs, while only close to none is aiming on a protein split.
