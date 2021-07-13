@@ -1157,12 +1157,23 @@ split within each InterPro family by predicting over all available
 drugs. We eventually normalized the number of novel interactions per
 class by the amount of proteins within the respective family. A
 heatmap showing the results of this analysis can be found in
-Supplementary Figure 5. \dots \todo{Roberts class analysis}.
+Supplementary Figure 5. \name{} predicts novel candidate drug--target
+interactions for a broad range of ATC categories as well as protein
+families.
 
-Most of novel predictions made by \name{} are for antineoplastic
-agents targeting proteins belonging to the Zinc finger, LIM-type
-family ({\tt IPR001781}).
-
+For example, ATC group A07 (Antidiarrheals) has relatively few
+approved drugs in total (Supplementary Figure 6), but \name{} predicts
+several candidate targets from proteins with a PHD-type zinc finger
+domain ({\tt IPR001965}). For example, the drug mesalazine, used to
+treat inflammatory bowel disease but with an apoptosis-inducing and
+chemopreventative effect in colon cancer \cite{Bus1999, Ishikawa2021};
+\name{} predicts mesalazine to interact with five proteins with
+PHD-type zinc finger domain: BRPF1, TRIM33, BAZ1A, RSF1, and
+DPF2. Overexpression of RSF1 is associated with poor prognosis in
+colorectal cancer, and knock-down of RSF1 leads to decrease of cell
+proliferation \cite{Liu2012}, indicating that, in addition to its
+antiinflammatory effects, mesalazine may act through inhibition of
+RSF1 in its chemopreventative effects on colon cancer.
 
 
 % The second most prevalent arrangement is the split
