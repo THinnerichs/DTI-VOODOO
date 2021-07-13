@@ -1048,8 +1048,7 @@ use of graph neural networks.
 One major component of our experiments was to determine how the
 information that is available to a machine learning model during
 training affects the performance of the model. Similarly to previous
-work \cite{MolTrans2020, DeepConvDTI2019}\todo{These seem wrong, they
-  only use a single splitting scheme -- should this be cite:DTI-CDF2019?}, we find significant
+work \cite{MolTrans2020, DeepConvDTI2019, DTI-CDF2019}, we find significant
 differences in predictive performance across different splitting
 schemes.
 
@@ -1116,8 +1115,7 @@ under a precision-recall curve.
 Several of the biases we identify in evaluating DTI prediction methods
 have been observed previously. The performance difference based on how
 training and evaluation data is split (by interaction pair, by drug,
-or by protein) has been demonstrated before using a
-\todo{MacroAUC/MicroAUC???} measure \cite{}; we further extend on
+or by protein) has been demonstrated before using the MacroAUC measure \cite{MolTrans2020, Pahikkala2014, vanLaarhoven2014}; we further extend on
 these results by introducing performance measures based on micro
 averages (Micro AUC$_p$ and Micro AUC$_d$) to further illustrate how
 prediction performance changes when evaluation data is imbalanced. We
