@@ -15,17 +15,32 @@ from sklearn.model_selection import KFold
 
 
 def write_predicted_DTIs(fold=3):
+    '''
     filename = '../models/graph_models/PPI_network_model_with_mol_features_fold_'+str(fold)+'_predictions.pkl'
+
+    pred_list = None #[(drug, prot, label, pred)]
+    with open(file=filename, mode='rb') as f:
+        pred_list = pickle.load(f)
+    '''
+
+    pred_list = []
+    for i in range(1,6):
+        print(f'Parsing fold {str(i)}')
+        path = '../results/full_model_STITCH_preds/all_'
+        filename = path + 'results_fold_' + str(i)
+
+        with open(file=filename, mode='r') as f:
+            for line in f:
+                drug, prot, val = line.strip().split('\t')
+                pred_list.append((drug,prot,float(val)))
+
+    print('num triples:', len(pred_list))
 
     drug_mapping = DTI_data_preparation.get_drug_to_name_mapping()
     protein_mapping = DTI_data_preparation.get_protein_to_EnsemblProtein_id()
 
     print('drug_dict.keys()', len(list(drug_mapping.keys())))
     print('protein_dict.keys()', len(list(protein_mapping.keys())))
-
-    pred_list = None #[(drug, prot, label, pred)]
-    with open(file=filename, mode='rb') as f:
-        pred_list = pickle.load(f)
 
     drug_list = [tup[0] for tup in pred_list]
     protein_list = [tup[1] for tup in pred_list]
@@ -42,12 +57,13 @@ def write_predicted_DTIs(fold=3):
     # print('sanity_check', pos_sanity_list[:200])
 
 
-    pred_list = [tup for tup in pred_list if round(tup[2])==0 and tup[3] > 0.7]
+    pred_list = [tup for tup in pred_list if tup[2] > 0.7]
 
-    pred_list = sorted(pred_list, key=lambda tup: tup[3], reverse=True)
+    pred_list = sorted(pred_list, key=lambda tup: tup[2], reverse=True)
     print('len(pred_list):', len(pred_list))
 
     drug_list = list({drug for drug in drug_list if drug in drug_mapping.keys()})
+
     protein_list = list({protein for protein in protein_list if protein in protein_mapping.keys()})
 
     filename = '../data/PPI_data/protein_to_gene_dict.pkl'
@@ -78,18 +94,18 @@ def write_predicted_DTIs(fold=3):
 
     print('Num proteins that are driver genes:', len(protein_list))
 
-    yamanishi_drug_mapping = DDI_utils.get_Yamanishi_db_to_PubChem_mapping_dict()
+    drug_ATC_mapping = DTI_data_preparation.get_drug_ATC_classification_mapping()
 
-    print('yamanishi mapping length', len(yamanishi_drug_mapping))
-    print(list(yamanishi_drug_mapping.items())[:10])
-    drug_list = [drug for drug in drug_list if drug in yamanishi_drug_mapping.values()]
+    print('ATC mapping length', len(drug_ATC_mapping))
+    print(list(drug_ATC_mapping.items())[:10])
+    drug_list = [drug for drug in drug_list if drug in drug_ATC_mapping.keys()]
 
-    print('drugs that are also present in yamanishi dataset:', len(drug_list))
+    print('drugs that are also present as ATC classes:', len(drug_list))
 
-    filename = '../results/full_model_with_mol_feat_results/best_preds_false_negatives_yama_subset'
+    filename = '../results/full_model_STITCH_preds/best_preds_false_negatives'
     with open(file=filename, mode='w') as f:
         print('drug\tprot\tconfidence\tdrug_alias\tprotein_alias\tcancer_type', file=f)
-        for drug, protein, _, confidence in pred_list:
+        for drug, protein, confidence in pred_list:
             if drug in drug_list and protein in protein_list:
                 print('\t'.join([drug, protein, str(confidence), drug_mapping[drug], protein_mapping[protein]]),
                       str(driver_gene_dict[protein_to_gene_mapping[protein[5:]]][0]), file=f)
@@ -388,13 +404,34 @@ def analyze_ATC_Ipro_rel():
     drug_list = None
     with open(file='../results/ATC_Interpro_results/drug_list', mode='rb') as f:
         drug_list = pickle.load(f)
-    drug_list = np.array([ATC_mapping.get(drug, None) for drug in drug_list])
-
-    present_ATC_classes = list(set(drug_list))
+    redundant_present_ATC_classes = np.array([ATC_mapping.get(drug, None) for drug in drug_list])
+    present_ATC_classes = list(set(redundant_present_ATC_classes))
     present_ATC_classes.remove(None)
+
+    res = [0] * len(present_ATC_classes)
+    for drug in drug_list:
+        query_res = ATC_mapping.get(drug, None)
+
+        if query_res:
+            res[present_ATC_classes.index(query_res)] += 1
+
+    print(res[:10])
+    sorted_classes = np.argsort(present_ATC_classes)
+
+    '''
+    plt.figure(figsize=(12, 8))
+    plt.xticks(ticks=np.arange(len(present_ATC_classes)), labels=np.array(present_ATC_classes)[sorted_classes], rotation=90)
+    plt.bar(np.array(present_ATC_classes)[sorted_classes], np.array(res)[sorted_classes])
+    plt.tight_layout()
+    plt.savefig('../results/ATC_Interpro_results/ATC_bar_distr.png', dpi=80)
+    '''
+
     print('Number of present level 2 ATC classes:', len(present_ATC_classes))
 
     results_list = np.zeros((len(ipro_class_list), len(present_ATC_classes)))
+    redundant_present_ATC_classes = np.array(redundant_present_ATC_classes)
+
+    new_drug_target_list = []
     for ipro_index, ipro_class in enumerate(ipro_class_list):
         filename = f'../results/ATC_Interpro_results/{ipro_class}_'
 
@@ -406,14 +443,43 @@ def analyze_ATC_Ipro_rel():
             for line in f:
                 prot, labels, predictions = line.strip().split('\t')
                 labels = np.array([int(float(i)) for i in labels[1:-1].split(',')])
-                predictions = np.array([round(float(i)) for i in predictions[1:-1].split(',')])
+                # predictions = np.array([round(float(i)) for i in predictions[1:-1].split(',')])
+                predictions = np.array([float(i) for i in predictions[1:-1].split(',')])
 
+                mask = ((predictions-labels)>0.7).astype(int)
+                for drug in np.array(drug_list)[mask==1]:
+                    ret_val = ATC_mapping.get(drug, None)
+                    if ret_val:
+                        new_drug_target_list.append((drug, ATC_mapping[drug], prot, ipro_class))
+
+                '''
                 for ATC_index, ATC_class in enumerate(present_ATC_classes):
-                    mask = drug_list==ATC_class
+                    mask = redundant_present_ATC_classes==ATC_class
+                    
                     results_list[ipro_index,ATC_index] = ((predictions[mask] - labels[mask])==1).astype(int).sum()
-
+                '''
         # normalize by number of prots
-        results_list[ipro_index, :] /= num_prots
+        # results_list[ipro_index, :] /= num_prots
+
+    print(len(new_drug_target_list))
+    filename = ''
+    with open(file='../results/ATC_Interpro_results/new_false_negatives_DTI_pairs.tsv', mode='w') as f:
+        for d, c, t, family in new_drug_target_list:
+            print(f'{d}\t{c}\t{t}\t{family}', file=f)
+
+    raise Exception
+
+
+
+
+
+
+
+
+
+    # Normalize with number of drugs in each ATC class
+    for i, ATC_class in enumerate(present_ATC_classes):
+        results_list[:, i] /= res[i]
 
     sorted_indices = np.argsort(results_list.flatten())
     highest_hits_list = []
