@@ -23,6 +23,14 @@ Blum, M.  {\em et~al.} (2020).
 \newblock The {InterPro} protein families and domains database: 20 years on.
 \newblock {\em Nucleic Acids Research\/}, {\bf 49}(D1), D344--D354.
 
+\bibitem[Bus {\em et~al.}(1999)Bus, Nagtegaal, Verspaget, Lamers, Geldof,
+  Krieken, and Griffioen]{Bus1999}
+Bus  {\em et~al.} (1999).
+\newblock Mesalazine-induced apoptosis of colorectal cancer: on the verge of a
+  new chemopreventive era?
+\newblock {\em Alimentary Pharmacology {\&} Therapeutics\/}, {\bf 13}(11),
+  1397--1402.
+
 \bibitem[Campillos {\em et~al.}(2008)Campillos, Kuhn, Gavin, Jensen, and
   Bork]{Campillos2008}
 Campillos, M.  {\em et~al.} (2008).
@@ -140,6 +148,18 @@ Huang, K.  {\em et~al.} (2020).
 \newblock {\em Bioinformatics\/}.
 \newblock advanced access.
 
+\bibitem[Ishikawa {\em et~al.}(2021)Ishikawa, Mutoh, Sato, Doyama, Tajika,
+  Tanaka, Horimatsu, Takeuchi, Kashida, Tashiro, Ezoe, Nakajima, Ikematsu,
+  Hori, Suzuki, Otani, Takayama, Ohda, Mure, Wakabayashi, and
+  Sakai]{Ishikawa2021}
+Ishikawa, H.  {\em et~al.} (2021).
+\newblock Chemoprevention with low-dose aspirin, mesalazine, or both in
+  patients with familial adenomatous polyposis without previous colectomy
+  (j-{FAPP} study {IV}): a multicentre, double-blind, randomised, two-by-two
+  factorial design trial.
+\newblock {\em The Lancet Gastroenterology {\&} Hepatology\/}, {\bf 6}(6),
+  474--481.
+
 \bibitem[Jeni {\em et~al.}(2013)Jeni, Cohn, and De~La~Torre]{Jeni2013}
 Jeni, L.~A.  {\em et~al.} (2013).
 \newblock Facing imbalanced data--recommendations for the use of performance
@@ -217,6 +237,12 @@ Liu, Q.  {\em et~al.} (2020).
 \newblock {DeepCDR}: a hybrid graph convolutional network for predicting cancer
   drug response.
 \newblock {\em Bioinformatics\/}, {\bf 36}(Supplement{\_}2), i911--i918.
+
+\bibitem[Liu {\em et~al.}(2012)Liu, Dong, and Wang]{Liu2012}
+Liu, S.  {\em et~al.} (2012).
+\newblock Rsf-1 overexpression correlates with poor prognosis and cell
+  proliferation in colon cancer.
+\newblock {\em Tumor Biology\/}, {\bf 33}(5), 1485--1491.
 
 \bibitem[Luo {\em et~al.}(2017)Luo, Zhao, Zhou, Yang, Zhang, Kuang, Peng, Chen,
   and Zeng]{DTINet2017}
