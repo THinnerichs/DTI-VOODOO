@@ -52,4 +52,5 @@ We provide all used datasets and download instructions in the `data/` and associ
 
 ## Reference 
 If you find our work useful, please cite:
+
 Tilman Hinnerichs, Robert Hoehndorf, DTI-Voodoo: machine learning over interaction networks and ontology-based background knowledge predicts drug–target interactions, Bioinformatics, 2021;, btab548, https://doi.org/10.1093/bioinformatics/btab548
