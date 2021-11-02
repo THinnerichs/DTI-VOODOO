@@ -1,8 +1,10 @@
+This method and this readme were adapted from the [DL2vec Github page](https://github.com/bio-ontology-research-group/DL2Vec). For more information on this approach, please check out their webpage.
+
 # DL2vec
 
 DL2vec is a project that can convert different types of axioms into graph representation, and then generate an embedding representation for each node and edge.
 
-The main covnertion tool is in DL2vec_embed folder
+The main convertion tool is in the DL2vec_embed folder
 
 ## pre-installled necessary packages
 python >= 3.4 <br>
