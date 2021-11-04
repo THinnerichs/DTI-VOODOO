@@ -218,7 +218,7 @@ def output_example_DL2vec_command(prefix='', workers=48, embedsize=200):
     path = '../../data/PhenomeNET_data/'
     onto = path + 'phenomenet.owl'
     asso = path + prefix+'association_file'
-    outfile = path + prefix+'embedding_model'
+    outfile = path + (prefix+'_' if prefix else '')+'embedding_model'
     ents = path + prefix +'entity_list'
     command = 'python runDL2vec.py -embedsize {embedsize} -ontology {onto} -associations {asso} -outfile {outfile} -entity_list {ents} -num_workers {num_workers}'.format(
         embedsize=embedsize,
